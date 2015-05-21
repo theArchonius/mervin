@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="ASCII"?>
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:advanced="http://www.eclipse.org/ui/2010/UIModel/application/ui/advanced" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/descriptor/basic" xmlns:basic_1="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_SvcfIPrtEeSNIagO6cD0dw">
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_VuxXAPrtEeSNIagO6cD0dw" featurename="menuContributions" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="menu:MenuContribution" xmi:id="_regZ4PrtEeSNIagO6cD0dw" elementId="at.bitandart.zoubek.mervin.menucontribution.main" parentId="org.eclipse.ui.main.menu">
+      <children xsi:type="menu:Menu" xmi:id="_rNJFoPsEEeS2q_4qNTgMUQ" elementId="at.bitandart.zoubek.mervin.menu.main" label="Mervin">
+        <children xsi:type="menu:Menu" xmi:id="_cKe3MP1TEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.menu.diagram.diff" label="Diagram Diff">
+          <children xsi:type="menu:HandledMenuItem" xmi:id="_VAzBQPruEeSNIagO6cD0dw" elementId="at.bitandart.zoubek.mervin.menuitem.diagram.diff.case1" label="Diagram Diff case 1" command="_dnOCgPsEEeS2q_4qNTgMUQ"/>
+        </children>
+      </children>
+    </elements>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_0er4kPr7EeS2q_4qNTgMUQ" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Command" xmi:id="_dnOCgPsEEeS2q_4qNTgMUQ" elementId="at.bitandart.zoubek.mervin.command.debug.diagram.diff.case1" commandName="Open Diagram Diff Case 1"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_rV6KoPsFEeS2q_4qNTgMUQ" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="commands:Handler" xmi:id="_vQOrIPsFEeS2q_4qNTgMUQ" elementId="at.bitandart.zoubek.mervin.handler.debug.diagram.diff.case1" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.debug.OpenDiagramDiffCase1Handler" command="_dnOCgPsEEeS2q_4qNTgMUQ"/>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_OapfwPsGEeS2q_4qNTgMUQ" featurename="descriptors" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="basic:PartDescriptor" xmi:id="_b4kdcPsGEeS2q_4qNTgMUQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.diagram.diffviewer" label="Diagram Diff Viewer" allowMultiple="true" category="Mervin" closeable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.diagram.diff.DiagramDiffView">
+      <tags>View</tags>
+      <tags>categoryTag:Mervin</tags>
+    </elements>
+    <elements xsi:type="basic:PartDescriptor" xmi:id="_AaxDUP1dEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.review" label="Review Explorer" category="Mervin" closeable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.review.ReviewExplorer">
+      <tags>View</tags>
+      <tags>categoryTag:Mervin</tags>
+    </elements>
+    <elements xsi:type="basic:PartDescriptor" xmi:id="_kGxz0P1dEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.comments" label="Review Comments" category="Mervin" closeable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.review.CommentsView">
+      <tags>View</tags>
+      <tags>categoryTag:Mervin</tags>
+    </elements>
+    <elements xsi:type="basic:PartDescriptor" xmi:id="_vxSTIP1dEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.patchset.history" label="Patch Set History" category="Mervin" closeable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.review.PatchSetHistoryView">
+      <tags>View</tags>
+      <tags>categoryTag:Mervin</tags>
+    </elements>
+    <elements xsi:type="basic:PartDescriptor" xmi:id="_791IgP1dEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.properties.diff" label="Property Diff" category="Mervin" closeable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.review.PropertyDiffView">
+      <tags>View</tags>
+      <tags>categoryTag:Mervin</tags>
+    </elements>
+    <elements xsi:type="basic:PartDescriptor" xmi:id="_G4WVUP1eEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.review.options" label="Review Options" category="Mervin" closeable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.review.ReviewOptionsView">
+      <tags>View</tags>
+      <tags>categoryTag:Mervin</tags>
+    </elements>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_hVAaUP1eEeSbdbEoUfEbuQ" featurename="snippets" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="advanced:Perspective" xmi:id="_2b3p4P1fEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.perspective" selectedElement="_q5Z20P1gEeSbdbEoUfEbuQ" label="Mervin">
+      <children xsi:type="basic_1:PartSashContainer" xmi:id="_q5Z20P1gEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partsashcontainer.0" selectedElement="_St-YIP1hEeSbdbEoUfEbuQ" horizontal="true">
+        <children xsi:type="basic_1:PartSashContainer" xmi:id="_cH6d0P1zEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partsashcontainer.3" containerData="2000">
+          <children xsi:type="basic_1:PartStack" xmi:id="_jXrQIP1zEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.perspective.left.top" containerData="2000">
+            <children xsi:type="advanced:Placeholder" xmi:id="_azu-IP-tEeSMrf4Vhz6vbQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.review.options"/>
+          </children>
+          <children xsi:type="basic_1:PartStack" xmi:id="_kUUekP1zEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.perspective.left.bottom" containerData="8000">
+            <children xsi:type="advanced:Placeholder" xmi:id="_oF7M8P-tEeSMrf4Vhz6vbQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.review"/>
+          </children>
+        </children>
+        <children xsi:type="basic_1:PartSashContainer" xmi:id="_St-YIP1hEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partsashcontainer.1" containerData="5500">
+          <children xsi:type="basic_1:PartStack" xmi:id="_sEf2UP1zEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.perspective.middle.top" containerData="2000">
+            <children xsi:type="advanced:Placeholder" xmi:id="_J_270P-uEeSMrf4Vhz6vbQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.patchset.history"/>
+          </children>
+          <children xsi:type="advanced:Placeholder" xmi:id="_m5iu0P-sEeSMrf4Vhz6vbQ" elementId="org.eclipse.ui.editorss" containerData="6000"/>
+          <children xsi:type="basic_1:PartStack" xmi:id="_suYg0P1zEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.perspective.middle.bottom" containerData="2000">
+            <children xsi:type="advanced:Placeholder" xmi:id="_Mi1O4P-uEeSMrf4Vhz6vbQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.properties.diff"/>
+          </children>
+        </children>
+        <children xsi:type="basic_1:PartStack" xmi:id="_6LS5QP1wEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.perspective.right" containerData="2500">
+          <children xsi:type="advanced:Placeholder" xmi:id="_Pk7G4P-uEeSMrf4Vhz6vbQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.comments"/>
+        </children>
+      </children>
+    </elements>
+  </fragments>
+</fragment:ModelFragments>

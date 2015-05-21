@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ModelReviewVis Prototype
+Bundle-SymbolicName: at.bitandart.zoubek.mervin;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Florian Zoubek
+Require-Bundle: org.eclipse.swt,
+ org.eclipse.e4.core.di,
+ org.eclipse.e4.ui.di,
+ org.eclipse.e4.ui.workbench,
+ org.eclipse.e4.ui.model.workbench,
+ javax.annotation,
+ javax.inject,
+ org.eclipse.osgi,
+ org.eclipse.emf.ecore,
+ org.eclipse.core.commands
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
