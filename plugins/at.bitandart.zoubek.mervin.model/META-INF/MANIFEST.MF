@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mervin Review Model
+Bundle-SymbolicName: at.bitandart.zoubek.mervin.model
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-Vendor: Florian Zoubek
