@@ -1,7 +1,16 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mervin Review Model
-Bundle-SymbolicName: at.bitandart.zoubek.mervin.model
+Bundle-SymbolicName: at.bitandart.zoubek.mervin.model;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ClassPath: .
 Bundle-Vendor: Florian Zoubek
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: at.bitandart.zoubek.mervin.model.modelreview,
+ at.bitandart.zoubek.mervin.model.modelreview.impl,
+ at.bitandart.zoubek.mervin.model.modelreview.util
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.emf.ecore;visibility:=reexport,
+ org.eclipse.gmf.runtime.notation;visibility:=reexport
+Bundle-ActivationPolicy: lazy

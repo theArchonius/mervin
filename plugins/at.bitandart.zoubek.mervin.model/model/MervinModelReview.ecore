@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="modelreview" nsURI="http://zoubek.bitandart.at/mervin/modelreview"
+    nsPrefix="at.bitandart.zoubek.mervin">
+  <eClassifiers xsi:type="ecore:EClass" name="ModelReview">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="patchSets" upperBound="-1"
+        eType="#//PatchSet" containment="true" eOpposite="#//PatchSet/review"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="comments" upperBound="-1"
+        eType="#//Comment"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PatchSet">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="review" eType="#//ModelReview"
+        eOpposite="#//ModelReview/patchSets"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="patches" upperBound="-1"
+        eType="#//Patch"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="involvedModels" upperBound="-1"
+        eType="#//ModelInstance"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="involvedDiagrams" eType="#//DiagramInstance"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Patch" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Comment" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ModelInstance">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="objects" upperBound="-1"
+        eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rootPackage" eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EPackage"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DiagramInstance">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="notationModel" eType="ecore:EClass ../../org.eclipse.gmf.runtime.notation/model/notation.ecore#//Diagram"/>
+  </eClassifiers>
+</ecore:EPackage>
