@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="ASCII"?>
-<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:advanced="http://www.eclipse.org/ui/2010/UIModel/application/ui/advanced" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/descriptor/basic" xmlns:basic_1="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_SvcfIPrtEeSNIagO6cD0dw">
+<fragment:ModelFragments xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:advanced="http://www.eclipse.org/ui/2010/UIModel/application/ui/advanced" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/descriptor/basic" xmlns:basic_1="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:commands="http://www.eclipse.org/ui/2010/UIModel/application/commands" xmlns:fragment="http://www.eclipse.org/ui/2010/UIModel/fragment" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_SvcfIPrtEeSNIagO6cD0dw">
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_VuxXAPrtEeSNIagO6cD0dw" featurename="menuContributions" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="menu:MenuContribution" xmi:id="_regZ4PrtEeSNIagO6cD0dw" elementId="at.bitandart.zoubek.mervin.menucontribution.main" parentId="org.eclipse.ui.main.menu">
       <children xsi:type="menu:Menu" xmi:id="_rNJFoPsEEeS2q_4qNTgMUQ" elementId="at.bitandart.zoubek.mervin.menu.main" label="Mervin">
         <children xsi:type="menu:Menu" xmi:id="_cKe3MP1TEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.menu.diagram.diff" label="Diagram Diff">
           <children xsi:type="menu:HandledMenuItem" xmi:id="_VAzBQPruEeSNIagO6cD0dw" elementId="at.bitandart.zoubek.mervin.menuitem.diagram.diff.case1" label="Diagram Diff case 1" command="_dnOCgPsEEeS2q_4qNTgMUQ"/>
         </children>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_M8pGoAX8EeWDm7E-HymwAA" elementId="at.bitandart.zoubek.mervin.menuitem.review.load" label="Load Review..." command="_UTSkEAX8EeWDm7E-HymwAA"/>
       </children>
     </elements>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_0er4kPr7EeS2q_4qNTgMUQ" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:Command" xmi:id="_dnOCgPsEEeS2q_4qNTgMUQ" elementId="at.bitandart.zoubek.mervin.command.debug.diagram.diff.case1" commandName="Open Diagram Diff Case 1"/>
+    <elements xsi:type="commands:Command" xmi:id="_UTSkEAX8EeWDm7E-HymwAA" elementId="at.bitandart.zoubek.mervin.command.review.load" commandName="Load Review"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_rV6KoPsFEeS2q_4qNTgMUQ" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:Handler" xmi:id="_vQOrIPsFEeS2q_4qNTgMUQ" elementId="at.bitandart.zoubek.mervin.handler.debug.diagram.diff.case1" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.debug.OpenDiagramDiffCase1Handler" command="_dnOCgPsEEeS2q_4qNTgMUQ"/>
+    <elements xsi:type="commands:Handler" xmi:id="_ZCDZQAX8EeWDm7E-HymwAA" elementId="at.bitandart.zoubek.mervin.handler.review.load" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.LoadReviewHandler" command="_UTSkEAX8EeWDm7E-HymwAA"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_OapfwPsGEeS2q_4qNTgMUQ" featurename="descriptors" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="basic:PartDescriptor" xmi:id="_b4kdcPsGEeS2q_4qNTgMUQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.diagram.diffviewer" label="Diagram Diff Viewer" allowMultiple="true" category="Mervin" closeable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.diagram.diff.DiagramDiffView">
@@ -66,5 +69,8 @@
         </children>
       </children>
     </elements>
+  </fragments>
+  <fragments xsi:type="fragment:StringModelFragment" xmi:id="_SvDPUAXqEeWDm7E-HymwAA" featurename="addons" parentElementId="org.eclipse.e4.legacy.ide.application">
+    <elements xsi:type="application:Addon" xmi:id="_VJ3E4AXqEeWDm7E-HymwAA" elementId="at.bitandart.zoubek.mervin.addon.services" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.MervinServicesAddon"/>
   </fragments>
 </fragment:ModelFragments>

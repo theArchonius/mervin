@@ -9,10 +9,17 @@ Require-Bundle: org.eclipse.swt,
  org.eclipse.e4.ui.di,
  org.eclipse.e4.ui.workbench,
  org.eclipse.e4.ui.model.workbench,
+ org.eclipse.e4.core.services,
+ org.eclipse.e4.core.contexts,
  javax.annotation,
  javax.inject,
  org.eclipse.osgi,
  org.eclipse.emf.ecore,
- org.eclipse.core.commands
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+ org.eclipse.core.commands,
+ org.eclipse.jface,
+ org.eclipse.ui.workbench,
+ org.eclipse.equinox.common,
+ org.eclipse.jgit,
+ at.bitandart.zoubek.mervin.model
 Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
