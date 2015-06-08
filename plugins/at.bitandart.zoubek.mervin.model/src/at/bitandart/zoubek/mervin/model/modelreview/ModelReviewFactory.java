@@ -50,6 +50,33 @@ public interface ModelReviewFactory extends EFactory {
 	PatchSet createPatchSet();
 
 	/**
+	 * Returns a new object of class '<em>Patch</em>'. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>Patch</em>'.
+	 * @generated
+	 */
+	Patch createPatch();
+
+	/**
+	 * Returns a new object of class '<em>Diagram Patch</em>'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>Diagram Patch</em>'.
+	 * @generated
+	 */
+	DiagramPatch createDiagramPatch();
+
+	/**
+	 * Returns a new object of class '<em>Model Patch</em>'. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>Model Patch</em>'.
+	 * @generated
+	 */
+	ModelPatch createModelPatch();
+
+	/**
 	 * Returns a new object of class '<em>Model Instance</em>'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 

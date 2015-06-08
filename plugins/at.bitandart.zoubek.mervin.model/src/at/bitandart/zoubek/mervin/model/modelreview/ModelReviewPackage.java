@@ -169,8 +169,8 @@ public interface ModelReviewPackage extends EPackage {
 	int PATCH_SET__INVOLVED_MODELS = 3;
 
 	/**
-	 * The feature id for the '<em><b>Involved Diagrams</b></em>' reference.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Involved Diagrams</b></em>' reference
+	 * list. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
@@ -207,13 +207,31 @@ public interface ModelReviewPackage extends EPackage {
 	int PATCH = 2;
 
 	/**
+	 * The feature id for the '<em><b>Path</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int PATCH__PATH = 0;
+
+	/**
+	 * The feature id for the '<em><b>Content</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int PATCH__CONTENT = 1;
+
+	/**
 	 * The number of structural features of the '<em>Patch</em>' class. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int PATCH_FEATURE_COUNT = 0;
+	int PATCH_FEATURE_COUNT = 2;
 
 	/**
 	 * The number of operations of the '<em>Patch</em>' class. <!--
@@ -226,6 +244,102 @@ public interface ModelReviewPackage extends EPackage {
 
 	/**
 	 * The meta object id for the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.DiagramPatchImpl
+	 * <em>Diagram Patch</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.DiagramPatchImpl
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDiagramPatch()
+	 * @generated
+	 */
+	int DIAGRAM_PATCH = 3;
+
+	/**
+	 * The feature id for the '<em><b>Path</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_PATCH__PATH = PATCH__PATH;
+
+	/**
+	 * The feature id for the '<em><b>Content</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_PATCH__CONTENT = PATCH__CONTENT;
+
+	/**
+	 * The number of structural features of the '<em>Diagram Patch</em>' class.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_PATCH_FEATURE_COUNT = PATCH_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of operations of the '<em>Diagram Patch</em>' class. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_PATCH_OPERATION_COUNT = PATCH_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelPatchImpl
+	 * <em>Model Patch</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelPatchImpl
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getModelPatch()
+	 * @generated
+	 */
+	int MODEL_PATCH = 4;
+
+	/**
+	 * The feature id for the '<em><b>Path</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_PATCH__PATH = PATCH__PATH;
+
+	/**
+	 * The feature id for the '<em><b>Content</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_PATCH__CONTENT = PATCH__CONTENT;
+
+	/**
+	 * The number of structural features of the '<em>Model Patch</em>' class.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_PATCH_FEATURE_COUNT = PATCH_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of operations of the '<em>Model Patch</em>' class. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_PATCH_OPERATION_COUNT = PATCH_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.CommentImpl
 	 * <em>Comment</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -233,7 +347,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getComment()
 	 * @generated
 	 */
-	int COMMENT = 3;
+	int COMMENT = 5;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute. <!--
@@ -272,7 +386,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getModelInstance()
 	 * @generated
 	 */
-	int MODEL_INSTANCE = 4;
+	int MODEL_INSTANCE = 6;
 
 	/**
 	 * The feature id for the '<em><b>Objects</b></em>' reference list. <!--
@@ -320,7 +434,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDiagramInstance()
 	 * @generated
 	 */
-	int DIAGRAM_INSTANCE = 5;
+	int DIAGRAM_INSTANCE = 7;
 
 	/**
 	 * The feature id for the '<em><b>Notation Model</b></em>' reference. <!--
@@ -480,6 +594,52 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getPatch();
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Patch#getPath
+	 * <em>Path</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Path</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.Patch#getPath()
+	 * @see #getPatch()
+	 * @generated
+	 */
+	EAttribute getPatch_Path();
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Patch#getContent
+	 * <em>Content</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Content</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.Patch#getContent()
+	 * @see #getPatch()
+	 * @generated
+	 */
+	EAttribute getPatch_Content();
+
+	/**
+	 * Returns the meta object for class '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch
+	 * <em>Diagram Patch</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Diagram Patch</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch
+	 * @generated
+	 */
+	EClass getDiagramPatch();
+
+	/**
+	 * Returns the meta object for class '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch
+	 * <em>Model Patch</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Model Patch</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelPatch
+	 * @generated
+	 */
+	EClass getModelPatch();
 
 	/**
 	 * Returns the meta object for class '
@@ -672,7 +832,7 @@ public interface ModelReviewPackage extends EPackage {
 
 		/**
 		 * The meta object literal for the '<em><b>Involved Diagrams</b></em>'
-		 * reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * reference list feature. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
 		 * @generated
 		 */
@@ -689,6 +849,46 @@ public interface ModelReviewPackage extends EPackage {
 		 * @generated
 		 */
 		EClass PATCH = eINSTANCE.getPatch();
+
+		/**
+		 * The meta object literal for the '<em><b>Path</b></em>' attribute
+		 * feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute PATCH__PATH = eINSTANCE.getPatch_Path();
+
+		/**
+		 * The meta object literal for the '<em><b>Content</b></em>' attribute
+		 * feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute PATCH__CONTENT = eINSTANCE.getPatch_Content();
+
+		/**
+		 * The meta object literal for the '
+		 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.DiagramPatchImpl
+		 * <em>Diagram Patch</em>}' class. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.DiagramPatchImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDiagramPatch()
+		 * @generated
+		 */
+		EClass DIAGRAM_PATCH = eINSTANCE.getDiagramPatch();
+
+		/**
+		 * The meta object literal for the '
+		 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelPatchImpl
+		 * <em>Model Patch</em>}' class. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelPatchImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getModelPatch()
+		 * @generated
+		 */
+		EClass MODEL_PATCH = eINSTANCE.getModelPatch();
 
 		/**
 		 * The meta object literal for the '

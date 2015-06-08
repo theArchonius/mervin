@@ -106,14 +106,14 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements
 
 	/**
 	 * The cached value of the '{@link #getInvolvedDiagrams()
-	 * <em>Involved Diagrams</em>}' reference. <!-- begin-user-doc --> <!--
+	 * <em>Involved Diagrams</em>}' reference list. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
 	 * @see #getInvolvedDiagrams()
 	 * @generated
 	 * @ordered
 	 */
-	protected DiagramInstance involvedDiagrams;
+	protected EList<DiagramInstance> involvedDiagrams;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -237,41 +237,13 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements
 	 * 
 	 * @generated
 	 */
-	public DiagramInstance getInvolvedDiagrams() {
-		if (involvedDiagrams != null && involvedDiagrams.eIsProxy()) {
-			InternalEObject oldInvolvedDiagrams = (InternalEObject) involvedDiagrams;
-			involvedDiagrams = (DiagramInstance) eResolveProxy(oldInvolvedDiagrams);
-			if (involvedDiagrams != oldInvolvedDiagrams) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							ModelReviewPackage.PATCH_SET__INVOLVED_DIAGRAMS,
-							oldInvolvedDiagrams, involvedDiagrams));
-			}
+	public EList<DiagramInstance> getInvolvedDiagrams() {
+		if (involvedDiagrams == null) {
+			involvedDiagrams = new EObjectResolvingEList<DiagramInstance>(
+					DiagramInstance.class, this,
+					ModelReviewPackage.PATCH_SET__INVOLVED_DIAGRAMS);
 		}
 		return involvedDiagrams;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public DiagramInstance basicGetInvolvedDiagrams() {
-		return involvedDiagrams;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public void setInvolvedDiagrams(DiagramInstance newInvolvedDiagrams) {
-		DiagramInstance oldInvolvedDiagrams = involvedDiagrams;
-		involvedDiagrams = newInvolvedDiagrams;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					ModelReviewPackage.PATCH_SET__INVOLVED_DIAGRAMS,
-					oldInvolvedDiagrams, involvedDiagrams));
 	}
 
 	/**
@@ -340,9 +312,7 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements
 		case ModelReviewPackage.PATCH_SET__INVOLVED_MODELS:
 			return getInvolvedModels();
 		case ModelReviewPackage.PATCH_SET__INVOLVED_DIAGRAMS:
-			if (resolve)
-				return getInvolvedDiagrams();
-			return basicGetInvolvedDiagrams();
+			return getInvolvedDiagrams();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -372,7 +342,9 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements
 					(Collection<? extends ModelInstance>) newValue);
 			return;
 		case ModelReviewPackage.PATCH_SET__INVOLVED_DIAGRAMS:
-			setInvolvedDiagrams((DiagramInstance) newValue);
+			getInvolvedDiagrams().clear();
+			getInvolvedDiagrams().addAll(
+					(Collection<? extends DiagramInstance>) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -399,7 +371,7 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements
 			getInvolvedModels().clear();
 			return;
 		case ModelReviewPackage.PATCH_SET__INVOLVED_DIAGRAMS:
-			setInvolvedDiagrams((DiagramInstance) null);
+			getInvolvedDiagrams().clear();
 			return;
 		}
 		super.eUnset(featureID);
@@ -422,7 +394,7 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements
 		case ModelReviewPackage.PATCH_SET__INVOLVED_MODELS:
 			return involvedModels != null && !involvedModels.isEmpty();
 		case ModelReviewPackage.PATCH_SET__INVOLVED_DIAGRAMS:
-			return involvedDiagrams != null;
+			return involvedDiagrams != null && !involvedDiagrams.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

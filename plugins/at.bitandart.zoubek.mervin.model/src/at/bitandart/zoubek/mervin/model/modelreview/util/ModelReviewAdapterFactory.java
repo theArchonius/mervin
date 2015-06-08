@@ -92,6 +92,16 @@ public class ModelReviewAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
+		public Adapter caseDiagramPatch(DiagramPatch object) {
+			return createDiagramPatchAdapter();
+		}
+
+		@Override
+		public Adapter caseModelPatch(ModelPatch object) {
+			return createModelPatchAdapter();
+		}
+
+		@Override
 		public Adapter caseComment(Comment object) {
 			return createCommentAdapter();
 		}
@@ -170,6 +180,38 @@ public class ModelReviewAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createPatchAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch
+	 * <em>Diagram Patch</em>}'. <!-- begin-user-doc --> This default
+	 * implementation returns null so that we can easily ignore cases; it's
+	 * useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch
+	 * @generated
+	 */
+	public Adapter createDiagramPatchAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch
+	 * <em>Model Patch</em>}'. <!-- begin-user-doc --> This default
+	 * implementation returns null so that we can easily ignore cases; it's
+	 * useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelPatch
+	 * @generated
+	 */
+	public Adapter createModelPatchAdapter() {
 		return null;
 	}
 

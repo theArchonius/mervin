@@ -71,6 +71,12 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements
 			return createModelReview();
 		case ModelReviewPackage.PATCH_SET:
 			return createPatchSet();
+		case ModelReviewPackage.PATCH:
+			return createPatch();
+		case ModelReviewPackage.DIAGRAM_PATCH:
+			return createDiagramPatch();
+		case ModelReviewPackage.MODEL_PATCH:
+			return createModelPatch();
 		case ModelReviewPackage.MODEL_INSTANCE:
 			return createModelInstance();
 		case ModelReviewPackage.DIAGRAM_INSTANCE:
@@ -99,6 +105,36 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements
 	public PatchSet createPatchSet() {
 		PatchSetImpl patchSet = new PatchSetImpl();
 		return patchSet;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public Patch createPatch() {
+		PatchImpl patch = new PatchImpl();
+		return patch;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public DiagramPatch createDiagramPatch() {
+		DiagramPatchImpl diagramPatch = new DiagramPatchImpl();
+		return diagramPatch;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public ModelPatch createModelPatch() {
+		ModelPatchImpl modelPatch = new ModelPatchImpl();
+		return modelPatch;
 	}
 
 	/**

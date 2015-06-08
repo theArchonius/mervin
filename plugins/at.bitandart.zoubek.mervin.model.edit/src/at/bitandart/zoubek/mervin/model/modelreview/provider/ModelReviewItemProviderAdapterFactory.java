@@ -138,6 +138,81 @@ public class ModelReviewItemProviderAdapterFactory extends
 
 	/**
 	 * This keeps track of the one adapter used for all
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Patch} instances.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected PatchItemProvider patchItemProvider;
+
+	/**
+	 * This creates an adapter for a
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Patch}. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createPatchAdapter() {
+		if (patchItemProvider == null) {
+			patchItemProvider = new PatchItemProvider(this);
+		}
+
+		return patchItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch}
+	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected DiagramPatchItemProvider diagramPatchItemProvider;
+
+	/**
+	 * This creates an adapter for a
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch}. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createDiagramPatchAdapter() {
+		if (diagramPatchItemProvider == null) {
+			diagramPatchItemProvider = new DiagramPatchItemProvider(this);
+		}
+
+		return diagramPatchItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch}
+	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected ModelPatchItemProvider modelPatchItemProvider;
+
+	/**
+	 * This creates an adapter for a
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch}. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createModelPatchAdapter() {
+		if (modelPatchItemProvider == null) {
+			modelPatchItemProvider = new ModelPatchItemProvider(this);
+		}
+
+		return modelPatchItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelInstance}
 	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -291,6 +366,12 @@ public class ModelReviewItemProviderAdapterFactory extends
 			modelReviewItemProvider.dispose();
 		if (patchSetItemProvider != null)
 			patchSetItemProvider.dispose();
+		if (patchItemProvider != null)
+			patchItemProvider.dispose();
+		if (diagramPatchItemProvider != null)
+			diagramPatchItemProvider.dispose();
+		if (modelPatchItemProvider != null)
+			modelPatchItemProvider.dispose();
 		if (modelInstanceItemProvider != null)
 			modelInstanceItemProvider.dispose();
 		if (diagramInstanceItemProvider != null)

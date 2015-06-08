@@ -96,6 +96,24 @@ public class ModelReviewSwitch<T> extends Switch<T> {
 				result = defaultCase(theEObject);
 			return result;
 		}
+		case ModelReviewPackage.DIAGRAM_PATCH: {
+			DiagramPatch diagramPatch = (DiagramPatch) theEObject;
+			T result = caseDiagramPatch(diagramPatch);
+			if (result == null)
+				result = casePatch(diagramPatch);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case ModelReviewPackage.MODEL_PATCH: {
+			ModelPatch modelPatch = (ModelPatch) theEObject;
+			T result = caseModelPatch(modelPatch);
+			if (result == null)
+				result = casePatch(modelPatch);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
 		case ModelReviewPackage.COMMENT: {
 			Comment comment = (Comment) theEObject;
 			T result = caseComment(comment);
@@ -170,6 +188,40 @@ public class ModelReviewSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T casePatch(Patch object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '
+	 * <em>Diagram Patch</em>'. <!-- begin-user-doc --> This implementation
+	 * returns null; returning a non-null result will terminate the switch. <!--
+	 * end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '
+	 *         <em>Diagram Patch</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseDiagramPatch(DiagramPatch object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '
+	 * <em>Model Patch</em>'. <!-- begin-user-doc --> This implementation
+	 * returns null; returning a non-null result will terminate the switch. <!--
+	 * end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '
+	 *         <em>Model Patch</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseModelPatch(ModelPatch object) {
 		return null;
 	}
 

@@ -142,7 +142,9 @@ public interface PatchSet extends EObject {
 	EList<ModelInstance> getInvolvedModels();
 
 	/**
-	 * Returns the value of the '<em><b>Involved Diagrams</b></em>' reference.
+	 * Returns the value of the '<em><b>Involved Diagrams</b></em>' reference
+	 * list. The list contents are of type
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Involved Diagrams</em>' reference isn't clear,
@@ -150,25 +152,11 @@ public interface PatchSet extends EObject {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Involved Diagrams</em>' reference.
-	 * @see #setInvolvedDiagrams(DiagramInstance)
+	 * @return the value of the '<em>Involved Diagrams</em>' reference list.
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getPatchSet_InvolvedDiagrams()
 	 * @model
 	 * @generated
 	 */
-	DiagramInstance getInvolvedDiagrams();
-
-	/**
-	 * Sets the value of the '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getInvolvedDiagrams
-	 * <em>Involved Diagrams</em>}' reference. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Involved Diagrams</em>' reference.
-	 * @see #getInvolvedDiagrams()
-	 * @generated
-	 */
-	void setInvolvedDiagrams(DiagramInstance value);
+	EList<DiagramInstance> getInvolvedDiagrams();
 
 } // PatchSet

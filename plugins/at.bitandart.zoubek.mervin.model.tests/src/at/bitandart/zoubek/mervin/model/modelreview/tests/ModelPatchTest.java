@@ -12,27 +12,18 @@
  */
 package at.bitandart.zoubek.mervin.model.modelreview.tests;
 
+import at.bitandart.zoubek.mervin.model.modelreview.ModelPatch;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
-import at.bitandart.zoubek.mervin.model.modelreview.Patch;
 
-import junit.framework.TestCase;
 import junit.textui.TestRunner;
 
 /**
  * <!-- begin-user-doc --> A test case for the model object '
- * <em><b>Patch</b></em>'. <!-- end-user-doc -->
+ * <em><b>Model Patch</b></em>'. <!-- end-user-doc -->
  * 
  * @generated
  */
-public class PatchTest extends TestCase {
-
-	/**
-	 * The fixture for this Patch test case. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected Patch fixture = null;
+public class ModelPatchTest extends PatchTest {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -40,37 +31,28 @@ public class PatchTest extends TestCase {
 	 * @generated
 	 */
 	public static void main(String[] args) {
-		TestRunner.run(PatchTest.class);
+		TestRunner.run(ModelPatchTest.class);
 	}
 
 	/**
-	 * Constructs a new Patch test case with the given name. <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
+	 * Constructs a new Model Patch test case with the given name. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	public PatchTest(String name) {
+	public ModelPatchTest(String name) {
 		super(name);
 	}
 
 	/**
-	 * Sets the fixture for this Patch test case. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * Returns the fixture for this Model Patch test case. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected void setFixture(Patch fixture) {
-		this.fixture = fixture;
-	}
-
-	/**
-	 * Returns the fixture for this Patch test case. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected Patch getFixture() {
-		return fixture;
+	@Override
+	protected ModelPatch getFixture() {
+		return (ModelPatch) fixture;
 	}
 
 	/**
@@ -81,7 +63,7 @@ public class PatchTest extends TestCase {
 	 */
 	@Override
 	protected void setUp() throws Exception {
-		setFixture(ModelReviewFactory.eINSTANCE.createPatch());
+		setFixture(ModelReviewFactory.eINSTANCE.createModelPatch());
 	}
 
 	/**
@@ -95,4 +77,4 @@ public class PatchTest extends TestCase {
 		setFixture(null);
 	}
 
-} // PatchTest
+} // ModelPatchTest

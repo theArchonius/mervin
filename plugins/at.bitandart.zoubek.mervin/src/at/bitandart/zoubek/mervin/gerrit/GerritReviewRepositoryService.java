@@ -27,22 +27,34 @@ import javax.inject.Inject;
 
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.lib.ObjectLoader;
+import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RefSpec;
+import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 
 import at.bitandart.zoubek.mervin.IReviewDescriptor;
 import at.bitandart.zoubek.mervin.IReviewRepositoryService;
 import at.bitandart.zoubek.mervin.exceptions.InvalidReviewException;
 import at.bitandart.zoubek.mervin.exceptions.InvalidReviewRepositoryException;
 import at.bitandart.zoubek.mervin.exceptions.RepositoryIOException;
+import at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch;
+import at.bitandart.zoubek.mervin.model.modelreview.ModelPatch;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
+import at.bitandart.zoubek.mervin.model.modelreview.Patch;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 
 /**
@@ -178,17 +190,16 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 		 * the model instance from it
 		 */
 
-
 		try {
 			Git git = Git.open(new File(uri));
 			int iId = Integer.parseInt(id);
-			
+
 			// First of all: fetch the patch sets
 			// git fetch origin
 			// +refs/changes/id%100/<cid>/*:refs/changes/id%100/<cid>/*
 			// Refspec of a patchset:
 			// +refs/changes/id%100/<cid>/<psId>:refs/changes/id%100/<cid>/<psId>
-			
+
 			git.fetch()
 					.setRefSpecs(
 							new RefSpec(
@@ -213,7 +224,14 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 					PatchSet patchSet = modelReviewFactory.createPatchSet();
 					patchSet.setId(matcher.group("patchSetId"));
 
-					// TODO load patches and involved diagrams
+					// load patched files
+					loadPatches(patchSet, refEntry.getValue(), git);
+
+					// load involved models
+					loadInvolvedModels(patchSet, refEntry.getValue(), git);
+
+					// TODO load involved diagrams
+
 				}
 			}
 			/*
@@ -268,6 +286,134 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 		} catch (GitAPIException e) {
 			throw new RepositoryIOException(
 					"Error occured during reading from the git repository", e);
+		}
+	}
+
+	private void loadInvolvedModels(PatchSet patchSet, Ref ref, Git git) throws IOException {
+		ResourceSet resourceSet = new ResourceSetImpl();
+		final String commitHash = ref.getObjectId().name();
+		URI repoURI = git.getRepository().getDirectory().toURI();
+		String authority = repoURI.getAuthority();
+		String path = repoURI.getPath();
+		final String repoPath = (authority != null ? authority : "") + "/"
+				+ (path != null ? path : "");
+		resourceSet.setURIConverter(new ExtensibleURIConverterImpl() {
+			@Override
+			public org.eclipse.emf.common.util.URI normalize(
+					org.eclipse.emf.common.util.URI uri) {
+				org.eclipse.emf.common.util.URI normalizedURI = super.normalize(uri);
+				if (uri.scheme().equals("file")) {
+					org.eclipse.emf.common.util.URI oldPrefix = org.eclipse.emf.common.util.URI
+							.createURI("file://");
+					org.eclipse.emf.common.util.URI newPrefix = org.eclipse.emf.common.util.URI
+							.createURI(GitURIParser.GIT_COMMIT_SCHEME + "://"
+									+ repoPath + "/" + commitHash + "/");
+					normalizedURI = normalizedURI.replacePrefix(oldPrefix, newPrefix);
+				}
+				return normalizedURI;
+			}
+		});
+
+		resourceSet.getURIConverter().getURIHandlers()
+				.add(new ReadOnlyGitCommitURIHandler());
+		
+		for(Patch patch : patchSet.getPatches()){
+			if(patch instanceof ModelPatch || patch instanceof DiagramPatch){
+				org.eclipse.emf.common.util.URI uri = org.eclipse.emf.common.util.URI
+				.createURI(GitURIParser.GIT_COMMIT_SCHEME + "://"
+						+ repoPath + "/" + commitHash + "/" + patch.getPath());
+				Resource resource = resourceSet.createResource(uri);
+				try {
+					resource.load(null);
+					EcoreUtil.resolveAll(resource);
+					if(patch instanceof ModelPatch){
+						
+						// TODO set content
+						
+					}else if(patch instanceof DiagramPatch){
+						
+						// TODO set content
+						
+					}
+				} catch (IOException e) {
+					throw new IOException(MessageFormat.format(
+					"Could not load resource \"{0}\" for patch set {1}", uri.toString(), patchSet.getId()), e);
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * loads all patches of from the given list of {@link DiffEntry}s.
+	 * 
+	 * @param patchSet
+	 *            the patchSet to add the patches to.
+	 * @param ref
+	 *            the ref to the commit of the patch set.
+	 * @param repository
+	 *            the git repository instance
+	 * @throws RepositoryIOException
+	 */
+	private void loadPatches(PatchSet patchSet, Ref ref, Git git)
+			throws RepositoryIOException {
+
+		EList<Patch> patches = patchSet.getPatches();
+		Repository repository = git.getRepository();
+
+		try {
+
+			RevWalk revWalk = new RevWalk(repository);
+			RevCommit newCommit = revWalk.parseCommit(ref.getObjectId());
+			RevCommit oldCommit = newCommit.getParent(0);
+			ObjectReader objectReader = repository.newObjectReader();
+			revWalk.close();
+
+			CanonicalTreeParser newTreeIterator = new CanonicalTreeParser();
+			newTreeIterator.reset(objectReader, newCommit.getTree().getId());
+			CanonicalTreeParser oldTreeIterator = new CanonicalTreeParser();
+			oldTreeIterator.reset(objectReader, oldCommit.getTree().getId());
+
+			List<DiffEntry> diffs = git.diff().setOldTree(oldTreeIterator)
+					.setNewTree(newTreeIterator).call();
+
+			for (DiffEntry diff : diffs) {
+
+				String path = diff.getNewPath();
+				Patch patch = null;
+
+				/*
+				 * only papyrus diagrams are supported for now, so models are in
+				 * .uml files, diagrams in .notation files
+				 */
+				if (path.endsWith(".uml")) {
+					patch = modelReviewFactory.createModelPatch();
+
+				} else if (path.endsWith(".notation")) {
+					patch = modelReviewFactory.createDiagramPatch();
+				} else {
+					patch = modelReviewFactory.createPatch();
+				}
+
+				patch.setPath(path);
+
+				ObjectLoader objectLoader = repository.open(diff.getNewId()
+						.toObjectId());
+				patch.setContent(objectLoader.getBytes());
+				patches.add(patch);
+
+			}
+
+		} catch (IOException e) {
+			throw new RepositoryIOException(
+					MessageFormat.format(
+							"An IO error occured during loading the patches for patch set #{0}",
+							patchSet.getId()), e);
+		} catch (GitAPIException e) {
+			throw new RepositoryIOException(
+					MessageFormat.format(
+							"An JGit API error occured during loading the patches for patch set #{0}",
+							patchSet.getId()), e);
 		}
 	}
 
