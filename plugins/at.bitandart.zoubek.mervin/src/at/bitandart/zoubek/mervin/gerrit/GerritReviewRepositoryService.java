@@ -35,6 +35,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import org.eclipse.jgit.lib.ObjectLoader;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Ref;
@@ -83,6 +84,11 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 	 * change id and patch set id
 	 */
 	private static final String CHANGE_REF_PATTERN = "refs/changes/(?<modChangePk>\\d\\d)/(?<changePk>\\d*)/(?<patchSetId>.*)";
+	
+	@SuppressWarnings("unused")
+	private static final String CHANGE_REF_PATTERN_GROUP_MOD_CHANGE_PK = "modChangePk";
+	private static final String CHANGE_REF_PATTERN_GROUP_CHANGE_PK = "changePk";
+	private static final String CHANGE_REF_PATTERN_GROUP_PATCH_SET_ID = "patchSetId";
 
 	/**
 	 * the model review factory used by this service to create all model
@@ -119,7 +125,7 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 
 					Matcher matcher = changeRefPattern.matcher(ref.getName());
 					if (matcher.matches()) {
-						String changePk = matcher.group("changePk");
+						String changePk = matcher.group(CHANGE_REF_PATTERN_GROUP_CHANGE_PK);
 						String changeId = "<unknown>";
 						GerritReviewDescriptor reviewDescriptor;
 						try {
@@ -220,9 +226,10 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 			for (Entry<String, Ref> refEntry : allRefs.entrySet()) {
 				Matcher matcher = changeRefPattern.matcher(refEntry.getValue()
 						.getName());
-				if (matcher.matches()) {
+				if (matcher.matches() && matcher.group(CHANGE_REF_PATTERN_GROUP_CHANGE_PK).equals(id)) {
 					PatchSet patchSet = modelReviewFactory.createPatchSet();
-					patchSet.setId(matcher.group("patchSetId"));
+					patchSets.add(patchSet);
+					patchSet.setId(matcher.group(CHANGE_REF_PATTERN_GROUP_PATCH_SET_ID));
 
 					// load patched files
 					loadPatches(patchSet, refEntry.getValue(), git);
@@ -259,7 +266,7 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 
 					if (iPsId1 != null && iPsId2 != null) {
 						// both numeric ids
-						return iPsId2.compareTo(iPsId2);
+						return iPsId1.compareTo(iPsId2);
 					} else if (iPsId1 != null && iPsId2 == null) {
 						// only one is numeric, the numeric id is always less
 						// than the string id
@@ -289,7 +296,20 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 		}
 	}
 
-	private void loadInvolvedModels(PatchSet patchSet, Ref ref, Git git) throws IOException {
+	/**
+	 * loads all involved models for the given patchSet using the given
+	 * {@link Git} from the given git {@link Ref}.
+	 * 
+	 * @param patchSet
+	 *            the patch set instance to store the involved models into
+	 * @param ref
+	 *            the git ref to the commit which contains the patch set.
+	 * @param git
+	 *            the git instance to use
+	 * @throws IOException
+	 */
+	private void loadInvolvedModels(PatchSet patchSet, Ref ref, Git git)
+			throws IOException {
 		ResourceSet resourceSet = new ResourceSetImpl();
 		final String commitHash = ref.getObjectId().name();
 		URI repoURI = git.getRepository().getDirectory().toURI();
@@ -301,14 +321,16 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 			@Override
 			public org.eclipse.emf.common.util.URI normalize(
 					org.eclipse.emf.common.util.URI uri) {
-				org.eclipse.emf.common.util.URI normalizedURI = super.normalize(uri);
+				org.eclipse.emf.common.util.URI normalizedURI = super
+						.normalize(uri);
 				if (uri.scheme().equals("file")) {
 					org.eclipse.emf.common.util.URI oldPrefix = org.eclipse.emf.common.util.URI
 							.createURI("file://");
 					org.eclipse.emf.common.util.URI newPrefix = org.eclipse.emf.common.util.URI
 							.createURI(GitURIParser.GIT_COMMIT_SCHEME + "://"
 									+ repoPath + "/" + commitHash + "/");
-					normalizedURI = normalizedURI.replacePrefix(oldPrefix, newPrefix);
+					normalizedURI = normalizedURI.replacePrefix(oldPrefix,
+							newPrefix);
 				}
 				return normalizedURI;
 			}
@@ -316,28 +338,31 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 
 		resourceSet.getURIConverter().getURIHandlers()
 				.add(new ReadOnlyGitCommitURIHandler());
-		
-		for(Patch patch : patchSet.getPatches()){
-			if(patch instanceof ModelPatch || patch instanceof DiagramPatch){
+
+		for (Patch patch : patchSet.getPatches()) {
+			if (patch instanceof ModelPatch || patch instanceof DiagramPatch) {
 				org.eclipse.emf.common.util.URI uri = org.eclipse.emf.common.util.URI
-				.createURI(GitURIParser.GIT_COMMIT_SCHEME + "://"
-						+ repoPath + "/" + commitHash + "/" + patch.getPath());
+						.createURI(GitURIParser.GIT_COMMIT_SCHEME + "://"
+								+ repoPath + "/" + commitHash + "/"
+								+ patch.getPath());
 				Resource resource = resourceSet.createResource(uri);
 				try {
 					resource.load(null);
 					EcoreUtil.resolveAll(resource);
-					if(patch instanceof ModelPatch){
-						
+					if (patch instanceof ModelPatch) {
+
 						// TODO set content
-						
-					}else if(patch instanceof DiagramPatch){
-						
+
+					} else if (patch instanceof DiagramPatch) {
+
 						// TODO set content
-						
+
 					}
 				} catch (IOException e) {
-					throw new IOException(MessageFormat.format(
-					"Could not load resource \"{0}\" for patch set {1}", uri.toString(), patchSet.getId()), e);
+					throw new IOException(
+							MessageFormat.format(
+									"Could not load resource \"{0}\" for patch set {1}",
+									uri.toString(), patchSet.getId()), e);
 				}
 			}
 		}
@@ -366,6 +391,7 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 			RevWalk revWalk = new RevWalk(repository);
 			RevCommit newCommit = revWalk.parseCommit(ref.getObjectId());
 			RevCommit oldCommit = newCommit.getParent(0);
+			revWalk.parseHeaders(oldCommit);
 			ObjectReader objectReader = repository.newObjectReader();
 			revWalk.close();
 
@@ -396,10 +422,11 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 				}
 
 				patch.setPath(path);
-
-				ObjectLoader objectLoader = repository.open(diff.getNewId()
-						.toObjectId());
-				patch.setContent(objectLoader.getBytes());
+				if (diff.getChangeType() != ChangeType.DELETE) {
+					ObjectLoader objectLoader = repository.open(diff.getNewId()
+							.toObjectId());
+					patch.setContent(objectLoader.getBytes());
+				}
 				patches.add(patch);
 
 			}
