@@ -23,6 +23,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 import at.bitandart.zoubek.mervin.model.modelreview.Patch;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 
+import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
@@ -152,6 +153,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements
 
 		// Initialize simple dependencies
 		NotationPackage.eINSTANCE.eClass();
+		ComparePackage.eINSTANCE.eClass();
 
 		// Create package meta-data objects
 		theModelReviewPackage.createPackageContents();
@@ -299,8 +301,44 @@ public class ModelReviewPackageImpl extends EPackageImpl implements
 	 * 
 	 * @generated
 	 */
+	public EReference getDiagramPatch_Comparison() {
+		return (EReference) diagramPatchEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EReference getDiagramPatch_DiagramInstance() {
+		return (EReference) diagramPatchEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	public EClass getModelPatch() {
 		return modelPatchEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EReference getModelPatch_Comparison() {
+		return (EReference) modelPatchEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EReference getModelPatch_ModelInstance() {
+		return (EReference) modelPatchEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -413,8 +451,12 @@ public class ModelReviewPackageImpl extends EPackageImpl implements
 		createEAttribute(patchEClass, PATCH__CONTENT);
 
 		diagramPatchEClass = createEClass(DIAGRAM_PATCH);
+		createEReference(diagramPatchEClass, DIAGRAM_PATCH__COMPARISON);
+		createEReference(diagramPatchEClass, DIAGRAM_PATCH__DIAGRAM_INSTANCE);
 
 		modelPatchEClass = createEClass(MODEL_PATCH);
+		createEReference(modelPatchEClass, MODEL_PATCH__COMPARISON);
+		createEReference(modelPatchEClass, MODEL_PATCH__MODEL_INSTANCE);
 
 		commentEClass = createEClass(COMMENT);
 		createEAttribute(commentEClass, COMMENT__ID);
@@ -453,6 +495,8 @@ public class ModelReviewPackageImpl extends EPackageImpl implements
 		setNsURI(eNS_URI);
 
 		// Obtain other dependent packages
+		ComparePackage theComparePackage = (ComparePackage) EPackage.Registry.INSTANCE
+				.getEPackage(ComparePackage.eNS_URI);
 		EcorePackage theEcorePackage = (EcorePackage) EPackage.Registry.INSTANCE
 				.getEPackage(EcorePackage.eNS_URI);
 		NotationPackage theNotationPackage = (NotationPackage) EPackage.Registry.INSTANCE
@@ -522,9 +566,29 @@ public class ModelReviewPackageImpl extends EPackageImpl implements
 
 		initEClass(diagramPatchEClass, DiagramPatch.class, "DiagramPatch",
 				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getDiagramPatch_Comparison(),
+				theComparePackage.getComparison(), null, "comparison", null, 0,
+				1, DiagramPatch.class, !IS_TRANSIENT, !IS_VOLATILE,
+				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDiagramPatch_DiagramInstance(),
+				this.getDiagramInstance(), null, "diagramInstance", null, 0, 1,
+				DiagramPatch.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE,
+				!IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 
 		initEClass(modelPatchEClass, ModelPatch.class, "ModelPatch",
 				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getModelPatch_Comparison(),
+				theComparePackage.getComparison(), null, "comparison", null, 0,
+				1, ModelPatch.class, !IS_TRANSIENT, !IS_VOLATILE,
+				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getModelPatch_ModelInstance(), this.getModelInstance(),
+				null, "modelInstance", null, 0, 1, ModelPatch.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
+				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
 
 		initEClass(commentEClass, Comment.class, "Comment", IS_ABSTRACT,
 				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

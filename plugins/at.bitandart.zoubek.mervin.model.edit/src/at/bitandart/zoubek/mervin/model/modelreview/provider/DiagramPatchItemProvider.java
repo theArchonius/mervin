@@ -14,12 +14,14 @@ package at.bitandart.zoubek.mervin.model.modelreview.provider;
 
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch;
 
+import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 
 /**
@@ -51,8 +53,48 @@ public class DiagramPatchItemProvider extends PatchItemProvider {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
+			addComparisonPropertyDescriptor(object);
+			addDiagramInstancePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
+	}
+
+	/**
+	 * This adds a property descriptor for the Comparison feature. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addComparisonPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory)
+						.getRootAdapterFactory(),
+				getResourceLocator(),
+				getString("_UI_DiagramPatch_comparison_feature"),
+				getString("_UI_PropertyDescriptor_description",
+						"_UI_DiagramPatch_comparison_feature",
+						"_UI_DiagramPatch_type"),
+				ModelReviewPackage.Literals.DIAGRAM_PATCH__COMPARISON, true,
+				false, true, null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Diagram Instance feature. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addDiagramInstancePropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory)
+						.getRootAdapterFactory(),
+				getResourceLocator(),
+				getString("_UI_DiagramPatch_diagramInstance_feature"),
+				getString("_UI_PropertyDescriptor_description",
+						"_UI_DiagramPatch_diagramInstance_feature",
+						"_UI_DiagramPatch_type"),
+				ModelReviewPackage.Literals.DIAGRAM_PATCH__DIAGRAM_INSTANCE,
+				true, false, true, null, null, null));
 	}
 
 	/**

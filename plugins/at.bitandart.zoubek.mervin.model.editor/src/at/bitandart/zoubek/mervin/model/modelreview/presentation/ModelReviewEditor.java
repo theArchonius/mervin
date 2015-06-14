@@ -164,6 +164,7 @@ import org.eclipse.emf.edit.ui.view.ExtendedPropertySheetPage;
 
 import at.bitandart.zoubek.mervin.model.modelreview.provider.ModelReviewItemProviderAdapterFactory;
 
+import org.eclipse.emf.compare.provider.CompareItemProviderAdapterFactory;
 import org.eclipse.emf.ecore.provider.EcoreItemProviderAdapterFactory;
 
 import org.eclipse.gmf.runtime.notation.provider.NotationItemProviderAdapterFactory;
@@ -720,6 +721,8 @@ public class ModelReviewEditor extends MultiPageEditorPart implements
 		adapterFactory.addAdapterFactory(new EcoreItemProviderAdapterFactory());
 		adapterFactory
 				.addAdapterFactory(new NotationItemProviderAdapterFactory());
+		adapterFactory
+				.addAdapterFactory(new CompareItemProviderAdapterFactory());
 		adapterFactory
 				.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 

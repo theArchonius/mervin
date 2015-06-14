@@ -12,5 +12,6 @@ Export-Package: at.bitandart.zoubek.mervin.model.modelreview,
  at.bitandart.zoubek.mervin.model.modelreview.util
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
- org.eclipse.gmf.runtime.notation;visibility:=reexport
+ org.eclipse.gmf.runtime.notation;visibility:=reexport,
+ org.eclipse.emf.compare;visibility:=reexport
 Bundle-ActivationPolicy: lazy

@@ -24,8 +24,14 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="path" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="content" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EByteArray"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="DiagramPatch" eSuperTypes="#//Patch"/>
-  <eClassifiers xsi:type="ecore:EClass" name="ModelPatch" eSuperTypes="#//Patch"/>
+  <eClassifiers xsi:type="ecore:EClass" name="DiagramPatch" eSuperTypes="#//Patch">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="comparison" eType="ecore:EClass platform:/plugin/org.eclipse.emf.compare/model/compare.ecore#//Comparison"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="diagramInstance" eType="#//DiagramInstance"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ModelPatch" eSuperTypes="#//Patch">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="comparison" eType="ecore:EClass platform:/plugin/org.eclipse.emf.compare/model/compare.ecore#//Comparison"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="modelInstance" eType="#//ModelInstance"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Comment" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>

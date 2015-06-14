@@ -273,13 +273,31 @@ public interface ModelReviewPackage extends EPackage {
 	int DIAGRAM_PATCH__CONTENT = PATCH__CONTENT;
 
 	/**
+	 * The feature id for the '<em><b>Comparison</b></em>' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_PATCH__COMPARISON = PATCH_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Diagram Instance</b></em>' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_PATCH__DIAGRAM_INSTANCE = PATCH_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>Diagram Patch</em>' class.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM_PATCH_FEATURE_COUNT = PATCH_FEATURE_COUNT + 0;
+	int DIAGRAM_PATCH_FEATURE_COUNT = PATCH_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of operations of the '<em>Diagram Patch</em>' class. <!--
@@ -321,13 +339,31 @@ public interface ModelReviewPackage extends EPackage {
 	int MODEL_PATCH__CONTENT = PATCH__CONTENT;
 
 	/**
+	 * The feature id for the '<em><b>Comparison</b></em>' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_PATCH__COMPARISON = PATCH_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Model Instance</b></em>' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_PATCH__MODEL_INSTANCE = PATCH_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>Model Patch</em>' class.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_PATCH_FEATURE_COUNT = PATCH_FEATURE_COUNT + 0;
+	int MODEL_PATCH_FEATURE_COUNT = PATCH_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of operations of the '<em>Model Patch</em>' class. <!--
@@ -631,6 +667,31 @@ public interface ModelReviewPackage extends EPackage {
 	EClass getDiagramPatch();
 
 	/**
+	 * Returns the meta object for the reference '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getComparison
+	 * <em>Comparison</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference '<em>Comparison</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getComparison()
+	 * @see #getDiagramPatch()
+	 * @generated
+	 */
+	EReference getDiagramPatch_Comparison();
+
+	/**
+	 * Returns the meta object for the reference '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getDiagramInstance
+	 * <em>Diagram Instance</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @return the meta object for the reference '<em>Diagram Instance</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getDiagramInstance()
+	 * @see #getDiagramPatch()
+	 * @generated
+	 */
+	EReference getDiagramPatch_DiagramInstance();
+
+	/**
 	 * Returns the meta object for class '
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch
 	 * <em>Model Patch</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -640,6 +701,30 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getModelPatch();
+
+	/**
+	 * Returns the meta object for the reference '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getComparison
+	 * <em>Comparison</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference '<em>Comparison</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getComparison()
+	 * @see #getModelPatch()
+	 * @generated
+	 */
+	EReference getModelPatch_Comparison();
+
+	/**
+	 * Returns the meta object for the reference '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getModelInstance
+	 * <em>Model Instance</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference '<em>Model Instance</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getModelInstance()
+	 * @see #getModelPatch()
+	 * @generated
+	 */
+	EReference getModelPatch_ModelInstance();
 
 	/**
 	 * Returns the meta object for class '
@@ -879,6 +964,24 @@ public interface ModelReviewPackage extends EPackage {
 		EClass DIAGRAM_PATCH = eINSTANCE.getDiagramPatch();
 
 		/**
+		 * The meta object literal for the '<em><b>Comparison</b></em>'
+		 * reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference DIAGRAM_PATCH__COMPARISON = eINSTANCE
+				.getDiagramPatch_Comparison();
+
+		/**
+		 * The meta object literal for the '<em><b>Diagram Instance</b></em>'
+		 * reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference DIAGRAM_PATCH__DIAGRAM_INSTANCE = eINSTANCE
+				.getDiagramPatch_DiagramInstance();
+
+		/**
 		 * The meta object literal for the '
 		 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelPatchImpl
 		 * <em>Model Patch</em>}' class. <!-- begin-user-doc --> <!--
@@ -889,6 +992,24 @@ public interface ModelReviewPackage extends EPackage {
 		 * @generated
 		 */
 		EClass MODEL_PATCH = eINSTANCE.getModelPatch();
+
+		/**
+		 * The meta object literal for the '<em><b>Comparison</b></em>'
+		 * reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference MODEL_PATCH__COMPARISON = eINSTANCE
+				.getModelPatch_Comparison();
+
+		/**
+		 * The meta object literal for the '<em><b>Model Instance</b></em>'
+		 * reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference MODEL_PATCH__MODEL_INSTANCE = eINSTANCE
+				.getModelPatch_ModelInstance();
 
 		/**
 		 * The meta object literal for the '

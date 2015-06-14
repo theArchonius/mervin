@@ -18,6 +18,7 @@ import org.eclipse.emf.common.ui.EclipseUIPlugin;
 
 import org.eclipse.emf.common.util.ResourceLocator;
 
+import org.eclipse.emf.compare.provider.EMFCompareEditPlugin;
 import org.eclipse.emf.ecore.provider.EcoreEditPlugin;
 
 import org.eclipse.gmf.runtime.notation.NotationEditPlugin;
@@ -52,7 +53,7 @@ public final class MervinModelReviewEditorPlugin extends EMFPlugin {
 	 */
 	public MervinModelReviewEditorPlugin() {
 		super(new ResourceLocator[] { EcoreEditPlugin.INSTANCE,
-				NotationEditPlugin.INSTANCE, });
+				NotationEditPlugin.INSTANCE, EMFCompareEditPlugin.INSTANCE, });
 	}
 
 	/**
