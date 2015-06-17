@@ -67,8 +67,12 @@ public class PatchSetItemProvider extends ItemProviderAdapter implements
 
 			addIdPropertyDescriptor(object);
 			addPatchesPropertyDescriptor(object);
-			addInvolvedModelsPropertyDescriptor(object);
-			addInvolvedDiagramsPropertyDescriptor(object);
+			addNewInvolvedModelsPropertyDescriptor(object);
+			addNewInvolvedDiagramsPropertyDescriptor(object);
+			addOldInvolvedModelsPropertyDescriptor(object);
+			addOldInvolvedDiagramsPropertyDescriptor(object);
+			addModelComparisonPropertyDescriptor(object);
+			addDiagramComparisonPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -110,41 +114,117 @@ public class PatchSetItemProvider extends ItemProviderAdapter implements
 	}
 
 	/**
-	 * This adds a property descriptor for the Involved Models feature. <!--
+	 * This adds a property descriptor for the New Involved Models feature. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected void addInvolvedModelsPropertyDescriptor(Object object) {
+	protected void addNewInvolvedModelsPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(
 				((ComposeableAdapterFactory) adapterFactory)
 						.getRootAdapterFactory(),
 				getResourceLocator(),
-				getString("_UI_PatchSet_involvedModels_feature"),
+				getString("_UI_PatchSet_newInvolvedModels_feature"),
 				getString("_UI_PropertyDescriptor_description",
-						"_UI_PatchSet_involvedModels_feature",
+						"_UI_PatchSet_newInvolvedModels_feature",
 						"_UI_PatchSet_type"),
-				ModelReviewPackage.Literals.PATCH_SET__INVOLVED_MODELS, true,
+				ModelReviewPackage.Literals.PATCH_SET__NEW_INVOLVED_MODELS,
+				true, false, true, null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the New Involved Diagrams feature.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addNewInvolvedDiagramsPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory)
+						.getRootAdapterFactory(),
+				getResourceLocator(),
+				getString("_UI_PatchSet_newInvolvedDiagrams_feature"),
+				getString("_UI_PropertyDescriptor_description",
+						"_UI_PatchSet_newInvolvedDiagrams_feature",
+						"_UI_PatchSet_type"),
+				ModelReviewPackage.Literals.PATCH_SET__NEW_INVOLVED_DIAGRAMS,
+				true, false, true, null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Old Involved Models feature. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addOldInvolvedModelsPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory)
+						.getRootAdapterFactory(),
+				getResourceLocator(),
+				getString("_UI_PatchSet_oldInvolvedModels_feature"),
+				getString("_UI_PropertyDescriptor_description",
+						"_UI_PatchSet_oldInvolvedModels_feature",
+						"_UI_PatchSet_type"),
+				ModelReviewPackage.Literals.PATCH_SET__OLD_INVOLVED_MODELS,
+				true, false, true, null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Old Involved Diagrams feature.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addOldInvolvedDiagramsPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory)
+						.getRootAdapterFactory(),
+				getResourceLocator(),
+				getString("_UI_PatchSet_oldInvolvedDiagrams_feature"),
+				getString("_UI_PropertyDescriptor_description",
+						"_UI_PatchSet_oldInvolvedDiagrams_feature",
+						"_UI_PatchSet_type"),
+				ModelReviewPackage.Literals.PATCH_SET__OLD_INVOLVED_DIAGRAMS,
+				true, false, true, null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Model Comparison feature. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addModelComparisonPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory)
+						.getRootAdapterFactory(),
+				getResourceLocator(),
+				getString("_UI_PatchSet_modelComparison_feature"),
+				getString("_UI_PropertyDescriptor_description",
+						"_UI_PatchSet_modelComparison_feature",
+						"_UI_PatchSet_type"),
+				ModelReviewPackage.Literals.PATCH_SET__MODEL_COMPARISON, true,
 				false, true, null, null, null));
 	}
 
 	/**
-	 * This adds a property descriptor for the Involved Diagrams feature. <!--
+	 * This adds a property descriptor for the Diagram Comparison feature. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected void addInvolvedDiagramsPropertyDescriptor(Object object) {
+	protected void addDiagramComparisonPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(
 				((ComposeableAdapterFactory) adapterFactory)
 						.getRootAdapterFactory(),
 				getResourceLocator(),
-				getString("_UI_PatchSet_involvedDiagrams_feature"),
+				getString("_UI_PatchSet_diagramComparison_feature"),
 				getString("_UI_PropertyDescriptor_description",
-						"_UI_PatchSet_involvedDiagrams_feature",
+						"_UI_PatchSet_diagramComparison_feature",
 						"_UI_PatchSet_type"),
-				ModelReviewPackage.Literals.PATCH_SET__INVOLVED_DIAGRAMS, true,
-				false, true, null, null, null));
+				ModelReviewPackage.Literals.PATCH_SET__DIAGRAM_COMPARISON,
+				true, false, true, null, null, null));
 	}
 
 	/**

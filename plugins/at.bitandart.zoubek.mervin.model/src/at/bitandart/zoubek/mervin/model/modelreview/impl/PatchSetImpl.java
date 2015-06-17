@@ -26,6 +26,7 @@ import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
 
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
@@ -33,7 +34,9 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '
@@ -51,11 +54,23 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchSetImpl#getPatches
  * <em>Patches</em>}</li>
  * <li>
- * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchSetImpl#getInvolvedModels
- * <em>Involved Models</em>}</li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchSetImpl#getNewInvolvedModels
+ * <em>New Involved Models</em>}</li>
  * <li>
- * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchSetImpl#getInvolvedDiagrams
- * <em>Involved Diagrams</em>}</li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchSetImpl#getNewInvolvedDiagrams
+ * <em>New Involved Diagrams</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchSetImpl#getOldInvolvedModels
+ * <em>Old Involved Models</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchSetImpl#getOldInvolvedDiagrams
+ * <em>Old Involved Diagrams</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchSetImpl#getModelComparison
+ * <em>Model Comparison</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchSetImpl#getDiagramComparison
+ * <em>Diagram Comparison</em>}</li>
  * </ul>
  * </p>
  *
@@ -94,26 +109,70 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements
 	protected EList<Patch> patches;
 
 	/**
-	 * The cached value of the '{@link #getInvolvedModels()
-	 * <em>Involved Models</em>}' reference list. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getNewInvolvedModels()
+	 * <em>New Involved Models</em>}' reference list. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
-	 * @see #getInvolvedModels()
+	 * @see #getNewInvolvedModels()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<ModelInstance> involvedModels;
+	protected EList<ModelInstance> newInvolvedModels;
 
 	/**
-	 * The cached value of the '{@link #getInvolvedDiagrams()
-	 * <em>Involved Diagrams</em>}' reference list. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getNewInvolvedDiagrams()
+	 * <em>New Involved Diagrams</em>}' reference list. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
-	 * @see #getInvolvedDiagrams()
+	 * @see #getNewInvolvedDiagrams()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<DiagramInstance> involvedDiagrams;
+	protected EList<DiagramInstance> newInvolvedDiagrams;
+
+	/**
+	 * The cached value of the '{@link #getOldInvolvedModels()
+	 * <em>Old Involved Models</em>}' reference list. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getOldInvolvedModels()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<ModelInstance> oldInvolvedModels;
+
+	/**
+	 * The cached value of the '{@link #getOldInvolvedDiagrams()
+	 * <em>Old Involved Diagrams</em>}' reference list. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getOldInvolvedDiagrams()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<DiagramInstance> oldInvolvedDiagrams;
+
+	/**
+	 * The cached value of the '{@link #getModelComparison()
+	 * <em>Model Comparison</em>}' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #getModelComparison()
+	 * @generated
+	 * @ordered
+	 */
+	protected Comparison modelComparison;
+
+	/**
+	 * The cached value of the '{@link #getDiagramComparison()
+	 * <em>Diagram Comparison</em>}' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #getDiagramComparison()
+	 * @generated
+	 * @ordered
+	 */
+	protected Comparison diagramComparison;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -212,8 +271,9 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements
 	 */
 	public EList<Patch> getPatches() {
 		if (patches == null) {
-			patches = new EObjectResolvingEList<Patch>(Patch.class, this,
-					ModelReviewPackage.PATCH_SET__PATCHES);
+			patches = new EObjectWithInverseResolvingEList<Patch>(Patch.class,
+					this, ModelReviewPackage.PATCH_SET__PATCHES,
+					ModelReviewPackage.PATCH__PATCH_SET);
 		}
 		return patches;
 	}
@@ -223,13 +283,13 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements
 	 * 
 	 * @generated
 	 */
-	public EList<ModelInstance> getInvolvedModels() {
-		if (involvedModels == null) {
-			involvedModels = new EObjectResolvingEList<ModelInstance>(
+	public EList<ModelInstance> getNewInvolvedModels() {
+		if (newInvolvedModels == null) {
+			newInvolvedModels = new EObjectResolvingEList<ModelInstance>(
 					ModelInstance.class, this,
-					ModelReviewPackage.PATCH_SET__INVOLVED_MODELS);
+					ModelReviewPackage.PATCH_SET__NEW_INVOLVED_MODELS);
 		}
-		return involvedModels;
+		return newInvolvedModels;
 	}
 
 	/**
@@ -237,13 +297,13 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements
 	 * 
 	 * @generated
 	 */
-	public EList<DiagramInstance> getInvolvedDiagrams() {
-		if (involvedDiagrams == null) {
-			involvedDiagrams = new EObjectResolvingEList<DiagramInstance>(
+	public EList<DiagramInstance> getNewInvolvedDiagrams() {
+		if (newInvolvedDiagrams == null) {
+			newInvolvedDiagrams = new EObjectResolvingEList<DiagramInstance>(
 					DiagramInstance.class, this,
-					ModelReviewPackage.PATCH_SET__INVOLVED_DIAGRAMS);
+					ModelReviewPackage.PATCH_SET__NEW_INVOLVED_DIAGRAMS);
 		}
-		return involvedDiagrams;
+		return newInvolvedDiagrams;
 	}
 
 	/**
@@ -251,6 +311,119 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements
 	 * 
 	 * @generated
 	 */
+	public EList<ModelInstance> getOldInvolvedModels() {
+		if (oldInvolvedModels == null) {
+			oldInvolvedModels = new EObjectResolvingEList<ModelInstance>(
+					ModelInstance.class, this,
+					ModelReviewPackage.PATCH_SET__OLD_INVOLVED_MODELS);
+		}
+		return oldInvolvedModels;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EList<DiagramInstance> getOldInvolvedDiagrams() {
+		if (oldInvolvedDiagrams == null) {
+			oldInvolvedDiagrams = new EObjectResolvingEList<DiagramInstance>(
+					DiagramInstance.class, this,
+					ModelReviewPackage.PATCH_SET__OLD_INVOLVED_DIAGRAMS);
+		}
+		return oldInvolvedDiagrams;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public Comparison getModelComparison() {
+		if (modelComparison != null && modelComparison.eIsProxy()) {
+			InternalEObject oldModelComparison = (InternalEObject) modelComparison;
+			modelComparison = (Comparison) eResolveProxy(oldModelComparison);
+			if (modelComparison != oldModelComparison) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							ModelReviewPackage.PATCH_SET__MODEL_COMPARISON,
+							oldModelComparison, modelComparison));
+			}
+		}
+		return modelComparison;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public Comparison basicGetModelComparison() {
+		return modelComparison;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setModelComparison(Comparison newModelComparison) {
+		Comparison oldModelComparison = modelComparison;
+		modelComparison = newModelComparison;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					ModelReviewPackage.PATCH_SET__MODEL_COMPARISON,
+					oldModelComparison, modelComparison));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public Comparison getDiagramComparison() {
+		if (diagramComparison != null && diagramComparison.eIsProxy()) {
+			InternalEObject oldDiagramComparison = (InternalEObject) diagramComparison;
+			diagramComparison = (Comparison) eResolveProxy(oldDiagramComparison);
+			if (diagramComparison != oldDiagramComparison) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							ModelReviewPackage.PATCH_SET__DIAGRAM_COMPARISON,
+							oldDiagramComparison, diagramComparison));
+			}
+		}
+		return diagramComparison;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public Comparison basicGetDiagramComparison() {
+		return diagramComparison;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setDiagramComparison(Comparison newDiagramComparison) {
+		Comparison oldDiagramComparison = diagramComparison;
+		diagramComparison = newDiagramComparison;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					ModelReviewPackage.PATCH_SET__DIAGRAM_COMPARISON,
+					oldDiagramComparison, diagramComparison));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd,
 			int featureID, NotificationChain msgs) {
@@ -259,6 +432,9 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements
 			if (eInternalContainer() != null)
 				msgs = eBasicRemoveFromContainer(msgs);
 			return basicSetReview((ModelReview) otherEnd, msgs);
+		case ModelReviewPackage.PATCH_SET__PATCHES:
+			return ((InternalEList<InternalEObject>) (InternalEList<?>) getPatches())
+					.basicAdd(otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -274,6 +450,9 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements
 		switch (featureID) {
 		case ModelReviewPackage.PATCH_SET__REVIEW:
 			return basicSetReview(null, msgs);
+		case ModelReviewPackage.PATCH_SET__PATCHES:
+			return ((InternalEList<?>) getPatches())
+					.basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -309,10 +488,22 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements
 			return getReview();
 		case ModelReviewPackage.PATCH_SET__PATCHES:
 			return getPatches();
-		case ModelReviewPackage.PATCH_SET__INVOLVED_MODELS:
-			return getInvolvedModels();
-		case ModelReviewPackage.PATCH_SET__INVOLVED_DIAGRAMS:
-			return getInvolvedDiagrams();
+		case ModelReviewPackage.PATCH_SET__NEW_INVOLVED_MODELS:
+			return getNewInvolvedModels();
+		case ModelReviewPackage.PATCH_SET__NEW_INVOLVED_DIAGRAMS:
+			return getNewInvolvedDiagrams();
+		case ModelReviewPackage.PATCH_SET__OLD_INVOLVED_MODELS:
+			return getOldInvolvedModels();
+		case ModelReviewPackage.PATCH_SET__OLD_INVOLVED_DIAGRAMS:
+			return getOldInvolvedDiagrams();
+		case ModelReviewPackage.PATCH_SET__MODEL_COMPARISON:
+			if (resolve)
+				return getModelComparison();
+			return basicGetModelComparison();
+		case ModelReviewPackage.PATCH_SET__DIAGRAM_COMPARISON:
+			if (resolve)
+				return getDiagramComparison();
+			return basicGetDiagramComparison();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -336,15 +527,31 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements
 			getPatches().clear();
 			getPatches().addAll((Collection<? extends Patch>) newValue);
 			return;
-		case ModelReviewPackage.PATCH_SET__INVOLVED_MODELS:
-			getInvolvedModels().clear();
-			getInvolvedModels().addAll(
+		case ModelReviewPackage.PATCH_SET__NEW_INVOLVED_MODELS:
+			getNewInvolvedModels().clear();
+			getNewInvolvedModels().addAll(
 					(Collection<? extends ModelInstance>) newValue);
 			return;
-		case ModelReviewPackage.PATCH_SET__INVOLVED_DIAGRAMS:
-			getInvolvedDiagrams().clear();
-			getInvolvedDiagrams().addAll(
+		case ModelReviewPackage.PATCH_SET__NEW_INVOLVED_DIAGRAMS:
+			getNewInvolvedDiagrams().clear();
+			getNewInvolvedDiagrams().addAll(
 					(Collection<? extends DiagramInstance>) newValue);
+			return;
+		case ModelReviewPackage.PATCH_SET__OLD_INVOLVED_MODELS:
+			getOldInvolvedModels().clear();
+			getOldInvolvedModels().addAll(
+					(Collection<? extends ModelInstance>) newValue);
+			return;
+		case ModelReviewPackage.PATCH_SET__OLD_INVOLVED_DIAGRAMS:
+			getOldInvolvedDiagrams().clear();
+			getOldInvolvedDiagrams().addAll(
+					(Collection<? extends DiagramInstance>) newValue);
+			return;
+		case ModelReviewPackage.PATCH_SET__MODEL_COMPARISON:
+			setModelComparison((Comparison) newValue);
+			return;
+		case ModelReviewPackage.PATCH_SET__DIAGRAM_COMPARISON:
+			setDiagramComparison((Comparison) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -367,11 +574,23 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements
 		case ModelReviewPackage.PATCH_SET__PATCHES:
 			getPatches().clear();
 			return;
-		case ModelReviewPackage.PATCH_SET__INVOLVED_MODELS:
-			getInvolvedModels().clear();
+		case ModelReviewPackage.PATCH_SET__NEW_INVOLVED_MODELS:
+			getNewInvolvedModels().clear();
 			return;
-		case ModelReviewPackage.PATCH_SET__INVOLVED_DIAGRAMS:
-			getInvolvedDiagrams().clear();
+		case ModelReviewPackage.PATCH_SET__NEW_INVOLVED_DIAGRAMS:
+			getNewInvolvedDiagrams().clear();
+			return;
+		case ModelReviewPackage.PATCH_SET__OLD_INVOLVED_MODELS:
+			getOldInvolvedModels().clear();
+			return;
+		case ModelReviewPackage.PATCH_SET__OLD_INVOLVED_DIAGRAMS:
+			getOldInvolvedDiagrams().clear();
+			return;
+		case ModelReviewPackage.PATCH_SET__MODEL_COMPARISON:
+			setModelComparison((Comparison) null);
+			return;
+		case ModelReviewPackage.PATCH_SET__DIAGRAM_COMPARISON:
+			setDiagramComparison((Comparison) null);
 			return;
 		}
 		super.eUnset(featureID);
@@ -391,10 +610,20 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements
 			return getReview() != null;
 		case ModelReviewPackage.PATCH_SET__PATCHES:
 			return patches != null && !patches.isEmpty();
-		case ModelReviewPackage.PATCH_SET__INVOLVED_MODELS:
-			return involvedModels != null && !involvedModels.isEmpty();
-		case ModelReviewPackage.PATCH_SET__INVOLVED_DIAGRAMS:
-			return involvedDiagrams != null && !involvedDiagrams.isEmpty();
+		case ModelReviewPackage.PATCH_SET__NEW_INVOLVED_MODELS:
+			return newInvolvedModels != null && !newInvolvedModels.isEmpty();
+		case ModelReviewPackage.PATCH_SET__NEW_INVOLVED_DIAGRAMS:
+			return newInvolvedDiagrams != null
+					&& !newInvolvedDiagrams.isEmpty();
+		case ModelReviewPackage.PATCH_SET__OLD_INVOLVED_MODELS:
+			return oldInvolvedModels != null && !oldInvolvedModels.isEmpty();
+		case ModelReviewPackage.PATCH_SET__OLD_INVOLVED_DIAGRAMS:
+			return oldInvolvedDiagrams != null
+					&& !oldInvolvedDiagrams.isEmpty();
+		case ModelReviewPackage.PATCH_SET__MODEL_COMPARISON:
+			return modelComparison != null;
+		case ModelReviewPackage.PATCH_SET__DIAGRAM_COMPARISON:
+			return diagramComparison != null;
 		}
 		return super.eIsSet(featureID);
 	}

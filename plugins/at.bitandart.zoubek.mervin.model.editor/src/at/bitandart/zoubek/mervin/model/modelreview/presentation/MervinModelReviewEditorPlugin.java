@@ -13,14 +13,10 @@
 package at.bitandart.zoubek.mervin.model.modelreview.presentation;
 
 import org.eclipse.emf.common.EMFPlugin;
-
 import org.eclipse.emf.common.ui.EclipseUIPlugin;
-
 import org.eclipse.emf.common.util.ResourceLocator;
-
 import org.eclipse.emf.compare.provider.EMFCompareEditPlugin;
 import org.eclipse.emf.ecore.provider.EcoreEditPlugin;
-
 import org.eclipse.gmf.runtime.notation.NotationEditPlugin;
 
 /**
@@ -52,8 +48,8 @@ public final class MervinModelReviewEditorPlugin extends EMFPlugin {
 	 * @generated
 	 */
 	public MervinModelReviewEditorPlugin() {
-		super(new ResourceLocator[] { EcoreEditPlugin.INSTANCE,
-				NotationEditPlugin.INSTANCE, EMFCompareEditPlugin.INSTANCE, });
+		super(new ResourceLocator[] { EMFCompareEditPlugin.INSTANCE,
+				EcoreEditPlugin.INSTANCE, NotationEditPlugin.INSTANCE, });
 	}
 
 	/**

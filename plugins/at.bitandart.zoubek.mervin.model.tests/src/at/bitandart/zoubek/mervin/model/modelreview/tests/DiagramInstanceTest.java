@@ -14,26 +14,23 @@ package at.bitandart.zoubek.mervin.model.modelreview.tests;
 
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
-
-import junit.framework.TestCase;
-
 import junit.textui.TestRunner;
 
 /**
  * <!-- begin-user-doc --> A test case for the model object '
  * <em><b>Diagram Instance</b></em>'. <!-- end-user-doc -->
+ * <p>
+ * The following operations are tested:
+ * <ul>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance#getDiagrams()
+ * <em>Get Diagrams</em>}</li>
+ * </ul>
+ * </p>
  * 
  * @generated
  */
-public class DiagramInstanceTest extends TestCase {
-
-	/**
-	 * The fixture for this Diagram Instance test case. <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected DiagramInstance fixture = null;
+public class DiagramInstanceTest extends ModelInstanceTest {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -55,23 +52,14 @@ public class DiagramInstanceTest extends TestCase {
 	}
 
 	/**
-	 * Sets the fixture for this Diagram Instance test case. <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected void setFixture(DiagramInstance fixture) {
-		this.fixture = fixture;
-	}
-
-	/**
 	 * Returns the fixture for this Diagram Instance test case. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
+	@Override
 	protected DiagramInstance getFixture() {
-		return fixture;
+		return (DiagramInstance) fixture;
 	}
 
 	/**
@@ -94,6 +82,21 @@ public class DiagramInstanceTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		setFixture(null);
+	}
+
+	/**
+	 * Tests the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance#getDiagrams()
+	 * <em>Get Diagrams</em>}' operation. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance#getDiagrams()
+	 * @generated
+	 */
+	public void testGetDiagrams() {
+		// TODO: implement this operation test method
+		// Ensure that you remove @generated or mark it @generated NOT
+		fail();
 	}
 
 } // DiagramInstanceTest

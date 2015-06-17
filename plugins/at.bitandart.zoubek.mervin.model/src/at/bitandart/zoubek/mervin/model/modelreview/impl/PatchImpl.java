@@ -15,9 +15,13 @@ package at.bitandart.zoubek.mervin.model.modelreview.impl;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 import at.bitandart.zoubek.mervin.model.modelreview.Patch;
 
+import at.bitandart.zoubek.mervin.model.modelreview.PatchChangeType;
+import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
@@ -28,11 +32,23 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * The following features are implemented:
  * <ul>
  * <li>
- * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchImpl#getPath
- * <em>Path</em>}</li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchImpl#getNewPath
+ * <em>New Path</em>}</li>
  * <li>
- * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchImpl#getContent
- * <em>Content</em>}</li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchImpl#getOldPath
+ * <em>Old Path</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchImpl#getNewContent
+ * <em>New Content</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchImpl#getOldContent
+ * <em>Old Content</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchImpl#getChangeType
+ * <em>Change Type</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchImpl#getPatchSet
+ * <em>Patch Set</em>}</li>
  * </ul>
  * </p>
  *
@@ -40,41 +56,106 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  */
 public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 	/**
-	 * The default value of the '{@link #getPath() <em>Path</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #getPath()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String PATH_EDEFAULT = null;
-	/**
-	 * The cached value of the '{@link #getPath() <em>Path</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #getPath()
-	 * @generated
-	 * @ordered
-	 */
-	protected String path = PATH_EDEFAULT;
-	/**
-	 * The default value of the '{@link #getContent() <em>Content</em>}'
+	 * The default value of the '{@link #getNewPath() <em>New Path</em>}'
 	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @see #getContent()
+	 * @see #getNewPath()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final byte[] CONTENT_EDEFAULT = null;
+	protected static final String NEW_PATH_EDEFAULT = null;
 	/**
-	 * The cached value of the '{@link #getContent() <em>Content</em>}'
+	 * The cached value of the '{@link #getNewPath() <em>New Path</em>}'
 	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @see #getContent()
+	 * @see #getNewPath()
 	 * @generated
 	 * @ordered
 	 */
-	protected byte[] content = CONTENT_EDEFAULT;
+	protected String newPath = NEW_PATH_EDEFAULT;
+	/**
+	 * The default value of the '{@link #getOldPath() <em>Old Path</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getOldPath()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String OLD_PATH_EDEFAULT = null;
+	/**
+	 * The cached value of the '{@link #getOldPath() <em>Old Path</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getOldPath()
+	 * @generated
+	 * @ordered
+	 */
+	protected String oldPath = OLD_PATH_EDEFAULT;
+	/**
+	 * The default value of the '{@link #getNewContent() <em>New Content</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getNewContent()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final byte[] NEW_CONTENT_EDEFAULT = null;
+	/**
+	 * The cached value of the '{@link #getNewContent() <em>New Content</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getNewContent()
+	 * @generated
+	 * @ordered
+	 */
+	protected byte[] newContent = NEW_CONTENT_EDEFAULT;
+	/**
+	 * The default value of the '{@link #getOldContent() <em>Old Content</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getOldContent()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final byte[] OLD_CONTENT_EDEFAULT = null;
+	/**
+	 * The cached value of the '{@link #getOldContent() <em>Old Content</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getOldContent()
+	 * @generated
+	 * @ordered
+	 */
+	protected byte[] oldContent = OLD_CONTENT_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getChangeType() <em>Change Type</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getChangeType()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final PatchChangeType CHANGE_TYPE_EDEFAULT = PatchChangeType.ADD;
+	/**
+	 * The cached value of the '{@link #getChangeType() <em>Change Type</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getChangeType()
+	 * @generated
+	 * @ordered
+	 */
+	protected PatchChangeType changeType = CHANGE_TYPE_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getPatchSet() <em>Patch Set</em>}'
+	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getPatchSet()
+	 * @generated
+	 * @ordered
+	 */
+	protected PatchSet patchSet;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -100,8 +181,8 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 	 * 
 	 * @generated
 	 */
-	public String getPath() {
-		return path;
+	public String getNewPath() {
+		return newPath;
 	}
 
 	/**
@@ -109,12 +190,12 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 	 * 
 	 * @generated
 	 */
-	public void setPath(String newPath) {
-		String oldPath = path;
-		path = newPath;
+	public void setNewPath(String newNewPath) {
+		String oldNewPath = newPath;
+		newPath = newNewPath;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
-					ModelReviewPackage.PATCH__PATH, oldPath, path));
+					ModelReviewPackage.PATCH__NEW_PATH, oldNewPath, newPath));
 	}
 
 	/**
@@ -122,8 +203,8 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 	 * 
 	 * @generated
 	 */
-	public byte[] getContent() {
-		return content;
+	public String getOldPath() {
+		return oldPath;
 	}
 
 	/**
@@ -131,12 +212,190 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 	 * 
 	 * @generated
 	 */
-	public void setContent(byte[] newContent) {
-		byte[] oldContent = content;
-		content = newContent;
+	public void setOldPath(String newOldPath) {
+		String oldOldPath = oldPath;
+		oldPath = newOldPath;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
-					ModelReviewPackage.PATCH__CONTENT, oldContent, content));
+					ModelReviewPackage.PATCH__OLD_PATH, oldOldPath, oldPath));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public byte[] getNewContent() {
+		return newContent;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setNewContent(byte[] newNewContent) {
+		byte[] oldNewContent = newContent;
+		newContent = newNewContent;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					ModelReviewPackage.PATCH__NEW_CONTENT, oldNewContent,
+					newContent));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public byte[] getOldContent() {
+		return oldContent;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setOldContent(byte[] newOldContent) {
+		byte[] oldOldContent = oldContent;
+		oldContent = newOldContent;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					ModelReviewPackage.PATCH__OLD_CONTENT, oldOldContent,
+					oldContent));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public PatchChangeType getChangeType() {
+		return changeType;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setChangeType(PatchChangeType newChangeType) {
+		PatchChangeType oldChangeType = changeType;
+		changeType = newChangeType == null ? CHANGE_TYPE_EDEFAULT
+				: newChangeType;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					ModelReviewPackage.PATCH__CHANGE_TYPE, oldChangeType,
+					changeType));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public PatchSet getPatchSet() {
+		if (patchSet != null && patchSet.eIsProxy()) {
+			InternalEObject oldPatchSet = (InternalEObject) patchSet;
+			patchSet = (PatchSet) eResolveProxy(oldPatchSet);
+			if (patchSet != oldPatchSet) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							ModelReviewPackage.PATCH__PATCH_SET, oldPatchSet,
+							patchSet));
+			}
+		}
+		return patchSet;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public PatchSet basicGetPatchSet() {
+		return patchSet;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public NotificationChain basicSetPatchSet(PatchSet newPatchSet,
+			NotificationChain msgs) {
+		PatchSet oldPatchSet = patchSet;
+		patchSet = newPatchSet;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this,
+					Notification.SET, ModelReviewPackage.PATCH__PATCH_SET,
+					oldPatchSet, newPatchSet);
+			if (msgs == null)
+				msgs = notification;
+			else
+				msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setPatchSet(PatchSet newPatchSet) {
+		if (newPatchSet != patchSet) {
+			NotificationChain msgs = null;
+			if (patchSet != null)
+				msgs = ((InternalEObject) patchSet).eInverseRemove(this,
+						ModelReviewPackage.PATCH_SET__PATCHES, PatchSet.class,
+						msgs);
+			if (newPatchSet != null)
+				msgs = ((InternalEObject) newPatchSet).eInverseAdd(this,
+						ModelReviewPackage.PATCH_SET__PATCHES, PatchSet.class,
+						msgs);
+			msgs = basicSetPatchSet(newPatchSet, msgs);
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					ModelReviewPackage.PATCH__PATCH_SET, newPatchSet,
+					newPatchSet));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd,
+			int featureID, NotificationChain msgs) {
+		switch (featureID) {
+		case ModelReviewPackage.PATCH__PATCH_SET:
+			if (patchSet != null)
+				msgs = ((InternalEObject) patchSet).eInverseRemove(this,
+						ModelReviewPackage.PATCH_SET__PATCHES, PatchSet.class,
+						msgs);
+			return basicSetPatchSet((PatchSet) otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd,
+			int featureID, NotificationChain msgs) {
+		switch (featureID) {
+		case ModelReviewPackage.PATCH__PATCH_SET:
+			return basicSetPatchSet(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -147,10 +406,20 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case ModelReviewPackage.PATCH__PATH:
-			return getPath();
-		case ModelReviewPackage.PATCH__CONTENT:
-			return getContent();
+		case ModelReviewPackage.PATCH__NEW_PATH:
+			return getNewPath();
+		case ModelReviewPackage.PATCH__OLD_PATH:
+			return getOldPath();
+		case ModelReviewPackage.PATCH__NEW_CONTENT:
+			return getNewContent();
+		case ModelReviewPackage.PATCH__OLD_CONTENT:
+			return getOldContent();
+		case ModelReviewPackage.PATCH__CHANGE_TYPE:
+			return getChangeType();
+		case ModelReviewPackage.PATCH__PATCH_SET:
+			if (resolve)
+				return getPatchSet();
+			return basicGetPatchSet();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -163,11 +432,23 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case ModelReviewPackage.PATCH__PATH:
-			setPath((String) newValue);
+		case ModelReviewPackage.PATCH__NEW_PATH:
+			setNewPath((String) newValue);
 			return;
-		case ModelReviewPackage.PATCH__CONTENT:
-			setContent((byte[]) newValue);
+		case ModelReviewPackage.PATCH__OLD_PATH:
+			setOldPath((String) newValue);
+			return;
+		case ModelReviewPackage.PATCH__NEW_CONTENT:
+			setNewContent((byte[]) newValue);
+			return;
+		case ModelReviewPackage.PATCH__OLD_CONTENT:
+			setOldContent((byte[]) newValue);
+			return;
+		case ModelReviewPackage.PATCH__CHANGE_TYPE:
+			setChangeType((PatchChangeType) newValue);
+			return;
+		case ModelReviewPackage.PATCH__PATCH_SET:
+			setPatchSet((PatchSet) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -181,11 +462,23 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case ModelReviewPackage.PATCH__PATH:
-			setPath(PATH_EDEFAULT);
+		case ModelReviewPackage.PATCH__NEW_PATH:
+			setNewPath(NEW_PATH_EDEFAULT);
 			return;
-		case ModelReviewPackage.PATCH__CONTENT:
-			setContent(CONTENT_EDEFAULT);
+		case ModelReviewPackage.PATCH__OLD_PATH:
+			setOldPath(OLD_PATH_EDEFAULT);
+			return;
+		case ModelReviewPackage.PATCH__NEW_CONTENT:
+			setNewContent(NEW_CONTENT_EDEFAULT);
+			return;
+		case ModelReviewPackage.PATCH__OLD_CONTENT:
+			setOldContent(OLD_CONTENT_EDEFAULT);
+			return;
+		case ModelReviewPackage.PATCH__CHANGE_TYPE:
+			setChangeType(CHANGE_TYPE_EDEFAULT);
+			return;
+		case ModelReviewPackage.PATCH__PATCH_SET:
+			setPatchSet((PatchSet) null);
 			return;
 		}
 		super.eUnset(featureID);
@@ -199,12 +492,22 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case ModelReviewPackage.PATCH__PATH:
-			return PATH_EDEFAULT == null ? path != null : !PATH_EDEFAULT
-					.equals(path);
-		case ModelReviewPackage.PATCH__CONTENT:
-			return CONTENT_EDEFAULT == null ? content != null
-					: !CONTENT_EDEFAULT.equals(content);
+		case ModelReviewPackage.PATCH__NEW_PATH:
+			return NEW_PATH_EDEFAULT == null ? newPath != null
+					: !NEW_PATH_EDEFAULT.equals(newPath);
+		case ModelReviewPackage.PATCH__OLD_PATH:
+			return OLD_PATH_EDEFAULT == null ? oldPath != null
+					: !OLD_PATH_EDEFAULT.equals(oldPath);
+		case ModelReviewPackage.PATCH__NEW_CONTENT:
+			return NEW_CONTENT_EDEFAULT == null ? newContent != null
+					: !NEW_CONTENT_EDEFAULT.equals(newContent);
+		case ModelReviewPackage.PATCH__OLD_CONTENT:
+			return OLD_CONTENT_EDEFAULT == null ? oldContent != null
+					: !OLD_CONTENT_EDEFAULT.equals(oldContent);
+		case ModelReviewPackage.PATCH__CHANGE_TYPE:
+			return changeType != CHANGE_TYPE_EDEFAULT;
+		case ModelReviewPackage.PATCH__PATCH_SET:
+			return patchSet != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -220,10 +523,16 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (path: ");
-		result.append(path);
-		result.append(", content: ");
-		result.append(content);
+		result.append(" (newPath: ");
+		result.append(newPath);
+		result.append(", oldPath: ");
+		result.append(oldPath);
+		result.append(", newContent: ");
+		result.append(newContent);
+		result.append(", oldContent: ");
+		result.append(oldContent);
+		result.append(", changeType: ");
+		result.append(changeType);
 		result.append(')');
 		return result.toString();
 	}

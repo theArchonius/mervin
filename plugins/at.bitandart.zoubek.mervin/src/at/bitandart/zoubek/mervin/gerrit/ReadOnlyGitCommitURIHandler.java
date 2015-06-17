@@ -17,6 +17,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
+
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.resource.URIHandler;
 import org.eclipse.emf.ecore.resource.impl.URIHandlerImpl;
@@ -30,6 +34,9 @@ import org.eclipse.emf.ecore.resource.impl.URIHandlerImpl;
  */
 public class ReadOnlyGitCommitURIHandler extends URIHandlerImpl {
 
+	@Inject
+	private IEclipseContext eclipseContext;
+	
 	public ReadOnlyGitCommitURIHandler() {
 	}
 
@@ -41,8 +48,8 @@ public class ReadOnlyGitCommitURIHandler extends URIHandlerImpl {
 	@Override
 	public InputStream createInputStream(org.eclipse.emf.common.util.URI uri,
 			Map<?, ?> options) throws IOException {
-
 		GitURIParser gitURIParser = new GitURIParser(uri);
+		ContextInjectionFactory.inject(gitURIParser, eclipseContext);
 
 		return gitURIParser.getObjectLoader().openStream();
 	}

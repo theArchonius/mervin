@@ -14,6 +14,8 @@ package at.bitandart.zoubek.mervin.model.modelreview;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
@@ -160,22 +162,58 @@ public interface ModelReviewPackage extends EPackage {
 	int PATCH_SET__PATCHES = 2;
 
 	/**
-	 * The feature id for the '<em><b>Involved Models</b></em>' reference list.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	int PATCH_SET__INVOLVED_MODELS = 3;
-
-	/**
-	 * The feature id for the '<em><b>Involved Diagrams</b></em>' reference
+	 * The feature id for the '<em><b>New Involved Models</b></em>' reference
 	 * list. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int PATCH_SET__INVOLVED_DIAGRAMS = 4;
+	int PATCH_SET__NEW_INVOLVED_MODELS = 3;
+
+	/**
+	 * The feature id for the '<em><b>New Involved Diagrams</b></em>' reference
+	 * list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int PATCH_SET__NEW_INVOLVED_DIAGRAMS = 4;
+
+	/**
+	 * The feature id for the '<em><b>Old Involved Models</b></em>' reference
+	 * list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int PATCH_SET__OLD_INVOLVED_MODELS = 5;
+
+	/**
+	 * The feature id for the '<em><b>Old Involved Diagrams</b></em>' reference
+	 * list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int PATCH_SET__OLD_INVOLVED_DIAGRAMS = 6;
+
+	/**
+	 * The feature id for the '<em><b>Model Comparison</b></em>' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int PATCH_SET__MODEL_COMPARISON = 7;
+
+	/**
+	 * The feature id for the '<em><b>Diagram Comparison</b></em>' reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int PATCH_SET__DIAGRAM_COMPARISON = 8;
 
 	/**
 	 * The number of structural features of the '<em>Patch Set</em>' class. <!--
@@ -184,7 +222,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PATCH_SET_FEATURE_COUNT = 5;
+	int PATCH_SET_FEATURE_COUNT = 9;
 
 	/**
 	 * The number of operations of the '<em>Patch Set</em>' class. <!--
@@ -207,22 +245,58 @@ public interface ModelReviewPackage extends EPackage {
 	int PATCH = 2;
 
 	/**
-	 * The feature id for the '<em><b>Path</b></em>' attribute. <!--
+	 * The feature id for the '<em><b>New Path</b></em>' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int PATCH__PATH = 0;
+	int PATCH__NEW_PATH = 0;
 
 	/**
-	 * The feature id for the '<em><b>Content</b></em>' attribute. <!--
+	 * The feature id for the '<em><b>Old Path</b></em>' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int PATCH__CONTENT = 1;
+	int PATCH__OLD_PATH = 1;
+
+	/**
+	 * The feature id for the '<em><b>New Content</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int PATCH__NEW_CONTENT = 2;
+
+	/**
+	 * The feature id for the '<em><b>Old Content</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int PATCH__OLD_CONTENT = 3;
+
+	/**
+	 * The feature id for the '<em><b>Change Type</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int PATCH__CHANGE_TYPE = 4;
+
+	/**
+	 * The feature id for the '<em><b>Patch Set</b></em>' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int PATCH__PATCH_SET = 5;
 
 	/**
 	 * The number of structural features of the '<em>Patch</em>' class. <!--
@@ -231,7 +305,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PATCH_FEATURE_COUNT = 2;
+	int PATCH_FEATURE_COUNT = 6;
 
 	/**
 	 * The number of operations of the '<em>Patch</em>' class. <!--
@@ -255,40 +329,76 @@ public interface ModelReviewPackage extends EPackage {
 	int DIAGRAM_PATCH = 3;
 
 	/**
-	 * The feature id for the '<em><b>Path</b></em>' attribute. <!--
+	 * The feature id for the '<em><b>New Path</b></em>' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM_PATCH__PATH = PATCH__PATH;
+	int DIAGRAM_PATCH__NEW_PATH = PATCH__NEW_PATH;
 
 	/**
-	 * The feature id for the '<em><b>Content</b></em>' attribute. <!--
+	 * The feature id for the '<em><b>Old Path</b></em>' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM_PATCH__CONTENT = PATCH__CONTENT;
+	int DIAGRAM_PATCH__OLD_PATH = PATCH__OLD_PATH;
 
 	/**
-	 * The feature id for the '<em><b>Comparison</b></em>' reference. <!--
+	 * The feature id for the '<em><b>New Content</b></em>' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM_PATCH__COMPARISON = PATCH_FEATURE_COUNT + 0;
+	int DIAGRAM_PATCH__NEW_CONTENT = PATCH__NEW_CONTENT;
 
 	/**
-	 * The feature id for the '<em><b>Diagram Instance</b></em>' reference. <!--
+	 * The feature id for the '<em><b>Old Content</b></em>' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM_PATCH__DIAGRAM_INSTANCE = PATCH_FEATURE_COUNT + 1;
+	int DIAGRAM_PATCH__OLD_CONTENT = PATCH__OLD_CONTENT;
+
+	/**
+	 * The feature id for the '<em><b>Change Type</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_PATCH__CHANGE_TYPE = PATCH__CHANGE_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Patch Set</b></em>' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_PATCH__PATCH_SET = PATCH__PATCH_SET;
+
+	/**
+	 * The feature id for the '<em><b>New Diagram Instance</b></em>' reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_PATCH__NEW_DIAGRAM_INSTANCE = PATCH_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Old Diagram Instance</b></em>' reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_PATCH__OLD_DIAGRAM_INSTANCE = PATCH_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Diagram Patch</em>' class.
@@ -321,40 +431,76 @@ public interface ModelReviewPackage extends EPackage {
 	int MODEL_PATCH = 4;
 
 	/**
-	 * The feature id for the '<em><b>Path</b></em>' attribute. <!--
+	 * The feature id for the '<em><b>New Path</b></em>' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_PATCH__PATH = PATCH__PATH;
+	int MODEL_PATCH__NEW_PATH = PATCH__NEW_PATH;
 
 	/**
-	 * The feature id for the '<em><b>Content</b></em>' attribute. <!--
+	 * The feature id for the '<em><b>Old Path</b></em>' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_PATCH__CONTENT = PATCH__CONTENT;
+	int MODEL_PATCH__OLD_PATH = PATCH__OLD_PATH;
 
 	/**
-	 * The feature id for the '<em><b>Comparison</b></em>' reference. <!--
+	 * The feature id for the '<em><b>New Content</b></em>' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_PATCH__COMPARISON = PATCH_FEATURE_COUNT + 0;
+	int MODEL_PATCH__NEW_CONTENT = PATCH__NEW_CONTENT;
 
 	/**
-	 * The feature id for the '<em><b>Model Instance</b></em>' reference. <!--
+	 * The feature id for the '<em><b>Old Content</b></em>' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_PATCH__MODEL_INSTANCE = PATCH_FEATURE_COUNT + 1;
+	int MODEL_PATCH__OLD_CONTENT = PATCH__OLD_CONTENT;
+
+	/**
+	 * The feature id for the '<em><b>Change Type</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_PATCH__CHANGE_TYPE = PATCH__CHANGE_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Patch Set</b></em>' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_PATCH__PATCH_SET = PATCH__PATCH_SET;
+
+	/**
+	 * The feature id for the '<em><b>New Model Instance</b></em>' reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_PATCH__NEW_MODEL_INSTANCE = PATCH_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Old Model Instance</b></em>' reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_PATCH__OLD_MODEL_INSTANCE = PATCH_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Model Patch</em>' class.
@@ -434,13 +580,13 @@ public interface ModelReviewPackage extends EPackage {
 	int MODEL_INSTANCE__OBJECTS = 0;
 
 	/**
-	 * The feature id for the '<em><b>Root Package</b></em>' reference. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * The feature id for the '<em><b>Root Packages</b></em>' reference list.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_INSTANCE__ROOT_PACKAGE = 1;
+	int MODEL_INSTANCE__ROOT_PACKAGES = 1;
 
 	/**
 	 * The number of structural features of the '<em>Model Instance</em>' class.
@@ -473,13 +619,22 @@ public interface ModelReviewPackage extends EPackage {
 	int DIAGRAM_INSTANCE = 7;
 
 	/**
-	 * The feature id for the '<em><b>Notation Model</b></em>' reference. <!--
+	 * The feature id for the '<em><b>Objects</b></em>' reference list. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM_INSTANCE__NOTATION_MODEL = 0;
+	int DIAGRAM_INSTANCE__OBJECTS = MODEL_INSTANCE__OBJECTS;
+
+	/**
+	 * The feature id for the '<em><b>Root Packages</b></em>' reference list.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_INSTANCE__ROOT_PACKAGES = MODEL_INSTANCE__ROOT_PACKAGES;
 
 	/**
 	 * The number of structural features of the '<em>Diagram Instance</em>'
@@ -488,7 +643,16 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM_INSTANCE_FEATURE_COUNT = 1;
+	int DIAGRAM_INSTANCE_FEATURE_COUNT = MODEL_INSTANCE_FEATURE_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Get Diagrams</em>' operation. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM_INSTANCE___GET_DIAGRAMS = MODEL_INSTANCE_OPERATION_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>Diagram Instance</em>' class. <!--
@@ -497,7 +661,19 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM_INSTANCE_OPERATION_COUNT = 0;
+	int DIAGRAM_INSTANCE_OPERATION_COUNT = MODEL_INSTANCE_OPERATION_COUNT + 1;
+
+	/**
+	 * The meta object id for the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchChangeType
+	 * <em>Patch Change Type</em>}' enum. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchChangeType
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getPatchChangeType()
+	 * @generated
+	 */
+	int PATCH_CHANGE_TYPE = 8;
 
 	/**
 	 * Returns the meta object for class '
@@ -596,29 +772,85 @@ public interface ModelReviewPackage extends EPackage {
 
 	/**
 	 * Returns the meta object for the reference list '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getInvolvedModels
-	 * <em>Involved Models</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getNewInvolvedModels
+	 * <em>New Involved Models</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
-	 * @return the meta object for the reference list '<em>Involved Models</em>
-	 *         '.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getInvolvedModels()
+	 * @return the meta object for the reference list '
+	 *         <em>New Involved Models</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getNewInvolvedModels()
 	 * @see #getPatchSet()
 	 * @generated
 	 */
-	EReference getPatchSet_InvolvedModels();
+	EReference getPatchSet_NewInvolvedModels();
+
+	/**
+	 * Returns the meta object for the reference list '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getNewInvolvedDiagrams
+	 * <em>New Involved Diagrams</em>}'. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @return the meta object for the reference list '
+	 *         <em>New Involved Diagrams</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getNewInvolvedDiagrams()
+	 * @see #getPatchSet()
+	 * @generated
+	 */
+	EReference getPatchSet_NewInvolvedDiagrams();
+
+	/**
+	 * Returns the meta object for the reference list '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getOldInvolvedModels
+	 * <em>Old Involved Models</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @return the meta object for the reference list '
+	 *         <em>Old Involved Models</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getOldInvolvedModels()
+	 * @see #getPatchSet()
+	 * @generated
+	 */
+	EReference getPatchSet_OldInvolvedModels();
+
+	/**
+	 * Returns the meta object for the reference list '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getOldInvolvedDiagrams
+	 * <em>Old Involved Diagrams</em>}'. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @return the meta object for the reference list '
+	 *         <em>Old Involved Diagrams</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getOldInvolvedDiagrams()
+	 * @see #getPatchSet()
+	 * @generated
+	 */
+	EReference getPatchSet_OldInvolvedDiagrams();
 
 	/**
 	 * Returns the meta object for the reference '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getInvolvedDiagrams
-	 * <em>Involved Diagrams</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getModelComparison
+	 * <em>Model Comparison</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
 	 * 
-	 * @return the meta object for the reference '<em>Involved Diagrams</em>'.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getInvolvedDiagrams()
+	 * @return the meta object for the reference '<em>Model Comparison</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getModelComparison()
 	 * @see #getPatchSet()
 	 * @generated
 	 */
-	EReference getPatchSet_InvolvedDiagrams();
+	EReference getPatchSet_ModelComparison();
+
+	/**
+	 * Returns the meta object for the reference '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getDiagramComparison
+	 * <em>Diagram Comparison</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @return the meta object for the reference '<em>Diagram Comparison</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getDiagramComparison()
+	 * @see #getPatchSet()
+	 * @generated
+	 */
+	EReference getPatchSet_DiagramComparison();
 
 	/**
 	 * Returns the meta object for class '
@@ -633,27 +865,75 @@ public interface ModelReviewPackage extends EPackage {
 
 	/**
 	 * Returns the meta object for the attribute '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Patch#getPath
-	 * <em>Path</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Patch#getNewPath
+	 * <em>New Path</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @return the meta object for the attribute '<em>Path</em>'.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.Patch#getPath()
+	 * @return the meta object for the attribute '<em>New Path</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.Patch#getNewPath()
 	 * @see #getPatch()
 	 * @generated
 	 */
-	EAttribute getPatch_Path();
+	EAttribute getPatch_NewPath();
 
 	/**
 	 * Returns the meta object for the attribute '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Patch#getContent
-	 * <em>Content</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Patch#getOldPath
+	 * <em>Old Path</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @return the meta object for the attribute '<em>Content</em>'.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.Patch#getContent()
+	 * @return the meta object for the attribute '<em>Old Path</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.Patch#getOldPath()
 	 * @see #getPatch()
 	 * @generated
 	 */
-	EAttribute getPatch_Content();
+	EAttribute getPatch_OldPath();
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Patch#getNewContent
+	 * <em>New Content</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>New Content</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.Patch#getNewContent()
+	 * @see #getPatch()
+	 * @generated
+	 */
+	EAttribute getPatch_NewContent();
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Patch#getOldContent
+	 * <em>Old Content</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Old Content</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.Patch#getOldContent()
+	 * @see #getPatch()
+	 * @generated
+	 */
+	EAttribute getPatch_OldContent();
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Patch#getChangeType
+	 * <em>Change Type</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Change Type</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.Patch#getChangeType()
+	 * @see #getPatch()
+	 * @generated
+	 */
+	EAttribute getPatch_ChangeType();
+
+	/**
+	 * Returns the meta object for the reference '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Patch#getPatchSet
+	 * <em>Patch Set</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference '<em>Patch Set</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.Patch#getPatchSet()
+	 * @see #getPatch()
+	 * @generated
+	 */
+	EReference getPatch_PatchSet();
 
 	/**
 	 * Returns the meta object for class '
@@ -668,28 +948,31 @@ public interface ModelReviewPackage extends EPackage {
 
 	/**
 	 * Returns the meta object for the reference '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getComparison
-	 * <em>Comparison</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getNewDiagramInstance
+	 * <em>New Diagram Instance</em>}'. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
-	 * @return the meta object for the reference '<em>Comparison</em>'.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getComparison()
+	 * @return the meta object for the reference '<em>New Diagram Instance</em>
+	 *         '.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getNewDiagramInstance()
 	 * @see #getDiagramPatch()
 	 * @generated
 	 */
-	EReference getDiagramPatch_Comparison();
+	EReference getDiagramPatch_NewDiagramInstance();
 
 	/**
 	 * Returns the meta object for the reference '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getDiagramInstance
-	 * <em>Diagram Instance</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getOldDiagramInstance
+	 * <em>Old Diagram Instance</em>}'. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
-	 * @return the meta object for the reference '<em>Diagram Instance</em>'.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getDiagramInstance()
+	 * @return the meta object for the reference '<em>Old Diagram Instance</em>
+	 *         '.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getOldDiagramInstance()
 	 * @see #getDiagramPatch()
 	 * @generated
 	 */
-	EReference getDiagramPatch_DiagramInstance();
+	EReference getDiagramPatch_OldDiagramInstance();
 
 	/**
 	 * Returns the meta object for class '
@@ -704,27 +987,29 @@ public interface ModelReviewPackage extends EPackage {
 
 	/**
 	 * Returns the meta object for the reference '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getComparison
-	 * <em>Comparison</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getNewModelInstance
+	 * <em>New Model Instance</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
-	 * @return the meta object for the reference '<em>Comparison</em>'.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getComparison()
+	 * @return the meta object for the reference '<em>New Model Instance</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getNewModelInstance()
 	 * @see #getModelPatch()
 	 * @generated
 	 */
-	EReference getModelPatch_Comparison();
+	EReference getModelPatch_NewModelInstance();
 
 	/**
 	 * Returns the meta object for the reference '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getModelInstance
-	 * <em>Model Instance</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getOldModelInstance
+	 * <em>Old Model Instance</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
-	 * @return the meta object for the reference '<em>Model Instance</em>'.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getModelInstance()
+	 * @return the meta object for the reference '<em>Old Model Instance</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getOldModelInstance()
 	 * @see #getModelPatch()
 	 * @generated
 	 */
-	EReference getModelPatch_ModelInstance();
+	EReference getModelPatch_OldModelInstance();
 
 	/**
 	 * Returns the meta object for class '
@@ -773,16 +1058,16 @@ public interface ModelReviewPackage extends EPackage {
 	EReference getModelInstance_Objects();
 
 	/**
-	 * Returns the meta object for the reference '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelInstance#getRootPackage
-	 * <em>Root Package</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns the meta object for the reference list '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelInstance#getRootPackages
+	 * <em>Root Packages</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @return the meta object for the reference '<em>Root Package</em>'.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelInstance#getRootPackage()
+	 * @return the meta object for the reference list '<em>Root Packages</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelInstance#getRootPackages()
 	 * @see #getModelInstance()
 	 * @generated
 	 */
-	EReference getModelInstance_RootPackage();
+	EReference getModelInstance_RootPackages();
 
 	/**
 	 * Returns the meta object for class '
@@ -797,16 +1082,28 @@ public interface ModelReviewPackage extends EPackage {
 	EClass getDiagramInstance();
 
 	/**
-	 * Returns the meta object for the reference '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance#getNotationModel
-	 * <em>Notation Model</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns the meta object for the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance#getDiagrams()
+	 * <em>Get Diagrams</em>}' operation. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
-	 * @return the meta object for the reference '<em>Notation Model</em>'.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance#getNotationModel()
-	 * @see #getDiagramInstance()
+	 * @return the meta object for the '<em>Get Diagrams</em>' operation.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance#getDiagrams()
 	 * @generated
 	 */
-	EReference getDiagramInstance_NotationModel();
+	EOperation getDiagramInstance__GetDiagrams();
+
+	/**
+	 * Returns the meta object for enum '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchChangeType
+	 * <em>Patch Change Type</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @return the meta object for enum '<em>Patch Change Type</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchChangeType
+	 * @generated
+	 */
+	EEnum getPatchChangeType();
 
 	/**
 	 * Returns the factory that creates the instances of the model. <!--
@@ -907,22 +1204,60 @@ public interface ModelReviewPackage extends EPackage {
 		EReference PATCH_SET__PATCHES = eINSTANCE.getPatchSet_Patches();
 
 		/**
-		 * The meta object literal for the '<em><b>Involved Models</b></em>'
+		 * The meta object literal for the '<em><b>New Involved Models</b></em>'
 		 * reference list feature. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
 		 * @generated
 		 */
-		EReference PATCH_SET__INVOLVED_MODELS = eINSTANCE
-				.getPatchSet_InvolvedModels();
+		EReference PATCH_SET__NEW_INVOLVED_MODELS = eINSTANCE
+				.getPatchSet_NewInvolvedModels();
 
 		/**
-		 * The meta object literal for the '<em><b>Involved Diagrams</b></em>'
+		 * The meta object literal for the '
+		 * <em><b>New Involved Diagrams</b></em>' reference list feature. <!--
+		 * begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference PATCH_SET__NEW_INVOLVED_DIAGRAMS = eINSTANCE
+				.getPatchSet_NewInvolvedDiagrams();
+
+		/**
+		 * The meta object literal for the '<em><b>Old Involved Models</b></em>'
 		 * reference list feature. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
 		 * @generated
 		 */
-		EReference PATCH_SET__INVOLVED_DIAGRAMS = eINSTANCE
-				.getPatchSet_InvolvedDiagrams();
+		EReference PATCH_SET__OLD_INVOLVED_MODELS = eINSTANCE
+				.getPatchSet_OldInvolvedModels();
+
+		/**
+		 * The meta object literal for the '
+		 * <em><b>Old Involved Diagrams</b></em>' reference list feature. <!--
+		 * begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference PATCH_SET__OLD_INVOLVED_DIAGRAMS = eINSTANCE
+				.getPatchSet_OldInvolvedDiagrams();
+
+		/**
+		 * The meta object literal for the '<em><b>Model Comparison</b></em>'
+		 * reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference PATCH_SET__MODEL_COMPARISON = eINSTANCE
+				.getPatchSet_ModelComparison();
+
+		/**
+		 * The meta object literal for the '<em><b>Diagram Comparison</b></em>'
+		 * reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference PATCH_SET__DIAGRAM_COMPARISON = eINSTANCE
+				.getPatchSet_DiagramComparison();
 
 		/**
 		 * The meta object literal for the '
@@ -936,20 +1271,52 @@ public interface ModelReviewPackage extends EPackage {
 		EClass PATCH = eINSTANCE.getPatch();
 
 		/**
-		 * The meta object literal for the '<em><b>Path</b></em>' attribute
+		 * The meta object literal for the '<em><b>New Path</b></em>' attribute
 		 * feature. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
 		 * @generated
 		 */
-		EAttribute PATCH__PATH = eINSTANCE.getPatch_Path();
+		EAttribute PATCH__NEW_PATH = eINSTANCE.getPatch_NewPath();
 
 		/**
-		 * The meta object literal for the '<em><b>Content</b></em>' attribute
+		 * The meta object literal for the '<em><b>Old Path</b></em>' attribute
 		 * feature. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
 		 * @generated
 		 */
-		EAttribute PATCH__CONTENT = eINSTANCE.getPatch_Content();
+		EAttribute PATCH__OLD_PATH = eINSTANCE.getPatch_OldPath();
+
+		/**
+		 * The meta object literal for the '<em><b>New Content</b></em>'
+		 * attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute PATCH__NEW_CONTENT = eINSTANCE.getPatch_NewContent();
+
+		/**
+		 * The meta object literal for the '<em><b>Old Content</b></em>'
+		 * attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute PATCH__OLD_CONTENT = eINSTANCE.getPatch_OldContent();
+
+		/**
+		 * The meta object literal for the '<em><b>Change Type</b></em>'
+		 * attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute PATCH__CHANGE_TYPE = eINSTANCE.getPatch_ChangeType();
+
+		/**
+		 * The meta object literal for the '<em><b>Patch Set</b></em>' reference
+		 * feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference PATCH__PATCH_SET = eINSTANCE.getPatch_PatchSet();
 
 		/**
 		 * The meta object literal for the '
@@ -964,22 +1331,22 @@ public interface ModelReviewPackage extends EPackage {
 		EClass DIAGRAM_PATCH = eINSTANCE.getDiagramPatch();
 
 		/**
-		 * The meta object literal for the '<em><b>Comparison</b></em>'
-		 * reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * The meta object literal for the '<em><b>New Diagram Instance</b></em>
+		 * ' reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
 		 * @generated
 		 */
-		EReference DIAGRAM_PATCH__COMPARISON = eINSTANCE
-				.getDiagramPatch_Comparison();
+		EReference DIAGRAM_PATCH__NEW_DIAGRAM_INSTANCE = eINSTANCE
+				.getDiagramPatch_NewDiagramInstance();
 
 		/**
-		 * The meta object literal for the '<em><b>Diagram Instance</b></em>'
-		 * reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * The meta object literal for the '<em><b>Old Diagram Instance</b></em>
+		 * ' reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
 		 * @generated
 		 */
-		EReference DIAGRAM_PATCH__DIAGRAM_INSTANCE = eINSTANCE
-				.getDiagramPatch_DiagramInstance();
+		EReference DIAGRAM_PATCH__OLD_DIAGRAM_INSTANCE = eINSTANCE
+				.getDiagramPatch_OldDiagramInstance();
 
 		/**
 		 * The meta object literal for the '
@@ -994,22 +1361,22 @@ public interface ModelReviewPackage extends EPackage {
 		EClass MODEL_PATCH = eINSTANCE.getModelPatch();
 
 		/**
-		 * The meta object literal for the '<em><b>Comparison</b></em>'
+		 * The meta object literal for the '<em><b>New Model Instance</b></em>'
 		 * reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
 		 * @generated
 		 */
-		EReference MODEL_PATCH__COMPARISON = eINSTANCE
-				.getModelPatch_Comparison();
+		EReference MODEL_PATCH__NEW_MODEL_INSTANCE = eINSTANCE
+				.getModelPatch_NewModelInstance();
 
 		/**
-		 * The meta object literal for the '<em><b>Model Instance</b></em>'
+		 * The meta object literal for the '<em><b>Old Model Instance</b></em>'
 		 * reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
 		 * @generated
 		 */
-		EReference MODEL_PATCH__MODEL_INSTANCE = eINSTANCE
-				.getModelPatch_ModelInstance();
+		EReference MODEL_PATCH__OLD_MODEL_INSTANCE = eINSTANCE
+				.getModelPatch_OldModelInstance();
 
 		/**
 		 * The meta object literal for the '
@@ -1053,13 +1420,13 @@ public interface ModelReviewPackage extends EPackage {
 				.getModelInstance_Objects();
 
 		/**
-		 * The meta object literal for the '<em><b>Root Package</b></em>'
-		 * reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * The meta object literal for the '<em><b>Root Packages</b></em>'
+		 * reference list feature. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
 		 * @generated
 		 */
-		EReference MODEL_INSTANCE__ROOT_PACKAGE = eINSTANCE
-				.getModelInstance_RootPackage();
+		EReference MODEL_INSTANCE__ROOT_PACKAGES = eINSTANCE
+				.getModelInstance_RootPackages();
 
 		/**
 		 * The meta object literal for the '
@@ -1074,13 +1441,25 @@ public interface ModelReviewPackage extends EPackage {
 		EClass DIAGRAM_INSTANCE = eINSTANCE.getDiagramInstance();
 
 		/**
-		 * The meta object literal for the '<em><b>Notation Model</b></em>'
-		 * reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * The meta object literal for the '<em><b>Get Diagrams</b></em>'
+		 * operation. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
 		 * @generated
 		 */
-		EReference DIAGRAM_INSTANCE__NOTATION_MODEL = eINSTANCE
-				.getDiagramInstance_NotationModel();
+		EOperation DIAGRAM_INSTANCE___GET_DIAGRAMS = eINSTANCE
+				.getDiagramInstance__GetDiagrams();
+
+		/**
+		 * The meta object literal for the '
+		 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchChangeType
+		 * <em>Patch Change Type</em>}' enum. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchChangeType
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getPatchChangeType()
+		 * @generated
+		 */
+		EEnum PATCH_CHANGE_TYPE = eINSTANCE.getPatchChangeType();
 
 	}
 

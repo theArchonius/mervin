@@ -28,8 +28,8 @@ import org.eclipse.emf.ecore.EPackage;
  * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelInstance#getObjects
  * <em>Objects</em>}</li>
  * <li>
- * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelInstance#getRootPackage
- * <em>Root Package</em>}</li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelInstance#getRootPackages
+ * <em>Root Packages</em>}</li>
  * </ul>
  * </p>
  *
@@ -56,33 +56,20 @@ public interface ModelInstance extends EObject {
 	EList<EObject> getObjects();
 
 	/**
-	 * Returns the value of the '<em><b>Root Package</b></em>' reference. <!--
-	 * begin-user-doc -->
+	 * Returns the value of the '<em><b>Root Packages</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.emf.ecore.EPackage}.
+	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Root Package</em>' reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Root Packages</em>' reference list isn't
+	 * clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Root Package</em>' reference.
-	 * @see #setRootPackage(EPackage)
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelInstance_RootPackage()
+	 * @return the value of the '<em>Root Packages</em>' reference list.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelInstance_RootPackages()
 	 * @model
 	 * @generated
 	 */
-	EPackage getRootPackage();
-
-	/**
-	 * Sets the value of the '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelInstance#getRootPackage
-	 * <em>Root Package</em>}' reference. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Root Package</em>' reference.
-	 * @see #getRootPackage()
-	 * @generated
-	 */
-	void setRootPackage(EPackage value);
+	EList<EPackage> getRootPackages();
 
 } // ModelInstance

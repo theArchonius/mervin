@@ -14,21 +14,12 @@ package at.bitandart.zoubek.mervin.model.modelreview.impl;
 
 import at.bitandart.zoubek.mervin.model.modelreview.ModelInstance;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
-
 import java.util.Collection;
-
-import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.InternalEObject;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
-
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 /**
@@ -41,8 +32,8 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelInstanceImpl#getObjects
  * <em>Objects</em>}</li>
  * <li>
- * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelInstanceImpl#getRootPackage
- * <em>Root Package</em>}</li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelInstanceImpl#getRootPackages
+ * <em>Root Packages</em>}</li>
  * </ul>
  * </p>
  *
@@ -61,14 +52,15 @@ public class ModelInstanceImpl extends MinimalEObjectImpl.Container implements
 	protected EList<EObject> objects;
 
 	/**
-	 * The cached value of the '{@link #getRootPackage() <em>Root Package</em>}'
-	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getRootPackages()
+	 * <em>Root Packages</em>}' reference list. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
 	 * 
-	 * @see #getRootPackage()
+	 * @see #getRootPackages()
 	 * @generated
 	 * @ordered
 	 */
-	protected EPackage rootPackage;
+	protected EList<EPackage> rootPackages;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -107,41 +99,12 @@ public class ModelInstanceImpl extends MinimalEObjectImpl.Container implements
 	 * 
 	 * @generated
 	 */
-	public EPackage getRootPackage() {
-		if (rootPackage != null && rootPackage.eIsProxy()) {
-			InternalEObject oldRootPackage = (InternalEObject) rootPackage;
-			rootPackage = (EPackage) eResolveProxy(oldRootPackage);
-			if (rootPackage != oldRootPackage) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							ModelReviewPackage.MODEL_INSTANCE__ROOT_PACKAGE,
-							oldRootPackage, rootPackage));
-			}
+	public EList<EPackage> getRootPackages() {
+		if (rootPackages == null) {
+			rootPackages = new EObjectResolvingEList<EPackage>(EPackage.class,
+					this, ModelReviewPackage.MODEL_INSTANCE__ROOT_PACKAGES);
 		}
-		return rootPackage;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public EPackage basicGetRootPackage() {
-		return rootPackage;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public void setRootPackage(EPackage newRootPackage) {
-		EPackage oldRootPackage = rootPackage;
-		rootPackage = newRootPackage;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					ModelReviewPackage.MODEL_INSTANCE__ROOT_PACKAGE,
-					oldRootPackage, rootPackage));
+		return rootPackages;
 	}
 
 	/**
@@ -154,10 +117,8 @@ public class ModelInstanceImpl extends MinimalEObjectImpl.Container implements
 		switch (featureID) {
 		case ModelReviewPackage.MODEL_INSTANCE__OBJECTS:
 			return getObjects();
-		case ModelReviewPackage.MODEL_INSTANCE__ROOT_PACKAGE:
-			if (resolve)
-				return getRootPackage();
-			return basicGetRootPackage();
+		case ModelReviewPackage.MODEL_INSTANCE__ROOT_PACKAGES:
+			return getRootPackages();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -175,8 +136,9 @@ public class ModelInstanceImpl extends MinimalEObjectImpl.Container implements
 			getObjects().clear();
 			getObjects().addAll((Collection<? extends EObject>) newValue);
 			return;
-		case ModelReviewPackage.MODEL_INSTANCE__ROOT_PACKAGE:
-			setRootPackage((EPackage) newValue);
+		case ModelReviewPackage.MODEL_INSTANCE__ROOT_PACKAGES:
+			getRootPackages().clear();
+			getRootPackages().addAll((Collection<? extends EPackage>) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -193,8 +155,8 @@ public class ModelInstanceImpl extends MinimalEObjectImpl.Container implements
 		case ModelReviewPackage.MODEL_INSTANCE__OBJECTS:
 			getObjects().clear();
 			return;
-		case ModelReviewPackage.MODEL_INSTANCE__ROOT_PACKAGE:
-			setRootPackage((EPackage) null);
+		case ModelReviewPackage.MODEL_INSTANCE__ROOT_PACKAGES:
+			getRootPackages().clear();
 			return;
 		}
 		super.eUnset(featureID);
@@ -210,8 +172,8 @@ public class ModelInstanceImpl extends MinimalEObjectImpl.Container implements
 		switch (featureID) {
 		case ModelReviewPackage.MODEL_INSTANCE__OBJECTS:
 			return objects != null && !objects.isEmpty();
-		case ModelReviewPackage.MODEL_INSTANCE__ROOT_PACKAGE:
-			return rootPackage != null;
+		case ModelReviewPackage.MODEL_INSTANCE__ROOT_PACKAGES:
+			return rootPackages != null && !rootPackages.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

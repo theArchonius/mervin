@@ -53,48 +53,50 @@ public class DiagramPatchItemProvider extends PatchItemProvider {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addComparisonPropertyDescriptor(object);
-			addDiagramInstancePropertyDescriptor(object);
+			addNewDiagramInstancePropertyDescriptor(object);
+			addOldDiagramInstancePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the Comparison feature. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * This adds a property descriptor for the New Diagram Instance feature.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected void addComparisonPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_DiagramPatch_comparison_feature"),
-				getString("_UI_PropertyDescriptor_description",
-						"_UI_DiagramPatch_comparison_feature",
-						"_UI_DiagramPatch_type"),
-				ModelReviewPackage.Literals.DIAGRAM_PATCH__COMPARISON, true,
-				false, true, null, null, null));
+	protected void addNewDiagramInstancePropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory) adapterFactory)
+								.getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_DiagramPatch_newDiagramInstance_feature"),
+						getString("_UI_PropertyDescriptor_description",
+								"_UI_DiagramPatch_newDiagramInstance_feature",
+								"_UI_DiagramPatch_type"),
+						ModelReviewPackage.Literals.DIAGRAM_PATCH__NEW_DIAGRAM_INSTANCE,
+						true, false, true, null, null, null));
 	}
 
 	/**
-	 * This adds a property descriptor for the Diagram Instance feature. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * This adds a property descriptor for the Old Diagram Instance feature.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected void addDiagramInstancePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_DiagramPatch_diagramInstance_feature"),
-				getString("_UI_PropertyDescriptor_description",
-						"_UI_DiagramPatch_diagramInstance_feature",
-						"_UI_DiagramPatch_type"),
-				ModelReviewPackage.Literals.DIAGRAM_PATCH__DIAGRAM_INSTANCE,
-				true, false, true, null, null, null));
+	protected void addOldDiagramInstancePropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory) adapterFactory)
+								.getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_DiagramPatch_oldDiagramInstance_feature"),
+						getString("_UI_PropertyDescriptor_description",
+								"_UI_DiagramPatch_oldDiagramInstance_feature",
+								"_UI_DiagramPatch_type"),
+						ModelReviewPackage.Literals.DIAGRAM_PATCH__OLD_DIAGRAM_INSTANCE,
+						true, false, true, null, null, null));
 	}
 
 	/**
@@ -117,7 +119,7 @@ public class DiagramPatchItemProvider extends PatchItemProvider {
 	 */
 	@Override
 	public String getText(Object object) {
-		String label = ((DiagramPatch) object).getPath();
+		String label = ((DiagramPatch) object).getNewPath();
 		return label == null || label.length() == 0 ? getString("_UI_DiagramPatch_type")
 				: getString("_UI_DiagramPatch_type") + " " + label;
 	}

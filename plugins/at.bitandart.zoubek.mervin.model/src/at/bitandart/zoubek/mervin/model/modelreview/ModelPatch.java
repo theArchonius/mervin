@@ -12,7 +12,6 @@
  */
 package at.bitandart.zoubek.mervin.model.modelreview;
 
-import org.eclipse.emf.compare.Comparison;
 
 /**
  * <!-- begin-user-doc --> A representation of the model object '
@@ -22,11 +21,11 @@ import org.eclipse.emf.compare.Comparison;
  * The following features are supported:
  * <ul>
  * <li>
- * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getComparison
- * <em>Comparison</em>}</li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getNewModelInstance
+ * <em>New Model Instance</em>}</li>
  * <li>
- * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getModelInstance
- * <em>Model Instance</em>}</li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getOldModelInstance
+ * <em>Old Model Instance</em>}</li>
  * </ul>
  * </p>
  *
@@ -37,62 +36,62 @@ import org.eclipse.emf.compare.Comparison;
 public interface ModelPatch extends Patch {
 
 	/**
-	 * Returns the value of the '<em><b>Comparison</b></em>' reference. <!--
-	 * begin-user-doc -->
+	 * Returns the value of the '<em><b>New Model Instance</b></em>' reference.
+	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Comparison</em>' reference isn't clear, there
-	 * really should be more of a description here...
+	 * If the meaning of the '<em>New Model Instance</em>' reference isn't
+	 * clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Comparison</em>' reference.
-	 * @see #setComparison(Comparison)
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelPatch_Comparison()
+	 * @return the value of the '<em>New Model Instance</em>' reference.
+	 * @see #setNewModelInstance(ModelInstance)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelPatch_NewModelInstance()
 	 * @model
 	 * @generated
 	 */
-	Comparison getComparison();
+	ModelInstance getNewModelInstance();
 
 	/**
 	 * Sets the value of the '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getComparison
-	 * <em>Comparison</em>}' reference. <!-- begin-user-doc --> <!--
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getNewModelInstance
+	 * <em>New Model Instance</em>}' reference. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
 	 * @param value
-	 *            the new value of the '<em>Comparison</em>' reference.
-	 * @see #getComparison()
+	 *            the new value of the '<em>New Model Instance</em>' reference.
+	 * @see #getNewModelInstance()
 	 * @generated
 	 */
-	void setComparison(Comparison value);
+	void setNewModelInstance(ModelInstance value);
 
 	/**
-	 * Returns the value of the '<em><b>Model Instance</b></em>' reference. <!--
-	 * begin-user-doc -->
+	 * Returns the value of the '<em><b>Old Model Instance</b></em>' reference.
+	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Model Instance</em>' reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Old Model Instance</em>' reference isn't
+	 * clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Model Instance</em>' reference.
-	 * @see #setModelInstance(ModelInstance)
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelPatch_ModelInstance()
+	 * @return the value of the '<em>Old Model Instance</em>' reference.
+	 * @see #setOldModelInstance(ModelInstance)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelPatch_OldModelInstance()
 	 * @model
 	 * @generated
 	 */
-	ModelInstance getModelInstance();
+	ModelInstance getOldModelInstance();
 
 	/**
 	 * Sets the value of the '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getModelInstance
-	 * <em>Model Instance</em>}' reference. <!-- begin-user-doc --> <!--
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getOldModelInstance
+	 * <em>Old Model Instance</em>}' reference. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
 	 * @param value
-	 *            the new value of the '<em>Model Instance</em>' reference.
-	 * @see #getModelInstance()
+	 *            the new value of the '<em>Old Model Instance</em>' reference.
+	 * @see #getOldModelInstance()
 	 * @generated
 	 */
-	void setModelInstance(ModelInstance value);
+	void setOldModelInstance(ModelInstance value);
 } // ModelPatch

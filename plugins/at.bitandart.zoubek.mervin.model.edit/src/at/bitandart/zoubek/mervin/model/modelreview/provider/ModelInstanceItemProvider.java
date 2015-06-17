@@ -63,7 +63,7 @@ public class ModelInstanceItemProvider extends ItemProviderAdapter implements
 			super.getPropertyDescriptors(object);
 
 			addObjectsPropertyDescriptor(object);
-			addRootPackagePropertyDescriptor(object);
+			addRootPackagesPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -88,22 +88,22 @@ public class ModelInstanceItemProvider extends ItemProviderAdapter implements
 	}
 
 	/**
-	 * This adds a property descriptor for the Root Package feature. <!--
+	 * This adds a property descriptor for the Root Packages feature. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected void addRootPackagePropertyDescriptor(Object object) {
+	protected void addRootPackagesPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(
 				((ComposeableAdapterFactory) adapterFactory)
 						.getRootAdapterFactory(),
 				getResourceLocator(),
-				getString("_UI_ModelInstance_rootPackage_feature"),
+				getString("_UI_ModelInstance_rootPackages_feature"),
 				getString("_UI_PropertyDescriptor_description",
-						"_UI_ModelInstance_rootPackage_feature",
+						"_UI_ModelInstance_rootPackages_feature",
 						"_UI_ModelInstance_type"),
-				ModelReviewPackage.Literals.MODEL_INSTANCE__ROOT_PACKAGE, true,
-				false, true, null, null, null));
+				ModelReviewPackage.Literals.MODEL_INSTANCE__ROOT_PACKAGES,
+				true, false, true, null, null, null));
 	}
 
 	/**

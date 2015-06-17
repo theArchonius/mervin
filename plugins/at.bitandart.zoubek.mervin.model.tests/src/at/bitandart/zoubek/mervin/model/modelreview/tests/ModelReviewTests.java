@@ -41,6 +41,7 @@ public class ModelReviewTests extends TestSuite {
 	 */
 	public static Test suite() {
 		TestSuite suite = new ModelReviewTests("modelreview Tests");
+		suite.addTestSuite(DiagramInstanceTest.class);
 		return suite;
 	}
 

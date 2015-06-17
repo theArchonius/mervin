@@ -12,7 +12,6 @@
  */
 package at.bitandart.zoubek.mervin.model.modelreview;
 
-import org.eclipse.emf.compare.Comparison;
 
 /**
  * <!-- begin-user-doc --> A representation of the model object '
@@ -22,11 +21,11 @@ import org.eclipse.emf.compare.Comparison;
  * The following features are supported:
  * <ul>
  * <li>
- * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getComparison
- * <em>Comparison</em>}</li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getNewDiagramInstance
+ * <em>New Diagram Instance</em>}</li>
  * <li>
- * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getDiagramInstance
- * <em>Diagram Instance</em>}</li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getOldDiagramInstance
+ * <em>Old Diagram Instance</em>}</li>
  * </ul>
  * </p>
  *
@@ -37,62 +36,64 @@ import org.eclipse.emf.compare.Comparison;
 public interface DiagramPatch extends Patch {
 
 	/**
-	 * Returns the value of the '<em><b>Comparison</b></em>' reference. <!--
-	 * begin-user-doc -->
+	 * Returns the value of the '<em><b>New Diagram Instance</b></em>'
+	 * reference. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Comparison</em>' reference isn't clear, there
-	 * really should be more of a description here...
+	 * If the meaning of the '<em>New Diagram Instance</em>' reference isn't
+	 * clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Comparison</em>' reference.
-	 * @see #setComparison(Comparison)
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getDiagramPatch_Comparison()
+	 * @return the value of the '<em>New Diagram Instance</em>' reference.
+	 * @see #setNewDiagramInstance(DiagramInstance)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getDiagramPatch_NewDiagramInstance()
 	 * @model
 	 * @generated
 	 */
-	Comparison getComparison();
+	DiagramInstance getNewDiagramInstance();
 
 	/**
 	 * Sets the value of the '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getComparison
-	 * <em>Comparison</em>}' reference. <!-- begin-user-doc --> <!--
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getNewDiagramInstance
+	 * <em>New Diagram Instance</em>}' reference. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
 	 * @param value
-	 *            the new value of the '<em>Comparison</em>' reference.
-	 * @see #getComparison()
+	 *            the new value of the '<em>New Diagram Instance</em>'
+	 *            reference.
+	 * @see #getNewDiagramInstance()
 	 * @generated
 	 */
-	void setComparison(Comparison value);
+	void setNewDiagramInstance(DiagramInstance value);
 
 	/**
-	 * Returns the value of the '<em><b>Diagram Instance</b></em>' reference.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Old Diagram Instance</b></em>'
+	 * reference. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Diagram Instance</em>' reference isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Old Diagram Instance</em>' reference isn't
+	 * clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Diagram Instance</em>' reference.
-	 * @see #setDiagramInstance(DiagramInstance)
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getDiagramPatch_DiagramInstance()
+	 * @return the value of the '<em>Old Diagram Instance</em>' reference.
+	 * @see #setOldDiagramInstance(DiagramInstance)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getDiagramPatch_OldDiagramInstance()
 	 * @model
 	 * @generated
 	 */
-	DiagramInstance getDiagramInstance();
+	DiagramInstance getOldDiagramInstance();
 
 	/**
 	 * Sets the value of the '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getDiagramInstance
-	 * <em>Diagram Instance</em>}' reference. <!-- begin-user-doc --> <!--
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getOldDiagramInstance
+	 * <em>Old Diagram Instance</em>}' reference. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
 	 * @param value
-	 *            the new value of the '<em>Diagram Instance</em>' reference.
-	 * @see #getDiagramInstance()
+	 *            the new value of the '<em>Old Diagram Instance</em>'
+	 *            reference.
+	 * @see #getOldDiagramInstance()
 	 * @generated
 	 */
-	void setDiagramInstance(DiagramInstance value);
+	void setOldDiagramInstance(DiagramInstance value);
 } // DiagramPatch

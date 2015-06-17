@@ -14,6 +14,7 @@ package at.bitandart.zoubek.mervin.model.modelreview;
 
 import org.eclipse.emf.common.util.EList;
 
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -30,11 +31,23 @@ import org.eclipse.emf.ecore.EObject;
  * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getPatches
  * <em>Patches</em>}</li>
  * <li>
- * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getInvolvedModels
- * <em>Involved Models</em>}</li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getNewInvolvedModels
+ * <em>New Involved Models</em>}</li>
  * <li>
- * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getInvolvedDiagrams
- * <em>Involved Diagrams</em>}</li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getNewInvolvedDiagrams
+ * <em>New Involved Diagrams</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getOldInvolvedModels
+ * <em>Old Involved Models</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getOldInvolvedDiagrams
+ * <em>Old Involved Diagrams</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getModelComparison
+ * <em>Model Comparison</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getDiagramComparison
+ * <em>Diagram Comparison</em>}</li>
  * </ul>
  * </p>
  *
@@ -124,39 +137,135 @@ public interface PatchSet extends EObject {
 	EList<Patch> getPatches();
 
 	/**
-	 * Returns the value of the '<em><b>Involved Models</b></em>' reference
+	 * Returns the value of the '<em><b>New Involved Models</b></em>' reference
 	 * list. The list contents are of type
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelInstance}. <!--
 	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Involved Models</em>' reference list isn't
+	 * If the meaning of the '<em>New Involved Models</em>' reference list isn't
 	 * clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Involved Models</em>' reference list.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getPatchSet_InvolvedModels()
+	 * @return the value of the '<em>New Involved Models</em>' reference list.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getPatchSet_NewInvolvedModels()
 	 * @model
 	 * @generated
 	 */
-	EList<ModelInstance> getInvolvedModels();
+	EList<ModelInstance> getNewInvolvedModels();
 
 	/**
-	 * Returns the value of the '<em><b>Involved Diagrams</b></em>' reference
-	 * list. The list contents are of type
+	 * Returns the value of the '<em><b>New Involved Diagrams</b></em>'
+	 * reference list. The list contents are of type
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Involved Diagrams</em>' reference isn't clear,
+	 * If the meaning of the '<em>New Involved Diagrams</em>' reference list
+	 * isn't clear, there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>New Involved Diagrams</em>' reference list.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getPatchSet_NewInvolvedDiagrams()
+	 * @model
+	 * @generated
+	 */
+	EList<DiagramInstance> getNewInvolvedDiagrams();
+
+	/**
+	 * Returns the value of the '<em><b>Old Involved Models</b></em>' reference
+	 * list. The list contents are of type
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelInstance}. <!--
+	 * begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Old Involved Models</em>' reference list isn't
+	 * clear, there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Old Involved Models</em>' reference list.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getPatchSet_OldInvolvedModels()
+	 * @model
+	 * @generated
+	 */
+	EList<ModelInstance> getOldInvolvedModels();
+
+	/**
+	 * Returns the value of the '<em><b>Old Involved Diagrams</b></em>'
+	 * reference list. The list contents are of type
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Old Involved Diagrams</em>' reference list
+	 * isn't clear, there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Old Involved Diagrams</em>' reference list.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getPatchSet_OldInvolvedDiagrams()
+	 * @model
+	 * @generated
+	 */
+	EList<DiagramInstance> getOldInvolvedDiagrams();
+
+	/**
+	 * Returns the value of the '<em><b>Model Comparison</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Model Comparison</em>' reference isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Involved Diagrams</em>' reference list.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getPatchSet_InvolvedDiagrams()
+	 * @return the value of the '<em>Model Comparison</em>' reference.
+	 * @see #setModelComparison(Comparison)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getPatchSet_ModelComparison()
 	 * @model
 	 * @generated
 	 */
-	EList<DiagramInstance> getInvolvedDiagrams();
+	Comparison getModelComparison();
+
+	/**
+	 * Sets the value of the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getModelComparison
+	 * <em>Model Comparison</em>}' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Model Comparison</em>' reference.
+	 * @see #getModelComparison()
+	 * @generated
+	 */
+	void setModelComparison(Comparison value);
+
+	/**
+	 * Returns the value of the '<em><b>Diagram Comparison</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Diagram Comparison</em>' reference isn't
+	 * clear, there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Diagram Comparison</em>' reference.
+	 * @see #setDiagramComparison(Comparison)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getPatchSet_DiagramComparison()
+	 * @model
+	 * @generated
+	 */
+	Comparison getDiagramComparison();
+
+	/**
+	 * Sets the value of the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getDiagramComparison
+	 * <em>Diagram Comparison</em>}' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Diagram Comparison</em>' reference.
+	 * @see #getDiagramComparison()
+	 * @generated
+	 */
+	void setDiagramComparison(Comparison value);
 
 } // PatchSet

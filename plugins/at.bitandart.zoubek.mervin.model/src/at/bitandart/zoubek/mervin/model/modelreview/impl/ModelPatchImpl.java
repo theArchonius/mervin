@@ -15,9 +15,7 @@ package at.bitandart.zoubek.mervin.model.modelreview.impl;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelInstance;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelPatch;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
-
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -29,11 +27,11 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * The following features are implemented:
  * <ul>
  * <li>
- * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelPatchImpl#getComparison
- * <em>Comparison</em>}</li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelPatchImpl#getNewModelInstance
+ * <em>New Model Instance</em>}</li>
  * <li>
- * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelPatchImpl#getModelInstance
- * <em>Model Instance</em>}</li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelPatchImpl#getOldModelInstance
+ * <em>Old Model Instance</em>}</li>
  * </ul>
  * </p>
  *
@@ -41,24 +39,25 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  */
 public class ModelPatchImpl extends PatchImpl implements ModelPatch {
 	/**
-	 * The cached value of the '{@link #getComparison() <em>Comparison</em>}'
-	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #getComparison()
-	 * @generated
-	 * @ordered
-	 */
-	protected Comparison comparison;
-	/**
-	 * The cached value of the '{@link #getModelInstance()
-	 * <em>Model Instance</em>}' reference. <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getNewModelInstance()
+	 * <em>New Model Instance</em>}' reference. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
-	 * @see #getModelInstance()
+	 * @see #getNewModelInstance()
 	 * @generated
 	 * @ordered
 	 */
-	protected ModelInstance modelInstance;
+	protected ModelInstance newModelInstance;
+	/**
+	 * The cached value of the '{@link #getOldModelInstance()
+	 * <em>Old Model Instance</em>}' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #getOldModelInstance()
+	 * @generated
+	 * @ordered
+	 */
+	protected ModelInstance oldModelInstance;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -84,18 +83,18 @@ public class ModelPatchImpl extends PatchImpl implements ModelPatch {
 	 * 
 	 * @generated
 	 */
-	public Comparison getComparison() {
-		if (comparison != null && comparison.eIsProxy()) {
-			InternalEObject oldComparison = (InternalEObject) comparison;
-			comparison = (Comparison) eResolveProxy(oldComparison);
-			if (comparison != oldComparison) {
+	public ModelInstance getNewModelInstance() {
+		if (newModelInstance != null && newModelInstance.eIsProxy()) {
+			InternalEObject oldNewModelInstance = (InternalEObject) newModelInstance;
+			newModelInstance = (ModelInstance) eResolveProxy(oldNewModelInstance);
+			if (newModelInstance != oldNewModelInstance) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							ModelReviewPackage.MODEL_PATCH__COMPARISON,
-							oldComparison, comparison));
+							ModelReviewPackage.MODEL_PATCH__NEW_MODEL_INSTANCE,
+							oldNewModelInstance, newModelInstance));
 			}
 		}
-		return comparison;
+		return newModelInstance;
 	}
 
 	/**
@@ -103,8 +102,8 @@ public class ModelPatchImpl extends PatchImpl implements ModelPatch {
 	 * 
 	 * @generated
 	 */
-	public Comparison basicGetComparison() {
-		return comparison;
+	public ModelInstance basicGetNewModelInstance() {
+		return newModelInstance;
 	}
 
 	/**
@@ -112,13 +111,13 @@ public class ModelPatchImpl extends PatchImpl implements ModelPatch {
 	 * 
 	 * @generated
 	 */
-	public void setComparison(Comparison newComparison) {
-		Comparison oldComparison = comparison;
-		comparison = newComparison;
+	public void setNewModelInstance(ModelInstance newNewModelInstance) {
+		ModelInstance oldNewModelInstance = newModelInstance;
+		newModelInstance = newNewModelInstance;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
-					ModelReviewPackage.MODEL_PATCH__COMPARISON, oldComparison,
-					comparison));
+					ModelReviewPackage.MODEL_PATCH__NEW_MODEL_INSTANCE,
+					oldNewModelInstance, newModelInstance));
 	}
 
 	/**
@@ -126,18 +125,18 @@ public class ModelPatchImpl extends PatchImpl implements ModelPatch {
 	 * 
 	 * @generated
 	 */
-	public ModelInstance getModelInstance() {
-		if (modelInstance != null && modelInstance.eIsProxy()) {
-			InternalEObject oldModelInstance = (InternalEObject) modelInstance;
-			modelInstance = (ModelInstance) eResolveProxy(oldModelInstance);
-			if (modelInstance != oldModelInstance) {
+	public ModelInstance getOldModelInstance() {
+		if (oldModelInstance != null && oldModelInstance.eIsProxy()) {
+			InternalEObject oldOldModelInstance = (InternalEObject) oldModelInstance;
+			oldModelInstance = (ModelInstance) eResolveProxy(oldOldModelInstance);
+			if (oldModelInstance != oldOldModelInstance) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							ModelReviewPackage.MODEL_PATCH__MODEL_INSTANCE,
-							oldModelInstance, modelInstance));
+							ModelReviewPackage.MODEL_PATCH__OLD_MODEL_INSTANCE,
+							oldOldModelInstance, oldModelInstance));
 			}
 		}
-		return modelInstance;
+		return oldModelInstance;
 	}
 
 	/**
@@ -145,8 +144,8 @@ public class ModelPatchImpl extends PatchImpl implements ModelPatch {
 	 * 
 	 * @generated
 	 */
-	public ModelInstance basicGetModelInstance() {
-		return modelInstance;
+	public ModelInstance basicGetOldModelInstance() {
+		return oldModelInstance;
 	}
 
 	/**
@@ -154,13 +153,13 @@ public class ModelPatchImpl extends PatchImpl implements ModelPatch {
 	 * 
 	 * @generated
 	 */
-	public void setModelInstance(ModelInstance newModelInstance) {
-		ModelInstance oldModelInstance = modelInstance;
-		modelInstance = newModelInstance;
+	public void setOldModelInstance(ModelInstance newOldModelInstance) {
+		ModelInstance oldOldModelInstance = oldModelInstance;
+		oldModelInstance = newOldModelInstance;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
-					ModelReviewPackage.MODEL_PATCH__MODEL_INSTANCE,
-					oldModelInstance, modelInstance));
+					ModelReviewPackage.MODEL_PATCH__OLD_MODEL_INSTANCE,
+					oldOldModelInstance, oldModelInstance));
 	}
 
 	/**
@@ -171,14 +170,14 @@ public class ModelPatchImpl extends PatchImpl implements ModelPatch {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case ModelReviewPackage.MODEL_PATCH__COMPARISON:
+		case ModelReviewPackage.MODEL_PATCH__NEW_MODEL_INSTANCE:
 			if (resolve)
-				return getComparison();
-			return basicGetComparison();
-		case ModelReviewPackage.MODEL_PATCH__MODEL_INSTANCE:
+				return getNewModelInstance();
+			return basicGetNewModelInstance();
+		case ModelReviewPackage.MODEL_PATCH__OLD_MODEL_INSTANCE:
 			if (resolve)
-				return getModelInstance();
-			return basicGetModelInstance();
+				return getOldModelInstance();
+			return basicGetOldModelInstance();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -191,11 +190,11 @@ public class ModelPatchImpl extends PatchImpl implements ModelPatch {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case ModelReviewPackage.MODEL_PATCH__COMPARISON:
-			setComparison((Comparison) newValue);
+		case ModelReviewPackage.MODEL_PATCH__NEW_MODEL_INSTANCE:
+			setNewModelInstance((ModelInstance) newValue);
 			return;
-		case ModelReviewPackage.MODEL_PATCH__MODEL_INSTANCE:
-			setModelInstance((ModelInstance) newValue);
+		case ModelReviewPackage.MODEL_PATCH__OLD_MODEL_INSTANCE:
+			setOldModelInstance((ModelInstance) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -209,11 +208,11 @@ public class ModelPatchImpl extends PatchImpl implements ModelPatch {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case ModelReviewPackage.MODEL_PATCH__COMPARISON:
-			setComparison((Comparison) null);
+		case ModelReviewPackage.MODEL_PATCH__NEW_MODEL_INSTANCE:
+			setNewModelInstance((ModelInstance) null);
 			return;
-		case ModelReviewPackage.MODEL_PATCH__MODEL_INSTANCE:
-			setModelInstance((ModelInstance) null);
+		case ModelReviewPackage.MODEL_PATCH__OLD_MODEL_INSTANCE:
+			setOldModelInstance((ModelInstance) null);
 			return;
 		}
 		super.eUnset(featureID);
@@ -227,10 +226,10 @@ public class ModelPatchImpl extends PatchImpl implements ModelPatch {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case ModelReviewPackage.MODEL_PATCH__COMPARISON:
-			return comparison != null;
-		case ModelReviewPackage.MODEL_PATCH__MODEL_INSTANCE:
-			return modelInstance != null;
+		case ModelReviewPackage.MODEL_PATCH__NEW_MODEL_INSTANCE:
+			return newModelInstance != null;
+		case ModelReviewPackage.MODEL_PATCH__OLD_MODEL_INSTANCE:
+			return oldModelInstance != null;
 		}
 		return super.eIsSet(featureID);
 	}

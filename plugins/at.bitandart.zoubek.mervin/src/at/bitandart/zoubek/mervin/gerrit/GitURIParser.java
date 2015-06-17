@@ -17,6 +17,8 @@ import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;
@@ -39,7 +41,15 @@ public class GitURIParser {
 	private org.eclipse.emf.common.util.URI uri;
 
 	private String authority = "";
+	
+	/**
+	 * the file path to the git repo, with leading slash.
+	 */
 	private String repoPath = "";
+	
+	/**
+	 * the file path to the file in the git commit, <b>without</b> a leading slash.
+	 */
 	private String filePath = "";
 	private String commitHash = "";
 
@@ -50,10 +60,14 @@ public class GitURIParser {
 	private ObjectLoader objectLoader;
 	private ObjectId objectId;
 
+	@SuppressWarnings("restriction")
+	@Inject
+	private org.eclipse.e4.core.services.log.Logger logger;
+	
 	/**
 	 * the scheme for a commit URI
 	 */
-	public static final String GIT_COMMIT_SCHEME = "git-commit";
+	public static final String GIT_COMMIT_SCHEME = "git-file";
 
 	public GitURIParser(org.eclipse.emf.common.util.URI uri) {
 		super();
@@ -66,39 +80,55 @@ public class GitURIParser {
 	 * @throws IOException
 	 *             if an error occurs during parsing the URI
 	 */
+	@SuppressWarnings("restriction")
 	private void parse() throws IOException {
 		StringBuilder repoPathBuilder = new StringBuilder();
 		StringBuilder filePathBuilder = new StringBuilder();
-		filePathBuilder.append("/");
 		repoPathBuilder.append("/");
 		if (uri.hasAuthority()) {
 			authority = uri.authority();
 		}
 		if (uri.hasDevice()) {
 			repoPathBuilder.append(uri.device());
+			repoPathBuilder.append("/");
 		}
 		List<String> segments = uri.segmentsList();
 		Iterator<String> segmentIt = segments.iterator();
 		String currentSegment = "";
 
 		// extract repo path
-		while (segmentIt.hasNext() && ObjectId.isId(currentSegment)) {
+		while (segmentIt.hasNext() && !ObjectId.isId(currentSegment)) {
 			repoPathBuilder.append(currentSegment);
+			if(!currentSegment.isEmpty()){
+				repoPathBuilder.append("/");
+			}
 			currentSegment = segmentIt.next();
 		}
 
 		// extract the commit Hash
-		String commitHash = currentSegment;
+		commitHash = currentSegment;
 		currentSegment = segmentIt.next();
 		if (!ObjectId.isId(commitHash)) {
+			commitHash = "";
 			throw new IOException("Invalid URI: no commit hash found");
 		}
 
 		// extract file path within commit
 		while (segmentIt.hasNext()) {
 			filePathBuilder.append(currentSegment);
+			filePathBuilder.append("/");
 			currentSegment = segmentIt.next();
 		}
+		filePathBuilder.append(currentSegment);
+
+		logger.debug("commit hash: "+ commitHash);
+		
+		repoPath = repoPathBuilder.toString();
+		logger.debug("repo path: "+ repoPath);
+		
+		filePath = filePathBuilder.toString();
+		logger.debug("file path: "+ filePath);
+		
 		uriParsed = true;
 	}
 
@@ -108,6 +138,7 @@ public class GitURIParser {
 	 * @throws IOException
 	 *             if an error occurs during parsing the URI
 	 */
+	@SuppressWarnings("restriction")
 	private void loadRepository() throws IOException {
 
 		if (!uriParsed)
@@ -115,7 +146,8 @@ public class GitURIParser {
 
 		URI repoURI;
 		try {
-			repoURI = new URI("file", authority, repoPath, "", "");
+			repoURI = new URI("file", authority, repoPath, null, null);
+			logger.debug("repo URI: "+ repoURI.toString());
 		} catch (URISyntaxException e) {
 			throw new IOException("Could not determine repository URI");
 		}

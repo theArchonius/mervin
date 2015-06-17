@@ -132,6 +132,8 @@ public class ModelReviewSwitch<T> extends Switch<T> {
 			DiagramInstance diagramInstance = (DiagramInstance) theEObject;
 			T result = caseDiagramInstance(diagramInstance);
 			if (result == null)
+				result = caseModelInstance(diagramInstance);
+			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
 		}

@@ -42,6 +42,7 @@ public class MervinModelReviewAllTests extends TestSuite {
 	public static Test suite() {
 		TestSuite suite = new MervinModelReviewAllTests(
 				"MervinModelReview Tests");
+		suite.addTest(ModelReviewTests.suite());
 		return suite;
 	}
 

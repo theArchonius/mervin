@@ -4,11 +4,18 @@
     modelDirectory="/at.bitandart.zoubek.mervin.model/src" modelPluginID="at.bitandart.zoubek.mervin.model"
     modelName="MervinModelReview" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     codeFormatting="true" commentFormatting="true" importerID="org.eclipse.emf.importer.ecore"
-    complianceLevel="7.0" copyrightFields="false" language="" usedGenPackages="../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore ../../org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation platform:/plugin/org.eclipse.emf.compare/model/compare.genmodel#//compare"
+    complianceLevel="7.0" copyrightFields="false" language="" usedGenPackages="platform:/plugin/org.eclipse.emf.compare/model/compare.genmodel#//compare ../../org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore ../../org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation"
     operationReflection="true" importOrganizing="true">
   <foreignModel>MervinModelReview.ecore</foreignModel>
   <genPackages prefix="ModelReview" basePackage="at.bitandart.zoubek.mervin.model"
       disposableProviderFactory="true" ecorePackage="MervinModelReview.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="MervinModelReview.ecore#//PatchChangeType">
+      <genEnumLiterals ecoreEnumLiteral="MervinModelReview.ecore#//PatchChangeType/ADD"/>
+      <genEnumLiterals ecoreEnumLiteral="MervinModelReview.ecore#//PatchChangeType/COPY"/>
+      <genEnumLiterals ecoreEnumLiteral="MervinModelReview.ecore#//PatchChangeType/DELETE"/>
+      <genEnumLiterals ecoreEnumLiteral="MervinModelReview.ecore#//PatchChangeType/MODIFY"/>
+      <genEnumLiterals ecoreEnumLiteral="MervinModelReview.ecore#//PatchChangeType/RENAME"/>
+    </genEnums>
     <genClasses ecoreClass="MervinModelReview.ecore#//ModelReview">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//ModelReview/id"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//ModelReview/patchSets"/>
@@ -18,30 +25,38 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//PatchSet/id"/>
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference MervinModelReview.ecore#//PatchSet/review"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//PatchSet/patches"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//PatchSet/involvedModels"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//PatchSet/involvedDiagrams"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//PatchSet/newInvolvedModels"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//PatchSet/newInvolvedDiagrams"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//PatchSet/oldInvolvedModels"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//PatchSet/oldInvolvedDiagrams"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//PatchSet/modelComparison"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//PatchSet/diagramComparison"/>
     </genClasses>
     <genClasses image="false" ecoreClass="MervinModelReview.ecore#//Patch">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//Patch/path"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//Patch/content"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//Patch/newPath"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//Patch/oldPath"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//Patch/newContent"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//Patch/oldContent"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//Patch/changeType"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//Patch/patchSet"/>
     </genClasses>
     <genClasses ecoreClass="MervinModelReview.ecore#//DiagramPatch">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//DiagramPatch/comparison"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//DiagramPatch/diagramInstance"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//DiagramPatch/newDiagramInstance"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//DiagramPatch/oldDiagramInstance"/>
     </genClasses>
     <genClasses ecoreClass="MervinModelReview.ecore#//ModelPatch">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//ModelPatch/comparison"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//ModelPatch/modelInstance"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//ModelPatch/newModelInstance"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//ModelPatch/oldModelInstance"/>
     </genClasses>
     <genClasses image="false" ecoreClass="MervinModelReview.ecore#//Comment">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//Comment/id"/>
     </genClasses>
     <genClasses ecoreClass="MervinModelReview.ecore#//ModelInstance">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//ModelInstance/objects"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//ModelInstance/rootPackage"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//ModelInstance/rootPackages"/>
     </genClasses>
     <genClasses ecoreClass="MervinModelReview.ecore#//DiagramInstance">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//DiagramInstance/notationModel"/>
+      <genOperations ecoreOperation="MervinModelReview.ecore#//DiagramInstance/getDiagrams"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>
