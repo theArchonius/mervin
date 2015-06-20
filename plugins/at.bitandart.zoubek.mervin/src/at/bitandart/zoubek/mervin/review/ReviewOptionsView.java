@@ -14,19 +14,12 @@ import java.text.MessageFormat;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
-import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.services.log.Logger;
-import org.eclipse.e4.ui.model.application.ui.basic.MPart;
-import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
-import org.eclipse.e4.ui.services.IServiceConstants;
-import org.eclipse.e4.ui.workbench.modeling.EModelService;
-import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -46,12 +39,11 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 
 import at.bitandart.zoubek.mervin.ICommandConstants;
-import at.bitandart.zoubek.mervin.diagram.diff.DiagramDiffView;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 
 @SuppressWarnings("restriction")
-public class ReviewOptionsView {
+public class ReviewOptionsView extends ModelReviewEditorTrackingView {
 
 	private final class PatchSetLabelProvider extends LabelProvider {
 		@Override
@@ -89,7 +81,6 @@ public class ReviewOptionsView {
 
 	// Data
 
-	private MPart activeModelReviewPart;
 	private boolean viewInitialized = false;
 
 	// Services
@@ -299,47 +290,8 @@ public class ReviewOptionsView {
 		
 	}
 
-	@Inject
-	public void setActiveModelReviewPart(
-			@Named(IServiceConstants.ACTIVE_PART) @Optional MPart part,
-			EModelService modelService, EPartService partService, MWindow window) {
-
-		if (part != null && part.getTags().contains("View")) {
-
-			// new active part is a view - the active model review part might be
-			// left open so do not reset it unless it has been closed
-
-			if (activeModelReviewPart != null
-					&& !activeModelReviewPart.isToBeRendered()) {
-
-				// part has been closed
-				activeModelReviewPart = null;
-				updateValues();
-
-			}
-
-		} else if (part != null
-				&& part.getTransientData().containsKey(
-						DiagramDiffView.DATA_TRANSIENT_MODEL_REVIEW)) {
-
-			// part contains a model review
-			activeModelReviewPart = part;
-			updateValues();
-
-		} else {
-
-			// part contains no model review
-			activeModelReviewPart = null;
-
-		}
-
-		updateValues();
-	}
-
-	/**
-	 * updates all controls with the values of the current model review
-	 */
-	private void updateValues() {
+	@Override
+	protected void updateValues() {
 		if (!viewInitialized) {
 			return;
 		}
@@ -417,27 +369,5 @@ public class ReviewOptionsView {
 		mainForm.reflow(true);
 		mainForm.redraw();
 
-	}
-
-	/**
-	 * @return the current model review that should be shown in this view
-	 */
-	private ModelReview getCurrentModelReview() {
-
-		// obtain the model review from the last active part that contains a
-		// model review
-		if (activeModelReviewPart != null
-				&& activeModelReviewPart.getTransientData().containsKey(
-						DiagramDiffView.DATA_TRANSIENT_MODEL_REVIEW)) {
-
-			Object object = activeModelReviewPart.getTransientData().get(
-					DiagramDiffView.DATA_TRANSIENT_MODEL_REVIEW);
-
-			if (object instanceof ModelReview) {
-				return (ModelReview) object;
-			}
-		}
-
-		return null;
 	}
 }
