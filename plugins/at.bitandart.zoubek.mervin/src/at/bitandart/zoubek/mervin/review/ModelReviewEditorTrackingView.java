@@ -66,19 +66,20 @@ public abstract class ModelReviewEditorTrackingView {
 		} else if (part != null
 				&& part.getTransientData().containsKey(
 						DiagramDiffView.DATA_TRANSIENT_MODEL_REVIEW)) {
-
-			// part contains a model review
-			activeModelReviewPart = part;
-			updateValues();
+			if(!part.equals(activeModelReviewPart)){
+				// part contains a model review
+				activeModelReviewPart = part;
+				updateValues();
+			}
 
 		} else {
 
 			// part contains no model review
 			activeModelReviewPart = null;
+			updateValues();
 
 		}
 
-		updateValues();
 	}
 
 	/**
