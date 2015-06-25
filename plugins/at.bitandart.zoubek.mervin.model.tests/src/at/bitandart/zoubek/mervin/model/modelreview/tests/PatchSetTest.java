@@ -22,6 +22,23 @@ import junit.textui.TestRunner;
 /**
  * <!-- begin-user-doc --> A test case for the model object '
  * <em><b>Patch Set</b></em>'. <!-- end-user-doc -->
+ * <p>
+ * The following features are tested:
+ * <ul>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getObjectChangeCount()
+ * <em>Object Change Count</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getObjectChangeRefCount()
+ * <em>Object Change Ref Count</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getMaxObjectChangeCount()
+ * <em>Max Object Change Count</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getMaxObjectChangeRefCount()
+ * <em>Max Object Change Ref Count</em>}</li>
+ * </ul>
+ * </p>
  * 
  * @generated
  */
@@ -94,6 +111,126 @@ public class PatchSetTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		setFixture(null);
+	}
+
+	/**
+	 * Tests the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getObjectChangeCount()
+	 * <em>Object Change Count</em>}' feature getter. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getObjectChangeCount()
+	 * @generated
+	 */
+	public void testGetObjectChangeCount() {
+		// TODO: implement this feature getter test method
+		// Ensure that you remove @generated or mark it @generated NOT
+		fail();
+	}
+
+	/**
+	 * Tests the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#isSetObjectChangeCount()
+	 * <em>isSetObjectChangeCount()</em>}' method. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#isSetObjectChangeCount()
+	 * @generated
+	 */
+	public void testIsSetObjectChangeCount() {
+		// TODO: implement this test method
+		// Ensure that you remove @generated or mark it @generated NOT
+		fail();
+	}
+
+	/**
+	 * Tests the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getObjectChangeRefCount()
+	 * <em>Object Change Ref Count</em>}' feature getter. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getObjectChangeRefCount()
+	 * @generated
+	 */
+	public void testGetObjectChangeRefCount() {
+		// TODO: implement this feature getter test method
+		// Ensure that you remove @generated or mark it @generated NOT
+		fail();
+	}
+
+	/**
+	 * Tests the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#isSetObjectChangeRefCount()
+	 * <em>isSetObjectChangeRefCount()</em>}' method. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#isSetObjectChangeRefCount()
+	 * @generated
+	 */
+	public void testIsSetObjectChangeRefCount() {
+		// TODO: implement this test method
+		// Ensure that you remove @generated or mark it @generated NOT
+		fail();
+	}
+
+	/**
+	 * Tests the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getMaxObjectChangeCount()
+	 * <em>Max Object Change Count</em>}' feature getter. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getMaxObjectChangeCount()
+	 * @generated
+	 */
+	public void testGetMaxObjectChangeCount() {
+		// TODO: implement this feature getter test method
+		// Ensure that you remove @generated or mark it @generated NOT
+		fail();
+	}
+
+	/**
+	 * Tests the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#isSetMaxObjectChangeCount()
+	 * <em>isSetMaxObjectChangeCount()</em>}' method. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#isSetMaxObjectChangeCount()
+	 * @generated
+	 */
+	public void testIsSetMaxObjectChangeCount() {
+		// TODO: implement this test method
+		// Ensure that you remove @generated or mark it @generated NOT
+		fail();
+	}
+
+	/**
+	 * Tests the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getMaxObjectChangeRefCount()
+	 * <em>Max Object Change Ref Count</em>}' feature getter. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getMaxObjectChangeRefCount()
+	 * @generated
+	 */
+	public void testGetMaxObjectChangeRefCount() {
+		// TODO: implement this feature getter test method
+		// Ensure that you remove @generated or mark it @generated NOT
+		fail();
+	}
+
+	/**
+	 * Tests the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#isSetMaxObjectChangeRefCount()
+	 * <em>isSetMaxObjectChangeRefCount()</em>}' method. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#isSetMaxObjectChangeRefCount()
+	 * @generated
+	 */
+	public void testIsSetMaxObjectChangeRefCount() {
+		// TODO: implement this test method
+		// Ensure that you remove @generated or mark it @generated NOT
+		fail();
 	}
 
 } // PatchSetTest

@@ -17,6 +17,7 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 
 import at.bitandart.zoubek.mervin.gerrit.GerritReviewRepositoryService;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
+import at.bitandart.zoubek.mervin.model.modelreview.impl.extended.DefaultModelReviewFactory;
 
 /**
  * This addon is responsible for registering all mervin related services to the
@@ -28,7 +29,7 @@ public class MervinServicesAddon {
 	public void addServicesToContext(IEclipseContext context){
 
 		// add the default factory for the review model to the context
-		context.set(ModelReviewFactory.class, ModelReviewFactory.eINSTANCE);
+		context.set(ModelReviewFactory.class, new DefaultModelReviewFactory());
 		
 		// the prototype supports currently only Gerrit, so use the Gerrit
 		// service by default

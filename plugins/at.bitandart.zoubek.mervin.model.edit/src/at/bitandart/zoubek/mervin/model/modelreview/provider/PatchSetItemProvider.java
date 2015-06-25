@@ -73,6 +73,10 @@ public class PatchSetItemProvider extends ItemProviderAdapter implements
 			addOldInvolvedDiagramsPropertyDescriptor(object);
 			addModelComparisonPropertyDescriptor(object);
 			addDiagramComparisonPropertyDescriptor(object);
+			addObjectChangeCountPropertyDescriptor(object);
+			addObjectChangeRefCountPropertyDescriptor(object);
+			addMaxObjectChangeCountPropertyDescriptor(object);
+			addMaxObjectChangeRefCountPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -228,6 +232,87 @@ public class PatchSetItemProvider extends ItemProviderAdapter implements
 	}
 
 	/**
+	 * This adds a property descriptor for the Object Change Count feature. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addObjectChangeCountPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory)
+						.getRootAdapterFactory(),
+				getResourceLocator(),
+				getString("_UI_PatchSet_objectChangeCount_feature"),
+				getString("_UI_PropertyDescriptor_description",
+						"_UI_PatchSet_objectChangeCount_feature",
+						"_UI_PatchSet_type"),
+				ModelReviewPackage.Literals.PATCH_SET__OBJECT_CHANGE_COUNT,
+				false, false, false,
+				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Object Change Ref Count feature.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addObjectChangeRefCountPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory)
+						.getRootAdapterFactory(),
+				getResourceLocator(),
+				getString("_UI_PatchSet_objectChangeRefCount_feature"),
+				getString("_UI_PropertyDescriptor_description",
+						"_UI_PatchSet_objectChangeRefCount_feature",
+						"_UI_PatchSet_type"),
+				ModelReviewPackage.Literals.PATCH_SET__OBJECT_CHANGE_REF_COUNT,
+				false, false, false,
+				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Max Object Change Count feature.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addMaxObjectChangeCountPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory)
+						.getRootAdapterFactory(),
+				getResourceLocator(),
+				getString("_UI_PatchSet_maxObjectChangeCount_feature"),
+				getString("_UI_PropertyDescriptor_description",
+						"_UI_PatchSet_maxObjectChangeCount_feature",
+						"_UI_PatchSet_type"),
+				ModelReviewPackage.Literals.PATCH_SET__MAX_OBJECT_CHANGE_COUNT,
+				true, false, false,
+				ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Max Object Change Ref Count
+	 * feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addMaxObjectChangeRefCountPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(
+						((ComposeableAdapterFactory) adapterFactory)
+								.getRootAdapterFactory(),
+						getResourceLocator(),
+						getString("_UI_PatchSet_maxObjectChangeRefCount_feature"),
+						getString("_UI_PropertyDescriptor_description",
+								"_UI_PatchSet_maxObjectChangeRefCount_feature",
+								"_UI_PatchSet_type"),
+						ModelReviewPackage.Literals.PATCH_SET__MAX_OBJECT_CHANGE_REF_COUNT,
+						true, false, false,
+						ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE, null, null));
+	}
+
+	/**
 	 * This returns PatchSet.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
@@ -265,6 +350,10 @@ public class PatchSetItemProvider extends ItemProviderAdapter implements
 
 		switch (notification.getFeatureID(PatchSet.class)) {
 		case ModelReviewPackage.PATCH_SET__ID:
+		case ModelReviewPackage.PATCH_SET__OBJECT_CHANGE_COUNT:
+		case ModelReviewPackage.PATCH_SET__OBJECT_CHANGE_REF_COUNT:
+		case ModelReviewPackage.PATCH_SET__MAX_OBJECT_CHANGE_COUNT:
+		case ModelReviewPackage.PATCH_SET__MAX_OBJECT_CHANGE_REF_COUNT:
 			fireNotifyChanged(new ViewerNotification(notification,
 					notification.getNotifier(), false, true));
 			return;

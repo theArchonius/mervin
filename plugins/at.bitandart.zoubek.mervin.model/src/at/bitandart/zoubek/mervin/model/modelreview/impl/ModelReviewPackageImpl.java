@@ -27,6 +27,7 @@ import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -308,6 +309,42 @@ public class ModelReviewPackageImpl extends EPackageImpl implements
 	 * 
 	 * @generated
 	 */
+	public EAttribute getPatchSet_ObjectChangeCount() {
+		return (EAttribute) patchSetEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getPatchSet_ObjectChangeRefCount() {
+		return (EAttribute) patchSetEClass.getEStructuralFeatures().get(10);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getPatchSet_MaxObjectChangeCount() {
+		return (EAttribute) patchSetEClass.getEStructuralFeatures().get(11);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getPatchSet_MaxObjectChangeRefCount() {
+		return (EAttribute) patchSetEClass.getEStructuralFeatures().get(12);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	public EClass getPatch() {
 		return patchEClass;
 	}
@@ -536,6 +573,10 @@ public class ModelReviewPackageImpl extends EPackageImpl implements
 		createEReference(patchSetEClass, PATCH_SET__OLD_INVOLVED_DIAGRAMS);
 		createEReference(patchSetEClass, PATCH_SET__MODEL_COMPARISON);
 		createEReference(patchSetEClass, PATCH_SET__DIAGRAM_COMPARISON);
+		createEAttribute(patchSetEClass, PATCH_SET__OBJECT_CHANGE_COUNT);
+		createEAttribute(patchSetEClass, PATCH_SET__OBJECT_CHANGE_REF_COUNT);
+		createEAttribute(patchSetEClass, PATCH_SET__MAX_OBJECT_CHANGE_COUNT);
+		createEAttribute(patchSetEClass, PATCH_SET__MAX_OBJECT_CHANGE_REF_COUNT);
 
 		patchEClass = createEClass(PATCH);
 		createEAttribute(patchEClass, PATCH__NEW_PATH);
@@ -673,6 +714,32 @@ public class ModelReviewPackageImpl extends EPackageImpl implements
 				null, 0, 1, PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE,
 				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		EGenericType g1 = createEGenericType(ecorePackage.getEMap());
+		EGenericType g2 = createEGenericType(theEcorePackage.getEObject());
+		g1.getETypeArguments().add(g2);
+		g2 = createEGenericType(ecorePackage.getEIntegerObject());
+		g1.getETypeArguments().add(g2);
+		initEAttribute(getPatchSet_ObjectChangeCount(), g1,
+				"objectChangeCount", null, 0, 1, PatchSet.class, IS_TRANSIENT,
+				!IS_VOLATILE, !IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				IS_DERIVED, IS_ORDERED);
+		g1 = createEGenericType(ecorePackage.getEMap());
+		g2 = createEGenericType(theEcorePackage.getEObject());
+		g1.getETypeArguments().add(g2);
+		g2 = createEGenericType(ecorePackage.getEIntegerObject());
+		g1.getETypeArguments().add(g2);
+		initEAttribute(getPatchSet_ObjectChangeRefCount(), g1,
+				"objectChangeRefCount", null, 0, 1, PatchSet.class,
+				IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, IS_UNSETTABLE,
+				!IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPatchSet_MaxObjectChangeCount(),
+				ecorePackage.getEInt(), "maxObjectChangeCount", "0", 0, 1,
+				PatchSet.class, IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE,
+				IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPatchSet_MaxObjectChangeRefCount(),
+				ecorePackage.getEInt(), "maxObjectChangeRefCount", "0", 0, 1,
+				PatchSet.class, IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE,
+				IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 
 		initEClass(patchEClass, Patch.class, "Patch", !IS_ABSTRACT,
 				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

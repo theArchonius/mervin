@@ -216,13 +216,49 @@ public interface ModelReviewPackage extends EPackage {
 	int PATCH_SET__DIAGRAM_COMPARISON = 8;
 
 	/**
+	 * The feature id for the '<em><b>Object Change Count</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int PATCH_SET__OBJECT_CHANGE_COUNT = 9;
+
+	/**
+	 * The feature id for the '<em><b>Object Change Ref Count</b></em>'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int PATCH_SET__OBJECT_CHANGE_REF_COUNT = 10;
+
+	/**
+	 * The feature id for the '<em><b>Max Object Change Count</b></em>'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int PATCH_SET__MAX_OBJECT_CHANGE_COUNT = 11;
+
+	/**
+	 * The feature id for the '<em><b>Max Object Change Ref Count</b></em>'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int PATCH_SET__MAX_OBJECT_CHANGE_REF_COUNT = 12;
+
+	/**
 	 * The number of structural features of the '<em>Patch Set</em>' class. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int PATCH_SET_FEATURE_COUNT = 9;
+	int PATCH_SET_FEATURE_COUNT = 13;
 
 	/**
 	 * The number of operations of the '<em>Patch Set</em>' class. <!--
@@ -853,6 +889,61 @@ public interface ModelReviewPackage extends EPackage {
 	EReference getPatchSet_DiagramComparison();
 
 	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getObjectChangeCount
+	 * <em>Object Change Count</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @return the meta object for the attribute '<em>Object Change Count</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getObjectChangeCount()
+	 * @see #getPatchSet()
+	 * @generated
+	 */
+	EAttribute getPatchSet_ObjectChangeCount();
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getObjectChangeRefCount
+	 * <em>Object Change Ref Count</em>}'. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '
+	 *         <em>Object Change Ref Count</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getObjectChangeRefCount()
+	 * @see #getPatchSet()
+	 * @generated
+	 */
+	EAttribute getPatchSet_ObjectChangeRefCount();
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getMaxObjectChangeCount
+	 * <em>Max Object Change Count</em>}'. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '
+	 *         <em>Max Object Change Count</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getMaxObjectChangeCount()
+	 * @see #getPatchSet()
+	 * @generated
+	 */
+	EAttribute getPatchSet_MaxObjectChangeCount();
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getMaxObjectChangeRefCount
+	 * <em>Max Object Change Ref Count</em>}'. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '
+	 *         <em>Max Object Change Ref Count</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getMaxObjectChangeRefCount()
+	 * @see #getPatchSet()
+	 * @generated
+	 */
+	EAttribute getPatchSet_MaxObjectChangeRefCount();
+
+	/**
 	 * Returns the meta object for class '
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Patch <em>Patch</em>}
 	 * '. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1258,6 +1349,45 @@ public interface ModelReviewPackage extends EPackage {
 		 */
 		EReference PATCH_SET__DIAGRAM_COMPARISON = eINSTANCE
 				.getPatchSet_DiagramComparison();
+
+		/**
+		 * The meta object literal for the '<em><b>Object Change Count</b></em>'
+		 * attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute PATCH_SET__OBJECT_CHANGE_COUNT = eINSTANCE
+				.getPatchSet_ObjectChangeCount();
+
+		/**
+		 * The meta object literal for the '
+		 * <em><b>Object Change Ref Count</b></em>' attribute feature. <!--
+		 * begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute PATCH_SET__OBJECT_CHANGE_REF_COUNT = eINSTANCE
+				.getPatchSet_ObjectChangeRefCount();
+
+		/**
+		 * The meta object literal for the '
+		 * <em><b>Max Object Change Count</b></em>' attribute feature. <!--
+		 * begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute PATCH_SET__MAX_OBJECT_CHANGE_COUNT = eINSTANCE
+				.getPatchSet_MaxObjectChangeCount();
+
+		/**
+		 * The meta object literal for the '
+		 * <em><b>Max Object Change Ref Count</b></em>' attribute feature. <!--
+		 * begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute PATCH_SET__MAX_OBJECT_CHANGE_REF_COUNT = eINSTANCE
+				.getPatchSet_MaxObjectChangeRefCount();
 
 		/**
 		 * The meta object literal for the '

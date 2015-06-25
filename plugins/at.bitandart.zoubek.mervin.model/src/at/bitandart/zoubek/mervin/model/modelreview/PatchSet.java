@@ -12,6 +12,7 @@
  */
 package at.bitandart.zoubek.mervin.model.modelreview;
 
+import java.util.Map;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.compare.Comparison;
@@ -48,6 +49,18 @@ import org.eclipse.emf.ecore.EObject;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getDiagramComparison
  * <em>Diagram Comparison</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getObjectChangeCount
+ * <em>Object Change Count</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getObjectChangeRefCount
+ * <em>Object Change Ref Count</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getMaxObjectChangeCount
+ * <em>Max Object Change Count</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getMaxObjectChangeRefCount
+ * <em>Max Object Change Ref Count</em>}</li>
  * </ul>
  * </p>
  *
@@ -267,5 +280,130 @@ public interface PatchSet extends EObject {
 	 * @generated
 	 */
 	void setDiagramComparison(Comparison value);
+
+	/**
+	 * Returns the value of the '<em><b>Object Change Count</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Object Change Count</em>' attribute isn't
+	 * clear, there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Object Change Count</em>' attribute.
+	 * @see #isSetObjectChangeCount()
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getPatchSet_ObjectChangeCount()
+	 * @model unsettable="true" transient="true" changeable="false"
+	 *        derived="true"
+	 * @generated
+	 */
+	Map<EObject, Integer> getObjectChangeCount();
+
+	/**
+	 * Returns whether the value of the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getObjectChangeCount
+	 * <em>Object Change Count</em>}' attribute is set. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return whether the value of the '<em>Object Change Count</em>' attribute
+	 *         is set.
+	 * @see #getObjectChangeCount()
+	 * @generated
+	 */
+	boolean isSetObjectChangeCount();
+
+	/**
+	 * Returns the value of the '<em><b>Object Change Ref Count</b></em>'
+	 * attribute. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Object Change Ref Count</em>' attribute isn't
+	 * clear, there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Object Change Ref Count</em>' attribute.
+	 * @see #isSetObjectChangeRefCount()
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getPatchSet_ObjectChangeRefCount()
+	 * @model unsettable="true" transient="true" changeable="false"
+	 *        derived="true"
+	 * @generated
+	 */
+	Map<EObject, Integer> getObjectChangeRefCount();
+
+	/**
+	 * Returns whether the value of the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getObjectChangeRefCount
+	 * <em>Object Change Ref Count</em>}' attribute is set. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
+	 * @return whether the value of the '<em>Object Change Ref Count</em>'
+	 *         attribute is set.
+	 * @see #getObjectChangeRefCount()
+	 * @generated
+	 */
+	boolean isSetObjectChangeRefCount();
+
+	/**
+	 * Returns the value of the '<em><b>Max Object Change Count</b></em>'
+	 * attribute. The default value is <code>"0"</code>. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Max Object Change Count</em>' attribute isn't
+	 * clear, there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Max Object Change Count</em>' attribute.
+	 * @see #isSetMaxObjectChangeCount()
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getPatchSet_MaxObjectChangeCount()
+	 * @model default="0" unsettable="true" transient="true" changeable="false"
+	 *        derived="true"
+	 * @generated
+	 */
+	int getMaxObjectChangeCount();
+
+	/**
+	 * Returns whether the value of the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getMaxObjectChangeCount
+	 * <em>Max Object Change Count</em>}' attribute is set. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
+	 * @return whether the value of the '<em>Max Object Change Count</em>'
+	 *         attribute is set.
+	 * @see #getMaxObjectChangeCount()
+	 * @generated
+	 */
+	boolean isSetMaxObjectChangeCount();
+
+	/**
+	 * Returns the value of the '<em><b>Max Object Change Ref Count</b></em>'
+	 * attribute. The default value is <code>"0"</code>. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Max Object Change Ref Count</em>' attribute
+	 * isn't clear, there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Max Object Change Ref Count</em>'
+	 *         attribute.
+	 * @see #isSetMaxObjectChangeRefCount()
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getPatchSet_MaxObjectChangeRefCount()
+	 * @model default="0" unsettable="true" transient="true" changeable="false"
+	 *        derived="true"
+	 * @generated
+	 */
+	int getMaxObjectChangeRefCount();
+
+	/**
+	 * Returns whether the value of the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getMaxObjectChangeRefCount
+	 * <em>Max Object Change Ref Count</em>}' attribute is set. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return whether the value of the '<em>Max Object Change Ref Count</em>'
+	 *         attribute is set.
+	 * @see #getMaxObjectChangeRefCount()
+	 * @generated
+	 */
+	boolean isSetMaxObjectChangeRefCount();
 
 } // PatchSet

@@ -11,7 +11,7 @@
 package at.bitandart.zoubek.mervin.review;
 
 import java.text.MessageFormat;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -23,6 +23,7 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -34,7 +35,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -42,10 +42,13 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 
+import at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelInstance;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.Patch;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
+import at.bitandart.zoubek.mervin.util.vis.HSB;
+import at.bitandart.zoubek.mervin.util.vis.NumericColoredColumnLabelProvider;
 
 public class ReviewExplorer extends ModelReviewEditorTrackingView {
 
@@ -64,7 +67,6 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 	// Data
 
 	private boolean viewInitialized = false;
-
 
 	@Inject
 	public ReviewExplorer() {
@@ -86,42 +88,38 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 		reviewTree.setLinesVisible(false);
 		reviewTree.setHeaderVisible(true);
 
-		labelColumn = new TreeViewerColumn(reviewTreeViewer,
-				SWT.NONE);
+		labelColumn = new TreeViewerColumn(reviewTreeViewer, SWT.NONE);
 		labelColumn.getColumn().setResizable(true);
 		labelColumn.getColumn().setMoveable(true);
 		labelColumn.getColumn().setText("Element");
 		labelColumn.getColumn().setWidth(200);
 		labelColumn
 				.setLabelProvider(new ModelReviewExplorerMainColumnLabelProvider());
-		labelColumn.getColumn().addSelectionListener(
-				new SelectionListener() {
+		labelColumn.getColumn().addSelectionListener(new SelectionListener() {
 
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						switch (reviewTreeViewer.getTree().getSortDirection()) {
-						case SWT.UP:
-							reviewTreeViewer.getTree().setSortDirection(
-									SWT.DOWN);
-							break;
-						case SWT.DOWN:
-							reviewTreeViewer.getTree().setSortDirection(
-									SWT.NONE);
-							break;
-						default:
-						case SWT.NONE:
-							reviewTreeViewer.getTree().setSortDirection(SWT.UP);
-							break;
-						}
-						reviewTreeViewer.getTree().setSortColumn(
-								labelColumn.getColumn());
-						reviewTreeViewer.refresh();
-					}
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				switch (reviewTreeViewer.getTree().getSortDirection()) {
+				case SWT.UP:
+					reviewTreeViewer.getTree().setSortDirection(SWT.DOWN);
+					break;
+				case SWT.DOWN:
+					reviewTreeViewer.getTree().setSortDirection(SWT.NONE);
+					break;
+				default:
+				case SWT.NONE:
+					reviewTreeViewer.getTree().setSortDirection(SWT.UP);
+					break;
+				}
+				reviewTreeViewer.getTree().setSortColumn(
+						labelColumn.getColumn());
+				reviewTreeViewer.refresh();
+			}
 
-					@Override
-					public void widgetDefaultSelected(SelectionEvent e) {
-					}
-				});
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
 
 		changeCountColumn = new TreeViewerColumn(reviewTreeViewer, SWT.NONE);
 		changeCountColumn.getColumn().setResizable(true);
@@ -131,8 +129,9 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 		changeCountColumn.getColumn().setToolTipText(
 				"Number of changed elements");
 		changeCountColumn.setLabelProvider(new ChangeCountColumnLabelProvider(
-				Display.getCurrent().getSystemColor(SWT.COLOR_WHITE), Display
-						.getCurrent().getSystemColor(SWT.COLOR_BLACK)));
+				reviewTreeViewer, Display.getCurrent().getSystemColor(
+						SWT.COLOR_WHITE), Display.getCurrent().getSystemColor(
+						SWT.COLOR_BLACK)));
 		changeCountColumn.getColumn().addSelectionListener(
 				new SelectionListener() {
 
@@ -172,8 +171,9 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 				"Number of references to changed elements");
 		refChangeCountColumn
 				.setLabelProvider(new ReferencedChangeCountColumnLabelProvider(
-						Display.getCurrent().getSystemColor(SWT.COLOR_WHITE),
-						Display.getCurrent().getSystemColor(SWT.COLOR_BLACK)));
+						reviewTreeViewer, Display.getCurrent().getSystemColor(
+								SWT.COLOR_WHITE), Display.getCurrent()
+								.getSystemColor(SWT.COLOR_BLACK)));
 
 		TreeViewerColumn resourceColumn = new TreeViewerColumn(
 				reviewTreeViewer, SWT.NONE);
@@ -288,144 +288,81 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 
 	}
 
-	private abstract class NumericColoredColumnLabelProvider extends
-			ColumnLabelProvider {
-
-		private Map<Object, Color> colors = new HashMap<>();
-
-		private Color fgColor1;
-		private Color fgColor2;
-		private float fgColor1Brightness;
-		private float fgColor2Brightness;
-
-		public NumericColoredColumnLabelProvider(Color fgColor1, Color fgColor2) {
-			this.fgColor1 = fgColor1;
-			this.fgColor2 = fgColor2;
-			fgColor1Brightness = getBrightness(this.fgColor1.getRGB());
-			fgColor2Brightness = getBrightness(this.fgColor2.getRGB());
-		}
-
-		@Override
-		public Color getBackground(Object element) {
-			if (hasValue(element)) {
-
-				RGB rgb = computeRGB(getValue(element), getMinValue(),
-						getMaxValue());
-				Color color = new Color(Display.getCurrent(), rgb);
-
-				if (colors.containsKey(element)) {
-					colors.get(element).dispose();
-				}
-				colors.put(element, color);
-
-				return color;
-			}
-			return null;
-		}
-
-		private RGB computeRGB(float value, float minValue, float maxValue) {
-			double relVal = 1.0 - ((1.0 / (maxValue - minValue)) * value);
-			RGB rgb = new RGB(205.0f, 0.59f, (float) (0.32 + relVal
-					* (1.0 - 0.32)));
-			return rgb;
-		}
-
-		private float getBrightness(RGB rgb) {
-			return ((rgb.red * 299) + (rgb.green * 587) + (rgb.blue * 114)) / 1000.0f;
-		}
-
-		private float getColorDifference(RGB rgb, RGB rgb2) {
-			return Math.abs(rgb.red - rgb2.red)
-					+ Math.abs(rgb.green - rgb2.green)
-					+ Math.abs(rgb.blue - rgb2.blue);
-		}
-
-		@Override
-		public Color getForeground(Object element) {
-			if (hasValue(element)) {
-
-				RGB rgb = computeRGB(getValue(element), getMinValue(),
-						getMaxValue());
-				float brightness = getBrightness(rgb);
-				// Difference metric based on
-				// http://www.w3.org/TR/AERT#color-contrast
-				float fgColor1Diff = Math.abs(brightness - fgColor1Brightness)
-						+ getColorDifference(fgColor1.getRGB(), rgb);
-				float fgColor2Diff = Math.abs(brightness - fgColor2Brightness)
-						+ getColorDifference(fgColor2.getRGB(), rgb);
-
-				if (fgColor2Diff > fgColor1Diff) {
-					return fgColor2;
-				} else {
-					return fgColor1;
-				}
-			}
-			return null;
-		}
-
-		@Override
-		public void dispose() {
-			for (Color color : colors.values()) {
-				color.dispose();
-			}
-			super.dispose();
-		}
-
-		@Override
-		public String getText(Object element) {
-			if (hasValue(element)) {
-				return "" + getValue(element);
-			}
-			return null;
-		}
-
-		public abstract float getMaxValue();
-
-		public abstract float getMinValue();
-
-		public abstract float getValue(Object element);
-
-		public abstract boolean hasValue(Object element);
-
-	}
-
 	private class ChangeCountColumnLabelProvider extends
 			NumericColoredColumnLabelProvider {
 
-		Map<Object, Double> cachedValues = new HashMap<Object, Double>();
+		ContentViewer viewer;
 
-		public ChangeCountColumnLabelProvider(Color fgBright, Color fgDark) {
-			super(fgBright, fgDark);
+		public ChangeCountColumnLabelProvider(ContentViewer viewer,
+				Color fgBright, Color fgDark) {
+			super(new HSB(205.0f, 0.f, 1.0f), new HSB(205.0f, 0.59f, 0.32f),
+					fgBright, fgDark);
+			this.viewer = viewer;
 		}
 
 		@Override
-		public float getMaxValue() {
-			// Dummy value for testing
-			// TODO replace with actual value
-			return 100;
+		public float getMaxValue(Object element) {
+
+			PatchSet patchSet = findPatchSet(element);
+			if (patchSet != null) {
+				return patchSet.getMaxObjectChangeCount();
+			}
+
+			return 0;
 		}
 
 		@Override
-		public float getMinValue() {
+		public float getMinValue(Object element) {
 			return 0;
 		}
 
 		@Override
 		public float getValue(Object element) {
-			// Dummy value for testing
-			// TODO replace with actual value
-			if (!cachedValues.containsKey(element)) {
-				cachedValues.put(element,
-						new Double(Math.round(Math.random() * 100)));
+
+			PatchSet patchSet = findPatchSet(element);
+			if (patchSet != null) {
+
+				Map<EObject, Integer> objectChangeCount = patchSet
+						.getObjectChangeCount();
+				if (objectChangeCount.containsKey(element)) {
+					return objectChangeCount.get(element);
+				}
+
 			}
-			return cachedValues.get(element).floatValue();
+
+			return 0;
 		}
 
 		@Override
 		public boolean hasValue(Object element) {
-			// Dummy value for testing
-			// TODO only model objects and patch sets have values
-			return true;
+
+			PatchSet patchSet = findPatchSet(element);
+			if (patchSet != null) {
+
+				Map<EObject, Integer> objectChangeCount = patchSet
+						.getObjectChangeCount();
+				return objectChangeCount.containsKey(element);
+			}
+
+			return false;
+		}
+
+		private PatchSet findPatchSet(Object element) {
+
+			ITreeContentProvider contentProvider = (ITreeContentProvider) viewer
+					.getContentProvider();
+			Object currentElement = element;
+
+			while (currentElement != null
+					&& !(currentElement instanceof PatchSet)) {
+				currentElement = contentProvider.getParent(currentElement);
+			}
+
+			if (currentElement instanceof PatchSet) {
+				return (PatchSet) currentElement;
+			}
+
+			return null;
 		}
 
 	}
@@ -433,40 +370,78 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 	private class ReferencedChangeCountColumnLabelProvider extends
 			NumericColoredColumnLabelProvider {
 
-		Map<Object, Double> cachedValues = new HashMap<Object, Double>();
+		ContentViewer viewer;
 
-		public ReferencedChangeCountColumnLabelProvider(Color fgBright,
-				Color fgDark) {
-			super(fgBright, fgDark);
+		public ReferencedChangeCountColumnLabelProvider(ContentViewer viewer,
+				Color fgBright, Color fgDark) {
+			super(new HSB(205.0f, 0.f, 1.0f), new HSB(205.0f, 0.59f, 0.32f),
+					fgBright, fgDark);
+			this.viewer = viewer;
 		}
 
 		@Override
-		public float getMaxValue() {
-			// Dummy value for testing
-			// TODO replace with actual value
-			return 100;
+		public float getMaxValue(Object element) {
+
+			PatchSet patchSet = findPatchSet(element);
+			if (patchSet != null) {
+				return patchSet.getMaxObjectChangeCount();
+			}
+
+			return 0;
 		}
 
 		@Override
-		public float getMinValue() {
+		public float getMinValue(Object element) {
 			return 0;
 		}
 
 		@Override
 		public float getValue(Object element) {
-			// Dummy value for testing
-			if (!cachedValues.containsKey(element)) {
-				cachedValues.put(element,
-						new Double(Math.round(Math.random() * 100)));
+
+			PatchSet patchSet = findPatchSet(element);
+			if (patchSet != null) {
+
+				Map<EObject, Integer> objectChangeRefCount = patchSet
+						.getObjectChangeRefCount();
+				if (objectChangeRefCount.containsKey(element)) {
+					return objectChangeRefCount.get(element);
+				}
+
 			}
-			return cachedValues.get(element).floatValue();
+
+			return 0;
 		}
 
 		@Override
 		public boolean hasValue(Object element) {
-			// Dummy value for testing
-			// TODO only model objects and patch sets have values
-			return true;
+
+			PatchSet patchSet = findPatchSet(element);
+			if (patchSet != null) {
+
+				Map<EObject, Integer> objectChangeRefCount = patchSet
+						.getObjectChangeRefCount();
+				return objectChangeRefCount.containsKey(element);
+			}
+
+			return false;
+		}
+
+		private PatchSet findPatchSet(Object element) {
+
+			ITreeContentProvider contentProvider = (ITreeContentProvider) viewer
+					.getContentProvider();
+			Object currentElement = element;
+
+			while (currentElement != null
+					&& !(currentElement instanceof PatchSet)) {
+				currentElement = contentProvider.getParent(currentElement);
+			}
+
+			if (currentElement instanceof PatchSet) {
+				return (PatchSet) currentElement;
+			}
+
+			return null;
 		}
 
 	}
@@ -474,6 +449,8 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 	private class ModelReviewContentProvider implements ITreeContentProvider {
 
 		private AdapterFactoryContentProvider adapterFactoryContentProvider;
+
+		private ModelReview modelReview;
 
 		public ModelReviewContentProvider() {
 			adapterFactoryContentProvider = new AdapterFactoryContentProvider(
@@ -485,6 +462,9 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 			adapterFactoryContentProvider.inputChanged(viewer, oldInput,
 					newInput);
+			if (newInput instanceof ModelReview) {
+				modelReview = (ModelReview) newInput;
+			}
 		}
 
 		@Override
@@ -520,11 +500,72 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 			if (element instanceof PatchSet) {
 				return ((PatchSet) element).getReview();
 			}
+			if (element instanceof DiagramInstance) {
+				DiagramInstance diagramInstance = (DiagramInstance) element;
+				for (PatchSet patchSet : modelReview.getPatchSets()) {
+					if (patchSet.getNewInvolvedDiagrams().contains(
+							diagramInstance)
+							|| patchSet.getNewInvolvedDiagrams().contains(
+									diagramInstance)) {
+						return patchSet;
+					}
+				}
+				return null;
+			}
 			if (element instanceof ModelInstance) {
+				ModelInstance modelInstance = (ModelInstance) element;
+				for (PatchSet patchSet : modelReview.getPatchSets()) {
+					if (patchSet.getNewInvolvedModels().contains(modelInstance)
+							|| patchSet.getOldInvolvedModels().contains(
+									modelInstance)) {
+						return patchSet;
+					}
+				}
 				return null;
 			}
 			if (element instanceof EObject) {
-				return adapterFactoryContentProvider.getParent(element);
+				EObject eObject = (EObject) element;
+				Object parent = adapterFactoryContentProvider
+						.getParent(element);
+
+				/*
+				 * FIXME It might be better to use an own implementation of
+				 * EcoreUtil.UsageCrossReferencer to detect references to the
+				 * model instance
+				 */
+				if (parent == null || parent instanceof Resource) {
+					// search for an containing model or diagram instance
+					for (PatchSet patchSet : modelReview.getPatchSets()) {
+						ModelInstance modelInstance = findContainingModelInstance(
+								patchSet.getNewInvolvedDiagrams(), eObject);
+						if (modelInstance != null)
+							return modelInstance;
+						modelInstance = findContainingModelInstance(
+								patchSet.getOldInvolvedDiagrams(), eObject);
+						if (modelInstance != null)
+							return modelInstance;
+						modelInstance = findContainingModelInstance(
+								patchSet.getNewInvolvedModels(), eObject);
+						if (modelInstance != null)
+							return modelInstance;
+						modelInstance = findContainingModelInstance(
+								patchSet.getOldInvolvedModels(), eObject);
+						if (modelInstance != null)
+							return modelInstance;
+					}
+				}
+				return parent;
+			}
+			return null;
+		}
+
+		private ModelInstance findContainingModelInstance(
+				Collection<? extends ModelInstance> modelInstances,
+				EObject object) {
+			for (ModelInstance modelInstance : modelInstances) {
+				if (modelInstance.getObjects().contains(object)) {
+					return modelInstance;
+				}
 			}
 			return null;
 		}

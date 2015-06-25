@@ -21,6 +21,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 
 import java.util.Collection;
 
+import java.util.Map;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
@@ -28,6 +29,7 @@ import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -71,6 +73,18 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchSetImpl#getDiagramComparison
  * <em>Diagram Comparison</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchSetImpl#getObjectChangeCount
+ * <em>Object Change Count</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchSetImpl#getObjectChangeRefCount
+ * <em>Object Change Ref Count</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchSetImpl#getMaxObjectChangeCount
+ * <em>Max Object Change Count</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchSetImpl#getMaxObjectChangeRefCount
+ * <em>Max Object Change Ref Count</em>}</li>
  * </ul>
  * </p>
  *
@@ -173,6 +187,108 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements
 	 * @ordered
 	 */
 	protected Comparison diagramComparison;
+
+	/**
+	 * The cached value of the '{@link #getObjectChangeCount()
+	 * <em>Object Change Count</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #getObjectChangeCount()
+	 * @generated
+	 * @ordered
+	 */
+	protected Map<EObject, Integer> objectChangeCount;
+
+	/**
+	 * This is true if the Object Change Count attribute has been set. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean objectChangeCountESet;
+
+	/**
+	 * The cached value of the '{@link #getObjectChangeRefCount()
+	 * <em>Object Change Ref Count</em>}' attribute. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getObjectChangeRefCount()
+	 * @generated
+	 * @ordered
+	 */
+	protected Map<EObject, Integer> objectChangeRefCount;
+
+	/**
+	 * This is true if the Object Change Ref Count attribute has been set. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean objectChangeRefCountESet;
+
+	/**
+	 * The default value of the '{@link #getMaxObjectChangeCount()
+	 * <em>Max Object Change Count</em>}' attribute. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getMaxObjectChangeCount()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final int MAX_OBJECT_CHANGE_COUNT_EDEFAULT = 0;
+
+	/**
+	 * The cached value of the '{@link #getMaxObjectChangeCount()
+	 * <em>Max Object Change Count</em>}' attribute. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getMaxObjectChangeCount()
+	 * @generated
+	 * @ordered
+	 */
+	protected int maxObjectChangeCount = MAX_OBJECT_CHANGE_COUNT_EDEFAULT;
+
+	/**
+	 * This is true if the Max Object Change Count attribute has been set. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean maxObjectChangeCountESet;
+
+	/**
+	 * The default value of the '{@link #getMaxObjectChangeRefCount()
+	 * <em>Max Object Change Ref Count</em>}' attribute. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getMaxObjectChangeRefCount()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final int MAX_OBJECT_CHANGE_REF_COUNT_EDEFAULT = 0;
+
+	/**
+	 * The cached value of the '{@link #getMaxObjectChangeRefCount()
+	 * <em>Max Object Change Ref Count</em>}' attribute. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getMaxObjectChangeRefCount()
+	 * @generated
+	 * @ordered
+	 */
+	protected int maxObjectChangeRefCount = MAX_OBJECT_CHANGE_REF_COUNT_EDEFAULT;
+
+	/**
+	 * This is true if the Max Object Change Ref Count attribute has been set.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean maxObjectChangeRefCountESet;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -423,6 +539,78 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements
 	 * 
 	 * @generated
 	 */
+	public Map<EObject, Integer> getObjectChangeCount() {
+		return objectChangeCount;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public boolean isSetObjectChangeCount() {
+		return objectChangeCountESet;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public Map<EObject, Integer> getObjectChangeRefCount() {
+		return objectChangeRefCount;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public boolean isSetObjectChangeRefCount() {
+		return objectChangeRefCountESet;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public int getMaxObjectChangeCount() {
+		return maxObjectChangeCount;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public boolean isSetMaxObjectChangeCount() {
+		return maxObjectChangeCountESet;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public int getMaxObjectChangeRefCount() {
+		return maxObjectChangeRefCount;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public boolean isSetMaxObjectChangeRefCount() {
+		return maxObjectChangeRefCountESet;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd,
@@ -504,6 +692,14 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements
 			if (resolve)
 				return getDiagramComparison();
 			return basicGetDiagramComparison();
+		case ModelReviewPackage.PATCH_SET__OBJECT_CHANGE_COUNT:
+			return getObjectChangeCount();
+		case ModelReviewPackage.PATCH_SET__OBJECT_CHANGE_REF_COUNT:
+			return getObjectChangeRefCount();
+		case ModelReviewPackage.PATCH_SET__MAX_OBJECT_CHANGE_COUNT:
+			return getMaxObjectChangeCount();
+		case ModelReviewPackage.PATCH_SET__MAX_OBJECT_CHANGE_REF_COUNT:
+			return getMaxObjectChangeRefCount();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -624,6 +820,14 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements
 			return modelComparison != null;
 		case ModelReviewPackage.PATCH_SET__DIAGRAM_COMPARISON:
 			return diagramComparison != null;
+		case ModelReviewPackage.PATCH_SET__OBJECT_CHANGE_COUNT:
+			return isSetObjectChangeCount();
+		case ModelReviewPackage.PATCH_SET__OBJECT_CHANGE_REF_COUNT:
+			return isSetObjectChangeRefCount();
+		case ModelReviewPackage.PATCH_SET__MAX_OBJECT_CHANGE_COUNT:
+			return isSetMaxObjectChangeCount();
+		case ModelReviewPackage.PATCH_SET__MAX_OBJECT_CHANGE_REF_COUNT:
+			return isSetMaxObjectChangeRefCount();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -641,6 +845,26 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (id: ");
 		result.append(id);
+		result.append(", objectChangeCount: ");
+		if (objectChangeCountESet)
+			result.append(objectChangeCount);
+		else
+			result.append("<unset>");
+		result.append(", objectChangeRefCount: ");
+		if (objectChangeRefCountESet)
+			result.append(objectChangeRefCount);
+		else
+			result.append("<unset>");
+		result.append(", maxObjectChangeCount: ");
+		if (maxObjectChangeCountESet)
+			result.append(maxObjectChangeCount);
+		else
+			result.append("<unset>");
+		result.append(", maxObjectChangeRefCount: ");
+		if (maxObjectChangeRefCountESet)
+			result.append(maxObjectChangeRefCount);
+		else
+			result.append("<unset>");
 		result.append(')');
 		return result.toString();
 	}

@@ -12,7 +12,6 @@
  */
 package at.bitandart.zoubek.mervin.model.modelreview;
 
-
 /**
  * <!-- begin-user-doc --> A representation of the model object '
  * <em><b>Model Patch</b></em>'. <!-- end-user-doc -->
