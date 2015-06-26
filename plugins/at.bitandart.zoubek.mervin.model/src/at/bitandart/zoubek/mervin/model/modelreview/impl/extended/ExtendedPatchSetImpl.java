@@ -31,6 +31,9 @@ import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.model.modelreview.impl.PatchSetImpl;
 
 /**
+ * An {@link PatchSet} implementation that supports the derived attributes of a
+ * {@link PatchSet} based on the other attributes.
+ * 
  * @author Florian Zoubek
  *
  */
@@ -80,6 +83,17 @@ public class ExtendedPatchSetImpl extends PatchSetImpl {
 		return objectChangeCount;
 	}
 
+	/**
+	 * updates the change count for all objects within the given collection of
+	 * {@link ModelInstance}s.
+	 * 
+	 * @param modelInstances
+	 *            the {@link ModelInstance}s that contain the objects to
+	 *            calculate the change count for.
+	 * @param comparison
+	 *            the associated {@link Comparison} for the given
+	 *            {@link ModelInstance}s
+	 */
 	private void updateChangeCount(
 			Collection<? extends ModelInstance> modelInstances,
 			Comparison comparison) {
@@ -103,7 +117,7 @@ public class ExtendedPatchSetImpl extends PatchSetImpl {
 					changeCount++;
 				}
 
-				if(changeCount > maxObjectChangeCount){
+				if (changeCount > maxObjectChangeCount) {
 					maxObjectChangeCount = changeCount;
 				}
 				objectChangeCount.put(element, changeCount);
@@ -161,7 +175,18 @@ public class ExtendedPatchSetImpl extends PatchSetImpl {
 
 		return objectChangeRefCount;
 	}
-	
+
+	/**
+	 * updates the reference count for all objects within the given collection
+	 * of {@link ModelInstance}s.
+	 * 
+	 * @param modelInstances
+	 *            the {@link ModelInstance}s that contain the objects to
+	 *            calculate the reference count for.
+	 * @param comparison
+	 *            the associated {@link Comparison} for the given
+	 *            {@link ModelInstance}s
+	 */
 	private void updateChangeRefCount(
 			Collection<? extends ModelInstance> modelInstances,
 			Comparison comparison) {
@@ -177,10 +202,11 @@ public class ExtendedPatchSetImpl extends PatchSetImpl {
 
 				// calculate references count
 
-				Collection<Setting> references = EcoreUtil.UsageCrossReferencer.find(element, element.eResource().getResourceSet());
-				
+				Collection<Setting> references = EcoreUtil.UsageCrossReferencer
+						.find(element, element.eResource().getResourceSet());
+
 				int referenceCount = references.size();
-				if(referenceCount > maxObjectChangeCount){
+				if (referenceCount > maxObjectChangeCount) {
 					maxObjectChangeRefCount = referenceCount;
 				}
 				objectChangeRefCount.put(element, referenceCount);

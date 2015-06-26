@@ -10,27 +10,24 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.util.vis;
 
-import org.eclipse.swt.SWT;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 
-/**
- * Represents a color value in the HSB color space.
- * 
- * @author Florian Zoubek
- *
- */
-public class HSB {
-	
-	public float hue;
-	public float saturation;
-	public float brightness;
+public abstract class NumericColumnLabelProvider extends ColumnLabelProvider {
 
-	public HSB(float hue, float saturation, float brightness) {
-		if (hue < 0 || hue > 360 || saturation < 0 || saturation > 1
-				|| brightness < 0 || brightness > 1) {
-			SWT.error(SWT.ERROR_INVALID_ARGUMENT);
-		}
-		this.hue = hue;
-		this.saturation = saturation;
-		this.brightness = brightness;
+	public NumericColumnLabelProvider() {
+		super();
 	}
+
+	@Override
+	public String getText(Object element) {
+		if (hasValue(element)) {
+			return "" + getValue(element);
+		}
+		return null;
+	}
+
+	public abstract float getValue(Object element);
+
+	public abstract boolean hasValue(Object element);
+
 }

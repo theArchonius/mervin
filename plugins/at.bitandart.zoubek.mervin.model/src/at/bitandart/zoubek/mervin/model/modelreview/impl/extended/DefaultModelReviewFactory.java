@@ -10,10 +10,16 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.model.modelreview.impl.extended;
 
+import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewFactoryImpl;
 
 /**
+ * The default factory for all {@link ModelReview} elements. It is recommended
+ * to extend and use this class instead of {@link ModelReviewFactoryImpl}
+ * because {@link ModelReviewFactoryImpl} does not provide complete
+ * implementations for all {@link ModelReview} elements.
+ * 
  * @author Florian Zoubek
  *
  */
@@ -23,5 +29,5 @@ public class DefaultModelReviewFactory extends ModelReviewFactoryImpl {
 	public PatchSet createPatchSet() {
 		return new ExtendedPatchSetImpl();
 	}
-	
+
 }

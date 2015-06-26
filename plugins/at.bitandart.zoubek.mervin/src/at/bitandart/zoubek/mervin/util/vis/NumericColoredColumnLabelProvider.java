@@ -13,13 +13,23 @@ package at.bitandart.zoubek.mervin.util.vis;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
+/**
+ * The base class for {@link NumericColumnLabelProvider}s that color the
+ * background of a cell according to its value and provided minimum and maximum
+ * values. The color is determined by interpolating to given colors in the HSB
+ * color space. Two different colors can be specified for the foreground of the
+ * cell, which are chosen depending on their contrast to the calculated
+ * background.
+ * 
+ * @author Florian Zoubek
+ *
+ */
 public abstract class NumericColoredColumnLabelProvider extends
-		ColumnLabelProvider {
+		NumericColumnLabelProvider {
 
 	private Map<Object, Color> colors = new HashMap<>();
 
@@ -62,6 +72,15 @@ public abstract class NumericColoredColumnLabelProvider extends
 		return null;
 	}
 
+	/**
+	 * computes the RGB value for the given value and range by interpolating
+	 * linearly between the colors of this provider.
+	 * 
+	 * @param value
+	 * @param minValue
+	 * @param maxValue
+	 * @return the computed color for the given value
+	 */
 	private RGB computeRGB(float value, float minValue, float maxValue) {
 
 		RGB rgb = new RGB((float) map(value, minValue, maxValue, minHSB.hue,
@@ -71,6 +90,16 @@ public abstract class NumericColoredColumnLabelProvider extends
 		return rgb;
 	}
 
+	/**
+	 * maps the value of the given source range to the destination range.
+	 * 
+	 * @param value
+	 * @param srcMin
+	 * @param srcMax
+	 * @param destMin
+	 * @param destMax
+	 * @return the value mapped into the destination range
+	 */
 	private double map(double value, double srcMin, double srcMax,
 			double destMin, double destMax) {
 		double srcRange = srcMax - srcMin;
@@ -78,10 +107,21 @@ public abstract class NumericColoredColumnLabelProvider extends
 		return destMin + (destRange / srcRange * (value - srcMin));
 	}
 
+	/**
+	 * @param rgb
+	 * @return the brightness of the given RGB color
+	 */
 	private float getBrightness(RGB rgb) {
 		return ((rgb.red * 299) + (rgb.green * 587) + (rgb.blue * 114)) / 1000.0f;
 	}
 
+	/**
+	 * 
+	 * @param rgb
+	 * @param rgb2
+	 * @return the accumulated absolute difference between the components of the
+	 *         RGB values.
+	 */
 	private float getColorDifference(RGB rgb, RGB rgb2) {
 		return Math.abs(rgb.red - rgb2.red) + Math.abs(rgb.green - rgb2.green)
 				+ Math.abs(rgb.blue - rgb2.blue);
@@ -118,20 +158,22 @@ public abstract class NumericColoredColumnLabelProvider extends
 		super.dispose();
 	}
 
-	@Override
-	public String getText(Object element) {
-		if (hasValue(element)) {
-			return "" + getValue(element);
-		}
-		return null;
-	}
-
+	/**
+	 * @param element
+	 * @return the maximum value used to calculate the final cell color, this
+	 *         value must at least satisfy the condition
+	 *         <code>maxVal &gt;= value</code> for all values returned by
+	 *         {@link #getValue(Object)}
+	 */
 	public abstract float getMaxValue(Object element);
 
+	/**
+	 * @param element
+	 * @return the minimum value used to calculate the final cell color, this
+	 *         value must at least satisfy the condition
+	 *         <code>minVal &lt;= value</code> for all values returned by
+	 *         {@link #getValue(Object)}
+	 */
 	public abstract float getMinValue(Object element);
-
-	public abstract float getValue(Object element);
-
-	public abstract boolean hasValue(Object element);
 
 }
