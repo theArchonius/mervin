@@ -11,6 +11,8 @@
 package at.bitandart.zoubek.mervin.review;
 
 import java.text.MessageFormat;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -22,8 +24,11 @@ import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -57,6 +62,11 @@ public class ReviewOptionsView extends ModelReviewEditorTrackingView {
 	}
 
 	public static final String PART_DESCRIPTOR_ID = "at.bitandart.zoubek.mervin.partdescriptor.review.options";
+
+	/**
+	 * Element that represents the base in the patch set comparison selector
+	 */
+	private static final String COMPARE_BASE = "Base";
 
 	// JFace viewers
 
@@ -114,7 +124,7 @@ public class ReviewOptionsView extends ModelReviewEditorTrackingView {
 		createPersistenceSection(toolkit);
 		viewInitialized = true;
 		updateValues();
-		
+
 	}
 
 	/**
@@ -123,7 +133,7 @@ public class ReviewOptionsView extends ModelReviewEditorTrackingView {
 	 * @param toolkit
 	 */
 	private void createInfoSection(FormToolkit toolkit) {
-		
+
 		Section informationSection = toolkit.createSection(mainPanel,
 				Section.TITLE_BAR);
 		informationSection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
@@ -157,7 +167,7 @@ public class ReviewOptionsView extends ModelReviewEditorTrackingView {
 		patchSetsValueLabel = toolkit.createLabel(informationPanel, "");
 		patchSetsValueLabel.setLayoutData(new GridData(SWT.BEGINNING,
 				SWT.CENTER, false, false));
-		
+
 	}
 
 	/**
@@ -166,7 +176,7 @@ public class ReviewOptionsView extends ModelReviewEditorTrackingView {
 	 * @param toolkit
 	 */
 	private void createCompareSection(FormToolkit toolkit) {
-		
+
 		Section compareSection = toolkit.createSection(mainPanel,
 				Section.TITLE_BAR);
 		compareSection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
@@ -186,6 +196,33 @@ public class ReviewOptionsView extends ModelReviewEditorTrackingView {
 		leftSidePatchSetViewer.setContentProvider(ArrayContentProvider
 				.getInstance());
 		leftSidePatchSetViewer.setLabelProvider(new PatchSetLabelProvider());
+		leftSidePatchSetViewer
+				.addSelectionChangedListener(new ISelectionChangedListener() {
+
+					@Override
+					public void selectionChanged(SelectionChangedEvent event) {
+
+						ISelection selection = event.getSelection();
+
+						if (!selection.isEmpty()
+								&& selection instanceof IStructuredSelection) {
+
+							IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+							Object element = structuredSelection
+									.getFirstElement();
+							ModelReview currentModelReview = getCurrentModelReview();
+
+							if (COMPARE_BASE.equals(element)) {
+								// null represents the base version
+								currentModelReview.setLeftPatchSet(null);
+
+							} else if (element instanceof PatchSet) {
+								currentModelReview
+										.setLeftPatchSet((PatchSet) element);
+							}
+						}
+					}
+				});
 
 		CCombo rightSidePatchSetCombo = new CCombo(comparePanel, SWT.DROP_DOWN
 				| SWT.READ_ONLY);
@@ -196,7 +233,34 @@ public class ReviewOptionsView extends ModelReviewEditorTrackingView {
 		rightSidePatchSetViewer.setContentProvider(ArrayContentProvider
 				.getInstance());
 		rightSidePatchSetViewer.setLabelProvider(new PatchSetLabelProvider());
-		
+		rightSidePatchSetViewer
+				.addSelectionChangedListener(new ISelectionChangedListener() {
+
+					@Override
+					public void selectionChanged(SelectionChangedEvent event) {
+
+						ISelection selection = event.getSelection();
+
+						if (!selection.isEmpty()
+								&& selection instanceof IStructuredSelection) {
+
+							IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+							Object element = structuredSelection
+									.getFirstElement();
+							ModelReview currentModelReview = getCurrentModelReview();
+
+							if (COMPARE_BASE.equals(element)) {
+								// null represents the base version
+								currentModelReview.setRightPatchSet(null);
+
+							} else if (element instanceof PatchSet) {
+								currentModelReview
+										.setRightPatchSet((PatchSet) element);
+							}
+						}
+					}
+				});
+
 	}
 
 	/**
@@ -205,7 +269,7 @@ public class ReviewOptionsView extends ModelReviewEditorTrackingView {
 	 * @param toolkit
 	 */
 	private void createPersistenceSection(FormToolkit toolkit) {
-		
+
 		persistencePanel = toolkit.createComposite(mainPanel, SWT.NONE);
 		persistencePanel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false));
@@ -287,7 +351,7 @@ public class ReviewOptionsView extends ModelReviewEditorTrackingView {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 		});
-		
+
 	}
 
 	@Override
@@ -324,34 +388,29 @@ public class ReviewOptionsView extends ModelReviewEditorTrackingView {
 					.size() + "");
 
 			// update compare section
-			IStructuredSelection prevLeftSelection = leftSidePatchSetViewer
-					.getStructuredSelection();
 			leftSidePatchSetViewer.getCCombo().setEnabled(true);
-			IStructuredSelection prevRightSelection = rightSidePatchSetViewer
-					.getStructuredSelection();
 			rightSidePatchSetViewer.getCCombo().setEnabled(true);
 
-			PatchSet[] patchSets = currentModelReview.getPatchSets().toArray(
-					new PatchSet[0]);
+			List<Object> patchSets = new LinkedList<Object>(
+					currentModelReview.getPatchSets());
+			patchSets.add(0, COMPARE_BASE);
 			leftSidePatchSetViewer.setInput(patchSets);
 			rightSidePatchSetViewer.setInput(patchSets);
 
-			if (!prevLeftSelection.isEmpty()
-					&& currentModelReview.getPatchSets().contains(
-							prevLeftSelection.getFirstElement())) {
-				leftSidePatchSetViewer.setSelection(prevLeftSelection);
-			} else if (patchSets.length > 0) {
+			if (currentModelReview.getLeftPatchSet() != null) {
 				leftSidePatchSetViewer.setSelection(new StructuredSelection(
-						patchSets[0]));
+						currentModelReview.getLeftPatchSet()));
+			} else {
+				leftSidePatchSetViewer.setSelection(new StructuredSelection(
+						COMPARE_BASE));
 			}
 
-			if (!prevRightSelection.isEmpty()
-					&& currentModelReview.getPatchSets().contains(
-							prevRightSelection.getFirstElement())) {
-				rightSidePatchSetViewer.setSelection(prevRightSelection);
-			} else if (patchSets.length > 0) {
+			if (currentModelReview.getRightPatchSet() != null) {
+				leftSidePatchSetViewer.setSelection(new StructuredSelection(
+						currentModelReview.getRightPatchSet()));
+			} else {
 				rightSidePatchSetViewer.setSelection(new StructuredSelection(
-						patchSets[0]));
+						COMPARE_BASE));
 			}
 
 			// update persistence section
