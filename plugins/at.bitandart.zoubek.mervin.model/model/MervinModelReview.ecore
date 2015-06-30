@@ -8,6 +8,8 @@
         eType="#//PatchSet" containment="true" eOpposite="#//PatchSet/review"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="comments" upperBound="-1"
         eType="#//Comment"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="leftPatchSet" eType="#//PatchSet"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rightPatchSet" eType="#//PatchSet"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PatchSet">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

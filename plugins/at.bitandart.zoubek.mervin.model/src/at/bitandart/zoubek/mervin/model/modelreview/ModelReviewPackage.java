@@ -106,13 +106,31 @@ public interface ModelReviewPackage extends EPackage {
 	int MODEL_REVIEW__COMMENTS = 2;
 
 	/**
+	 * The feature id for the '<em><b>Left Patch Set</b></em>' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_REVIEW__LEFT_PATCH_SET = 3;
+
+	/**
+	 * The feature id for the '<em><b>Right Patch Set</b></em>' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_REVIEW__RIGHT_PATCH_SET = 4;
+
+	/**
 	 * The number of structural features of the '<em>Model Review</em>' class.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_REVIEW_FEATURE_COUNT = 3;
+	int MODEL_REVIEW_FEATURE_COUNT = 5;
 
 	/**
 	 * The number of operations of the '<em>Model Review</em>' class. <!--
@@ -760,6 +778,30 @@ public interface ModelReviewPackage extends EPackage {
 	EReference getModelReview_Comments();
 
 	/**
+	 * Returns the meta object for the reference '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getLeftPatchSet
+	 * <em>Left Patch Set</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference '<em>Left Patch Set</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getLeftPatchSet()
+	 * @see #getModelReview()
+	 * @generated
+	 */
+	EReference getModelReview_LeftPatchSet();
+
+	/**
+	 * Returns the meta object for the reference '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getRightPatchSet
+	 * <em>Right Patch Set</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference '<em>Right Patch Set</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getRightPatchSet()
+	 * @see #getModelReview()
+	 * @generated
+	 */
+	EReference getModelReview_RightPatchSet();
+
+	/**
 	 * Returns the meta object for class '
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet
 	 * <em>Patch Set</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1257,6 +1299,24 @@ public interface ModelReviewPackage extends EPackage {
 		 * @generated
 		 */
 		EReference MODEL_REVIEW__COMMENTS = eINSTANCE.getModelReview_Comments();
+
+		/**
+		 * The meta object literal for the '<em><b>Left Patch Set</b></em>'
+		 * reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference MODEL_REVIEW__LEFT_PATCH_SET = eINSTANCE
+				.getModelReview_LeftPatchSet();
+
+		/**
+		 * The meta object literal for the '<em><b>Right Patch Set</b></em>'
+		 * reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference MODEL_REVIEW__RIGHT_PATCH_SET = eINSTANCE
+				.getModelReview_RightPatchSet();
 
 		/**
 		 * The meta object literal for the '

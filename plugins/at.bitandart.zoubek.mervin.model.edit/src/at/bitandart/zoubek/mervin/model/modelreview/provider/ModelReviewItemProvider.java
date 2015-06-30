@@ -70,6 +70,8 @@ public class ModelReviewItemProvider extends ItemProviderAdapter implements
 
 			addIdPropertyDescriptor(object);
 			addCommentsPropertyDescriptor(object);
+			addLeftPatchSetPropertyDescriptor(object);
+			addRightPatchSetPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -109,6 +111,44 @@ public class ModelReviewItemProvider extends ItemProviderAdapter implements
 						"_UI_ModelReview_type"),
 				ModelReviewPackage.Literals.MODEL_REVIEW__COMMENTS, true,
 				false, true, null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Left Patch Set feature. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addLeftPatchSetPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory)
+						.getRootAdapterFactory(),
+				getResourceLocator(),
+				getString("_UI_ModelReview_leftPatchSet_feature"),
+				getString("_UI_PropertyDescriptor_description",
+						"_UI_ModelReview_leftPatchSet_feature",
+						"_UI_ModelReview_type"),
+				ModelReviewPackage.Literals.MODEL_REVIEW__LEFT_PATCH_SET, true,
+				false, true, null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Right Patch Set feature. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addRightPatchSetPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory)
+						.getRootAdapterFactory(),
+				getResourceLocator(),
+				getString("_UI_ModelReview_rightPatchSet_feature"),
+				getString("_UI_PropertyDescriptor_description",
+						"_UI_ModelReview_rightPatchSet_feature",
+						"_UI_ModelReview_type"),
+				ModelReviewPackage.Literals.MODEL_REVIEW__RIGHT_PATCH_SET,
+				true, false, true, null, null, null));
 	}
 
 	/**

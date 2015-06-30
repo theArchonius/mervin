@@ -31,6 +31,12 @@ import org.eclipse.emf.ecore.EObject;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getComments
  * <em>Comments</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getLeftPatchSet
+ * <em>Left Patch Set</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getRightPatchSet
+ * <em>Right Patch Set</em>}</li>
  * </ul>
  * </p>
  *
@@ -107,5 +113,65 @@ public interface ModelReview extends EObject {
 	 * @generated
 	 */
 	EList<Comment> getComments();
+
+	/**
+	 * Returns the value of the '<em><b>Left Patch Set</b></em>' reference. <!--
+	 * begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Left Patch Set</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Left Patch Set</em>' reference.
+	 * @see #setLeftPatchSet(PatchSet)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelReview_LeftPatchSet()
+	 * @model
+	 * @generated
+	 */
+	PatchSet getLeftPatchSet();
+
+	/**
+	 * Sets the value of the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getLeftPatchSet
+	 * <em>Left Patch Set</em>}' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Left Patch Set</em>' reference.
+	 * @see #getLeftPatchSet()
+	 * @generated
+	 */
+	void setLeftPatchSet(PatchSet value);
+
+	/**
+	 * Returns the value of the '<em><b>Right Patch Set</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Right Patch Set</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Right Patch Set</em>' reference.
+	 * @see #setRightPatchSet(PatchSet)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelReview_RightPatchSet()
+	 * @model
+	 * @generated
+	 */
+	PatchSet getRightPatchSet();
+
+	/**
+	 * Sets the value of the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getRightPatchSet
+	 * <em>Right Patch Set</em>}' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Right Patch Set</em>' reference.
+	 * @see #getRightPatchSet()
+	 * @generated
+	 */
+	void setRightPatchSet(PatchSet value);
 
 } // ModelReview

@@ -219,6 +219,24 @@ public class ModelReviewPackageImpl extends EPackageImpl implements
 	 * 
 	 * @generated
 	 */
+	public EReference getModelReview_LeftPatchSet() {
+		return (EReference) modelReviewEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EReference getModelReview_RightPatchSet() {
+		return (EReference) modelReviewEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	public EClass getPatchSet() {
 		return patchSetEClass;
 	}
@@ -562,6 +580,8 @@ public class ModelReviewPackageImpl extends EPackageImpl implements
 		createEAttribute(modelReviewEClass, MODEL_REVIEW__ID);
 		createEReference(modelReviewEClass, MODEL_REVIEW__PATCH_SETS);
 		createEReference(modelReviewEClass, MODEL_REVIEW__COMMENTS);
+		createEReference(modelReviewEClass, MODEL_REVIEW__LEFT_PATCH_SET);
+		createEReference(modelReviewEClass, MODEL_REVIEW__RIGHT_PATCH_SET);
 
 		patchSetEClass = createEClass(PATCH_SET);
 		createEAttribute(patchSetEClass, PATCH_SET__ID);
@@ -667,6 +687,15 @@ public class ModelReviewPackageImpl extends EPackageImpl implements
 				"comments", null, 0, -1, ModelReview.class, !IS_TRANSIENT,
 				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getModelReview_LeftPatchSet(), this.getPatchSet(), null,
+				"leftPatchSet", null, 0, 1, ModelReview.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getModelReview_RightPatchSet(), this.getPatchSet(),
+				null, "rightPatchSet", null, 0, 1, ModelReview.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
+				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
 
 		initEClass(patchSetEClass, PatchSet.class, "PatchSet", !IS_ABSTRACT,
 				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

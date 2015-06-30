@@ -43,6 +43,12 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewImpl#getComments
  * <em>Comments</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewImpl#getLeftPatchSet
+ * <em>Left Patch Set</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewImpl#getRightPatchSet
+ * <em>Right Patch Set</em>}</li>
  * </ul>
  * </p>
  *
@@ -89,6 +95,28 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements
 	 * @ordered
 	 */
 	protected EList<Comment> comments;
+
+	/**
+	 * The cached value of the '{@link #getLeftPatchSet()
+	 * <em>Left Patch Set</em>}' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #getLeftPatchSet()
+	 * @generated
+	 * @ordered
+	 */
+	protected PatchSet leftPatchSet;
+
+	/**
+	 * The cached value of the '{@link #getRightPatchSet()
+	 * <em>Right Patch Set</em>}' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #getRightPatchSet()
+	 * @generated
+	 * @ordered
+	 */
+	protected PatchSet rightPatchSet;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -164,6 +192,90 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements
 	 * 
 	 * @generated
 	 */
+	public PatchSet getLeftPatchSet() {
+		if (leftPatchSet != null && leftPatchSet.eIsProxy()) {
+			InternalEObject oldLeftPatchSet = (InternalEObject) leftPatchSet;
+			leftPatchSet = (PatchSet) eResolveProxy(oldLeftPatchSet);
+			if (leftPatchSet != oldLeftPatchSet) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							ModelReviewPackage.MODEL_REVIEW__LEFT_PATCH_SET,
+							oldLeftPatchSet, leftPatchSet));
+			}
+		}
+		return leftPatchSet;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public PatchSet basicGetLeftPatchSet() {
+		return leftPatchSet;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setLeftPatchSet(PatchSet newLeftPatchSet) {
+		PatchSet oldLeftPatchSet = leftPatchSet;
+		leftPatchSet = newLeftPatchSet;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					ModelReviewPackage.MODEL_REVIEW__LEFT_PATCH_SET,
+					oldLeftPatchSet, leftPatchSet));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public PatchSet getRightPatchSet() {
+		if (rightPatchSet != null && rightPatchSet.eIsProxy()) {
+			InternalEObject oldRightPatchSet = (InternalEObject) rightPatchSet;
+			rightPatchSet = (PatchSet) eResolveProxy(oldRightPatchSet);
+			if (rightPatchSet != oldRightPatchSet) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							ModelReviewPackage.MODEL_REVIEW__RIGHT_PATCH_SET,
+							oldRightPatchSet, rightPatchSet));
+			}
+		}
+		return rightPatchSet;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public PatchSet basicGetRightPatchSet() {
+		return rightPatchSet;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setRightPatchSet(PatchSet newRightPatchSet) {
+		PatchSet oldRightPatchSet = rightPatchSet;
+		rightPatchSet = newRightPatchSet;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					ModelReviewPackage.MODEL_REVIEW__RIGHT_PATCH_SET,
+					oldRightPatchSet, rightPatchSet));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd,
@@ -206,6 +318,14 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements
 			return getPatchSets();
 		case ModelReviewPackage.MODEL_REVIEW__COMMENTS:
 			return getComments();
+		case ModelReviewPackage.MODEL_REVIEW__LEFT_PATCH_SET:
+			if (resolve)
+				return getLeftPatchSet();
+			return basicGetLeftPatchSet();
+		case ModelReviewPackage.MODEL_REVIEW__RIGHT_PATCH_SET:
+			if (resolve)
+				return getRightPatchSet();
+			return basicGetRightPatchSet();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -230,6 +350,12 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements
 			getComments().clear();
 			getComments().addAll((Collection<? extends Comment>) newValue);
 			return;
+		case ModelReviewPackage.MODEL_REVIEW__LEFT_PATCH_SET:
+			setLeftPatchSet((PatchSet) newValue);
+			return;
+		case ModelReviewPackage.MODEL_REVIEW__RIGHT_PATCH_SET:
+			setRightPatchSet((PatchSet) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -251,6 +377,12 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements
 		case ModelReviewPackage.MODEL_REVIEW__COMMENTS:
 			getComments().clear();
 			return;
+		case ModelReviewPackage.MODEL_REVIEW__LEFT_PATCH_SET:
+			setLeftPatchSet((PatchSet) null);
+			return;
+		case ModelReviewPackage.MODEL_REVIEW__RIGHT_PATCH_SET:
+			setRightPatchSet((PatchSet) null);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -269,6 +401,10 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements
 			return patchSets != null && !patchSets.isEmpty();
 		case ModelReviewPackage.MODEL_REVIEW__COMMENTS:
 			return comments != null && !comments.isEmpty();
+		case ModelReviewPackage.MODEL_REVIEW__LEFT_PATCH_SET:
+			return leftPatchSet != null;
+		case ModelReviewPackage.MODEL_REVIEW__RIGHT_PATCH_SET:
+			return rightPatchSet != null;
 		}
 		return super.eIsSet(featureID);
 	}
