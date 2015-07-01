@@ -83,28 +83,11 @@ public abstract class NumericColoredColumnLabelProvider extends
 	 */
 	private RGB computeRGB(float value, float minValue, float maxValue) {
 
-		RGB rgb = new RGB((float) map(value, minValue, maxValue, minHSB.hue,
-				maxHSB.hue), (float) map(value, minValue, maxValue,
-				minHSB.saturation, maxHSB.saturation), (float) map(value,
+		RGB rgb = new RGB((float) MathUtil.map(value, minValue, maxValue, minHSB.hue,
+				maxHSB.hue), (float) MathUtil.map(value, minValue, maxValue,
+				minHSB.saturation, maxHSB.saturation), (float) MathUtil.map(value,
 				minValue, maxValue, minHSB.brightness, maxHSB.brightness));
 		return rgb;
-	}
-
-	/**
-	 * maps the value of the given source range to the destination range.
-	 * 
-	 * @param value
-	 * @param srcMin
-	 * @param srcMax
-	 * @param destMin
-	 * @param destMax
-	 * @return the value mapped into the destination range
-	 */
-	private double map(double value, double srcMin, double srcMax,
-			double destMin, double destMax) {
-		double srcRange = srcMax - srcMin;
-		double destRange = destMax - destMin;
-		return destMin + (destRange / srcRange * (value - srcMin));
 	}
 
 	/**

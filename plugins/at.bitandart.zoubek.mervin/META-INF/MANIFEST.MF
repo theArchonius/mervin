@@ -28,3 +28,4 @@ Require-Bundle: org.eclipse.swt,
  org.eclipse.emf.edit.ui
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: at.bitandart.zoubek.mervin.util.vis

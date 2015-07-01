@@ -48,14 +48,7 @@ public class PatchSetHistoryEntryImpl<O, V> implements
 		this.entryObject = object;
 	}
 
-	/**
-	 * sets the value of the given {@link PatchSet}-
-	 * 
-	 * @param patchSet
-	 *            the {@link PatchSet} to set the value for.
-	 * @param value
-	 *            the value to set for the given {@link PatchSet}.
-	 */
+	@Override
 	public void setValue(PatchSet patchSet, V value) {
 		valueMap.put(patchSet, value);
 	}

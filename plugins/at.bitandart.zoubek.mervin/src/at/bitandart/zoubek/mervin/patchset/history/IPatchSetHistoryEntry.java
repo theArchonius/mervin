@@ -35,6 +35,14 @@ public interface IPatchSetHistoryEntry<O, V> {
 	V getValue(PatchSet patchSet);
 
 	/**
+	 * @param patchSet
+	 *            the patch set to set the value for.
+	 * @param value
+	 *            the associated value to the given {@link PatchSet}
+	 */
+	void setValue(PatchSet patchSet, V value);
+
+	/**
 	 * 
 	 * @return the entry {@link Object} that is associated to the given values.
 	 */
