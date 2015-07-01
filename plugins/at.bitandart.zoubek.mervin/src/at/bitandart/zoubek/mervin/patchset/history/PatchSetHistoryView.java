@@ -8,7 +8,7 @@
  * Contributors:
  *    Florian Zoubek - initial API and implementation
  *******************************************************************************/
-package at.bitandart.zoubek.mervin.review;
+package at.bitandart.zoubek.mervin.patchset.history;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -22,6 +22,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
+
+import at.bitandart.zoubek.mervin.review.ModelReviewEditorTrackingView;
 
 /**
  * Shows the similarity of differences to differences of other patch sets.

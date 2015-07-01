@@ -31,7 +31,7 @@
       <tags>View</tags>
       <tags>categoryTag:Mervin</tags>
     </elements>
-    <elements xsi:type="basic:PartDescriptor" xmi:id="_vxSTIP1dEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.patchset.history" label="Patch Set History" category="Mervin" closeable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.review.PatchSetHistoryView">
+    <elements xsi:type="basic:PartDescriptor" xmi:id="_vxSTIP1dEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.patchset.history" label="Patch Set History" category="Mervin" closeable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.patchset.history.PatchSetHistoryView">
       <tags>View</tags>
       <tags>categoryTag:Mervin</tags>
     </elements>
