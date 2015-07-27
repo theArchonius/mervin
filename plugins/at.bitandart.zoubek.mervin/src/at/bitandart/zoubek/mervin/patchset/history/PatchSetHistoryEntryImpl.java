@@ -10,6 +10,7 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.patchset.history;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
@@ -27,6 +28,12 @@ public class PatchSetHistoryEntryImpl<O, V> implements
 	private O entryObject;
 
 	private Map<PatchSet, V> valueMap;
+	
+	public PatchSetHistoryEntryImpl(O entryObject) {
+		super();
+		this.entryObject = entryObject;
+		valueMap = new HashMap<PatchSet, V>();
+	}
 
 	@Override
 	public V getValue(PatchSet patchSet) {

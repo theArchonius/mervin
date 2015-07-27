@@ -25,7 +25,9 @@ Require-Bundle: org.eclipse.swt,
  org.eclipse.ui.forms,
  at.bitandart.zoubek.mervin.model,
  org.eclipse.emf.edit,
- org.eclipse.emf.edit.ui
+ org.eclipse.emf.edit.ui,
+ org.eclipse.emf.compare.edit,
+ org.eclipse.emf.compare.rcp
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: at.bitandart.zoubek.mervin.util.vis

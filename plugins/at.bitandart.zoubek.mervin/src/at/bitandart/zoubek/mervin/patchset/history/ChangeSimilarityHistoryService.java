@@ -12,6 +12,7 @@ package at.bitandart.zoubek.mervin.patchset.history;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.BasicMonitor;
@@ -39,13 +40,13 @@ import at.bitandart.zoubek.mervin.util.vis.MathUtil;
  *
  */
 public class ChangeSimilarityHistoryService implements
-		IPatchSetHistoryService<Diff, Double> {
+		ISimilarityHistoryService{
 
 	@Override
 	public IPatchSetHistoryEntry<Diff, Double> createEntryFor(Diff object,
 			Collection<PatchSet> patchSets) {
 
-		PatchSetHistoryEntryImpl<Diff, Double> entry = new PatchSetHistoryEntryImpl<Diff, Double>();
+		PatchSetHistoryEntryImpl<Diff, Double> entry = new PatchSetHistoryEntryImpl<Diff, Double>(object);
 		updateEntryFor(entry, patchSets);
 
 		return entry;
@@ -87,7 +88,7 @@ public class ChangeSimilarityHistoryService implements
 	 * 
 	 * @param entry
 	 * @param patchSet
-	 * @param match
+	 * @param match the matching diff in the patchSet, or null if none has been found
 	 * @param comparison
 	 */
 	protected void postProcessEntry(IPatchSetHistoryEntry<Diff, Double> entry,
@@ -134,6 +135,47 @@ public class ChangeSimilarityHistoryService implements
 		EditionDistance editionDistance = new EditionDistance(
 				WeightProviderDescriptorRegistryImpl.createStandaloneInstance());
 		return MathUtil.map(editionDistance.distance(comparison, left, right), 0.0, Double.MAX_VALUE, 1.0, 0.0);
+	}
+
+
+	@Override
+	public List<IPatchSetHistoryEntry<Diff, Double>> createModelEntries(
+			PatchSet patchSet, List<PatchSet> patchSets) {
+		
+		return createEntriesForDiffs(patchSet.getModelComparison().getDifferences(), patchSets);
+	}
+
+	@Override
+	public List<IPatchSetHistoryEntry<Diff, Double>> createDiagramEntries(
+			PatchSet patchSet, List<PatchSet> patchSets) {
+
+		return createEntriesForDiffs(patchSet.getDiagramComparison().getDifferences(), patchSets);
+	}
+	
+	private List<IPatchSetHistoryEntry<Diff, Double>> createEntriesForDiffs(List<Diff> differences,List<PatchSet> patchSets){
+		
+		List<IPatchSetHistoryEntry<Diff, Double>> entries = new LinkedList<IPatchSetHistoryEntry<Diff,Double>>();
+		
+		for(Diff diff : differences){
+			IPatchSetHistoryEntry<Diff, Double> historyEntry = createEntryFor(diff, patchSets);
+			entries.add(historyEntry);
+		}
+		
+		return entries;
+	}
+	
+	@Override
+	public List<IPatchSetHistoryEntry<Diff, Double>> createModelEntries(
+			List<PatchSet> patchSets) {
+		throw new UnsupportedOperationException("Not yet implemented");
+		// TODO implement
+	}
+
+	@Override
+	public List<IPatchSetHistoryEntry<Diff, Double>> createDiagramEntries(
+			List<PatchSet> patchSets) {
+		throw new UnsupportedOperationException("Not yet implemented");
+		// TODO implement
 	}
 
 }

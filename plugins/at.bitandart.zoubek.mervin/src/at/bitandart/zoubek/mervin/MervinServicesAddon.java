@@ -18,6 +18,8 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import at.bitandart.zoubek.mervin.gerrit.GerritReviewRepositoryService;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
 import at.bitandart.zoubek.mervin.model.modelreview.impl.extended.DefaultModelReviewFactory;
+import at.bitandart.zoubek.mervin.patchset.history.ChangeSimilarityHistoryService;
+import at.bitandart.zoubek.mervin.patchset.history.ISimilarityHistoryService;
 
 /**
  * This addon is responsible for registering all mervin related services to the
@@ -37,6 +39,11 @@ public class MervinServicesAddon {
 				.make(GerritReviewRepositoryService.class, context);
 		context.set(IReviewRepositoryService.class,
 				gerritReviewRepositoryService);
+
+		ChangeSimilarityHistoryService changeSimilarityHistoryService = ContextInjectionFactory
+				.make(ChangeSimilarityHistoryService.class, context);
+		context.set(ISimilarityHistoryService.class,
+				changeSimilarityHistoryService);
 	}
 	
 
