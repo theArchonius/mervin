@@ -27,7 +27,10 @@ Require-Bundle: org.eclipse.swt,
  org.eclipse.emf.edit,
  org.eclipse.emf.edit.ui,
  org.eclipse.emf.compare.edit,
- org.eclipse.emf.compare.rcp
+ org.eclipse.emf.compare.rcp,
+ org.eclipse.gef,
+ org.eclipse.gmf.runtime.diagram.ui,
+ org.eclipse.gmf.runtime.notation.edit
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: at.bitandart.zoubek.mervin.util.vis

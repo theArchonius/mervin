@@ -17,12 +17,14 @@ import javax.inject.Inject;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
+import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Control;
 
+import at.bitandart.zoubek.mervin.diagram.diff.parts.DiagramDiffRootEditPart;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 
 /**
@@ -40,6 +42,8 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 public class DiagramDiffView {
 
 	private Composite mainPanel;
+
+	private Control viewerControl;
 
 	@Inject
 	private ESelectionService selectionService;
@@ -67,10 +71,12 @@ public class DiagramDiffView {
 		mainPanel = new Composite(parent, SWT.NONE);
 		mainPanel.setLayout(new GridLayout());
 
-		// TODO replace with the diagram diff component
-		Label nYILabel = new Label(mainPanel, SWT.NONE);
-		nYILabel.setText("Not yet implemented");
-		nYILabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		GraphicalViewer viewer = new DiagramDiffViewer();
+		viewerControl = viewer.createControl(mainPanel);
+		viewerControl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		viewer.setRootEditPart(new DiagramDiffRootEditPart());
+		viewer.setEditPartFactory(new DiagramDiffPartFactory());
+
 	}
 
 	@PreDestroy
@@ -102,8 +108,7 @@ public class DiagramDiffView {
 
 		// the review model is stored in the transient data map
 		if (part.getTransientData().containsKey(DATA_TRANSIENT_MODEL_REVIEW)) {
-			Object object = part.getTransientData().get(
-					DATA_TRANSIENT_MODEL_REVIEW);
+			Object object = part.getTransientData().get(DATA_TRANSIENT_MODEL_REVIEW);
 
 			if (object instanceof ModelReview) {
 				return (ModelReview) object;
