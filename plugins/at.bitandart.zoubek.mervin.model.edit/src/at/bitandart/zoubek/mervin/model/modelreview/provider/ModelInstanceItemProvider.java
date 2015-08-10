@@ -38,9 +38,8 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
  * 
  * @generated
  */
-public class ModelInstanceItemProvider extends ItemProviderAdapter implements
-		IEditingDomainItemProvider, IStructuredItemContentProvider,
-		ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class ModelInstanceItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider,
+		IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
@@ -75,16 +74,12 @@ public class ModelInstanceItemProvider extends ItemProviderAdapter implements
 	 * @generated
 	 */
 	protected void addObjectsPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_ModelInstance_objects_feature"),
-				getString("_UI_PropertyDescriptor_description",
-						"_UI_ModelInstance_objects_feature",
-						"_UI_ModelInstance_type"),
-				ModelReviewPackage.Literals.MODEL_INSTANCE__OBJECTS, true,
-				false, true, null, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_ModelInstance_objects_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_ModelInstance_objects_feature",
+								"_UI_ModelInstance_type"),
+						ModelReviewPackage.Literals.MODEL_INSTANCE__OBJECTS, true, false, true, null, null, null));
 	}
 
 	/**
@@ -94,16 +89,13 @@ public class ModelInstanceItemProvider extends ItemProviderAdapter implements
 	 * @generated
 	 */
 	protected void addRootPackagesPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_ModelInstance_rootPackages_feature"),
-				getString("_UI_PropertyDescriptor_description",
-						"_UI_ModelInstance_rootPackages_feature",
-						"_UI_ModelInstance_type"),
-				ModelReviewPackage.Literals.MODEL_INSTANCE__ROOT_PACKAGES,
-				true, false, true, null, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_ModelInstance_rootPackages_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_ModelInstance_rootPackages_feature",
+								"_UI_ModelInstance_type"),
+						ModelReviewPackage.Literals.MODEL_INSTANCE__ROOT_PACKAGES, true, false, true, null, null,
+						null));
 	}
 
 	/**
@@ -114,8 +106,7 @@ public class ModelInstanceItemProvider extends ItemProviderAdapter implements
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object,
-				getResourceLocator().getImage("full/obj16/ModelInstance"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/ModelInstance"));
 	}
 
 	/**
@@ -151,8 +142,7 @@ public class ModelInstanceItemProvider extends ItemProviderAdapter implements
 	 * @generated
 	 */
 	@Override
-	protected void collectNewChildDescriptors(
-			Collection<Object> newChildDescriptors, Object object) {
+	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}
 

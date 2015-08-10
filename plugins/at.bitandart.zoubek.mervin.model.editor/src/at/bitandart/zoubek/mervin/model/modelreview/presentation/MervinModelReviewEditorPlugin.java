@@ -48,8 +48,8 @@ public final class MervinModelReviewEditorPlugin extends EMFPlugin {
 	 * @generated
 	 */
 	public MervinModelReviewEditorPlugin() {
-		super(new ResourceLocator[] { EMFCompareEditPlugin.INSTANCE,
-				EcoreEditPlugin.INSTANCE, NotationEditPlugin.INSTANCE, });
+		super(new ResourceLocator[] { EMFCompareEditPlugin.INSTANCE, EcoreEditPlugin.INSTANCE,
+				NotationEditPlugin.INSTANCE, });
 	}
 
 	/**

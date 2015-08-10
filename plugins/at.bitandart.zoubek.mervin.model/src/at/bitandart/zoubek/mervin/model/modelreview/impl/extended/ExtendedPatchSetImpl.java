@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.Stack;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.util.BasicEList;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
@@ -24,7 +26,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.gmf.runtime.notation.Diagram;
 
+import at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelInstance;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
@@ -94,9 +98,7 @@ public class ExtendedPatchSetImpl extends PatchSetImpl {
 	 *            the associated {@link Comparison} for the given
 	 *            {@link ModelInstance}s
 	 */
-	private void updateChangeCount(
-			Collection<? extends ModelInstance> modelInstances,
-			Comparison comparison) {
+	private void updateChangeCount(Collection<? extends ModelInstance> modelInstances, Comparison comparison) {
 
 		for (ModelInstance modelInstance : modelInstances) {
 
@@ -111,9 +113,8 @@ public class ExtendedPatchSetImpl extends PatchSetImpl {
 
 				// calculate count
 
-				for (Iterator<Diff> allDifferences = match.getAllDifferences()
-						.iterator(); allDifferences.hasNext(); allDifferences
-						.next()) {
+				for (Iterator<Diff> allDifferences = match.getAllDifferences().iterator(); allDifferences
+						.hasNext(); allDifferences.next()) {
 					changeCount++;
 				}
 
@@ -187,9 +188,7 @@ public class ExtendedPatchSetImpl extends PatchSetImpl {
 	 *            the associated {@link Comparison} for the given
 	 *            {@link ModelInstance}s
 	 */
-	private void updateChangeRefCount(
-			Collection<? extends ModelInstance> modelInstances,
-			Comparison comparison) {
+	private void updateChangeRefCount(Collection<? extends ModelInstance> modelInstances, Comparison comparison) {
 
 		for (ModelInstance modelInstance : modelInstances) {
 
@@ -202,8 +201,8 @@ public class ExtendedPatchSetImpl extends PatchSetImpl {
 
 				// calculate references count
 
-				Collection<Setting> references = EcoreUtil.UsageCrossReferencer
-						.find(element, element.eResource().getResourceSet());
+				Collection<Setting> references = EcoreUtil.UsageCrossReferencer.find(element,
+						element.eResource().getResourceSet());
 
 				int referenceCount = references.size();
 				if (referenceCount > maxObjectChangeCount) {
@@ -217,6 +216,24 @@ public class ExtendedPatchSetImpl extends PatchSetImpl {
 			}
 		}
 
+	}
+
+	@Override
+	public EList<Diagram> getAllNewInvolvedDiagrams() {
+		EList<Diagram> diagrams = new BasicEList<Diagram>();
+		for (DiagramInstance diagramInstance : getNewInvolvedDiagrams()) {
+			diagrams.addAll(diagramInstance.getDiagrams());
+		}
+		return diagrams;
+	}
+
+	@Override
+	public EList<Diagram> getAllOldInvolvedDiagrams() {
+		EList<Diagram> diagrams = new BasicEList<Diagram>();
+		for (DiagramInstance diagramInstance : getOldInvolvedDiagrams()) {
+			diagrams.addAll(diagramInstance.getDiagrams());
+		}
+		return diagrams;
 	}
 
 }

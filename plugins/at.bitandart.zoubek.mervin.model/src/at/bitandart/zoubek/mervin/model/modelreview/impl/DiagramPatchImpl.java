@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <em><b>Diagram Patch</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.DiagramPatchImpl#getNewDiagramInstance
@@ -33,7 +34,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.DiagramPatchImpl#getOldDiagramInstance
  * <em>Old Diagram Instance</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -89,11 +89,9 @@ public class DiagramPatchImpl extends PatchImpl implements DiagramPatch {
 			newDiagramInstance = (DiagramInstance) eResolveProxy(oldNewDiagramInstance);
 			if (newDiagramInstance != oldNewDiagramInstance) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(
-							this,
-							Notification.RESOLVE,
-							ModelReviewPackage.DIAGRAM_PATCH__NEW_DIAGRAM_INSTANCE,
-							oldNewDiagramInstance, newDiagramInstance));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							ModelReviewPackage.DIAGRAM_PATCH__NEW_DIAGRAM_INSTANCE, oldNewDiagramInstance,
+							newDiagramInstance));
 			}
 		}
 		return newDiagramInstance;
@@ -118,8 +116,7 @@ public class DiagramPatchImpl extends PatchImpl implements DiagramPatch {
 		newDiagramInstance = newNewDiagramInstance;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
-					ModelReviewPackage.DIAGRAM_PATCH__NEW_DIAGRAM_INSTANCE,
-					oldNewDiagramInstance, newDiagramInstance));
+					ModelReviewPackage.DIAGRAM_PATCH__NEW_DIAGRAM_INSTANCE, oldNewDiagramInstance, newDiagramInstance));
 	}
 
 	/**
@@ -133,11 +130,9 @@ public class DiagramPatchImpl extends PatchImpl implements DiagramPatch {
 			oldDiagramInstance = (DiagramInstance) eResolveProxy(oldOldDiagramInstance);
 			if (oldDiagramInstance != oldOldDiagramInstance) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(
-							this,
-							Notification.RESOLVE,
-							ModelReviewPackage.DIAGRAM_PATCH__OLD_DIAGRAM_INSTANCE,
-							oldOldDiagramInstance, oldDiagramInstance));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							ModelReviewPackage.DIAGRAM_PATCH__OLD_DIAGRAM_INSTANCE, oldOldDiagramInstance,
+							oldDiagramInstance));
 			}
 		}
 		return oldDiagramInstance;
@@ -162,8 +157,7 @@ public class DiagramPatchImpl extends PatchImpl implements DiagramPatch {
 		oldDiagramInstance = newOldDiagramInstance;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
-					ModelReviewPackage.DIAGRAM_PATCH__OLD_DIAGRAM_INSTANCE,
-					oldOldDiagramInstance, oldDiagramInstance));
+					ModelReviewPackage.DIAGRAM_PATCH__OLD_DIAGRAM_INSTANCE, oldOldDiagramInstance, oldDiagramInstance));
 	}
 
 	/**

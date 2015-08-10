@@ -22,6 +22,8 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//ModelReview/comments"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//ModelReview/leftPatchSet"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//ModelReview/rightPatchSet"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//ModelReview/selectedModelComparison"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//ModelReview/selectedDiagramComparison"/>
     </genClasses>
     <genClasses ecoreClass="MervinModelReview.ecore#//PatchSet">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//PatchSet/id"/>
@@ -37,6 +39,8 @@
       <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//PatchSet/objectChangeRefCount"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//PatchSet/maxObjectChangeCount"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//PatchSet/maxObjectChangeRefCount"/>
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference MervinModelReview.ecore#//PatchSet/allNewInvolvedDiagrams"/>
+      <genFeatures property="Readonly" notify="false" createChild="false" ecoreFeature="ecore:EReference MervinModelReview.ecore#//PatchSet/allOldInvolvedDiagrams"/>
     </genClasses>
     <genClasses image="false" ecoreClass="MervinModelReview.ecore#//Patch">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//Patch/newPath"/>

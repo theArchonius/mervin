@@ -20,11 +20,12 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
- * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.Patch#getNewPath <em>
- * New Path</em>}</li>
- * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.Patch#getOldPath <em>
- * Old Path</em>}</li>
+ * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.Patch#getNewPath
+ * <em>New Path</em>}</li>
+ * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.Patch#getOldPath
+ * <em>Old Path</em>}</li>
  * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.Patch#getNewContent
  * <em>New Content</em>}</li>
  * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.Patch#getOldContent
@@ -34,7 +35,6 @@ import org.eclipse.emf.ecore.EObject;
  * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.Patch#getPatchSet
  * <em>Patch Set</em>}</li>
  * </ul>
- * </p>
  *
  * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getPatch()
  * @model

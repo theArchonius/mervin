@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <em><b>Model Patch</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelPatchImpl#getNewModelInstance
@@ -33,7 +34,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelPatchImpl#getOldModelInstance
  * <em>Old Model Instance</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -90,8 +90,7 @@ public class ModelPatchImpl extends PatchImpl implements ModelPatch {
 			if (newModelInstance != oldNewModelInstance) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							ModelReviewPackage.MODEL_PATCH__NEW_MODEL_INSTANCE,
-							oldNewModelInstance, newModelInstance));
+							ModelReviewPackage.MODEL_PATCH__NEW_MODEL_INSTANCE, oldNewModelInstance, newModelInstance));
 			}
 		}
 		return newModelInstance;
@@ -115,8 +114,7 @@ public class ModelPatchImpl extends PatchImpl implements ModelPatch {
 		ModelInstance oldNewModelInstance = newModelInstance;
 		newModelInstance = newNewModelInstance;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					ModelReviewPackage.MODEL_PATCH__NEW_MODEL_INSTANCE,
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.MODEL_PATCH__NEW_MODEL_INSTANCE,
 					oldNewModelInstance, newModelInstance));
 	}
 
@@ -132,8 +130,7 @@ public class ModelPatchImpl extends PatchImpl implements ModelPatch {
 			if (oldModelInstance != oldOldModelInstance) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							ModelReviewPackage.MODEL_PATCH__OLD_MODEL_INSTANCE,
-							oldOldModelInstance, oldModelInstance));
+							ModelReviewPackage.MODEL_PATCH__OLD_MODEL_INSTANCE, oldOldModelInstance, oldModelInstance));
 			}
 		}
 		return oldModelInstance;
@@ -157,8 +154,7 @@ public class ModelPatchImpl extends PatchImpl implements ModelPatch {
 		ModelInstance oldOldModelInstance = oldModelInstance;
 		oldModelInstance = newOldModelInstance;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					ModelReviewPackage.MODEL_PATCH__OLD_MODEL_INSTANCE,
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.MODEL_PATCH__OLD_MODEL_INSTANCE,
 					oldOldModelInstance, oldModelInstance));
 	}
 

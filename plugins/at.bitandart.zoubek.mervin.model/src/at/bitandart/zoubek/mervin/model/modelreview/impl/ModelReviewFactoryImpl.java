@@ -29,8 +29,7 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
  * 
  * @generated
  */
-public class ModelReviewFactoryImpl extends EFactoryImpl implements
-		ModelReviewFactory {
+public class ModelReviewFactoryImpl extends EFactoryImpl implements ModelReviewFactory {
 	/**
 	 * Creates the default factory implementation. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -83,8 +82,7 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements
 		case ModelReviewPackage.DIAGRAM_INSTANCE:
 			return createDiagramInstance();
 		default:
-			throw new IllegalArgumentException("The class '" + eClass.getName()
-					+ "' is not a valid classifier");
+			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
 	}
 
@@ -99,8 +97,7 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements
 		case ModelReviewPackage.PATCH_CHANGE_TYPE:
 			return createPatchChangeTypeFromString(eDataType, initialValue);
 		default:
-			throw new IllegalArgumentException("The datatype '"
-					+ eDataType.getName() + "' is not a valid classifier");
+			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
 	}
 
@@ -115,8 +112,7 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements
 		case ModelReviewPackage.PATCH_CHANGE_TYPE:
 			return convertPatchChangeTypeToString(eDataType, instanceValue);
 		default:
-			throw new IllegalArgumentException("The datatype '"
-					+ eDataType.getName() + "' is not a valid classifier");
+			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
 	}
 
@@ -195,13 +191,11 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements
 	 * 
 	 * @generated
 	 */
-	public PatchChangeType createPatchChangeTypeFromString(EDataType eDataType,
-			String initialValue) {
+	public PatchChangeType createPatchChangeTypeFromString(EDataType eDataType, String initialValue) {
 		PatchChangeType result = PatchChangeType.get(initialValue);
 		if (result == null)
-			throw new IllegalArgumentException("The value '" + initialValue
-					+ "' is not a valid enumerator of '" + eDataType.getName()
-					+ "'");
+			throw new IllegalArgumentException(
+					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
 		return result;
 	}
 
@@ -210,8 +204,7 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements
 	 * 
 	 * @generated
 	 */
-	public String convertPatchChangeTypeToString(EDataType eDataType,
-			Object instanceValue) {
+	public String convertPatchChangeTypeToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 

@@ -18,6 +18,7 @@ import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.gef.GraphicalViewer;
+import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -70,12 +71,17 @@ public class DiagramDiffView {
 	public void postConstruct(Composite parent) {
 		mainPanel = new Composite(parent, SWT.NONE);
 		mainPanel.setLayout(new GridLayout());
+		// mainPanel.setLayout(new FillLayout());
 
 		GraphicalViewer viewer = new DiagramDiffViewer();
 		viewerControl = viewer.createControl(mainPanel);
 		viewerControl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+		viewer.setKeyHandler(new GraphicalViewerKeyHandler(viewer));
 		viewer.setRootEditPart(new DiagramDiffRootEditPart());
 		viewer.setEditPartFactory(new DiagramDiffPartFactory());
+		viewerControl.setBackground(parent.getBackground());
+		viewer.setContents(getModelReview());
 
 	}
 
@@ -86,7 +92,7 @@ public class DiagramDiffView {
 
 	@Focus
 	public void onFocus() {
-		mainPanel.setFocus();
+		viewerControl.setFocus();
 		selectionService.setSelection(getModelReview());
 	}
 

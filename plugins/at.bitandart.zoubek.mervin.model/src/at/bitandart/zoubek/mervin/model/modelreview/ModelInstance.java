@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.EPackage;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelInstance#getObjects
@@ -31,7 +32,6 @@ import org.eclipse.emf.ecore.EPackage;
  * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelInstance#getRootPackages
  * <em>Root Packages</em>}</li>
  * </ul>
- * </p>
  *
  * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelInstance()
  * @model

@@ -41,8 +41,7 @@ import org.eclipse.gmf.runtime.notation.NotationPackage;
  * 
  * @generated
  */
-public class ModelReviewPackageImpl extends EPackageImpl implements
-		ModelReviewPackage {
+public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewPackage {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -149,13 +148,12 @@ public class ModelReviewPackageImpl extends EPackageImpl implements
 	 */
 	public static ModelReviewPackage init() {
 		if (isInited)
-			return (ModelReviewPackage) EPackage.Registry.INSTANCE
-					.getEPackage(ModelReviewPackage.eNS_URI);
+			return (ModelReviewPackage) EPackage.Registry.INSTANCE.getEPackage(ModelReviewPackage.eNS_URI);
 
 		// Obtain or create and register package
 		ModelReviewPackageImpl theModelReviewPackage = (ModelReviewPackageImpl) (EPackage.Registry.INSTANCE
-				.get(eNS_URI) instanceof ModelReviewPackageImpl ? EPackage.Registry.INSTANCE
-				.get(eNS_URI) : new ModelReviewPackageImpl());
+				.get(eNS_URI) instanceof ModelReviewPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI)
+						: new ModelReviewPackageImpl());
 
 		isInited = true;
 
@@ -173,8 +171,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements
 		theModelReviewPackage.freeze();
 
 		// Update the registry and return the package
-		EPackage.Registry.INSTANCE.put(ModelReviewPackage.eNS_URI,
-				theModelReviewPackage);
+		EPackage.Registry.INSTANCE.put(ModelReviewPackage.eNS_URI, theModelReviewPackage);
 		return theModelReviewPackage;
 	}
 
@@ -230,6 +227,24 @@ public class ModelReviewPackageImpl extends EPackageImpl implements
 	 */
 	public EReference getModelReview_RightPatchSet() {
 		return (EReference) modelReviewEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EReference getModelReview_SelectedModelComparison() {
+		return (EReference) modelReviewEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EReference getModelReview_SelectedDiagramComparison() {
+		return (EReference) modelReviewEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -356,6 +371,24 @@ public class ModelReviewPackageImpl extends EPackageImpl implements
 	 */
 	public EAttribute getPatchSet_MaxObjectChangeRefCount() {
 		return (EAttribute) patchSetEClass.getEStructuralFeatures().get(12);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EReference getPatchSet_AllNewInvolvedDiagrams() {
+		return (EReference) patchSetEClass.getEStructuralFeatures().get(13);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EReference getPatchSet_AllOldInvolvedDiagrams() {
+		return (EReference) patchSetEClass.getEStructuralFeatures().get(14);
 	}
 
 	/**
@@ -582,6 +615,8 @@ public class ModelReviewPackageImpl extends EPackageImpl implements
 		createEReference(modelReviewEClass, MODEL_REVIEW__COMMENTS);
 		createEReference(modelReviewEClass, MODEL_REVIEW__LEFT_PATCH_SET);
 		createEReference(modelReviewEClass, MODEL_REVIEW__RIGHT_PATCH_SET);
+		createEReference(modelReviewEClass, MODEL_REVIEW__SELECTED_MODEL_COMPARISON);
+		createEReference(modelReviewEClass, MODEL_REVIEW__SELECTED_DIAGRAM_COMPARISON);
 
 		patchSetEClass = createEClass(PATCH_SET);
 		createEAttribute(patchSetEClass, PATCH_SET__ID);
@@ -597,6 +632,8 @@ public class ModelReviewPackageImpl extends EPackageImpl implements
 		createEAttribute(patchSetEClass, PATCH_SET__OBJECT_CHANGE_REF_COUNT);
 		createEAttribute(patchSetEClass, PATCH_SET__MAX_OBJECT_CHANGE_COUNT);
 		createEAttribute(patchSetEClass, PATCH_SET__MAX_OBJECT_CHANGE_REF_COUNT);
+		createEReference(patchSetEClass, PATCH_SET__ALL_NEW_INVOLVED_DIAGRAMS);
+		createEReference(patchSetEClass, PATCH_SET__ALL_OLD_INVOLVED_DIAGRAMS);
 
 		patchEClass = createEClass(PATCH);
 		createEAttribute(patchEClass, PATCH__NEW_PATH);
@@ -607,10 +644,8 @@ public class ModelReviewPackageImpl extends EPackageImpl implements
 		createEReference(patchEClass, PATCH__PATCH_SET);
 
 		diagramPatchEClass = createEClass(DIAGRAM_PATCH);
-		createEReference(diagramPatchEClass,
-				DIAGRAM_PATCH__NEW_DIAGRAM_INSTANCE);
-		createEReference(diagramPatchEClass,
-				DIAGRAM_PATCH__OLD_DIAGRAM_INSTANCE);
+		createEReference(diagramPatchEClass, DIAGRAM_PATCH__NEW_DIAGRAM_INSTANCE);
+		createEReference(diagramPatchEClass, DIAGRAM_PATCH__OLD_DIAGRAM_INSTANCE);
 
 		modelPatchEClass = createEClass(MODEL_PATCH);
 		createEReference(modelPatchEClass, MODEL_PATCH__NEW_MODEL_INSTANCE);
@@ -657,8 +692,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements
 		// Obtain other dependent packages
 		ComparePackage theComparePackage = (ComparePackage) EPackage.Registry.INSTANCE
 				.getEPackage(ComparePackage.eNS_URI);
-		EcorePackage theEcorePackage = (EcorePackage) EPackage.Registry.INSTANCE
-				.getEPackage(EcorePackage.eNS_URI);
+		EcorePackage theEcorePackage = (EcorePackage) EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
 		NotationPackage theNotationPackage = (NotationPackage) EPackage.Registry.INSTANCE
 				.getEPackage(NotationPackage.eNS_URI);
 
@@ -672,189 +706,138 @@ public class ModelReviewPackageImpl extends EPackageImpl implements
 		diagramInstanceEClass.getESuperTypes().add(this.getModelInstance());
 
 		// Initialize classes, features, and operations; add parameters
-		initEClass(modelReviewEClass, ModelReview.class, "ModelReview",
-				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getModelReview_Id(), ecorePackage.getEString(), "id",
-				null, 0, 1, ModelReview.class, !IS_TRANSIENT, !IS_VOLATILE,
-				IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
-		initEReference(getModelReview_PatchSets(), this.getPatchSet(),
-				this.getPatchSet_Review(), "patchSets", null, 0, -1,
-				ModelReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE,
-				IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-		initEReference(getModelReview_Comments(), this.getComment(), null,
-				"comments", null, 0, -1, ModelReview.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+		initEClass(modelReviewEClass, ModelReview.class, "ModelReview", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getModelReview_Id(), ecorePackage.getEString(), "id", null, 0, 1, ModelReview.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getModelReview_PatchSets(), this.getPatchSet(), this.getPatchSet_Review(), "patchSets", null, 0,
+				-1, ModelReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getModelReview_LeftPatchSet(), this.getPatchSet(), null,
-				"leftPatchSet", null, 0, 1, ModelReview.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+		initEReference(getModelReview_Comments(), this.getComment(), null, "comments", null, 0, -1, ModelReview.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getModelReview_LeftPatchSet(), this.getPatchSet(), null, "leftPatchSet", null, 0, 1,
+				ModelReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getModelReview_RightPatchSet(), this.getPatchSet(),
-				null, "rightPatchSet", null, 0, 1, ModelReview.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
-				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
+		initEReference(getModelReview_RightPatchSet(), this.getPatchSet(), null, "rightPatchSet", null, 0, 1,
+				ModelReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getModelReview_SelectedModelComparison(), theComparePackage.getComparison(), null,
+				"selectedModelComparison", null, 0, 1, ModelReview.class, IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE,
+				!IS_COMPOSITE, IS_RESOLVE_PROXIES, IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEReference(getModelReview_SelectedDiagramComparison(), theComparePackage.getComparison(), null,
+				"selectedDiagramComparison", null, 0, 1, ModelReview.class, IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE,
+				!IS_COMPOSITE, IS_RESOLVE_PROXIES, IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 
-		initEClass(patchSetEClass, PatchSet.class, "PatchSet", !IS_ABSTRACT,
-				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getPatchSet_Id(), ecorePackage.getEString(), "id", null,
-				0, 1, PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE,
-				IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
-		initEReference(getPatchSet_Review(), this.getModelReview(),
-				this.getModelReview_PatchSets(), "review", null, 0, 1,
-				PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE,
-				!IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-		initEReference(getPatchSet_Patches(), this.getPatch(),
-				this.getPatch_PatchSet(), "patches", null, 0, -1,
-				PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE,
-				!IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-		initEReference(getPatchSet_NewInvolvedModels(),
-				this.getModelInstance(), null, "newInvolvedModels", null, 0,
-				-1, PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE,
-				!IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-		initEReference(getPatchSet_NewInvolvedDiagrams(),
-				this.getDiagramInstance(), null, "newInvolvedDiagrams", null,
-				0, -1, PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE,
-				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+		initEClass(patchSetEClass, PatchSet.class, "PatchSet", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getPatchSet_Id(), ecorePackage.getEString(), "id", null, 0, 1, PatchSet.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPatchSet_Review(), this.getModelReview(), this.getModelReview_PatchSets(), "review", null, 0,
+				1, PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getPatchSet_OldInvolvedModels(),
-				this.getModelInstance(), null, "oldInvolvedModels", null, 0,
-				-1, PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE,
-				!IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-		initEReference(getPatchSet_OldInvolvedDiagrams(),
-				this.getDiagramInstance(), null, "oldInvolvedDiagrams", null,
-				0, -1, PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE,
-				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+		initEReference(getPatchSet_Patches(), this.getPatch(), this.getPatch_PatchSet(), "patches", null, 0, -1,
+				PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getPatchSet_ModelComparison(),
-				theComparePackage.getComparison(), null, "modelComparison",
-				null, 0, 1, PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE,
-				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+		initEReference(getPatchSet_NewInvolvedModels(), this.getModelInstance(), null, "newInvolvedModels", null, 0, -1,
+				PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getPatchSet_DiagramComparison(),
-				theComparePackage.getComparison(), null, "diagramComparison",
-				null, 0, 1, PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE,
-				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+		initEReference(getPatchSet_NewInvolvedDiagrams(), this.getDiagramInstance(), null, "newInvolvedDiagrams", null,
+				0, -1, PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPatchSet_OldInvolvedModels(), this.getModelInstance(), null, "oldInvolvedModels", null, 0, -1,
+				PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPatchSet_OldInvolvedDiagrams(), this.getDiagramInstance(), null, "oldInvolvedDiagrams", null,
+				0, -1, PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPatchSet_ModelComparison(), theComparePackage.getComparison(), null, "modelComparison", null,
+				0, 1, PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPatchSet_DiagramComparison(), theComparePackage.getComparison(), null, "diagramComparison",
+				null, 0, 1, PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
+				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		EGenericType g1 = createEGenericType(ecorePackage.getEMap());
 		EGenericType g2 = createEGenericType(theEcorePackage.getEObject());
 		g1.getETypeArguments().add(g2);
 		g2 = createEGenericType(ecorePackage.getEIntegerObject());
 		g1.getETypeArguments().add(g2);
-		initEAttribute(getPatchSet_ObjectChangeCount(), g1,
-				"objectChangeCount", null, 0, 1, PatchSet.class, IS_TRANSIENT,
-				!IS_VOLATILE, !IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPatchSet_ObjectChangeCount(), g1, "objectChangeCount", null, 0, 1, PatchSet.class,
+				IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 		g1 = createEGenericType(ecorePackage.getEMap());
 		g2 = createEGenericType(theEcorePackage.getEObject());
 		g1.getETypeArguments().add(g2);
 		g2 = createEGenericType(ecorePackage.getEIntegerObject());
 		g1.getETypeArguments().add(g2);
-		initEAttribute(getPatchSet_ObjectChangeRefCount(), g1,
-				"objectChangeRefCount", null, 0, 1, PatchSet.class,
-				IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, IS_UNSETTABLE,
-				!IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPatchSet_MaxObjectChangeCount(),
-				ecorePackage.getEInt(), "maxObjectChangeCount", "0", 0, 1,
-				PatchSet.class, IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE,
-				IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPatchSet_MaxObjectChangeRefCount(),
-				ecorePackage.getEInt(), "maxObjectChangeRefCount", "0", 0, 1,
-				PatchSet.class, IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE,
-				IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPatchSet_ObjectChangeRefCount(), g1, "objectChangeRefCount", null, 0, 1, PatchSet.class,
+				IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPatchSet_MaxObjectChangeCount(), ecorePackage.getEInt(), "maxObjectChangeCount", "0", 0, 1,
+				PatchSet.class, IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPatchSet_MaxObjectChangeRefCount(), ecorePackage.getEInt(), "maxObjectChangeRefCount", "0", 0,
+				1, PatchSet.class, IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				IS_DERIVED, IS_ORDERED);
+		initEReference(getPatchSet_AllNewInvolvedDiagrams(), theNotationPackage.getDiagram(), null,
+				"allNewInvolvedDiagrams", null, 0, -1, PatchSet.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE,
+				!IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEReference(getPatchSet_AllOldInvolvedDiagrams(), theNotationPackage.getDiagram(), null,
+				"allOldInvolvedDiagrams", null, 0, -1, PatchSet.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE,
+				!IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 
-		initEClass(patchEClass, Patch.class, "Patch", !IS_ABSTRACT,
-				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getPatch_NewPath(), ecorePackage.getEString(),
-				"newPath", null, 0, 1, Patch.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPatch_OldPath(), ecorePackage.getEString(),
-				"oldPath", null, 0, 1, Patch.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPatch_NewContent(), ecorePackage.getEByteArray(),
-				"newContent", null, 0, 1, Patch.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPatch_OldContent(), ecorePackage.getEByteArray(),
-				"oldContent", null, 0, 1, Patch.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-		initEAttribute(getPatch_ChangeType(), this.getPatchChangeType(),
-				"changeType", "ADD", 0, 1, Patch.class, !IS_TRANSIENT,
-				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-		initEReference(getPatch_PatchSet(), this.getPatchSet(),
-				this.getPatchSet_Patches(), "patchSet", null, 0, 1,
-				Patch.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE,
-				!IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-
-		initEClass(diagramPatchEClass, DiagramPatch.class, "DiagramPatch",
-				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getDiagramPatch_NewDiagramInstance(),
-				this.getDiagramInstance(), null, "newDiagramInstance", null, 0,
-				1, DiagramPatch.class, !IS_TRANSIENT, !IS_VOLATILE,
-				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
-				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getDiagramPatch_OldDiagramInstance(),
-				this.getDiagramInstance(), null, "oldDiagramInstance", null, 0,
-				1, DiagramPatch.class, !IS_TRANSIENT, !IS_VOLATILE,
-				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+		initEClass(patchEClass, Patch.class, "Patch", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getPatch_NewPath(), ecorePackage.getEString(), "newPath", null, 0, 1, Patch.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPatch_OldPath(), ecorePackage.getEString(), "oldPath", null, 0, 1, Patch.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPatch_NewContent(), ecorePackage.getEByteArray(), "newContent", null, 0, 1, Patch.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPatch_OldContent(), ecorePackage.getEByteArray(), "oldContent", null, 0, 1, Patch.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPatch_ChangeType(), this.getPatchChangeType(), "changeType", "ADD", 0, 1, Patch.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPatch_PatchSet(), this.getPatchSet(), this.getPatchSet_Patches(), "patchSet", null, 0, 1,
+				Patch.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(modelPatchEClass, ModelPatch.class, "ModelPatch",
-				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getModelPatch_NewModelInstance(),
-				this.getModelInstance(), null, "newModelInstance", null, 0, 1,
-				ModelPatch.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE,
-				!IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
-		initEReference(getModelPatch_OldModelInstance(),
-				this.getModelInstance(), null, "oldModelInstance", null, 0, 1,
-				ModelPatch.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE,
-				!IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
+		initEClass(diagramPatchEClass, DiagramPatch.class, "DiagramPatch", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getDiagramPatch_NewDiagramInstance(), this.getDiagramInstance(), null, "newDiagramInstance",
+				null, 0, 1, DiagramPatch.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
+				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDiagramPatch_OldDiagramInstance(), this.getDiagramInstance(), null, "oldDiagramInstance",
+				null, 0, 1, DiagramPatch.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
+				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(commentEClass, Comment.class, "Comment", IS_ABSTRACT,
-				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getComment_Id(), ecorePackage.getEString(), "id", null,
-				0, 1, Comment.class, !IS_TRANSIENT, !IS_VOLATILE,
-				IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
-
-		initEClass(modelInstanceEClass, ModelInstance.class, "ModelInstance",
-				!IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getModelInstance_Objects(), ecorePackage.getEObject(),
-				null, "objects", null, 0, -1, ModelInstance.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
-				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
-				IS_ORDERED);
-		initEReference(getModelInstance_RootPackages(),
-				theEcorePackage.getEPackage(), null, "rootPackages", null, 0,
-				-1, ModelInstance.class, !IS_TRANSIENT, !IS_VOLATILE,
-				IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+		initEClass(modelPatchEClass, ModelPatch.class, "ModelPatch", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getModelPatch_NewModelInstance(), this.getModelInstance(), null, "newModelInstance", null, 0, 1,
+				ModelPatch.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getModelPatch_OldModelInstance(), this.getModelInstance(), null, "oldModelInstance", null, 0, 1,
+				ModelPatch.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(diagramInstanceEClass, DiagramInstance.class,
-				"DiagramInstance", !IS_ABSTRACT, !IS_INTERFACE,
+		initEClass(commentEClass, Comment.class, "Comment", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getComment_Id(), ecorePackage.getEString(), "id", null, 0, 1, Comment.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(modelInstanceEClass, ModelInstance.class, "ModelInstance", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getModelInstance_Objects(), ecorePackage.getEObject(), null, "objects", null, 0, -1,
+				ModelInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getModelInstance_RootPackages(), theEcorePackage.getEPackage(), null, "rootPackages", null, 0,
+				-1, ModelInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(diagramInstanceEClass, DiagramInstance.class, "DiagramInstance", !IS_ABSTRACT, !IS_INTERFACE,
 				IS_GENERATED_INSTANCE_CLASS);
 
-		initEOperation(getDiagramInstance__GetDiagrams(),
-				theNotationPackage.getDiagram(), "getDiagrams", 0, -1,
+		initEOperation(getDiagramInstance__GetDiagrams(), theNotationPackage.getDiagram(), "getDiagrams", 0, -1,
 				IS_UNIQUE, IS_ORDERED);
 
 		// Initialize enums and add enum literals
-		initEEnum(patchChangeTypeEEnum, PatchChangeType.class,
-				"PatchChangeType");
+		initEEnum(patchChangeTypeEEnum, PatchChangeType.class, "PatchChangeType");
 		addEEnumLiteral(patchChangeTypeEEnum, PatchChangeType.ADD);
 		addEEnumLiteral(patchChangeTypeEEnum, PatchChangeType.COPY);
 		addEEnumLiteral(patchChangeTypeEEnum, PatchChangeType.DELETE);

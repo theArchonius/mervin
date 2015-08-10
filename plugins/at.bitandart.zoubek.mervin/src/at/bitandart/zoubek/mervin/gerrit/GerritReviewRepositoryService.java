@@ -40,6 +40,7 @@ import org.eclipse.emf.ecore.resource.URIHandler;
 import org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
@@ -117,8 +118,7 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 
 	@SuppressWarnings("restriction")
 	@Override
-	public List<IReviewDescriptor> getReviews(URI uri)
-			throws InvalidReviewRepositoryException {
+	public List<IReviewDescriptor> getReviews(URI uri) throws InvalidReviewRepositoryException {
 
 		List<IReviewDescriptor> changeIds = new LinkedList<>();
 
@@ -129,8 +129,7 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 			try {
 				// Assume that origin refers to the remote gerrit repository
 				// list all remote refs from origin
-				Collection<Ref> remoteRefs = git.lsRemote().setTimeout(60)
-						.call();
+				Collection<Ref> remoteRefs = git.lsRemote().setTimeout(60).call();
 
 				Pattern changeRefPattern = Pattern.compile(CHANGE_REF_PATTERN);
 
@@ -139,13 +138,11 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 
 					Matcher matcher = changeRefPattern.matcher(ref.getName());
 					if (matcher.matches()) {
-						String changePk = matcher
-								.group(CHANGE_REF_PATTERN_GROUP_CHANGE_PK);
+						String changePk = matcher.group(CHANGE_REF_PATTERN_GROUP_CHANGE_PK);
 						String changeId = "<unknown>";
 						GerritReviewDescriptor reviewDescriptor;
 						try {
-							reviewDescriptor = new GerritReviewDescriptor(
-									Integer.parseInt(changePk), changeId);
+							reviewDescriptor = new GerritReviewDescriptor(Integer.parseInt(changePk), changeId);
 						} catch (NumberFormatException nfe) {
 							// FIXME ignore it or throw an exception?
 							break;
@@ -159,31 +156,24 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 							 * so we extract it from the commit message of the
 							 * current ref
 							 */
-							FetchResult fetchResult = git.fetch()
-									.setRefSpecs(new RefSpec(ref.getName()))
-									.call();
+							FetchResult fetchResult = git.fetch().setRefSpecs(new RefSpec(ref.getName())).call();
 
-							Ref localRef = fetchResult.getAdvertisedRef(ref
-									.getName());
+							Ref localRef = fetchResult.getAdvertisedRef(ref.getName());
 							RevWalk revWalk = new RevWalk(git.getRepository());
-							RevCommit commit = revWalk.parseCommit(localRef
-									.getObjectId());
-							String[] paragraphs = commit.getFullMessage()
-									.split("\n");
+							RevCommit commit = revWalk.parseCommit(localRef.getObjectId());
+							String[] paragraphs = commit.getFullMessage().split("\n");
 							String lastParagraph = paragraphs[paragraphs.length - 1];
-							Pattern pattern = Pattern
-									.compile(".*Change-Id: (I[^ \n]*).*");
-							Matcher changeIdMatcher = pattern
-									.matcher(lastParagraph);
+							Pattern pattern = Pattern.compile(".*Change-Id: (I[^ \n]*).*");
+							Matcher changeIdMatcher = pattern.matcher(lastParagraph);
 
 							if (changeIdMatcher.matches()) {
 								changeId = changeIdMatcher.group(1);
 								reviewDescriptor.setChangeId(changeId);
 								;
 							} else {
-								logger.warn(MessageFormat
-										.format("Could not find the change id for Gerrit change with primary key {0}",
-												changePk));
+								logger.warn(MessageFormat.format(
+										"Could not find the change id for Gerrit change with primary key {0}",
+										changePk));
 							}
 							revWalk.close();
 						}
@@ -191,21 +181,18 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 				}
 
 			} catch (GitAPIException e) {
-				throw new RepositoryIOException(
-						"Error during loading all remote changes", e);
+				throw new RepositoryIOException("Error during loading all remote changes", e);
 			}
 
 		} catch (IOException e) {
-			throw new InvalidReviewRepositoryException(
-					"Could not open local git repository", e);
+			throw new InvalidReviewRepositoryException("Could not open local git repository", e);
 		}
 		return changeIds;
 	}
 
 	@Override
 	public ModelReview loadReview(URI uri, String id)
-			throws InvalidReviewRepositoryException, InvalidReviewException,
-			RepositoryIOException {
+			throws InvalidReviewRepositoryException, InvalidReviewException, RepositoryIOException {
 		/*
 		 * Fetch all refs to the patch sets for the particular change and create
 		 * the model instance from it
@@ -222,11 +209,9 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 			// +refs/changes/id%100/<cid>/<psId>:refs/changes/id%100/<cid>/<psId>
 
 			git.fetch()
-					.setRefSpecs(
-							new RefSpec(
-									MessageFormat
-											.format("+refs/changes/{0,number,00}/{1}/*:refs/changes/{0,number,00}/{1}/*",
-													iId % 100, iId))).call();
+					.setRefSpecs(new RefSpec(MessageFormat.format(
+							"+refs/changes/{0,number,00}/{1}/*:refs/changes/{0,number,00}/{1}/*", iId % 100, iId)))
+					.call();
 
 			// create model instance
 
@@ -239,23 +224,18 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 			Pattern changeRefPattern = Pattern.compile(CHANGE_REF_PATTERN);
 
 			for (Entry<String, Ref> refEntry : allRefs.entrySet()) {
-				Matcher matcher = changeRefPattern.matcher(refEntry.getValue()
-						.getName());
-				if (matcher.matches()
-						&& matcher.group(CHANGE_REF_PATTERN_GROUP_CHANGE_PK)
-								.equals(id)) {
+				Matcher matcher = changeRefPattern.matcher(refEntry.getValue().getName());
+				if (matcher.matches() && matcher.group(CHANGE_REF_PATTERN_GROUP_CHANGE_PK).equals(id)) {
 
 					PatchSet patchSet = modelReviewFactory.createPatchSet();
 					patchSets.add(patchSet);
-					patchSet.setId(matcher
-							.group(CHANGE_REF_PATTERN_GROUP_PATCH_SET_ID));
+					patchSet.setId(matcher.group(CHANGE_REF_PATTERN_GROUP_PATCH_SET_ID));
 
 					// load patched files
 					loadPatches(patchSet, refEntry.getValue(), git);
 
 					// load involved models
-					loadInvolvedModelsAndDiagrams(patchSet,
-							refEntry.getValue(), git);
+					loadInvolvedModelsAndDiagrams(patchSet, refEntry.getValue(), git);
 
 					// compare the involved models
 					patchSet.setModelComparison(compareModels(patchSet));
@@ -308,14 +288,11 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 			return modelReview;
 
 		} catch (IOException e) {
-			throw new InvalidReviewRepositoryException(
-					"Could not open local git repository", e);
+			throw new InvalidReviewRepositoryException("Could not open local git repository", e);
 		} catch (NumberFormatException e) {
-			throw new InvalidReviewException(MessageFormat.format(
-					"Invalid review id: {0}", id));
+			throw new InvalidReviewException(MessageFormat.format("Invalid review id: {0}", id));
 		} catch (GitAPIException e) {
-			throw new RepositoryIOException(
-					"Error occured during reading from the git repository", e);
+			throw new RepositoryIOException("Error occured during reading from the git repository", e);
 		}
 	}
 
@@ -328,21 +305,17 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 	 */
 	public Comparison compareModels(PatchSet patchSet) {
 
-		EList<ModelInstance> oldInvolvedModels = patchSet
-				.getOldInvolvedModels();
-		EList<ModelInstance> newInvolvedModels = patchSet
-				.getNewInvolvedModels();
+		EList<ModelInstance> oldInvolvedModels = patchSet.getOldInvolvedModels();
+		EList<ModelInstance> newInvolvedModels = patchSet.getNewInvolvedModels();
 		ResourceSet oldResourceSet = new ResourceSetImpl();
 		ResourceSet newResourceSet = new ResourceSetImpl();
 
 		if (!oldInvolvedModels.isEmpty()) {
-			oldResourceSet = oldInvolvedModels.get(0).getObjects().get(0)
-					.eResource().getResourceSet();
+			oldResourceSet = oldInvolvedModels.get(0).getObjects().get(0).eResource().getResourceSet();
 		}
 
 		if (!newInvolvedModels.isEmpty()) {
-			newResourceSet = newInvolvedModels.get(0).getObjects().get(0)
-					.eResource().getResourceSet();
+			newResourceSet = newInvolvedModels.get(0).getObjects().get(0).eResource().getResourceSet();
 		}
 
 		EcoreUtil.resolveAll(oldResourceSet);
@@ -350,8 +323,7 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 
 		EMFCompare comparator = EMFCompare.builder().build();
 
-		DefaultComparisonScope scope = new DefaultComparisonScope(
-				oldResourceSet, newResourceSet, null);
+		DefaultComparisonScope scope = new DefaultComparisonScope(oldResourceSet, newResourceSet, null);
 		Comparison comparison = comparator.compare(scope);
 		return comparison;
 	}
@@ -365,21 +337,17 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 	 */
 	public Comparison compareDiagrams(PatchSet patchSet) {
 
-		EList<DiagramInstance> oldInvolvedDiagrams = patchSet
-				.getOldInvolvedDiagrams();
-		EList<DiagramInstance> newInvolvedDiagrams = patchSet
-				.getNewInvolvedDiagrams();
+		EList<DiagramInstance> oldInvolvedDiagrams = patchSet.getOldInvolvedDiagrams();
+		EList<DiagramInstance> newInvolvedDiagrams = patchSet.getNewInvolvedDiagrams();
 		ResourceSet oldResourceSet = new ResourceSetImpl();
 		ResourceSet newResourceSet = new ResourceSetImpl();
 
 		if (!oldInvolvedDiagrams.isEmpty()) {
-			oldResourceSet = oldInvolvedDiagrams.get(0).getObjects().get(0)
-					.eResource().getResourceSet();
+			oldResourceSet = oldInvolvedDiagrams.get(0).getObjects().get(0).eResource().getResourceSet();
 		}
 
 		if (!newInvolvedDiagrams.isEmpty()) {
-			newResourceSet = newInvolvedDiagrams.get(0).getObjects().get(0)
-					.eResource().getResourceSet();
+			newResourceSet = newInvolvedDiagrams.get(0).getObjects().get(0).eResource().getResourceSet();
 		}
 
 		// TODO filter to include only notation model resources
@@ -388,8 +356,7 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 
 		EMFCompare comparator = EMFCompare.builder().build();
 
-		DefaultComparisonScope scope = new DefaultComparisonScope(
-				oldResourceSet, newResourceSet, null);
+		DefaultComparisonScope scope = new DefaultComparisonScope(oldResourceSet, newResourceSet, null);
 		Comparison comparison = comparator.compare(scope);
 		return comparison;
 	}
@@ -406,8 +373,7 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 	 *            the git instance to use
 	 * @throws IOException
 	 */
-	private void loadInvolvedModelsAndDiagrams(PatchSet patchSet, Ref ref,
-			Git git) throws IOException {
+	private void loadInvolvedModelsAndDiagrams(PatchSet patchSet, Ref ref, Git git) throws IOException {
 
 		String commitHash = ref.getObjectId().name();
 
@@ -422,47 +388,35 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 		URI repoURI = git.getRepository().getDirectory().toURI();
 		String authority = repoURI.getAuthority();
 		String path = repoURI.getPath();
-		String repoPath = (authority != null ? authority : "") + "/"
-				+ (path != null ? path : "");
+		String repoPath = (authority != null ? authority : "") + "/" + (path != null ? path : "");
 
-		ResourceSet newModelResourceSet = createGitAwareResourceSet(commitHash,
-				repoPath);
-		ResourceSet oldModelResourceSet = createGitAwareResourceSet(
-				parentCommitHash, repoPath);
-		ResourceSet newDiagramResourceSet = createGitAwareResourceSet(
-				commitHash, repoPath);
-		ResourceSet oldDiagramResourceSet = createGitAwareResourceSet(
-				parentCommitHash, repoPath);
+		ResourceSet newModelResourceSet = createGitAwareResourceSet(commitHash, repoPath);
+		ResourceSet oldModelResourceSet = createGitAwareResourceSet(parentCommitHash, repoPath);
+		ResourceSet newDiagramResourceSet = createGitAwareResourceSet(commitHash, repoPath);
+		ResourceSet oldDiagramResourceSet = createGitAwareResourceSet(parentCommitHash, repoPath);
 
 		for (Patch patch : patchSet.getPatches()) {
 			if (patch instanceof ModelPatch || patch instanceof DiagramPatch) {
-				org.eclipse.emf.common.util.URI newUri = org.eclipse.emf.common.util.URI
-						.createURI(GitURIParser.GIT_COMMIT_SCHEME + "://"
-								+ repoPath + commitHash + "/"
-								+ patch.getNewPath());
+				org.eclipse.emf.common.util.URI newUri = org.eclipse.emf.common.util.URI.createURI(
+						GitURIParser.GIT_COMMIT_SCHEME + "://" + repoPath + commitHash + "/" + patch.getNewPath());
 
 				org.eclipse.emf.common.util.URI oldUri = org.eclipse.emf.common.util.URI
-						.createURI(GitURIParser.GIT_COMMIT_SCHEME + "://"
-								+ repoPath + "/" + parentCommitHash + "/"
+						.createURI(GitURIParser.GIT_COMMIT_SCHEME + "://" + repoPath + "/" + parentCommitHash + "/"
 								+ patch.getOldPath());
 
 				if (patch.getChangeType() != PatchChangeType.DELETE) {
 					// if the patch has been deleted no new resource exists
 					Resource newResource = null;
 					if (patch instanceof ModelPatch) {
-						newResource = newModelResourceSet.getResource(newUri,
-								true);
+						newResource = newModelResourceSet.getResource(newUri, true);
 					} else {
-						newResource = newDiagramResourceSet.getResource(newUri,
-								true);
+						newResource = newDiagramResourceSet.getResource(newUri, true);
 					}
 					try {
 						applyResourceContent(newResource, patch, false);
 					} catch (IOException e) {
-						throw new IOException(
-								MessageFormat.format(
-										"Could not load resource \"{0}\" for patch set {1}",
-										newUri.toString(), patchSet.getId()), e);
+						throw new IOException(MessageFormat.format("Could not load resource \"{0}\" for patch set {1}",
+								newUri.toString(), patchSet.getId()), e);
 					}
 				}
 
@@ -470,19 +424,15 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 					// if the patch has been added no old resource exists
 					Resource oldResource = null;
 					if (patch instanceof ModelPatch) {
-						oldResource = oldModelResourceSet.getResource(oldUri,
-								true);
+						oldResource = oldModelResourceSet.getResource(oldUri, true);
 					} else {
-						oldResource = oldDiagramResourceSet.getResource(oldUri,
-								true);
+						oldResource = oldDiagramResourceSet.getResource(oldUri, true);
 					}
 					try {
 						applyResourceContent(oldResource, patch, true);
 					} catch (IOException e) {
-						throw new IOException(
-								MessageFormat.format(
-										"Could not load resource \"{0}\" for patch set {1}",
-										oldUri.toString(), patchSet.getId()), e);
+						throw new IOException(MessageFormat.format("Could not load resource \"{0}\" for patch set {1}",
+								oldUri.toString(), patchSet.getId()), e);
 					}
 				}
 
@@ -505,8 +455,7 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 	 *            old version or the new version
 	 * @throws IOException
 	 */
-	private void applyResourceContent(Resource resource, Patch patch,
-			boolean old) throws IOException {
+	private void applyResourceContent(Resource resource, Patch patch, boolean old) throws IOException {
 		PatchSet patchSet = patch.getPatchSet();
 		EList<ModelInstance> involvedModels = null;
 		EList<DiagramInstance> involvedDiagrams = null;
@@ -524,8 +473,7 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 
 			// create a new model instance and add all objects from
 			// the resource to the object list
-			ModelInstance modelInstance = modelReviewFactory
-					.createModelInstance();
+			ModelInstance modelInstance = modelReviewFactory.createModelInstance();
 			EList<EObject> containedObjects = modelInstance.getObjects();
 			containedObjects.addAll(resource.getContents());
 
@@ -545,8 +493,7 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 
 			// create a new diagram instance and add all objects from
 			// the resource to the object list
-			DiagramInstance diagramInstance = modelReviewFactory
-					.createDiagramInstance();
+			DiagramInstance diagramInstance = modelReviewFactory.createDiagramInstance();
 			EList<EObject> containedObjects = diagramInstance.getObjects();
 			containedObjects.addAll(resource.getContents());
 
@@ -572,8 +519,7 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 	 * @param objects
 	 *            the objects used to update the list of involved models
 	 */
-	private void updateInvolvedModels(List<ModelInstance> involvedModels,
-			List<EObject> objects) {
+	private void updateInvolvedModels(List<ModelInstance> involvedModels, List<EObject> objects) {
 		for (EObject object : objects) {
 			EPackage rootPackage = findRootPackage(object);
 
@@ -607,8 +553,7 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 	 * @param objects
 	 *            the objects used to update the list of involved diagrams
 	 */
-	private void updateInvolvedDiagrams(List<DiagramInstance> involvedDiagrams,
-			List<EObject> objects) {
+	private void updateInvolvedDiagrams(List<DiagramInstance> involvedDiagrams, List<EObject> objects) {
 		for (EObject object : objects) {
 			EPackage rootPackage = findRootPackage(object);
 
@@ -676,35 +621,28 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 	 *            the absolute path to the git repo
 	 * @return the resource set
 	 */
-	private ResourceSet createGitAwareResourceSet(final String commitHash,
-			final String repoPath) {
+	private ResourceSet createGitAwareResourceSet(final String commitHash, final String repoPath) {
 		ResourceSet resourceSet = new ResourceSetImpl();
 		resourceSet.setURIConverter(new ExtensibleURIConverterImpl() {
 			@Override
-			public org.eclipse.emf.common.util.URI normalize(
-					org.eclipse.emf.common.util.URI uri) {
-				org.eclipse.emf.common.util.URI normalizedURI = super
-						.normalize(uri);
+			public org.eclipse.emf.common.util.URI normalize(org.eclipse.emf.common.util.URI uri) {
+				org.eclipse.emf.common.util.URI normalizedURI = super.normalize(uri);
 				if (uri.scheme().equals("file")) {
-					org.eclipse.emf.common.util.URI oldPrefix = org.eclipse.emf.common.util.URI
-							.createURI("file://");
+					org.eclipse.emf.common.util.URI oldPrefix = org.eclipse.emf.common.util.URI.createURI("file://");
 					org.eclipse.emf.common.util.URI newPrefix = org.eclipse.emf.common.util.URI
-							.createURI(GitURIParser.GIT_COMMIT_SCHEME + "://"
-									+ repoPath + "/" + commitHash + "/");
-					normalizedURI = normalizedURI.replacePrefix(oldPrefix,
-							newPrefix);
+							.createURI(GitURIParser.GIT_COMMIT_SCHEME + "://" + repoPath + "/" + commitHash + "/");
+					normalizedURI = normalizedURI.replacePrefix(oldPrefix, newPrefix);
 				}
 				return normalizedURI;
 			}
 		});
-		EList<URIHandler> uriHandlers = resourceSet.getURIConverter()
-				.getURIHandlers();
-		uriHandlers.add(ContextInjectionFactory.make(
-				ReadOnlyGitCommitURIHandler.class, eclipseContext));
+		EList<URIHandler> uriHandlers = resourceSet.getURIConverter().getURIHandlers();
+		uriHandlers.add(ContextInjectionFactory.make(ReadOnlyGitCommitURIHandler.class, eclipseContext));
 		// make sure the Git commit URI handler is placed before the standard
 		// URI Handler which handles by default any URI (otherwise the default
 		// URI handler is visited first and is used to load the resource)
 		uriHandlers.move(uriHandlers.size() - 1, uriHandlers.size() - 2);
+		TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain(resourceSet);
 		return resourceSet;
 	}
 
@@ -719,8 +657,7 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 	 *            the git repository instance
 	 * @throws RepositoryIOException
 	 */
-	private void loadPatches(PatchSet patchSet, Ref ref, Git git)
-			throws RepositoryIOException {
+	private void loadPatches(PatchSet patchSet, Ref ref, Git git) throws RepositoryIOException {
 
 		EList<Patch> patches = patchSet.getPatches();
 		Repository repository = git.getRepository();
@@ -739,8 +676,7 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 			CanonicalTreeParser oldTreeIterator = new CanonicalTreeParser();
 			oldTreeIterator.reset(objectReader, oldCommit.getTree().getId());
 
-			List<DiffEntry> diffs = git.diff().setOldTree(oldTreeIterator)
-					.setNewTree(newTreeIterator).call();
+			List<DiffEntry> diffs = git.diff().setOldTree(oldTreeIterator).setNewTree(newTreeIterator).call();
 
 			for (DiffEntry diff : diffs) {
 
@@ -795,13 +731,11 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 				patch.setOldPath(oldPath);
 
 				if (diff.getChangeType() != ChangeType.DELETE) {
-					ObjectLoader objectLoader = repository.open(diff.getNewId()
-							.toObjectId());
+					ObjectLoader objectLoader = repository.open(diff.getNewId().toObjectId());
 					patch.setNewContent(objectLoader.getBytes());
 				}
 				if (diff.getChangeType() != ChangeType.ADD) {
-					ObjectLoader objectLoader = repository.open(diff.getOldId()
-							.toObjectId());
+					ObjectLoader objectLoader = repository.open(diff.getOldId().toObjectId());
 					patch.setOldContent(objectLoader.getBytes());
 				}
 				patches.add(patch);
@@ -809,21 +743,16 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 			}
 
 		} catch (IOException e) {
-			throw new RepositoryIOException(
-					MessageFormat.format(
-							"An IO error occured during loading the patches for patch set #{0}",
-							patchSet.getId()), e);
+			throw new RepositoryIOException(MessageFormat
+					.format("An IO error occured during loading the patches for patch set #{0}", patchSet.getId()), e);
 		} catch (GitAPIException e) {
-			throw new RepositoryIOException(
-					MessageFormat.format(
-							"An JGit API error occured during loading the patches for patch set #{0}",
-							patchSet.getId()), e);
+			throw new RepositoryIOException(MessageFormat.format(
+					"An JGit API error occured during loading the patches for patch set #{0}", patchSet.getId()), e);
 		}
 	}
 
 	@Override
-	public void saveReview(URI uri, ModelReview modelReview)
-			throws InvalidReviewException, RepositoryIOException {
+	public void saveReview(URI uri, ModelReview modelReview) throws InvalidReviewException, RepositoryIOException {
 		// TODO Auto-generated method stub
 
 	}

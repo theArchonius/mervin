@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * <em><b>Patch</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchImpl#getNewPath
@@ -50,7 +51,6 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchImpl#getPatchSet
  * <em>Patch Set</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -194,8 +194,8 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 		String oldNewPath = newPath;
 		newPath = newNewPath;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					ModelReviewPackage.PATCH__NEW_PATH, oldNewPath, newPath));
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.PATCH__NEW_PATH, oldNewPath,
+					newPath));
 	}
 
 	/**
@@ -216,8 +216,8 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 		String oldOldPath = oldPath;
 		oldPath = newOldPath;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					ModelReviewPackage.PATCH__OLD_PATH, oldOldPath, oldPath));
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.PATCH__OLD_PATH, oldOldPath,
+					oldPath));
 	}
 
 	/**
@@ -238,8 +238,7 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 		byte[] oldNewContent = newContent;
 		newContent = newNewContent;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					ModelReviewPackage.PATCH__NEW_CONTENT, oldNewContent,
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.PATCH__NEW_CONTENT, oldNewContent,
 					newContent));
 	}
 
@@ -261,8 +260,7 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 		byte[] oldOldContent = oldContent;
 		oldContent = newOldContent;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					ModelReviewPackage.PATCH__OLD_CONTENT, oldOldContent,
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.PATCH__OLD_CONTENT, oldOldContent,
 					oldContent));
 	}
 
@@ -282,11 +280,9 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 	 */
 	public void setChangeType(PatchChangeType newChangeType) {
 		PatchChangeType oldChangeType = changeType;
-		changeType = newChangeType == null ? CHANGE_TYPE_EDEFAULT
-				: newChangeType;
+		changeType = newChangeType == null ? CHANGE_TYPE_EDEFAULT : newChangeType;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					ModelReviewPackage.PATCH__CHANGE_TYPE, oldChangeType,
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.PATCH__CHANGE_TYPE, oldChangeType,
 					changeType));
 	}
 
@@ -301,9 +297,8 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 			patchSet = (PatchSet) eResolveProxy(oldPatchSet);
 			if (patchSet != oldPatchSet) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							ModelReviewPackage.PATCH__PATCH_SET, oldPatchSet,
-							patchSet));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ModelReviewPackage.PATCH__PATCH_SET,
+							oldPatchSet, patchSet));
 			}
 		}
 		return patchSet;
@@ -323,14 +318,12 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 	 * 
 	 * @generated
 	 */
-	public NotificationChain basicSetPatchSet(PatchSet newPatchSet,
-			NotificationChain msgs) {
+	public NotificationChain basicSetPatchSet(PatchSet newPatchSet, NotificationChain msgs) {
 		PatchSet oldPatchSet = patchSet;
 		patchSet = newPatchSet;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this,
-					Notification.SET, ModelReviewPackage.PATCH__PATCH_SET,
-					oldPatchSet, newPatchSet);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+					ModelReviewPackage.PATCH__PATCH_SET, oldPatchSet, newPatchSet);
 			if (msgs == null)
 				msgs = notification;
 			else
@@ -348,19 +341,16 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 		if (newPatchSet != patchSet) {
 			NotificationChain msgs = null;
 			if (patchSet != null)
-				msgs = ((InternalEObject) patchSet).eInverseRemove(this,
-						ModelReviewPackage.PATCH_SET__PATCHES, PatchSet.class,
-						msgs);
+				msgs = ((InternalEObject) patchSet).eInverseRemove(this, ModelReviewPackage.PATCH_SET__PATCHES,
+						PatchSet.class, msgs);
 			if (newPatchSet != null)
-				msgs = ((InternalEObject) newPatchSet).eInverseAdd(this,
-						ModelReviewPackage.PATCH_SET__PATCHES, PatchSet.class,
-						msgs);
+				msgs = ((InternalEObject) newPatchSet).eInverseAdd(this, ModelReviewPackage.PATCH_SET__PATCHES,
+						PatchSet.class, msgs);
 			msgs = basicSetPatchSet(newPatchSet, msgs);
 			if (msgs != null)
 				msgs.dispatch();
 		} else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					ModelReviewPackage.PATCH__PATCH_SET, newPatchSet,
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.PATCH__PATCH_SET, newPatchSet,
 					newPatchSet));
 	}
 
@@ -370,14 +360,12 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseAdd(InternalEObject otherEnd,
-			int featureID, NotificationChain msgs) {
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 		case ModelReviewPackage.PATCH__PATCH_SET:
 			if (patchSet != null)
-				msgs = ((InternalEObject) patchSet).eInverseRemove(this,
-						ModelReviewPackage.PATCH_SET__PATCHES, PatchSet.class,
-						msgs);
+				msgs = ((InternalEObject) patchSet).eInverseRemove(this, ModelReviewPackage.PATCH_SET__PATCHES,
+						PatchSet.class, msgs);
 			return basicSetPatchSet((PatchSet) otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
@@ -389,8 +377,7 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd,
-			int featureID, NotificationChain msgs) {
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 		case ModelReviewPackage.PATCH__PATCH_SET:
 			return basicSetPatchSet(null, msgs);
@@ -493,17 +480,13 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
 		case ModelReviewPackage.PATCH__NEW_PATH:
-			return NEW_PATH_EDEFAULT == null ? newPath != null
-					: !NEW_PATH_EDEFAULT.equals(newPath);
+			return NEW_PATH_EDEFAULT == null ? newPath != null : !NEW_PATH_EDEFAULT.equals(newPath);
 		case ModelReviewPackage.PATCH__OLD_PATH:
-			return OLD_PATH_EDEFAULT == null ? oldPath != null
-					: !OLD_PATH_EDEFAULT.equals(oldPath);
+			return OLD_PATH_EDEFAULT == null ? oldPath != null : !OLD_PATH_EDEFAULT.equals(oldPath);
 		case ModelReviewPackage.PATCH__NEW_CONTENT:
-			return NEW_CONTENT_EDEFAULT == null ? newContent != null
-					: !NEW_CONTENT_EDEFAULT.equals(newContent);
+			return NEW_CONTENT_EDEFAULT == null ? newContent != null : !NEW_CONTENT_EDEFAULT.equals(newContent);
 		case ModelReviewPackage.PATCH__OLD_CONTENT:
-			return OLD_CONTENT_EDEFAULT == null ? oldContent != null
-					: !OLD_CONTENT_EDEFAULT.equals(oldContent);
+			return OLD_CONTENT_EDEFAULT == null ? oldContent != null : !OLD_CONTENT_EDEFAULT.equals(oldContent);
 		case ModelReviewPackage.PATCH__CHANGE_TYPE:
 			return changeType != CHANGE_TYPE_EDEFAULT;
 		case ModelReviewPackage.PATCH__PATCH_SET:

@@ -13,6 +13,12 @@ package at.bitandart.zoubek.mervin.diagram.diff;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.View;
+
+import at.bitandart.zoubek.mervin.diagram.diff.parts.DiagramEditPart;
+import at.bitandart.zoubek.mervin.diagram.diff.parts.WorkspaceEditPart;
+import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 
 /**
  * This {@link EditPartFactory} creates {@link EditPart}s for diagram diffs and
@@ -32,10 +38,24 @@ public class DiagramDiffPartFactory implements EditPartFactory {
 	 */
 	@Override
 	public EditPart createEditPart(EditPart context, Object model) {
+
+		if (model instanceof ModelReview) {
+			WorkspaceEditPart workspaceEditPart = new WorkspaceEditPart();
+			workspaceEditPart.setModel(model);
+			return workspaceEditPart;
+		} else if (model instanceof Diagram) {
+			DiagramEditPart diagramEditPart = new DiagramEditPart((Diagram) model);
+			return diagramEditPart;
+		}
+
+		/*
+		 * no known model review element -> delegate to registered GMF edit part
+		 * factories
+		 */
 		EditPartService editPartService = EditPartService.getInstance();
-
-		// TODO return edit parts for diff elements
-
+		if (model instanceof View) {
+			return editPartService.createGraphicEditPart((View) model);
+		}
 		return editPartService.createEditPart(context, model);
 	}
 

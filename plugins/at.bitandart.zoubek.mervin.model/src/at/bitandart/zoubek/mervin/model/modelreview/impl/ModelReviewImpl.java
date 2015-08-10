@@ -20,6 +20,7 @@ import java.util.Collection;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -33,6 +34,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <em><b>Model Review</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewImpl#getId
@@ -49,13 +51,17 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewImpl#getRightPatchSet
  * <em>Right Patch Set</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewImpl#getSelectedModelComparison
+ * <em>Selected Model Comparison</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewImpl#getSelectedDiagramComparison
+ * <em>Selected Diagram Comparison</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
-public class ModelReviewImpl extends MinimalEObjectImpl.Container implements
-		ModelReview {
+public class ModelReviewImpl extends MinimalEObjectImpl.Container implements ModelReview {
 	/**
 	 * The default value of the '{@link #getId() <em>Id</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
@@ -119,6 +125,46 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements
 	protected PatchSet rightPatchSet;
 
 	/**
+	 * The cached value of the '{@link #getSelectedModelComparison()
+	 * <em>Selected Model Comparison</em>}' reference. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getSelectedModelComparison()
+	 * @generated
+	 * @ordered
+	 */
+	protected Comparison selectedModelComparison;
+
+	/**
+	 * This is true if the Selected Model Comparison reference has been set.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean selectedModelComparisonESet;
+
+	/**
+	 * The cached value of the '{@link #getSelectedDiagramComparison()
+	 * <em>Selected Diagram Comparison</em>}' reference. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getSelectedDiagramComparison()
+	 * @generated
+	 * @ordered
+	 */
+	protected Comparison selectedDiagramComparison;
+
+	/**
+	 * This is true if the Selected Diagram Comparison reference has been set.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean selectedDiagramComparisonESet;
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
@@ -155,8 +201,7 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements
 		String oldId = id;
 		id = newId;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					ModelReviewPackage.MODEL_REVIEW__ID, oldId, id));
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.MODEL_REVIEW__ID, oldId, id));
 	}
 
 	/**
@@ -166,10 +211,8 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements
 	 */
 	public EList<PatchSet> getPatchSets() {
 		if (patchSets == null) {
-			patchSets = new EObjectContainmentWithInverseEList<PatchSet>(
-					PatchSet.class, this,
-					ModelReviewPackage.MODEL_REVIEW__PATCH_SETS,
-					ModelReviewPackage.PATCH_SET__REVIEW);
+			patchSets = new EObjectContainmentWithInverseEList<PatchSet>(PatchSet.class, this,
+					ModelReviewPackage.MODEL_REVIEW__PATCH_SETS, ModelReviewPackage.PATCH_SET__REVIEW);
 		}
 		return patchSets;
 	}
@@ -199,8 +242,7 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements
 			if (leftPatchSet != oldLeftPatchSet) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							ModelReviewPackage.MODEL_REVIEW__LEFT_PATCH_SET,
-							oldLeftPatchSet, leftPatchSet));
+							ModelReviewPackage.MODEL_REVIEW__LEFT_PATCH_SET, oldLeftPatchSet, leftPatchSet));
 			}
 		}
 		return leftPatchSet;
@@ -224,8 +266,7 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements
 		PatchSet oldLeftPatchSet = leftPatchSet;
 		leftPatchSet = newLeftPatchSet;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					ModelReviewPackage.MODEL_REVIEW__LEFT_PATCH_SET,
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.MODEL_REVIEW__LEFT_PATCH_SET,
 					oldLeftPatchSet, leftPatchSet));
 	}
 
@@ -241,8 +282,7 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements
 			if (rightPatchSet != oldRightPatchSet) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							ModelReviewPackage.MODEL_REVIEW__RIGHT_PATCH_SET,
-							oldRightPatchSet, rightPatchSet));
+							ModelReviewPackage.MODEL_REVIEW__RIGHT_PATCH_SET, oldRightPatchSet, rightPatchSet));
 			}
 		}
 		return rightPatchSet;
@@ -266,9 +306,82 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements
 		PatchSet oldRightPatchSet = rightPatchSet;
 		rightPatchSet = newRightPatchSet;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					ModelReviewPackage.MODEL_REVIEW__RIGHT_PATCH_SET,
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.MODEL_REVIEW__RIGHT_PATCH_SET,
 					oldRightPatchSet, rightPatchSet));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public Comparison getSelectedModelComparison() {
+		if (selectedModelComparison != null && selectedModelComparison.eIsProxy()) {
+			InternalEObject oldSelectedModelComparison = (InternalEObject) selectedModelComparison;
+			selectedModelComparison = (Comparison) eResolveProxy(oldSelectedModelComparison);
+			if (selectedModelComparison != oldSelectedModelComparison) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							ModelReviewPackage.MODEL_REVIEW__SELECTED_MODEL_COMPARISON, oldSelectedModelComparison,
+							selectedModelComparison));
+			}
+		}
+		return selectedModelComparison;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public Comparison basicGetSelectedModelComparison() {
+		return selectedModelComparison;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public boolean isSetSelectedModelComparison() {
+		return selectedModelComparisonESet;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public Comparison getSelectedDiagramComparison() {
+		if (selectedDiagramComparison != null && selectedDiagramComparison.eIsProxy()) {
+			InternalEObject oldSelectedDiagramComparison = (InternalEObject) selectedDiagramComparison;
+			selectedDiagramComparison = (Comparison) eResolveProxy(oldSelectedDiagramComparison);
+			if (selectedDiagramComparison != oldSelectedDiagramComparison) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							ModelReviewPackage.MODEL_REVIEW__SELECTED_DIAGRAM_COMPARISON, oldSelectedDiagramComparison,
+							selectedDiagramComparison));
+			}
+		}
+		return selectedDiagramComparison;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public Comparison basicGetSelectedDiagramComparison() {
+		return selectedDiagramComparison;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public boolean isSetSelectedDiagramComparison() {
+		return selectedDiagramComparisonESet;
 	}
 
 	/**
@@ -278,12 +391,10 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public NotificationChain eInverseAdd(InternalEObject otherEnd,
-			int featureID, NotificationChain msgs) {
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 		case ModelReviewPackage.MODEL_REVIEW__PATCH_SETS:
-			return ((InternalEList<InternalEObject>) (InternalEList<?>) getPatchSets())
-					.basicAdd(otherEnd, msgs);
+			return ((InternalEList<InternalEObject>) (InternalEList<?>) getPatchSets()).basicAdd(otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -294,12 +405,10 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd,
-			int featureID, NotificationChain msgs) {
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 		case ModelReviewPackage.MODEL_REVIEW__PATCH_SETS:
-			return ((InternalEList<?>) getPatchSets()).basicRemove(otherEnd,
-					msgs);
+			return ((InternalEList<?>) getPatchSets()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -326,6 +435,14 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements
 			if (resolve)
 				return getRightPatchSet();
 			return basicGetRightPatchSet();
+		case ModelReviewPackage.MODEL_REVIEW__SELECTED_MODEL_COMPARISON:
+			if (resolve)
+				return getSelectedModelComparison();
+			return basicGetSelectedModelComparison();
+		case ModelReviewPackage.MODEL_REVIEW__SELECTED_DIAGRAM_COMPARISON:
+			if (resolve)
+				return getSelectedDiagramComparison();
+			return basicGetSelectedDiagramComparison();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -405,6 +522,10 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements
 			return leftPatchSet != null;
 		case ModelReviewPackage.MODEL_REVIEW__RIGHT_PATCH_SET:
 			return rightPatchSet != null;
+		case ModelReviewPackage.MODEL_REVIEW__SELECTED_MODEL_COMPARISON:
+			return isSetSelectedModelComparison();
+		case ModelReviewPackage.MODEL_REVIEW__SELECTED_DIAGRAM_COMPARISON:
+			return isSetSelectedDiagramComparison();
 		}
 		return super.eIsSet(featureID);
 	}

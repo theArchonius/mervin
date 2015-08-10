@@ -44,9 +44,8 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
  * 
  * @generated
  */
-public class ModelReviewItemProvider extends ItemProviderAdapter implements
-		IEditingDomainItemProvider, IStructuredItemContentProvider,
-		ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class ModelReviewItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider,
+		IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
@@ -72,6 +71,8 @@ public class ModelReviewItemProvider extends ItemProviderAdapter implements
 			addCommentsPropertyDescriptor(object);
 			addLeftPatchSetPropertyDescriptor(object);
 			addRightPatchSetPropertyDescriptor(object);
+			addSelectedModelComparisonPropertyDescriptor(object);
+			addSelectedDiagramComparisonPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -83,15 +84,13 @@ public class ModelReviewItemProvider extends ItemProviderAdapter implements
 	 * @generated
 	 */
 	protected void addIdPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_ModelReview_id_feature"),
-				getString("_UI_PropertyDescriptor_description",
-						"_UI_ModelReview_id_feature", "_UI_ModelReview_type"),
-				ModelReviewPackage.Literals.MODEL_REVIEW__ID, true, false,
-				false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_ModelReview_id_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_ModelReview_id_feature",
+								"_UI_ModelReview_type"),
+						ModelReviewPackage.Literals.MODEL_REVIEW__ID, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -101,16 +100,12 @@ public class ModelReviewItemProvider extends ItemProviderAdapter implements
 	 * @generated
 	 */
 	protected void addCommentsPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_ModelReview_comments_feature"),
-				getString("_UI_PropertyDescriptor_description",
-						"_UI_ModelReview_comments_feature",
-						"_UI_ModelReview_type"),
-				ModelReviewPackage.Literals.MODEL_REVIEW__COMMENTS, true,
-				false, true, null, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_ModelReview_comments_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_ModelReview_comments_feature",
+								"_UI_ModelReview_type"),
+						ModelReviewPackage.Literals.MODEL_REVIEW__COMMENTS, true, false, true, null, null, null));
 	}
 
 	/**
@@ -120,16 +115,12 @@ public class ModelReviewItemProvider extends ItemProviderAdapter implements
 	 * @generated
 	 */
 	protected void addLeftPatchSetPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_ModelReview_leftPatchSet_feature"),
-				getString("_UI_PropertyDescriptor_description",
-						"_UI_ModelReview_leftPatchSet_feature",
-						"_UI_ModelReview_type"),
-				ModelReviewPackage.Literals.MODEL_REVIEW__LEFT_PATCH_SET, true,
-				false, true, null, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_ModelReview_leftPatchSet_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_ModelReview_leftPatchSet_feature",
+								"_UI_ModelReview_type"),
+						ModelReviewPackage.Literals.MODEL_REVIEW__LEFT_PATCH_SET, true, false, true, null, null, null));
 	}
 
 	/**
@@ -139,16 +130,45 @@ public class ModelReviewItemProvider extends ItemProviderAdapter implements
 	 * @generated
 	 */
 	protected void addRightPatchSetPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_ModelReview_rightPatchSet_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_ModelReview_rightPatchSet_feature",
+								"_UI_ModelReview_type"),
+						ModelReviewPackage.Literals.MODEL_REVIEW__RIGHT_PATCH_SET, true, false, true, null, null,
+						null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Selected Model Comparison
+	 * feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addSelectedModelComparisonPropertyDescriptor(Object object) {
 		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_ModelReview_rightPatchSet_feature"),
-				getString("_UI_PropertyDescriptor_description",
-						"_UI_ModelReview_rightPatchSet_feature",
+				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_ModelReview_selectedModelComparison_feature"),
+				getString("_UI_PropertyDescriptor_description", "_UI_ModelReview_selectedModelComparison_feature",
 						"_UI_ModelReview_type"),
-				ModelReviewPackage.Literals.MODEL_REVIEW__RIGHT_PATCH_SET,
-				true, false, true, null, null, null));
+				ModelReviewPackage.Literals.MODEL_REVIEW__SELECTED_MODEL_COMPARISON, true, false, true, null, null,
+				null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Selected Diagram Comparison
+	 * feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addSelectedDiagramComparisonPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_ModelReview_selectedDiagramComparison_feature"),
+				getString("_UI_PropertyDescriptor_description", "_UI_ModelReview_selectedDiagramComparison_feature",
+						"_UI_ModelReview_type"),
+				ModelReviewPackage.Literals.MODEL_REVIEW__SELECTED_DIAGRAM_COMPARISON, true, false, true, null, null,
+				null));
 	}
 
 	/**
@@ -162,12 +182,10 @@ public class ModelReviewItemProvider extends ItemProviderAdapter implements
 	 * @generated
 	 */
 	@Override
-	public Collection<? extends EStructuralFeature> getChildrenFeatures(
-			Object object) {
+	public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
 		if (childrenFeatures == null) {
 			super.getChildrenFeatures(object);
-			childrenFeatures
-					.add(ModelReviewPackage.Literals.MODEL_REVIEW__PATCH_SETS);
+			childrenFeatures.add(ModelReviewPackage.Literals.MODEL_REVIEW__PATCH_SETS);
 		}
 		return childrenFeatures;
 	}
@@ -194,8 +212,7 @@ public class ModelReviewItemProvider extends ItemProviderAdapter implements
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object,
-				getResourceLocator().getImage("full/obj16/ModelReview"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/ModelReview"));
 	}
 
 	/**
@@ -225,12 +242,10 @@ public class ModelReviewItemProvider extends ItemProviderAdapter implements
 
 		switch (notification.getFeatureID(ModelReview.class)) {
 		case ModelReviewPackage.MODEL_REVIEW__ID:
-			fireNotifyChanged(new ViewerNotification(notification,
-					notification.getNotifier(), false, true));
+			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 			return;
 		case ModelReviewPackage.MODEL_REVIEW__PATCH_SETS:
-			fireNotifyChanged(new ViewerNotification(notification,
-					notification.getNotifier(), true, false));
+			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 			return;
 		}
 		super.notifyChanged(notification);
@@ -244,12 +259,10 @@ public class ModelReviewItemProvider extends ItemProviderAdapter implements
 	 * @generated
 	 */
 	@Override
-	protected void collectNewChildDescriptors(
-			Collection<Object> newChildDescriptors, Object object) {
+	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 
-		newChildDescriptors.add(createChildParameter(
-				ModelReviewPackage.Literals.MODEL_REVIEW__PATCH_SETS,
+		newChildDescriptors.add(createChildParameter(ModelReviewPackage.Literals.MODEL_REVIEW__PATCH_SETS,
 				ModelReviewFactory.eINSTANCE.createPatchSet()));
 	}
 

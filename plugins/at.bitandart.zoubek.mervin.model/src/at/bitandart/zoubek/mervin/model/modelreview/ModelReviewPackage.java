@@ -63,8 +63,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * 
 	 * @generated
 	 */
-	ModelReviewPackage eINSTANCE = at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl
-			.init();
+	ModelReviewPackage eINSTANCE = at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl.init();
 
 	/**
 	 * The meta object id for the '
@@ -124,13 +123,31 @@ public interface ModelReviewPackage extends EPackage {
 	int MODEL_REVIEW__RIGHT_PATCH_SET = 4;
 
 	/**
+	 * The feature id for the '<em><b>Selected Model Comparison</b></em>'
+	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_REVIEW__SELECTED_MODEL_COMPARISON = 5;
+
+	/**
+	 * The feature id for the '<em><b>Selected Diagram Comparison</b></em>'
+	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_REVIEW__SELECTED_DIAGRAM_COMPARISON = 6;
+
+	/**
 	 * The number of structural features of the '<em>Model Review</em>' class.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_REVIEW_FEATURE_COUNT = 5;
+	int MODEL_REVIEW_FEATURE_COUNT = 7;
 
 	/**
 	 * The number of operations of the '<em>Model Review</em>' class. <!--
@@ -270,13 +287,31 @@ public interface ModelReviewPackage extends EPackage {
 	int PATCH_SET__MAX_OBJECT_CHANGE_REF_COUNT = 12;
 
 	/**
+	 * The feature id for the '<em><b>All New Involved Diagrams</b></em>'
+	 * reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int PATCH_SET__ALL_NEW_INVOLVED_DIAGRAMS = 13;
+
+	/**
+	 * The feature id for the '<em><b>All Old Involved Diagrams</b></em>'
+	 * reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int PATCH_SET__ALL_OLD_INVOLVED_DIAGRAMS = 14;
+
+	/**
 	 * The number of structural features of the '<em>Patch Set</em>' class. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int PATCH_SET_FEATURE_COUNT = 13;
+	int PATCH_SET_FEATURE_COUNT = 15;
 
 	/**
 	 * The number of operations of the '<em>Patch Set</em>' class. <!--
@@ -666,7 +701,8 @@ public interface ModelReviewPackage extends EPackage {
 	 * <em>Diagram Instance</em>}' class. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.DiagramInstanceImpl
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
+	 *      DiagramInstanceImpl
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDiagramInstance()
 	 * @generated
 	 */
@@ -800,6 +836,34 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getModelReview_RightPatchSet();
+
+	/**
+	 * Returns the meta object for the reference '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getSelectedModelComparison
+	 * <em>Selected Model Comparison</em>}'. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @return the meta object for the reference '
+	 *         <em>Selected Model Comparison</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getSelectedModelComparison()
+	 * @see #getModelReview()
+	 * @generated
+	 */
+	EReference getModelReview_SelectedModelComparison();
+
+	/**
+	 * Returns the meta object for the reference '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getSelectedDiagramComparison
+	 * <em>Selected Diagram Comparison</em>}'. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @return the meta object for the reference '
+	 *         <em>Selected Diagram Comparison</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getSelectedDiagramComparison()
+	 * @see #getModelReview()
+	 * @generated
+	 */
+	EReference getModelReview_SelectedDiagramComparison();
 
 	/**
 	 * Returns the meta object for class '
@@ -984,6 +1048,34 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getPatchSet_MaxObjectChangeRefCount();
+
+	/**
+	 * Returns the meta object for the reference list '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getAllNewInvolvedDiagrams
+	 * <em>All New Involved Diagrams</em>}'. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @return the meta object for the reference list '
+	 *         <em>All New Involved Diagrams</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getAllNewInvolvedDiagrams()
+	 * @see #getPatchSet()
+	 * @generated
+	 */
+	EReference getPatchSet_AllNewInvolvedDiagrams();
+
+	/**
+	 * Returns the meta object for the reference list '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getAllOldInvolvedDiagrams
+	 * <em>All Old Involved Diagrams</em>}'. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @return the meta object for the reference list '
+	 *         <em>All Old Involved Diagrams</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getAllOldInvolvedDiagrams()
+	 * @see #getPatchSet()
+	 * @generated
+	 */
+	EReference getPatchSet_AllOldInvolvedDiagrams();
 
 	/**
 	 * Returns the meta object for class '
@@ -1268,7 +1360,8 @@ public interface ModelReviewPackage extends EPackage {
 		 * <em>Model Review</em>}' class. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
 		 * 
-		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
+		 *      ModelReviewImpl
 		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getModelReview()
 		 * @generated
 		 */
@@ -1289,8 +1382,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * 
 		 * @generated
 		 */
-		EReference MODEL_REVIEW__PATCH_SETS = eINSTANCE
-				.getModelReview_PatchSets();
+		EReference MODEL_REVIEW__PATCH_SETS = eINSTANCE.getModelReview_PatchSets();
 
 		/**
 		 * The meta object literal for the '<em><b>Comments</b></em>' reference
@@ -1306,8 +1398,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * 
 		 * @generated
 		 */
-		EReference MODEL_REVIEW__LEFT_PATCH_SET = eINSTANCE
-				.getModelReview_LeftPatchSet();
+		EReference MODEL_REVIEW__LEFT_PATCH_SET = eINSTANCE.getModelReview_LeftPatchSet();
 
 		/**
 		 * The meta object literal for the '<em><b>Right Patch Set</b></em>'
@@ -1315,8 +1406,25 @@ public interface ModelReviewPackage extends EPackage {
 		 * 
 		 * @generated
 		 */
-		EReference MODEL_REVIEW__RIGHT_PATCH_SET = eINSTANCE
-				.getModelReview_RightPatchSet();
+		EReference MODEL_REVIEW__RIGHT_PATCH_SET = eINSTANCE.getModelReview_RightPatchSet();
+
+		/**
+		 * The meta object literal for the '
+		 * <em><b>Selected Model Comparison</b></em>' reference feature. <!--
+		 * begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference MODEL_REVIEW__SELECTED_MODEL_COMPARISON = eINSTANCE.getModelReview_SelectedModelComparison();
+
+		/**
+		 * The meta object literal for the '
+		 * <em><b>Selected Diagram Comparison</b></em>' reference feature. <!--
+		 * begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference MODEL_REVIEW__SELECTED_DIAGRAM_COMPARISON = eINSTANCE.getModelReview_SelectedDiagramComparison();
 
 		/**
 		 * The meta object literal for the '
@@ -1360,8 +1468,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * 
 		 * @generated
 		 */
-		EReference PATCH_SET__NEW_INVOLVED_MODELS = eINSTANCE
-				.getPatchSet_NewInvolvedModels();
+		EReference PATCH_SET__NEW_INVOLVED_MODELS = eINSTANCE.getPatchSet_NewInvolvedModels();
 
 		/**
 		 * The meta object literal for the '
@@ -1370,8 +1477,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * 
 		 * @generated
 		 */
-		EReference PATCH_SET__NEW_INVOLVED_DIAGRAMS = eINSTANCE
-				.getPatchSet_NewInvolvedDiagrams();
+		EReference PATCH_SET__NEW_INVOLVED_DIAGRAMS = eINSTANCE.getPatchSet_NewInvolvedDiagrams();
 
 		/**
 		 * The meta object literal for the '<em><b>Old Involved Models</b></em>'
@@ -1379,8 +1485,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * 
 		 * @generated
 		 */
-		EReference PATCH_SET__OLD_INVOLVED_MODELS = eINSTANCE
-				.getPatchSet_OldInvolvedModels();
+		EReference PATCH_SET__OLD_INVOLVED_MODELS = eINSTANCE.getPatchSet_OldInvolvedModels();
 
 		/**
 		 * The meta object literal for the '
@@ -1389,8 +1494,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * 
 		 * @generated
 		 */
-		EReference PATCH_SET__OLD_INVOLVED_DIAGRAMS = eINSTANCE
-				.getPatchSet_OldInvolvedDiagrams();
+		EReference PATCH_SET__OLD_INVOLVED_DIAGRAMS = eINSTANCE.getPatchSet_OldInvolvedDiagrams();
 
 		/**
 		 * The meta object literal for the '<em><b>Model Comparison</b></em>'
@@ -1398,8 +1502,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * 
 		 * @generated
 		 */
-		EReference PATCH_SET__MODEL_COMPARISON = eINSTANCE
-				.getPatchSet_ModelComparison();
+		EReference PATCH_SET__MODEL_COMPARISON = eINSTANCE.getPatchSet_ModelComparison();
 
 		/**
 		 * The meta object literal for the '<em><b>Diagram Comparison</b></em>'
@@ -1407,8 +1510,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * 
 		 * @generated
 		 */
-		EReference PATCH_SET__DIAGRAM_COMPARISON = eINSTANCE
-				.getPatchSet_DiagramComparison();
+		EReference PATCH_SET__DIAGRAM_COMPARISON = eINSTANCE.getPatchSet_DiagramComparison();
 
 		/**
 		 * The meta object literal for the '<em><b>Object Change Count</b></em>'
@@ -1416,8 +1518,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * 
 		 * @generated
 		 */
-		EAttribute PATCH_SET__OBJECT_CHANGE_COUNT = eINSTANCE
-				.getPatchSet_ObjectChangeCount();
+		EAttribute PATCH_SET__OBJECT_CHANGE_COUNT = eINSTANCE.getPatchSet_ObjectChangeCount();
 
 		/**
 		 * The meta object literal for the '
@@ -1426,8 +1527,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * 
 		 * @generated
 		 */
-		EAttribute PATCH_SET__OBJECT_CHANGE_REF_COUNT = eINSTANCE
-				.getPatchSet_ObjectChangeRefCount();
+		EAttribute PATCH_SET__OBJECT_CHANGE_REF_COUNT = eINSTANCE.getPatchSet_ObjectChangeRefCount();
 
 		/**
 		 * The meta object literal for the '
@@ -1436,8 +1536,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * 
 		 * @generated
 		 */
-		EAttribute PATCH_SET__MAX_OBJECT_CHANGE_COUNT = eINSTANCE
-				.getPatchSet_MaxObjectChangeCount();
+		EAttribute PATCH_SET__MAX_OBJECT_CHANGE_COUNT = eINSTANCE.getPatchSet_MaxObjectChangeCount();
 
 		/**
 		 * The meta object literal for the '
@@ -1446,8 +1545,25 @@ public interface ModelReviewPackage extends EPackage {
 		 * 
 		 * @generated
 		 */
-		EAttribute PATCH_SET__MAX_OBJECT_CHANGE_REF_COUNT = eINSTANCE
-				.getPatchSet_MaxObjectChangeRefCount();
+		EAttribute PATCH_SET__MAX_OBJECT_CHANGE_REF_COUNT = eINSTANCE.getPatchSet_MaxObjectChangeRefCount();
+
+		/**
+		 * The meta object literal for the '
+		 * <em><b>All New Involved Diagrams</b></em>' reference list feature.
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference PATCH_SET__ALL_NEW_INVOLVED_DIAGRAMS = eINSTANCE.getPatchSet_AllNewInvolvedDiagrams();
+
+		/**
+		 * The meta object literal for the '
+		 * <em><b>All Old Involved Diagrams</b></em>' reference list feature.
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference PATCH_SET__ALL_OLD_INVOLVED_DIAGRAMS = eINSTANCE.getPatchSet_AllOldInvolvedDiagrams();
 
 		/**
 		 * The meta object literal for the '
@@ -1514,7 +1630,8 @@ public interface ModelReviewPackage extends EPackage {
 		 * <em>Diagram Patch</em>}' class. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
 		 * 
-		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.DiagramPatchImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
+		 *      DiagramPatchImpl
 		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDiagramPatch()
 		 * @generated
 		 */
@@ -1526,8 +1643,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * 
 		 * @generated
 		 */
-		EReference DIAGRAM_PATCH__NEW_DIAGRAM_INSTANCE = eINSTANCE
-				.getDiagramPatch_NewDiagramInstance();
+		EReference DIAGRAM_PATCH__NEW_DIAGRAM_INSTANCE = eINSTANCE.getDiagramPatch_NewDiagramInstance();
 
 		/**
 		 * The meta object literal for the '<em><b>Old Diagram Instance</b></em>
@@ -1535,8 +1651,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * 
 		 * @generated
 		 */
-		EReference DIAGRAM_PATCH__OLD_DIAGRAM_INSTANCE = eINSTANCE
-				.getDiagramPatch_OldDiagramInstance();
+		EReference DIAGRAM_PATCH__OLD_DIAGRAM_INSTANCE = eINSTANCE.getDiagramPatch_OldDiagramInstance();
 
 		/**
 		 * The meta object literal for the '
@@ -1556,8 +1671,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * 
 		 * @generated
 		 */
-		EReference MODEL_PATCH__NEW_MODEL_INSTANCE = eINSTANCE
-				.getModelPatch_NewModelInstance();
+		EReference MODEL_PATCH__NEW_MODEL_INSTANCE = eINSTANCE.getModelPatch_NewModelInstance();
 
 		/**
 		 * The meta object literal for the '<em><b>Old Model Instance</b></em>'
@@ -1565,8 +1679,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * 
 		 * @generated
 		 */
-		EReference MODEL_PATCH__OLD_MODEL_INSTANCE = eINSTANCE
-				.getModelPatch_OldModelInstance();
+		EReference MODEL_PATCH__OLD_MODEL_INSTANCE = eINSTANCE.getModelPatch_OldModelInstance();
 
 		/**
 		 * The meta object literal for the '
@@ -1594,7 +1707,8 @@ public interface ModelReviewPackage extends EPackage {
 		 * <em>Model Instance</em>}' class. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
 		 * 
-		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelInstanceImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
+		 *      ModelInstanceImpl
 		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getModelInstance()
 		 * @generated
 		 */
@@ -1606,8 +1720,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * 
 		 * @generated
 		 */
-		EReference MODEL_INSTANCE__OBJECTS = eINSTANCE
-				.getModelInstance_Objects();
+		EReference MODEL_INSTANCE__OBJECTS = eINSTANCE.getModelInstance_Objects();
 
 		/**
 		 * The meta object literal for the '<em><b>Root Packages</b></em>'
@@ -1615,8 +1728,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * 
 		 * @generated
 		 */
-		EReference MODEL_INSTANCE__ROOT_PACKAGES = eINSTANCE
-				.getModelInstance_RootPackages();
+		EReference MODEL_INSTANCE__ROOT_PACKAGES = eINSTANCE.getModelInstance_RootPackages();
 
 		/**
 		 * The meta object literal for the '
@@ -1624,7 +1736,8 @@ public interface ModelReviewPackage extends EPackage {
 		 * <em>Diagram Instance</em>}' class. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
 		 * 
-		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.DiagramInstanceImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
+		 *      DiagramInstanceImpl
 		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDiagramInstance()
 		 * @generated
 		 */
@@ -1636,8 +1749,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * 
 		 * @generated
 		 */
-		EOperation DIAGRAM_INSTANCE___GET_DIAGRAMS = eINSTANCE
-				.getDiagramInstance__GetDiagrams();
+		EOperation DIAGRAM_INSTANCE___GET_DIAGRAMS = eINSTANCE.getDiagramInstance__GetDiagrams();
 
 		/**
 		 * The meta object literal for the '

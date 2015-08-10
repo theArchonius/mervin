@@ -10,6 +10,12 @@
         eType="#//Comment"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="leftPatchSet" eType="#//PatchSet"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rightPatchSet" eType="#//PatchSet"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="selectedModelComparison"
+        eType="ecore:EClass platform:/plugin/org.eclipse.emf.compare/model/compare.ecore#//Comparison"
+        changeable="false" transient="true" unsettable="true" derived="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="selectedDiagramComparison"
+        eType="ecore:EClass platform:/plugin/org.eclipse.emf.compare/model/compare.ecore#//Comparison"
+        changeable="false" transient="true" unsettable="true" derived="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PatchSet">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -47,6 +53,12 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxObjectChangeRefCount"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" changeable="false"
         transient="true" defaultValueLiteral="0" unsettable="true" derived="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="allNewInvolvedDiagrams"
+        upperBound="-1" eType="ecore:EClass ../../org.eclipse.gmf.runtime.notation/model/notation.ecore#//Diagram"
+        changeable="false" volatile="true" transient="true" derived="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="allOldInvolvedDiagrams"
+        upperBound="-1" eType="ecore:EClass ../../org.eclipse.gmf.runtime.notation/model/notation.ecore#//Diagram"
+        changeable="false" volatile="true" transient="true" derived="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Patch">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="newPath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

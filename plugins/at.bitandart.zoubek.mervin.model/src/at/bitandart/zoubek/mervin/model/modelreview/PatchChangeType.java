@@ -159,8 +159,7 @@ public enum PatchChangeType implements Enumerator {
 	 * 
 	 * @generated
 	 */
-	private static final PatchChangeType[] VALUES_ARRAY = new PatchChangeType[] {
-			ADD, COPY, DELETE, MODIFY, RENAME, };
+	private static final PatchChangeType[] VALUES_ARRAY = new PatchChangeType[] { ADD, COPY, DELETE, MODIFY, RENAME, };
 
 	/**
 	 * A public read-only list of all the '<em><b>Patch Change Type</b></em>'
@@ -168,13 +167,15 @@ public enum PatchChangeType implements Enumerator {
 	 * 
 	 * @generated
 	 */
-	public static final List<PatchChangeType> VALUES = Collections
-			.unmodifiableList(Arrays.asList(VALUES_ARRAY));
+	public static final List<PatchChangeType> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 
 	/**
 	 * Returns the '<em><b>Patch Change Type</b></em>' literal with the
 	 * specified literal value. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
+	 * @param literal
+	 *            the literal.
+	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
 	public static PatchChangeType get(String literal) {
@@ -191,6 +192,9 @@ public enum PatchChangeType implements Enumerator {
 	 * Returns the '<em><b>Patch Change Type</b></em>' literal with the
 	 * specified name. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
+	 * @param name
+	 *            the name.
+	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
 	public static PatchChangeType getByName(String name) {
@@ -207,6 +211,9 @@ public enum PatchChangeType implements Enumerator {
 	 * Returns the '<em><b>Patch Change Type</b></em>' literal with the
 	 * specified integer value. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
+	 * @param value
+	 *            the integer value.
+	 * @return the matching enumerator or <code>null</code>.
 	 * @generated
 	 */
 	public static PatchChangeType get(int value) {

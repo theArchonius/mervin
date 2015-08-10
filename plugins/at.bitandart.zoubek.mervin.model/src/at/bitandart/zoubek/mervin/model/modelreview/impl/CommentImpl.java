@@ -27,17 +27,16 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  * <em><b>Comment</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.CommentImpl#getId
  * <em>Id</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
-public abstract class CommentImpl extends MinimalEObjectImpl.Container
-		implements Comment {
+public abstract class CommentImpl extends MinimalEObjectImpl.Container implements Comment {
 	/**
 	 * The default value of the '{@link #getId() <em>Id</em>}' attribute. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
@@ -95,8 +94,7 @@ public abstract class CommentImpl extends MinimalEObjectImpl.Container
 		String oldId = id;
 		id = newId;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET,
-					ModelReviewPackage.COMMENT__ID, oldId, id));
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.COMMENT__ID, oldId, id));
 	}
 
 	/**

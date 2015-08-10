@@ -17,6 +17,7 @@ import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
  * <!-- begin-user-doc --> A representation of the model object '
@@ -24,9 +25,10 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
- * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getId <em>Id
- * </em>}</li>
+ * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getId
+ * <em>Id</em>}</li>
  * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getReview
  * <em>Review</em>}</li>
  * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getPatches
@@ -61,8 +63,13 @@ import org.eclipse.emf.ecore.EObject;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getMaxObjectChangeRefCount
  * <em>Max Object Change Ref Count</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getAllNewInvolvedDiagrams
+ * <em>All New Involved Diagrams</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getAllOldInvolvedDiagrams
+ * <em>All Old Involved Diagrams</em>}</li>
  * </ul>
- * </p>
  *
  * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getPatchSet()
  * @model
@@ -405,5 +412,41 @@ public interface PatchSet extends EObject {
 	 * @generated
 	 */
 	boolean isSetMaxObjectChangeRefCount();
+
+	/**
+	 * Returns the value of the '<em><b>All New Involved Diagrams</b></em>'
+	 * reference list. The list contents are of type
+	 * {@link org.eclipse.gmf.runtime.notation.Diagram}. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>All New Involved Diagrams</em>' reference list
+	 * isn't clear, there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>All New Involved Diagrams</em>' reference
+	 *         list.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getPatchSet_AllNewInvolvedDiagrams()
+	 * @model transient="true" changeable="false" volatile="true" derived="true"
+	 * @generated
+	 */
+	EList<Diagram> getAllNewInvolvedDiagrams();
+
+	/**
+	 * Returns the value of the '<em><b>All Old Involved Diagrams</b></em>'
+	 * reference list. The list contents are of type
+	 * {@link org.eclipse.gmf.runtime.notation.Diagram}. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>All Old Involved Diagrams</em>' reference list
+	 * isn't clear, there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>All Old Involved Diagrams</em>' reference
+	 *         list.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getPatchSet_AllOldInvolvedDiagrams()
+	 * @model transient="true" changeable="false" volatile="true" derived="true"
+	 * @generated
+	 */
+	EList<Diagram> getAllOldInvolvedDiagrams();
 
 } // PatchSet

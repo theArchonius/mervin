@@ -63,16 +63,13 @@ public class ModelPatchItemProvider extends PatchItemProvider {
 	 * @generated
 	 */
 	protected void addNewModelInstancePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_ModelPatch_newModelInstance_feature"),
-				getString("_UI_PropertyDescriptor_description",
-						"_UI_ModelPatch_newModelInstance_feature",
-						"_UI_ModelPatch_type"),
-				ModelReviewPackage.Literals.MODEL_PATCH__NEW_MODEL_INSTANCE,
-				true, false, true, null, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_ModelPatch_newModelInstance_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_ModelPatch_newModelInstance_feature",
+								"_UI_ModelPatch_type"),
+						ModelReviewPackage.Literals.MODEL_PATCH__NEW_MODEL_INSTANCE, true, false, true, null, null,
+						null));
 	}
 
 	/**
@@ -82,16 +79,13 @@ public class ModelPatchItemProvider extends PatchItemProvider {
 	 * @generated
 	 */
 	protected void addOldModelInstancePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_ModelPatch_oldModelInstance_feature"),
-				getString("_UI_PropertyDescriptor_description",
-						"_UI_ModelPatch_oldModelInstance_feature",
-						"_UI_ModelPatch_type"),
-				ModelReviewPackage.Literals.MODEL_PATCH__OLD_MODEL_INSTANCE,
-				true, false, true, null, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_ModelPatch_oldModelInstance_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_ModelPatch_oldModelInstance_feature",
+								"_UI_ModelPatch_type"),
+						ModelReviewPackage.Literals.MODEL_PATCH__OLD_MODEL_INSTANCE, true, false, true, null, null,
+						null));
 	}
 
 	/**
@@ -102,8 +96,7 @@ public class ModelPatchItemProvider extends PatchItemProvider {
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object,
-				getResourceLocator().getImage("full/obj16/ModelPatch"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/ModelPatch"));
 	}
 
 	/**
@@ -141,8 +134,7 @@ public class ModelPatchItemProvider extends PatchItemProvider {
 	 * @generated
 	 */
 	@Override
-	protected void collectNewChildDescriptors(
-			Collection<Object> newChildDescriptors, Object object) {
+	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}
 

@@ -37,6 +37,12 @@ import junit.textui.TestRunner;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getMaxObjectChangeRefCount()
  * <em>Max Object Change Ref Count</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getAllNewInvolvedDiagrams()
+ * <em>All New Involved Diagrams</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getAllOldInvolvedDiagrams()
+ * <em>All Old Involved Diagrams</em>}</li>
  * </ul>
  * </p>
  * 
@@ -229,6 +235,36 @@ public class PatchSetTest extends TestCase {
 	 */
 	public void testIsSetMaxObjectChangeRefCount() {
 		// TODO: implement this test method
+		// Ensure that you remove @generated or mark it @generated NOT
+		fail();
+	}
+
+	/**
+	 * Tests the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getAllNewInvolvedDiagrams()
+	 * <em>All New Involved Diagrams</em>}' feature getter. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getAllNewInvolvedDiagrams()
+	 * @generated
+	 */
+	public void testGetAllNewInvolvedDiagrams() {
+		// TODO: implement this feature getter test method
+		// Ensure that you remove @generated or mark it @generated NOT
+		fail();
+	}
+
+	/**
+	 * Tests the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getAllOldInvolvedDiagrams()
+	 * <em>All Old Involved Diagrams</em>}' feature getter. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getAllOldInvolvedDiagrams()
+	 * @generated
+	 */
+	public void testGetAllOldInvolvedDiagrams() {
+		// TODO: implement this feature getter test method
 		// Ensure that you remove @generated or mark it @generated NOT
 		fail();
 	}

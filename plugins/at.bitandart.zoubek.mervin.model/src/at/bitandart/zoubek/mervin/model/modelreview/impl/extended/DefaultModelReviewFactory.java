@@ -10,6 +10,7 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.model.modelreview.impl.extended;
 
+import at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewFactoryImpl;
@@ -26,8 +27,18 @@ import at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewFactoryImpl;
 public class DefaultModelReviewFactory extends ModelReviewFactoryImpl {
 
 	@Override
+	public ModelReview createModelReview() {
+		return new ExtendedModelReviewImpl();
+	}
+
+	@Override
 	public PatchSet createPatchSet() {
 		return new ExtendedPatchSetImpl();
+	}
+
+	@Override
+	public DiagramInstance createDiagramInstance() {
+		return new ExtendedDiagramInstanceImpl();
 	}
 
 }

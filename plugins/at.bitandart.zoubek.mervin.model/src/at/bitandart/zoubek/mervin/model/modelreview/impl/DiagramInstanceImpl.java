@@ -22,13 +22,10 @@ import org.eclipse.gmf.runtime.notation.Diagram;
 /**
  * <!-- begin-user-doc --> An implementation of the model object '
  * <em><b>Diagram Instance</b></em>'. <!-- end-user-doc -->
- * <p>
- * </p>
  *
  * @generated
  */
-public class DiagramInstanceImpl extends ModelInstanceImpl implements
-		DiagramInstance {
+public class DiagramInstanceImpl extends ModelInstanceImpl implements DiagramInstance {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -65,8 +62,7 @@ public class DiagramInstanceImpl extends ModelInstanceImpl implements
 	 * @generated
 	 */
 	@Override
-	public Object eInvoke(int operationID, EList<?> arguments)
-			throws InvocationTargetException {
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
 		case ModelReviewPackage.DIAGRAM_INSTANCE___GET_DIAGRAMS:
 			return getDiagrams();

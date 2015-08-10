@@ -10,12 +10,12 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.diagram.diff;
 
-import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramGraphicalViewer;
 
 /**
  * @author Florian Zoubek
  *
  */
-public class DiagramDiffViewer extends ScrollingGraphicalViewer {
+public class DiagramDiffViewer extends DiagramGraphicalViewer {
 
 }
