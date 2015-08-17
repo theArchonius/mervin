@@ -8,5 +8,31 @@
             uri="fragment.e4xmi">
       </fragment>
    </extension>
+   <extension
+         point="org.eclipse.gmf.runtime.emf.type.core.elementTypes">
+      <metamodel
+            nsURI="http://zoubek.bitandart.at/mervin/modelreview">
+         <metamodelType
+               eclass="ModelReview"
+               id="at.bitandart.zoubek.mervin.model.ModelReview"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               name="ModelReview">
+            <param
+                  name="semanticHint"
+                  value="Mervin_ModelReview_ModelReview">
+            </param>
+         </metamodelType>
+         <metamodelType
+               eclass="Diagram"
+               id="at.bitandart.zoubek.mervin.model.Diagram"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               name="Diagram">
+            <param
+                  name="semanticHint"
+                  value="Mervin_ModelReview_Diagram">
+            </param>
+         </metamodelType>
+      </metamodel>
+   </extension>
 
 </plugin>
