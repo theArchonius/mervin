@@ -20,7 +20,9 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 public class ModelReviewElementTypes extends AbstractElementTypeEnumerator {
 
 	public static final IElementType MODEL_REVIEW = getElementType("at.bitandart.zoubek.mervin.model.ModelReview");
+	public static final String MODEL_REVIEW_SEMANTIC_HINT = "Mervin_ModelReview_ModelReview";
 
 	public static final IElementType DIAGRAM = getElementType("at.bitandart.zoubek.mervin.model.Diagram");
+	public static final String DIAGRAM_SEMANTIC_HINT = "Mervin_ModelReview_Diagram";
 
 }

@@ -34,5 +34,14 @@
          </metamodelType>
       </metamodel>
    </extension>
+   <extension
+         point="org.eclipse.gmf.runtime.diagram.core.viewProviders">
+      <viewProvider
+            class="at.bitandart.zoubek.mervin.diagram.diff.gmf.ModelReviewViewProvider">
+         <Priority
+               name="Highest">
+         </Priority>
+      </viewProvider>
+   </extension>
 
 </plugin>
