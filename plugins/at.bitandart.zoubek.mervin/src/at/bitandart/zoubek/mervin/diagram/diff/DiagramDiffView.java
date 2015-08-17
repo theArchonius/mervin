@@ -17,8 +17,19 @@ import javax.inject.Inject;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
+import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
+import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
+import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
+import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -79,9 +90,16 @@ public class DiagramDiffView {
 
 		viewer.setKeyHandler(new GraphicalViewerKeyHandler(viewer));
 		viewer.setRootEditPart(new DiagramDiffRootEditPart());
-		viewer.setEditPartFactory(new DiagramDiffPartFactory());
+		viewer.setEditPartFactory(EditPartService.getInstance());
 		viewerControl.setBackground(parent.getBackground());
-		viewer.setContents(getModelReview());
+		Diagram diagram = ViewService.getInstance().createDiagram(new EObjectAdapter(getModelReview()),
+				PART_DESCRIPTOR_ID, new PreferencesHint(PART_DESCRIPTOR_ID));
+		ResourceSet resourceSet = new ResourceSetImpl();
+		Resource resource = new ResourceImpl(URI.createURI("mervin-model-review-resource.resource"));
+		resourceSet.getResources().add(resource);
+		resource.getContents().add(diagram);
+		TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain(resourceSet);
+		viewer.setContents(diagram);
 
 	}
 

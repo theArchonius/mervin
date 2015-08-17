@@ -10,22 +10,16 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.diagram.diff.parts;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.gef.EditPart;
-import org.eclipse.gef.EditPolicy;
-import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
-import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
-import org.eclipse.gef.requests.CreateRequest;
-import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
+import org.eclipse.gmf.runtime.notation.View;
 
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
@@ -38,25 +32,14 @@ import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
  * @author Florian Zoubek
  *
  */
-public class WorkspaceEditPart extends AbstractGraphicalEditPart {
+public class WorkspaceEditPart extends GraphicalEditPart {
 
-	private final Adapter reviewUpdateAdapter = new EContentAdapter() {
-		@Override
-		public void notifyChanged(Notification notification) {
+	public WorkspaceEditPart(EObject model) {
+		super(model);
 
-			// needed to adapt also containment references
-			super.notifyChanged(notification);
+	}
 
-			int featureID = notification.getFeatureID(PatchSet.class);
-			if (featureID == ModelReviewPackage.MODEL_REVIEW__LEFT_PATCH_SET
-					|| featureID == ModelReviewPackage.MODEL_REVIEW__RIGHT_PATCH_SET) {
-
-				// left or right patch set has changed -> refresh
-				refresh();
-
-			}
-		}
-	};
+	private Adapter reviewUpdateAdapter;
 
 	/*
 	 * (non-Javadoc)
@@ -70,53 +53,54 @@ public class WorkspaceEditPart extends AbstractGraphicalEditPart {
 		return panel;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gef.editparts.AbstractEditPart#createEditPolicies()
-	 */
-	@Override
-	protected void createEditPolicies() {
-		installEditPolicy(EditPolicy.LAYOUT_ROLE, new XYLayoutEditPolicy() {
-
-			@Override
-			protected Command getCreateCommand(CreateRequest request) {
-				return new Command() {
-				};
-			}
-		});
-	}
-
-	@Override
-	protected List<Diagram> getModelChildren() {
-		List<Diagram> diagrams = Collections.emptyList();
-		ModelReview modelReview = getModelReview();
-		if (modelReview != null) {
-			PatchSet rightPatchSet = modelReview.getRightPatchSet();
-			if (rightPatchSet != null) {
-				diagrams = rightPatchSet.getAllNewInvolvedDiagrams();
-			}
-		}
-		return diagrams;
-	}
-
 	@Override
 	public void setModel(Object model) {
-		if (model instanceof ModelReview) {
-			// remove old adapter
-			((ModelReview) model).eAdapters().remove(reviewUpdateAdapter);
+		Object oldModel = getModel();
+		if (oldModel != null) {
+			if (model instanceof ModelReview) {
+				// remove old adapter
+				((ModelReview) model).eAdapters().remove(getReviewUpdateAdapter());
+			} else if (model instanceof View) {
+				((View) oldModel).getElement().eAdapters().remove(getReviewUpdateAdapter());
+			}
 		}
 
 		super.setModel(model);
 
 		if (model instanceof ModelReview) {
 			// add update adapter
-			((ModelReview) model).eAdapters().add(reviewUpdateAdapter);
+			((ModelReview) model).eAdapters().add(getReviewUpdateAdapter());
+		} else if (model instanceof View) {
+			resolveSemanticElement().eAdapters().add(getReviewUpdateAdapter());
 		}
 	}
 
+	private Adapter getReviewUpdateAdapter() {
+
+		if (reviewUpdateAdapter == null) {
+			reviewUpdateAdapter = new EContentAdapter() {
+				@Override
+				public void notifyChanged(Notification notification) {
+
+					// needed to adapt also containment references
+					super.notifyChanged(notification);
+
+					int featureID = notification.getFeatureID(PatchSet.class);
+					if (featureID == ModelReviewPackage.MODEL_REVIEW__LEFT_PATCH_SET
+							|| featureID == ModelReviewPackage.MODEL_REVIEW__RIGHT_PATCH_SET) {
+
+						// left or right patch set has changed -> refresh
+						refresh();
+
+					}
+				}
+			};
+		}
+		return reviewUpdateAdapter;
+	}
+
 	public ModelReview getModelReview() {
-		Object model = getModel();
+		EObject model = resolveSemanticElement();
 		if (model instanceof ModelReview) {
 			return (ModelReview) model;
 		}

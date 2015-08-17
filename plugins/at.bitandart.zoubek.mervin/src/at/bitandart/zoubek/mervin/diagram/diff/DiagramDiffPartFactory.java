@@ -40,8 +40,7 @@ public class DiagramDiffPartFactory implements EditPartFactory {
 	public EditPart createEditPart(EditPart context, Object model) {
 
 		if (model instanceof ModelReview) {
-			WorkspaceEditPart workspaceEditPart = new WorkspaceEditPart();
-			workspaceEditPart.setModel(model);
+			WorkspaceEditPart workspaceEditPart = new WorkspaceEditPart((ModelReview) model);
 			return workspaceEditPart;
 		} else if (model instanceof Diagram) {
 			DiagramEditPart diagramEditPart = new DiagramEditPart((Diagram) model);
