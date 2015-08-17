@@ -43,5 +43,14 @@
          </Priority>
       </viewProvider>
    </extension>
+   <extension
+         point="org.eclipse.gmf.runtime.diagram.ui.editpartProviders">
+      <editpartProvider
+            class="at.bitandart.zoubek.mervin.diagram.diff.gmf.ModelReviewEditPartProvider">
+         <Priority
+               name="Highest">
+         </Priority>
+      </editpartProvider>
+   </extension>
 
 </plugin>
