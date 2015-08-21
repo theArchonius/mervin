@@ -10,9 +10,7 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.diagram.diff.parts;
 
-import java.util.Collections;
-import java.util.List;
-
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.ScrollPane;
@@ -22,7 +20,6 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
-import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
  * An {@link EditPart} that provides a view on a diagram.
@@ -60,37 +57,12 @@ public class DiagramEditPart extends GraphicalEditPart {
 
 		IFigure figure = getFigure();
 		// TODO Replace when workspace layout is implemented
-		figure.getParent().setConstraint(figure, new Rectangle(10, 10, 3000, 3000));
+		figure.getParent().setConstraint(figure, new Rectangle(10, 10, 1000, 2000));
 		super.refreshVisuals();
 	}
 
 	@Override
 	public IFigure getContentPane() {
 		return contentPane;
-	}
-
-	/**
-	 * 
-	 * @return the diagram model assigned to this edit part or null if the model
-	 *         instance is not an instance of {@link Diagram}
-	 */
-	public Diagram getDiagram() {
-		Object model = getModel();
-		if (model instanceof Diagram) {
-			return (Diagram) model;
-		}
-		return null;
-	}
-
-	@Override
-	protected List<?> getModelChildren() {
-		Diagram diagram = getDiagram();
-		if (diagram != null) {
-			/*
-			 * TODO return only context children for now, return the child views
-			 */
-			return diagram.getVisibleChildren();
-		}
-		return Collections.EMPTY_LIST;
 	}
 }

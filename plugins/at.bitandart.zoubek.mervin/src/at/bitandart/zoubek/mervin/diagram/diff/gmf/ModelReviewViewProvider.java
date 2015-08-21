@@ -15,7 +15,6 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.gmf.runtime.diagram.core.providers.AbstractViewProvider;
-import org.eclipse.gmf.runtime.diagram.ui.view.factories.DiagramViewFactory;
 import org.eclipse.gmf.runtime.notation.View;
 
 import at.bitandart.zoubek.mervin.diagram.diff.DiagramDiffView;
@@ -34,9 +33,9 @@ public class ModelReviewViewProvider extends AbstractViewProvider {
 	private final Map<String, Class<?>> nodeMap = new HashMap<String, Class<?>>();
 
 	{
-		diagramMap.put(DiagramDiffView.PART_DESCRIPTOR_ID, DiagramViewFactory.class);
+		diagramMap.put(DiagramDiffView.PART_DESCRIPTOR_ID, ModelReviewDiffDiagramViewFactory.class);
 
-		nodeMap.put(ModelReviewElementTypes.DIAGRAM_SEMANTIC_HINT, DiagramViewFactory.class);
+		nodeMap.put(ModelReviewElementTypes.DIAGRAM_SEMANTIC_HINT, WorkspaceDiagramFactory.class);
 	}
 
 	@Override

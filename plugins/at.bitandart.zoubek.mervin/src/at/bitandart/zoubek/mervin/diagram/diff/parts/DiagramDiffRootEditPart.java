@@ -14,6 +14,7 @@ import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.LayeredPane;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
+import org.eclipse.gmf.runtime.notation.MeasurementUnit;
 
 /**
  * A {@link ScalableFreeformRootEditPart} that contains the default layers and
@@ -23,6 +24,10 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
  *
  */
 public class DiagramDiffRootEditPart extends DiagramRootEditPart {
+
+	public DiagramDiffRootEditPart(MeasurementUnit measurementUnit) {
+		super(measurementUnit);
+	}
 
 	public static final String DIFF_HIGHLIGHT_LAYER = "at.bitandart.zoubek.mervin.diagram.diff.highlight.layer";
 

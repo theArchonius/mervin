@@ -13,17 +13,19 @@ package at.bitandart.zoubek.mervin.diagram.diff.parts;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.emf.common.notify.Adapter;
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.commands.Command;
+import org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
-import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CreationEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.SemanticEditPolicy;
+import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
+import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
 
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
-import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
-import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 
 /**
  * An {@link EditPart} that provides a workspace with multiple child elements
@@ -39,8 +41,6 @@ public class WorkspaceEditPart extends GraphicalEditPart {
 
 	}
 
-	private Adapter reviewUpdateAdapter;
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -53,52 +53,6 @@ public class WorkspaceEditPart extends GraphicalEditPart {
 		return panel;
 	}
 
-	@Override
-	public void setModel(Object model) {
-		Object oldModel = getModel();
-		if (oldModel != null) {
-			if (model instanceof ModelReview) {
-				// remove old adapter
-				((ModelReview) model).eAdapters().remove(getReviewUpdateAdapter());
-			} else if (model instanceof View) {
-				((View) oldModel).getElement().eAdapters().remove(getReviewUpdateAdapter());
-			}
-		}
-
-		super.setModel(model);
-
-		if (model instanceof ModelReview) {
-			// add update adapter
-			((ModelReview) model).eAdapters().add(getReviewUpdateAdapter());
-		} else if (model instanceof View) {
-			resolveSemanticElement().eAdapters().add(getReviewUpdateAdapter());
-		}
-	}
-
-	private Adapter getReviewUpdateAdapter() {
-
-		if (reviewUpdateAdapter == null) {
-			reviewUpdateAdapter = new EContentAdapter() {
-				@Override
-				public void notifyChanged(Notification notification) {
-
-					// needed to adapt also containment references
-					super.notifyChanged(notification);
-
-					int featureID = notification.getFeatureID(PatchSet.class);
-					if (featureID == ModelReviewPackage.MODEL_REVIEW__LEFT_PATCH_SET
-							|| featureID == ModelReviewPackage.MODEL_REVIEW__RIGHT_PATCH_SET) {
-
-						// left or right patch set has changed -> refresh
-						refresh();
-
-					}
-				}
-			};
-		}
-		return reviewUpdateAdapter;
-	}
-
 	public ModelReview getModelReview() {
 		EObject model = resolveSemanticElement();
 		if (model instanceof ModelReview) {
@@ -106,6 +60,32 @@ public class WorkspaceEditPart extends GraphicalEditPart {
 		}
 		return null;
 
+	}
+
+	@Override
+	protected void createDefaultEditPolicies() {
+		super.createDefaultEditPolicies();
+		removeEditPolicy(EditPolicyRoles.SEMANTIC_ROLE);
+		installEditPolicy(EditPolicyRoles.SEMANTIC_ROLE, new SemanticEditPolicy() {
+
+			/**
+			 * Overridden to prevent deletion of semantic model elements,
+			 * inspired by
+			 * {@code org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.NonSemanticEditPolicy}
+			 * .
+			 */
+			protected Command getSemanticCommand(IEditCommandRequest editRequest) {
+
+				if (editRequest instanceof DestroyElementRequest) {
+					if (getHost() instanceof GraphicalEditPart) {
+						return new ICommandProxy(new DeleteCommand(editRequest.getEditingDomain(),
+								((GraphicalEditPart) getHost()).getPrimaryView()));
+					}
+				}
+				return super.getSemanticCommand(editRequest);
+			}
+		});
+		installEditPolicy(EditPolicyRoles.CREATION_ROLE, new CreationEditPolicy());
 	}
 
 }
