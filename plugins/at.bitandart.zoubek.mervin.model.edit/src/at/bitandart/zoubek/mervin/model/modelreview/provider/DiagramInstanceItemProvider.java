@@ -59,8 +59,7 @@ public class DiagramInstanceItemProvider extends ModelInstanceItemProvider {
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object,
-				getResourceLocator().getImage("full/obj16/DiagramInstance"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/DiagramInstance"));
 	}
 
 	/**
@@ -96,8 +95,7 @@ public class DiagramInstanceItemProvider extends ModelInstanceItemProvider {
 	 * @generated
 	 */
 	@Override
-	protected void collectNewChildDescriptors(
-			Collection<Object> newChildDescriptors, Object object) {
+	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}
 

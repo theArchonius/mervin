@@ -20,11 +20,11 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
- * <ul>
- * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getId <em>Id
- * </em>}</li>
- * </ul>
  * </p>
+ * <ul>
+ * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getId
+ * <em>Id</em>}</li>
+ * </ul>
  *
  * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getComment()
  * @model abstract="true"

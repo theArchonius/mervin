@@ -14,6 +14,7 @@ package at.bitandart.zoubek.mervin.model.modelreview;
 
 import org.eclipse.emf.common.util.EList;
 
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -22,6 +23,7 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getId
  * <em>Id</em>}</li>
@@ -37,8 +39,13 @@ import org.eclipse.emf.ecore.EObject;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getRightPatchSet
  * <em>Right Patch Set</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getSelectedModelComparison
+ * <em>Selected Model Comparison</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getSelectedDiagramComparison
+ * <em>Selected Diagram Comparison</em>}</li>
  * </ul>
- * </p>
  *
  * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelReview()
  * @model
@@ -173,5 +180,72 @@ public interface ModelReview extends EObject {
 	 * @generated
 	 */
 	void setRightPatchSet(PatchSet value);
+
+	/**
+	 * Returns the value of the '<em><b>Selected Model Comparison</b></em>'
+	 * reference. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Selected Model Comparison</em>' reference
+	 * isn't clear, there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Selected Model Comparison</em>' reference.
+	 * @see #isSetSelectedModelComparison()
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelReview_SelectedModelComparison()
+	 * @model unsettable="true" transient="true" changeable="false"
+	 *        derived="true"
+	 * @generated
+	 */
+	Comparison getSelectedModelComparison();
+
+	/**
+	 * Returns whether the value of the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getSelectedModelComparison
+	 * <em>Selected Model Comparison</em>}' reference is set. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return whether the value of the '<em>Selected Model Comparison</em>'
+	 *         reference is set.
+	 * @see #unsetSelectedModelComparison()
+	 * @see #getSelectedModelComparison()
+	 * @see #setSelectedModelComparison(Comparison)
+	 * @generated
+	 */
+	boolean isSetSelectedModelComparison();
+
+	/**
+	 * Returns the value of the '<em><b>Selected Diagram Comparison</b></em>'
+	 * reference. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Selected Diagram Comparison</em>' reference
+	 * isn't clear, there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Selected Diagram Comparison</em>'
+	 *         reference.
+	 * @see #isSetSelectedDiagramComparison()
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelReview_SelectedDiagramComparison()
+	 * @model unsettable="true" transient="true" changeable="false"
+	 *        derived="true"
+	 * @generated
+	 */
+	Comparison getSelectedDiagramComparison();
+
+	/**
+	 * Returns whether the value of the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getSelectedDiagramComparison
+	 * <em>Selected Diagram Comparison</em>}' reference is set. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return whether the value of the '<em>Selected Diagram Comparison</em>'
+	 *         reference is set.
+	 * @see #unsetSelectedDiagramComparison()
+	 * @see #getSelectedDiagramComparison()
+	 * @see #setSelectedDiagramComparison(Comparison)
+	 * @generated
+	 */
+	boolean isSetSelectedDiagramComparison();
 
 } // ModelReview

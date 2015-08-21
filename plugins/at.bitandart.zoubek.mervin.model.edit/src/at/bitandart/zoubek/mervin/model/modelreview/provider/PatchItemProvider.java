@@ -40,9 +40,8 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
  * 
  * @generated
  */
-public class PatchItemProvider extends ItemProviderAdapter implements
-		IEditingDomainItemProvider, IStructuredItemContentProvider,
-		ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
+public class PatchItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider,
+		IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
@@ -81,15 +80,12 @@ public class PatchItemProvider extends ItemProviderAdapter implements
 	 * @generated
 	 */
 	protected void addNewPathPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_Patch_newPath_feature"),
-				getString("_UI_PropertyDescriptor_description",
-						"_UI_Patch_newPath_feature", "_UI_Patch_type"),
-				ModelReviewPackage.Literals.PATCH__NEW_PATH, true, false,
-				false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Patch_newPath_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_Patch_newPath_feature", "_UI_Patch_type"),
+						ModelReviewPackage.Literals.PATCH__NEW_PATH, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -99,15 +95,12 @@ public class PatchItemProvider extends ItemProviderAdapter implements
 	 * @generated
 	 */
 	protected void addOldPathPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_Patch_oldPath_feature"),
-				getString("_UI_PropertyDescriptor_description",
-						"_UI_Patch_oldPath_feature", "_UI_Patch_type"),
-				ModelReviewPackage.Literals.PATCH__OLD_PATH, true, false,
-				false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Patch_oldPath_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_Patch_oldPath_feature", "_UI_Patch_type"),
+						ModelReviewPackage.Literals.PATCH__OLD_PATH, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -117,15 +110,13 @@ public class PatchItemProvider extends ItemProviderAdapter implements
 	 * @generated
 	 */
 	protected void addNewContentPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_Patch_newContent_feature"),
-				getString("_UI_PropertyDescriptor_description",
-						"_UI_Patch_newContent_feature", "_UI_Patch_type"),
-				ModelReviewPackage.Literals.PATCH__NEW_CONTENT, true, false,
-				false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Patch_newContent_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_Patch_newContent_feature",
+								"_UI_Patch_type"),
+						ModelReviewPackage.Literals.PATCH__NEW_CONTENT, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -135,15 +126,13 @@ public class PatchItemProvider extends ItemProviderAdapter implements
 	 * @generated
 	 */
 	protected void addOldContentPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_Patch_oldContent_feature"),
-				getString("_UI_PropertyDescriptor_description",
-						"_UI_Patch_oldContent_feature", "_UI_Patch_type"),
-				ModelReviewPackage.Literals.PATCH__OLD_CONTENT, true, false,
-				false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Patch_oldContent_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_Patch_oldContent_feature",
+								"_UI_Patch_type"),
+						ModelReviewPackage.Literals.PATCH__OLD_CONTENT, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -153,15 +142,13 @@ public class PatchItemProvider extends ItemProviderAdapter implements
 	 * @generated
 	 */
 	protected void addChangeTypePropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_Patch_changeType_feature"),
-				getString("_UI_PropertyDescriptor_description",
-						"_UI_Patch_changeType_feature", "_UI_Patch_type"),
-				ModelReviewPackage.Literals.PATCH__CHANGE_TYPE, true, false,
-				false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Patch_changeType_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_Patch_changeType_feature",
+								"_UI_Patch_type"),
+						ModelReviewPackage.Literals.PATCH__CHANGE_TYPE, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -171,15 +158,11 @@ public class PatchItemProvider extends ItemProviderAdapter implements
 	 * @generated
 	 */
 	protected void addPatchSetPropertyDescriptor(Object object) {
-		itemPropertyDescriptors.add(createItemPropertyDescriptor(
-				((ComposeableAdapterFactory) adapterFactory)
-						.getRootAdapterFactory(),
-				getResourceLocator(),
-				getString("_UI_Patch_patchSet_feature"),
-				getString("_UI_PropertyDescriptor_description",
-						"_UI_Patch_patchSet_feature", "_UI_Patch_type"),
-				ModelReviewPackage.Literals.PATCH__PATCH_SET, true, false,
-				true, null, null, null));
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Patch_patchSet_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_Patch_patchSet_feature", "_UI_Patch_type"),
+						ModelReviewPackage.Literals.PATCH__PATCH_SET, true, false, true, null, null, null));
 	}
 
 	/**
@@ -213,8 +196,7 @@ public class PatchItemProvider extends ItemProviderAdapter implements
 		case ModelReviewPackage.PATCH__NEW_CONTENT:
 		case ModelReviewPackage.PATCH__OLD_CONTENT:
 		case ModelReviewPackage.PATCH__CHANGE_TYPE:
-			fireNotifyChanged(new ViewerNotification(notification,
-					notification.getNotifier(), false, true));
+			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 			return;
 		}
 		super.notifyChanged(notification);
@@ -228,8 +210,7 @@ public class PatchItemProvider extends ItemProviderAdapter implements
 	 * @generated
 	 */
 	@Override
-	protected void collectNewChildDescriptors(
-			Collection<Object> newChildDescriptors, Object object) {
+	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}
 

@@ -28,8 +28,7 @@ public interface ModelReviewFactory extends EFactory {
 	 * 
 	 * @generated
 	 */
-	ModelReviewFactory eINSTANCE = at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewFactoryImpl
-			.init();
+	ModelReviewFactory eINSTANCE = at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewFactoryImpl.init();
 
 	/**
 	 * Returns a new object of class '<em>Model Review</em>'. <!--

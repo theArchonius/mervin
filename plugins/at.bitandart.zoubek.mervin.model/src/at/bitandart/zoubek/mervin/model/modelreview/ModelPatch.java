@@ -18,6 +18,7 @@ package at.bitandart.zoubek.mervin.model.modelreview;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getNewModelInstance
@@ -26,7 +27,6 @@ package at.bitandart.zoubek.mervin.model.modelreview;
  * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getOldModelInstance
  * <em>Old Model Instance</em>}</li>
  * </ul>
- * </p>
  *
  * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelPatch()
  * @model

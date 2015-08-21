@@ -56,27 +56,20 @@ public class ModelReviewExample {
 		// Register the appropriate resource factory to handle all file
 		// extensions.
 		//
-		resourceSet
-				.getResourceFactoryRegistry()
-				.getExtensionToFactoryMap()
-				.put(Resource.Factory.Registry.DEFAULT_EXTENSION,
-						new XMIResourceFactoryImpl());
+		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
+				.put(Resource.Factory.Registry.DEFAULT_EXTENSION, new XMIResourceFactoryImpl());
 
 		// Register the package to ensure it is available during loading.
 		//
-		resourceSet.getPackageRegistry().put(ModelReviewPackage.eNS_URI,
-				ModelReviewPackage.eINSTANCE);
+		resourceSet.getPackageRegistry().put(ModelReviewPackage.eNS_URI, ModelReviewPackage.eINSTANCE);
 
 		// If there are no arguments, emit an appropriate usage message.
 		//
 		if (args.length == 0) {
-			System.out
-					.println("Enter a list of file paths or URIs that have content like this:");
+			System.out.println("Enter a list of file paths or URIs that have content like this:");
 			try {
-				Resource resource = resourceSet.createResource(URI
-						.createURI("http:///My.modelreview"));
-				ModelReview root = ModelReviewFactory.eINSTANCE
-						.createModelReview();
+				Resource resource = resourceSet.createResource(URI.createURI("http:///My.modelreview"));
+				ModelReview root = ModelReviewFactory.eINSTANCE.createModelReview();
 				resource.getContents().add(root);
 				resource.save(System.out, null);
 			} catch (IOException exception) {
@@ -92,8 +85,7 @@ public class ModelReviewExample {
 				// Otherwise, it's directly treated as a URL.
 				//
 				File file = new File(args[i]);
-				URI uri = file.isFile() ? URI.createFileURI(file
-						.getAbsolutePath()) : URI.createURI(args[i]);
+				URI uri = file.isFile() ? URI.createFileURI(file.getAbsolutePath()) : URI.createURI(args[i]);
 
 				try {
 					// Demand load resource for this file.
@@ -104,8 +96,7 @@ public class ModelReviewExample {
 					// Validate the contents of the loaded resource.
 					//
 					for (EObject eObject : resource.getContents()) {
-						Diagnostic diagnostic = Diagnostician.INSTANCE
-								.validate(eObject);
+						Diagnostic diagnostic = Diagnostician.INSTANCE.validate(eObject);
 						if (diagnostic.getSeverity() != Diagnostic.OK) {
 							printDiagnostic(diagnostic, "");
 						}

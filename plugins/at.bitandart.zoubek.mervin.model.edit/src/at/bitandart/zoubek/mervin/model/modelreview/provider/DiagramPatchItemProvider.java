@@ -67,16 +67,11 @@ public class DiagramPatchItemProvider extends PatchItemProvider {
 	 */
 	protected void addNewDiagramInstancePropertyDescriptor(Object object) {
 		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(
-						((ComposeableAdapterFactory) adapterFactory)
-								.getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_DiagramPatch_newDiagramInstance_feature"),
-						getString("_UI_PropertyDescriptor_description",
-								"_UI_DiagramPatch_newDiagramInstance_feature",
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_DiagramPatch_newDiagramInstance_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_DiagramPatch_newDiagramInstance_feature",
 								"_UI_DiagramPatch_type"),
-						ModelReviewPackage.Literals.DIAGRAM_PATCH__NEW_DIAGRAM_INSTANCE,
-						true, false, true, null, null, null));
+				ModelReviewPackage.Literals.DIAGRAM_PATCH__NEW_DIAGRAM_INSTANCE, true, false, true, null, null, null));
 	}
 
 	/**
@@ -87,16 +82,11 @@ public class DiagramPatchItemProvider extends PatchItemProvider {
 	 */
 	protected void addOldDiagramInstancePropertyDescriptor(Object object) {
 		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(
-						((ComposeableAdapterFactory) adapterFactory)
-								.getRootAdapterFactory(),
-						getResourceLocator(),
-						getString("_UI_DiagramPatch_oldDiagramInstance_feature"),
-						getString("_UI_PropertyDescriptor_description",
-								"_UI_DiagramPatch_oldDiagramInstance_feature",
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_DiagramPatch_oldDiagramInstance_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_DiagramPatch_oldDiagramInstance_feature",
 								"_UI_DiagramPatch_type"),
-						ModelReviewPackage.Literals.DIAGRAM_PATCH__OLD_DIAGRAM_INSTANCE,
-						true, false, true, null, null, null));
+				ModelReviewPackage.Literals.DIAGRAM_PATCH__OLD_DIAGRAM_INSTANCE, true, false, true, null, null, null));
 	}
 
 	/**
@@ -107,8 +97,7 @@ public class DiagramPatchItemProvider extends PatchItemProvider {
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object,
-				getResourceLocator().getImage("full/obj16/DiagramPatch"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/DiagramPatch"));
 	}
 
 	/**
@@ -146,8 +135,7 @@ public class DiagramPatchItemProvider extends PatchItemProvider {
 	 * @generated
 	 */
 	@Override
-	protected void collectNewChildDescriptors(
-			Collection<Object> newChildDescriptors, Object object) {
+	protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
 		super.collectNewChildDescriptors(newChildDescriptors, object);
 	}
 

@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  * <em><b>Model Instance</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelInstanceImpl#getObjects
@@ -35,12 +36,10 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelInstanceImpl#getRootPackages
  * <em>Root Packages</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
-public class ModelInstanceImpl extends MinimalEObjectImpl.Container implements
-		ModelInstance {
+public class ModelInstanceImpl extends MinimalEObjectImpl.Container implements ModelInstance {
 	/**
 	 * The cached value of the '{@link #getObjects() <em>Objects</em>}'
 	 * reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -52,9 +51,8 @@ public class ModelInstanceImpl extends MinimalEObjectImpl.Container implements
 	protected EList<EObject> objects;
 
 	/**
-	 * The cached value of the '{@link #getRootPackages()
-	 * <em>Root Packages</em>}' reference list. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
+	 * The cached value of the '{@link #getRootPackages() <em>Root Packages</em>
+	 * }' reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @see #getRootPackages()
 	 * @generated
@@ -101,8 +99,8 @@ public class ModelInstanceImpl extends MinimalEObjectImpl.Container implements
 	 */
 	public EList<EPackage> getRootPackages() {
 		if (rootPackages == null) {
-			rootPackages = new EObjectResolvingEList<EPackage>(EPackage.class,
-					this, ModelReviewPackage.MODEL_INSTANCE__ROOT_PACKAGES);
+			rootPackages = new EObjectResolvingEList<EPackage>(EPackage.class, this,
+					ModelReviewPackage.MODEL_INSTANCE__ROOT_PACKAGES);
 		}
 		return rootPackages;
 	}
