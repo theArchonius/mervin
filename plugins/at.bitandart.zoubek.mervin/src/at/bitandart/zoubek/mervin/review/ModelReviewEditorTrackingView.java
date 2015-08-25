@@ -45,8 +45,7 @@ public abstract class ModelReviewEditorTrackingView {
 	}
 
 	@Inject
-	public void setActiveModelReviewPart(
-			@Named(IServiceConstants.ACTIVE_PART) @Optional MPart part,
+	public void setActiveModelReviewPart(@Named(IServiceConstants.ACTIVE_PART) @Optional MPart part,
 			EModelService modelService, EPartService partService, MWindow window) {
 
 		if (part != null && part.getTags().contains("View")) {
@@ -54,8 +53,7 @@ public abstract class ModelReviewEditorTrackingView {
 			// new active part is a view - the active model review part might be
 			// left open so do not reset it unless it has been closed
 
-			if (activeModelReviewPart != null
-					&& !activeModelReviewPart.isToBeRendered()) {
+			if (activeModelReviewPart != null && !activeModelReviewPart.isToBeRendered()) {
 
 				// part has been closed
 				activeModelReviewPart = null;
@@ -63,10 +61,8 @@ public abstract class ModelReviewEditorTrackingView {
 
 			}
 
-		} else if (part != null
-				&& part.getTransientData().containsKey(
-						DiagramDiffView.DATA_TRANSIENT_MODEL_REVIEW)) {
-			if(!part.equals(activeModelReviewPart)){
+		} else if (part != null && part.getTransientData().containsKey(DiagramDiffView.DATA_TRANSIENT_MODEL_REVIEW)) {
+			if (!part.equals(activeModelReviewPart)) {
 				// part contains a model review
 				activeModelReviewPart = part;
 				updateValues();
@@ -90,11 +86,9 @@ public abstract class ModelReviewEditorTrackingView {
 		// obtain the model review from the last active part that contains a
 		// model review
 		if (activeModelReviewPart != null
-				&& activeModelReviewPart.getTransientData().containsKey(
-						DiagramDiffView.DATA_TRANSIENT_MODEL_REVIEW)) {
+				&& activeModelReviewPart.getTransientData().containsKey(DiagramDiffView.DATA_TRANSIENT_MODEL_REVIEW)) {
 
-			Object object = activeModelReviewPart.getTransientData().get(
-					DiagramDiffView.DATA_TRANSIENT_MODEL_REVIEW);
+			Object object = activeModelReviewPart.getTransientData().get(DiagramDiffView.DATA_TRANSIENT_MODEL_REVIEW);
 
 			if (object instanceof ModelReview) {
 				return (ModelReview) object;
@@ -102,6 +96,10 @@ public abstract class ModelReviewEditorTrackingView {
 		}
 
 		return null;
+	}
+
+	public MPart getActiveModelReviewPart() {
+		return activeModelReviewPart;
 	}
 
 }
