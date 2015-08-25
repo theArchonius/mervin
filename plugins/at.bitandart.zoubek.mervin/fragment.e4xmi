@@ -43,6 +43,10 @@
       <tags>View</tags>
       <tags>categoryTag:Mervin</tags>
     </elements>
+    <elements xsi:type="basic:PartDescriptor" xmi:id="_Pb5oEEo8EeWfAoXJ8X3mpw" elementId="at.bitandart.zoubek.mervin.partdescriptor.debug.diff.diagram" label="DiagramDiff Debug" category="Mervin" closeable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.review.DiagramDiffDebugView">
+      <tags>View</tags>
+      <tags>categoryTag:Mervin</tags>
+    </elements>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_hVAaUP1eEeSbdbEoUfEbuQ" featurename="snippets" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="advanced:Perspective" xmi:id="_2b3p4P1fEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.perspective" selectedElement="_q5Z20P1gEeSbdbEoUfEbuQ" label="Mervin">

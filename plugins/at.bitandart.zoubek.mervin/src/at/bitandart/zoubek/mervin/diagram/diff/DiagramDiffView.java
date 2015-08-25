@@ -15,6 +15,8 @@ import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
@@ -26,7 +28,9 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditDomain;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.GraphicalViewer;
+import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.ui.parts.GraphicalViewerKeyHandler;
 import org.eclipse.gmf.runtime.common.ui.action.ActionManager;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
@@ -40,10 +44,12 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 
 /**
+ * <p>
  * A View that visualizes the difference between a set of diagram elements
  * within two patch sets of a {@link ModelReview} instance. The
  * {@link ModelReview} instance must be provided in the transient data map (
@@ -51,13 +57,27 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
  * {@link #DATA_TRANSIENT_MODEL_REVIEW}. The {@link ModelReview} instance can be
  * obtained or modified by other views using the transient data map or using
  * {@link #getModelReview()} and {@link #setModelReview(ModelReview)}.
+ * </p>
+ * <p>
+ * This class adapts to the following classes:
+ * <ul>
+ * <li>{@link ModelReview} - the loaded model review instance</li>
+ * <li>{@link Diagram} - the diagram instance of the diff view</li>
+ * <li>{@link RootEditPart} - the {@link RootEditPart} of the graphical viewer
+ * </li>
+ * <li>{@link IFigure} - the root {@link IFigure} of the graphical viewer</li>
+ * </ul>
+ * </p>
+ * 
  * 
  * @author Florian Zoubek
  *
  */
-public class DiagramDiffView {
+public class DiagramDiffView implements IAdaptable {
 
 	private Composite mainPanel;
+
+	private GraphicalViewer viewer;
 
 	private Control viewerControl;
 
@@ -91,34 +111,38 @@ public class DiagramDiffView {
 		mainPanel = new Composite(parent, SWT.NONE);
 		mainPanel.setLayout(new GridLayout());
 		// mainPanel.setLayout(new FillLayout());
+		if (getModelReview() != null) {
 
-		ResourceSet resourceSet = new ResourceSetImpl();
-		final Resource resource = new ResourceImpl(URI.createURI("mervin-model-review-resource.resource"));
-		resourceSet.getResources().add(resource);
-		// Diagram diagram = ViewService.getInstance().createDiagram(new
-		// EObjectAdapter(getModelReview()),
-		// PART_DESCRIPTOR_ID, new PreferencesHint(PART_DESCRIPTOR_ID));
-		editingDomain = TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain(resourceSet);
+			ResourceSet resourceSet = new ResourceSetImpl();
+			final Resource resource = new ResourceImpl(URI.createURI("mervin-model-review-resource.resource"));
+			resourceSet.getResources().add(resource);
+			// Diagram diagram = ViewService.getInstance().createDiagram(new
+			// EObjectAdapter(getModelReview()),
+			// PART_DESCRIPTOR_ID, new PreferencesHint(PART_DESCRIPTOR_ID));
+			editingDomain = TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain(resourceSet);
 
-		GraphicalViewer viewer = new DiagramDiffViewer();
-		viewerControl = viewer.createControl(mainPanel);
-		viewerControl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+			viewer = new DiagramDiffViewer();
+			viewerControl = viewer.createControl(mainPanel);
+			viewerControl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		viewer.setKeyHandler(new GraphicalViewerKeyHandler(viewer));
-		viewer.setEditPartFactory(EditPartService.getInstance());
-		viewer.setEditDomain(createEditDomain());
-		viewerControl.setBackground(parent.getBackground());
+			viewer.setKeyHandler(new GraphicalViewerKeyHandler(viewer));
+			viewer.setEditPartFactory(EditPartService.getInstance());
+			viewer.setEditDomain(createEditDomain());
+			viewerControl.setBackground(parent.getBackground());
 
-		final Diagram diagram = diagramDiffViewService.createAndConnectViewModel(getModelReview(),
-				viewer.getEditDomain(), editingDomain, new PreferencesHint(PART_DESCRIPTOR_ID));
-		editingDomain.getCommandStack().execute(new RecordingCommand(editingDomain) {
-			protected void doExecute() {
-				resource.getContents().add(diagram);
-			}
-		});
-		viewer.setRootEditPart(EditPartService.getInstance().createRootEditPart(diagram));
-		viewer.setContents(diagram);
-
+			final Diagram diagram = diagramDiffViewService.createAndConnectViewModel(getModelReview(),
+					viewer.getEditDomain(), editingDomain, new PreferencesHint(PART_DESCRIPTOR_ID));
+			editingDomain.getCommandStack().execute(new RecordingCommand(editingDomain) {
+				protected void doExecute() {
+					resource.getContents().add(diagram);
+				}
+			});
+			viewer.setRootEditPart(EditPartService.getInstance().createRootEditPart(diagram));
+			viewer.setContents(diagram);
+		} else {
+			Label infoLabel = new Label(mainPanel, SWT.CENTER);
+			infoLabel.setText("Could not restore review - close this view and try reloading the review");
+		}
 	}
 
 	@PreDestroy
@@ -128,7 +152,11 @@ public class DiagramDiffView {
 
 	@Focus
 	public void onFocus() {
-		viewerControl.setFocus();
+		if (viewerControl != null) {
+			viewerControl.setFocus();
+		} else {
+			mainPanel.setFocus();
+		}
 		selectionService.setSelection(getModelReview());
 	}
 
@@ -191,6 +219,29 @@ public class DiagramDiffView {
 			this.actionManager = actionManager;
 		}
 
+	}
+
+	@Override
+	public <T> T getAdapter(Class<T> adapterType) {
+
+		if (adapterType == ModelReview.class) {
+			return adapterType.cast(getModelReview());
+
+		} else if (adapterType == Diagram.class) {
+			return adapterType.cast(viewer.getContents().getModel());
+
+		} else if (adapterType == RootEditPart.class) {
+			return adapterType.cast(viewer.getRootEditPart());
+
+		} else if (adapterType == IFigure.class) {
+
+			RootEditPart rootEditPart = viewer.getRootEditPart();
+			if (rootEditPart instanceof GraphicalEditPart) {
+				return adapterType.cast(((GraphicalEditPart) rootEditPart).getFigure());
+			}
+
+		}
+		return null;
 	}
 
 }
