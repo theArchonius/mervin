@@ -23,7 +23,6 @@ import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
@@ -39,6 +38,7 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
 import org.eclipse.gmf.runtime.emf.commands.core.command.EditingDomainUndoContext;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.papyrus.infra.gmfdiag.css.helper.CSSHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -114,7 +114,9 @@ public class DiagramDiffView implements IAdaptable {
 		if (getModelReview() != null) {
 
 			ResourceSet resourceSet = new ResourceSetImpl();
-			final Resource resource = new ResourceImpl(URI.createURI("mervin-model-review-resource.resource"));
+			CSSHelper.installCSSSupport(resourceSet);
+			final Resource resource = resourceSet
+					.createResource(URI.createURI("mervin-model-review-resource.resource.notation"));
 			resourceSet.getResources().add(resource);
 			// Diagram diagram = ViewService.getInstance().createDiagram(new
 			// EObjectAdapter(getModelReview()),

@@ -10,16 +10,14 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.diagram.diff.parts;
 
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.RectangleFigure;
-import org.eclipse.draw2d.ScrollPane;
-import org.eclipse.draw2d.ToolbarLayout;
-import org.eclipse.draw2d.XYLayout;
+import org.eclipse.draw2d.LayoutAnimator;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
+import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * An {@link EditPart} that provides a view on a diagram.
@@ -27,29 +25,18 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
  * @author Florian Zoubek
  *
  */
-public class DiagramEditPart extends GraphicalEditPart {
+public class DiagramEditPart extends ShapeCompartmentEditPart {
 
-	public DiagramEditPart(EObject model) {
+	public DiagramEditPart(View model) {
 		super(model);
 	}
 
-	private IFigure contentPane;
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#createFigure()
-	 */
 	@Override
 	protected IFigure createFigure() {
-		IFigure rectFigure = new RectangleFigure();
-		ToolbarLayout fillLayout = new ToolbarLayout();
-		fillLayout.setStretchMinorAxis(true);
-		rectFigure.setLayoutManager(fillLayout);
-		contentPane = new ScrollPane();
-		contentPane.setLayoutManager(new XYLayout());
-		rectFigure.add(contentPane);
-		return rectFigure;
+		DiagramContainerFigure figure = new DiagramContainerFigure(getCompartmentName(), getMapMode());
+		figure.getContentPane().addLayoutListener(LayoutAnimator.getDefault());
+		figure.setBorder(null);
+		return figure;
 	}
 
 	@Override
@@ -57,12 +44,22 @@ public class DiagramEditPart extends GraphicalEditPart {
 
 		IFigure figure = getFigure();
 		// TODO Replace when workspace layout is implemented
-		figure.getParent().setConstraint(figure, new Rectangle(10, 10, 1000, 2000));
+		figure.getParent().setConstraint(figure, new Rectangle(10, 10, 800, 300));
 		super.refreshVisuals();
 	}
 
 	@Override
-	public IFigure getContentPane() {
-		return contentPane;
+	public String getCompartmentName() {
+		EObject element = getNotationView().getElement();
+		if (element instanceof Diagram) {
+			return ((Diagram) element).getName();
+		}
+		return super.getCompartmentName();
+	}
+
+	@Override
+	protected void setRatio(Double ratio) {
+		// ratio is not supported by parent figures with XYLayout layout
+		// managers
 	}
 }
