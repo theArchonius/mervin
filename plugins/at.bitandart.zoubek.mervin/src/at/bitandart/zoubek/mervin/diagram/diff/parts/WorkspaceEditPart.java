@@ -19,6 +19,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CreationEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.SemanticEditPolicy;
@@ -34,7 +35,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
  * @author Florian Zoubek
  *
  */
-public class WorkspaceEditPart extends GraphicalEditPart {
+public class WorkspaceEditPart extends GraphicalEditPart implements IPrimaryEditPart {
 
 	public WorkspaceEditPart(EObject model) {
 		super(model);

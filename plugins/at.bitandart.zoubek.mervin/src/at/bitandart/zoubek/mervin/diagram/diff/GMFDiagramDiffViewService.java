@@ -13,6 +13,9 @@ package at.bitandart.zoubek.mervin.diagram.diff;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
@@ -22,21 +25,21 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
-import org.eclipse.gmf.runtime.diagram.core.commands.AddCommand;
 import org.eclipse.gmf.runtime.diagram.core.commands.CreateDiagramCommand;
 import org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.View;
 
@@ -192,32 +195,91 @@ public class GMFDiagramDiffViewService {
 				final View childView = (View) workspaceChild;
 				final Diagram diagram = (Diagram) childView.getElement();
 
-				// set a model hint for generated GMF editpart provider
-				transactionalEditingDomain.getCommandStack().execute(new RecordingCommand(transactionalEditingDomain) {
-					protected void doExecute() {
-						if (childView.getEAnnotation("Shortcut") == null) {
-							EAnnotation eAnnotation = EcoreFactory.eINSTANCE.createEAnnotation();
-							eAnnotation.setSource("Shortcut");
-							eAnnotation.getDetails().put("modelID", diagram.getType());
-							childView.getEAnnotations().add(eAnnotation);
-						}
-					}
-				});
-
 				CompositeCommand compositeCommand = new CompositeCommand("");
 				/*
 				 * TODO return only context children. For now, return all
 				 * visible child views
 				 */
-				List<Object> childrenCopy = new LinkedList<Object>(
-						EcoreUtil.copyAll((List<?>) diagram.getVisibleChildren()));
-				for (Object diagramChild : childrenCopy) {
-					if (diagramChild instanceof View) {
-						compositeCommand.add(new AddCommand(transactionalEditingDomain, new EObjectAdapter(childView),
-								new EObjectAdapter((View) diagramChild)));
-					}
-				}
+				List<Object> childrenAndEdges = new LinkedList<Object>();
+				childrenAndEdges.addAll((List<?>) diagram.getEdges());
+				childrenAndEdges.addAll((List<?>) diagram.getVisibleChildren());
+				List<Object> childrenCopy = new LinkedList<Object>(EcoreUtil.copyAll(childrenAndEdges));
+				compositeCommand.add(new AddDiagramEdgesAndNodesCommand(transactionalEditingDomain, workspaceDiagram,
+						(View) childView, filterEdges(childrenCopy), filterNonEdges(childrenCopy), diagram.getType()));
 				executeCommand(compositeCommand.reduce(), editDomain);
+			}
+		}
+	}
+
+	private List<Edge> filterEdges(List<Object> elements) {
+		List<Edge> edges = new LinkedList<Edge>();
+		for (Object child : elements) {
+			if (child instanceof Edge) {
+				edges.add((Edge) child);
+			}
+		}
+		return edges;
+	}
+
+	private List<View> filterNonEdges(List<Object> elements) {
+
+		List<View> nodes = new LinkedList<View>();
+		for (Object child : elements) {
+			if (child instanceof View && !(child instanceof Edge)) {
+				nodes.add((View) child);
+			}
+		}
+		return nodes;
+	}
+
+	private class AddDiagramEdgesAndNodesCommand extends AbstractTransactionalCommand {
+
+		private View parentView;
+		private Diagram diagram;
+		private String originalDiagramType;
+		private List<Edge> edges;
+		private List<View> nodes;
+
+		public AddDiagramEdgesAndNodesCommand(TransactionalEditingDomain domain, Diagram diagram, View parentView,
+				List<Edge> edges, List<View> nodes, String originalDiagramType) {
+			super(domain, "", null);
+			this.parentView = parentView;
+			this.diagram = diagram;
+			this.edges = edges;
+			this.nodes = nodes;
+			this.originalDiagramType = originalDiagramType;
+		}
+
+		@Override
+		protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
+				throws ExecutionException {
+
+			for (Edge edge : edges) {
+				diagram.insertEdge(edge);
+				addMissingModelHint(edge);
+			}
+
+			for (View node : nodes) {
+				parentView.insertChild(node);
+				addMissingModelHint(node);
+			}
+
+			return CommandResult.newOKCommandResult();
+		}
+
+		/**
+		 * sets a model hint for generated GMF editpart provider if it does not
+		 * exist.
+		 * 
+		 * @param view
+		 *            the view to add the model hint
+		 */
+		private void addMissingModelHint(View view) {
+			if (view.getEAnnotation("Shortcut") == null) {
+				EAnnotation eAnnotation = EcoreFactory.eINSTANCE.createEAnnotation();
+				eAnnotation.setSource("Shortcut");
+				eAnnotation.getDetails().put("modelID", originalDiagramType);
+				view.getEAnnotations().add(eAnnotation);
 			}
 		}
 	}
