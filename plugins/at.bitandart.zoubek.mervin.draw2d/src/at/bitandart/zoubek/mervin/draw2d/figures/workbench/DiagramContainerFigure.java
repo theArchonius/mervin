@@ -22,6 +22,7 @@ import org.eclipse.draw2d.ScrollPaneLayout;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemsAwareFreeFormLayer;
 import org.eclipse.gmf.runtime.diagram.ui.layout.FreeFormLayoutEx;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScalableFreeformLayeredPane;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.tooling.runtime.linklf.LinkLFShapeCompartmentEditPart;
@@ -53,6 +54,8 @@ public class DiagramContainerFigure extends LinkLFShapeCompartmentEditPart.Shape
 		IFigure primaryLayer = new BorderItemsAwareFreeFormLayer();
 		primaryLayer.setLayoutManager(new FreeFormLayoutEx());
 		layeredPane.add(primaryLayer, LayerConstants.PRIMARY_LAYER);
+		IFigure connectionlayer = new ConnectionLayerEx();
+		layeredPane.add(connectionlayer, LayerConstants.CONNECTION_LAYER);
 
 		FreeformLayer overlayLayer = new FreeformLayer();
 		overlayLayer.setLayoutManager(new DelegatingLayout());
