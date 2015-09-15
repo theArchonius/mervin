@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg id="svg2" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" height="12.619mm" width="63.419mm" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="0 0 224.71429 44.714288">
+ <metadata id="metadata7">
+  <rdf:RDF>
+   <cc:Work rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:title/>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <g id="layer1" transform="translate(-25.857 -25.362)" stroke="#444" fill="none">
+  <g>
+   <rect id="rect4136" ry="0" height="14.973" width="14.973" stroke-linecap="round" y="38.59" x="42.371" stroke-width="1.0271"/>
+   <g stroke-width="1.0271">
+    <path id="path4160" d="m44.371 44.096v-3.5059h3.4746"/>
+    <path id="rect4138" d="m44.358 40.596 4.6444 4.6444"/>
+    <path id="path4141" d="m55.344 48.088v3.4746h-3.5059m-1.1298-4.6432 4.6444 4.6444"/>
+    <path id="path4143" d="m51.869 40.59h3.4746v3.5059m-4.6471 1.1436 4.6444-4.6444"/>
+    <path id="path4145" d="m47.877 51.563h-3.5059v-3.4746m0.0158 3.4717 4.6444-4.6444"/>
+   </g>
+   <rect id="rect4179" ry="0" height="14.973" width="14.973" stroke-linecap="round" y="38.59" x="74.371" stroke-width="1.0271"/>
+   <g>
+    <path id="path4181" d="m83.357 51.092v-3.5154h3.5154m-3.5276 0.0054 4.5219 4.5219"/>
+    <path id="path4184" d="m80.357 41.092v3.4841h-3.4841m-1.0293-4.5207 4.5219 4.5219"/>
+    <path id="path4186" d="m76.873 47.576h3.4841v3.5466m-4.5245 0.98014 4.5219-4.5219"/>
+    <path id="path4188" d="m86.873 44.576h-3.5154v-3.4841m0.01542 3.4813 4.5219-4.5219"/>
+   </g>
+   <rect id="rect4175-5" ry="0" height="15" width="15" stroke-linecap="round" y="38.576" x="106.36"/>
+  </g>
+  <path id="path4179-7" d="m108.86 42.076h10" stroke-width="2.027"/>
+  <rect id="rect4177-0" ry="0" height="15" width="14.986" stroke-linecap="round" y="38.576" x="138.37"/>
+  <rect id="rect4181-6" ry="0" height="9" width="9" stroke-linecap="round" y="41.576" x="141.36"/>
+  <path id="path4183-0" d="m141.1 44.576h9.5211"/>
+ </g>
+</svg>
