@@ -1,6 +1,7 @@
 # Eclipse
 
 plugins/*/bin/
+plugins/*/.settings/com.chronon.sb.browser.launcher.prefs
 
 # Mac OS
 *.DS_Store
