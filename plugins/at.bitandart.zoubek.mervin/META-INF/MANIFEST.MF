@@ -55,7 +55,8 @@ Require-Bundle: org.eclipse.swt,
  org.eclipse.papyrus.uml.diagram.stereotype.edition;bundle-version="1.1.2",
  org.eclipse.papyrus.uml.diagram.symbols;bundle-version="1.1.2",
  org.eclipse.papyrus.uml.diagram.timing;bundle-version="1.1.2",
- org.eclipse.papyrus.uml.diagram.usecase;bundle-version="1.1.2"
+ org.eclipse.papyrus.uml.diagram.usecase;bundle-version="1.1.2",
+ org.eclipse.gmf.tooling.runtime
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: at.bitandart.zoubek.mervin.util.vis
