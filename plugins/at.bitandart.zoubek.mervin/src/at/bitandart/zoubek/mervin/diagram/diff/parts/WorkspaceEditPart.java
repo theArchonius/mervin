@@ -10,22 +10,27 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.diagram.diff.parts;
 
-import org.eclipse.draw2d.FreeformLayer;
-import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CreationEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.SemanticEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
+import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
+import org.eclipse.gmf.runtime.notation.View;
 
+import at.bitandart.zoubek.mervin.diagram.diff.figures.workbench.DiffWorkbench;
+import at.bitandart.zoubek.mervin.diagram.diff.figures.workbench.IDiffWorkbench;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 
 /**
@@ -35,23 +40,16 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
  * @author Florian Zoubek
  *
  */
-public class WorkspaceEditPart extends GraphicalEditPart implements IPrimaryEditPart {
+public class WorkspaceEditPart extends ShapeNodeEditPart implements IPrimaryEditPart {
 
-	public WorkspaceEditPart(EObject model) {
+	public WorkspaceEditPart(View model) {
 		super(model);
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.gef.editparts.AbstractGraphicalEditPart#createFigure()
-	 */
 	@Override
-	protected IFigure createFigure() {
-		FreeformLayer panel = new FreeformLayer();
-		panel.setLayoutManager(new FreeformLayout());
-		return panel;
+	protected void refreshVisuals() {
+		super.refreshVisuals();
 	}
 
 	public ModelReview getModelReview() {
@@ -61,6 +59,14 @@ public class WorkspaceEditPart extends GraphicalEditPart implements IPrimaryEdit
 		}
 		return null;
 
+	}
+
+	@Override
+	public IFigure getContentPane() {
+		if (figure instanceof IDiffWorkbench) {
+			return ((IDiffWorkbench) figure).getContentArea();
+		}
+		return figure;
 	}
 
 	@Override
@@ -87,6 +93,12 @@ public class WorkspaceEditPart extends GraphicalEditPart implements IPrimaryEdit
 			}
 		});
 		installEditPolicy(EditPolicyRoles.CREATION_ROLE, new CreationEditPolicy());
+		installEditPolicy(EditPolicy.LAYOUT_ROLE, new XYLayoutEditPolicy());
 	}
 
+	@Override
+	protected NodeFigure createNodeFigure() {
+		DiffWorkbench figure = new DiffWorkbench(getMapMode());
+		return figure;
+	}
 }

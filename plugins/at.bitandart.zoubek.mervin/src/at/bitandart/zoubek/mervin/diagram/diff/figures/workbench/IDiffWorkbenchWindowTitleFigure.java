@@ -8,19 +8,26 @@
  * Contributors:
  *    Florian Zoubek - initial API and implementation
  *******************************************************************************/
-package at.bitandart.zoubek.mervin.diagram.diff.parts;
+package at.bitandart.zoubek.mervin.diagram.diff.figures.workbench;
 
-import org.eclipse.gmf.runtime.diagram.ui.figures.ShapeCompartmentFigure;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.draw2d.IFigure;
 
 /**
  * @author Florian Zoubek
  *
  */
-public class DiagramContainerFigure extends ShapeCompartmentFigure {
+public interface IDiffWorkbenchWindowTitleFigure extends IFigure {
 
-	public DiagramContainerFigure(String compartmentTitle, IMapMode mm) {
-		super(compartmentTitle, mm);
-	}
+	/**
+	 * @return the associated {@link IDiffWorkbenchContainer}
+	 */
+	public IDiffWorkbenchContainer getContainer();
 
+	/**
+	 * Returns the figure which should be used to attach child figures of this
+	 * figure.
+	 * 
+	 * @return the content pane figure.
+	 */
+	public IFigure getContentPane();
 }
