@@ -11,12 +11,21 @@
 package at.bitandart.zoubek.mervin.draw2d.figures.workbench;
 
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.Layer;
+import org.eclipse.draw2d.LayeredPane;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.ScrollPane;
 import org.eclipse.draw2d.ScrollPaneLayout;
+import org.eclipse.gef.LayerConstants;
+import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemsAwareFreeFormLayer;
+import org.eclipse.gmf.runtime.diagram.ui.layout.FreeFormLayoutEx;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScalableFreeformLayeredPane;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.tooling.runtime.linklf.LinkLFShapeCompartmentEditPart;
+
+import at.bitandart.zoubek.mervin.draw2d.MervinLayerConstants;
 
 /**
  * An {@link IDiffWorkbenchContainer} implementation that shows the contents of
@@ -37,6 +46,15 @@ public class DiagramContainerFigure extends LinkLFShapeCompartmentEditPart.Shape
 		remove(getTextPane());
 		ScrollPane scrollPane = getScrollPane();
 		scrollPane.setLayoutManager(new ScrollPaneLayout());
+
+		// TODO find some better way than using an internal GMF class
+		ScalableFreeformLayeredPane layeredPane = new ScalableFreeformLayeredPane(mm);
+		IFigure primaryLayer = new BorderItemsAwareFreeFormLayer();
+		primaryLayer.setLayoutManager(new FreeFormLayoutEx());
+		layeredPane.add(primaryLayer, LayerConstants.PRIMARY_LAYER);
+		layeredPane.add(new FreeformLayer(), MervinLayerConstants.DIFF_HIGHLIGHT_LAYER);
+		scrollPane.setContents(layeredPane);
+
 		setBorder(new LineBorder(ColorConstants.lightGray, 2));
 	}
 
@@ -54,6 +72,23 @@ public class DiagramContainerFigure extends LinkLFShapeCompartmentEditPart.Shape
 	@Override
 	public IFigure getToolbarArea() {
 		// TODO implement toolbar area
+		return null;
+	}
+
+	@Override
+	public IFigure getContentPane() {
+		IFigure contents = getScrollPane().getContents();
+		if (contents instanceof LayeredPane) {
+			return ((LayeredPane) contents).getLayer(LayerConstants.PRIMARY_LAYER);
+		}
+		return super.getContentPane();
+	}
+
+	public Layer getLayer(Object key) {
+		IFigure contents = getScrollPane().getContents();
+		if (contents instanceof LayeredPane) {
+			return ((LayeredPane) contents).getLayer(key);
+		}
 		return null;
 	}
 

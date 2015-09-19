@@ -23,6 +23,8 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.notation.MeasurementUnit;
 
+import at.bitandart.zoubek.mervin.draw2d.MervinLayerConstants;
+
 /**
  * A {@link ScalableFreeformRootEditPart} that contains the default layers and
  * an additional {@link #DIFF_HIGHLIGHT_LAYER} on top.
@@ -36,12 +38,10 @@ public class DiagramDiffRootEditPart extends DiagramRootEditPart {
 		super(measurementUnit);
 	}
 
-	public static final String DIFF_HIGHLIGHT_LAYER = "at.bitandart.zoubek.mervin.diagram.diff.highlight.layer";
-
 	@Override
 	protected void createLayers(LayeredPane layeredPane) {
 		super.createLayers(layeredPane);
-		layeredPane.add(new FreeformLayer(), DIFF_HIGHLIGHT_LAYER);
+		layeredPane.add(new FreeformLayer(), MervinLayerConstants.DIFF_HIGHLIGHT_LAYER);
 		ConstrainedToolbarLayout layout = new ConstrainedToolbarLayout();
 		layout.setStretchMinorAxis(false);
 		layout.setStretchMajorAxis(false);

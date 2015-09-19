@@ -11,6 +11,7 @@
 package at.bitandart.zoubek.mervin.diagram.diff.parts;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.Layer;
 import org.eclipse.draw2d.LayoutAnimator;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
@@ -20,17 +21,19 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.LayerConstants;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ResizableEditPolicyEx;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.gmf.tooling.runtime.linklf.LinkLFShapeCompartmentEditPart;
 
+import at.bitandart.zoubek.mervin.draw2d.MervinLayerConstants;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.DiagramContainerFigure;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbench;
+import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbench.DisplayMode;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbenchContainer;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IWorkbenchListener;
-import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbench.DisplayMode;
 
 /**
  * An {@link EditPart} that provides a view on a diagram.
@@ -72,6 +75,28 @@ public class DiagramEditPart extends LinkLFShapeCompartmentEditPart {
 			}
 		}
 		refreshBounds();
+	}
+
+	@Override
+	protected void addChildVisual(EditPart childEditPart, int index) {
+
+		IFigure figure = getFigure();
+		if (childEditPart instanceof IOverlayEditPart && childEditPart instanceof GraphicalEditPart
+				&& figure instanceof DiagramContainerFigure) {
+			DiagramContainerFigure containerFigure = (DiagramContainerFigure) figure;
+			Layer layer = containerFigure.getLayer(MervinLayerConstants.DIFF_HIGHLIGHT_LAYER);
+			layer.add(((GraphicalEditPart) childEditPart).getFigure(), toOverlayIndex(index, containerFigure));
+		} else {
+			super.addChildVisual(childEditPart, index);
+		}
+
+	}
+
+	private int toOverlayIndex(int index, DiagramContainerFigure figure) {
+
+		Layer layer = figure.getLayer(LayerConstants.PRIMARY_LAYER);
+		int numPrimaryChildren = layer.getChildren().size();
+		return Math.max(index - numPrimaryChildren, 0);
 	}
 
 	/**
