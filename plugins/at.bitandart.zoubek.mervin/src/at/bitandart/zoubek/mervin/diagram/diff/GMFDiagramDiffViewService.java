@@ -10,8 +10,11 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.diagram.diff;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -20,11 +23,16 @@ import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.AttributeChange;
+import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.util.EContentAdapter;
-import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
@@ -33,6 +41,7 @@ import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.commands.CreateDiagramCommand;
 import org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor;
@@ -43,8 +52,13 @@ import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.View;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+
 import at.bitandart.zoubek.mervin.diagram.diff.gmf.ModelReviewElementTypes;
+import at.bitandart.zoubek.mervin.model.modelreview.ChangeOverlay;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
+import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 
@@ -56,6 +70,9 @@ import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
  */
 @Creatable
 public class GMFDiagramDiffViewService {
+
+	@Inject
+	private ModelReviewFactory reviewFactory;
 
 	/**
 	 * creates a view model for the given {@link ModelReview} instance and adds
@@ -203,9 +220,24 @@ public class GMFDiagramDiffViewService {
 				List<Object> childrenAndEdges = new LinkedList<Object>();
 				childrenAndEdges.addAll((List<?>) diagram.getEdges());
 				childrenAndEdges.addAll((List<?>) diagram.getVisibleChildren());
-				List<Object> childrenCopy = new LinkedList<Object>(EcoreUtil.copyAll(childrenAndEdges));
+
+				/*
+				 * Copy the diagram contents and keep the mapping information to
+				 * associate the copies to the differences later
+				 */
+				Copier copier = new Copier();
+				Collection<Object> childrenAndEdgesCopy = copier.copyAll(childrenAndEdges);
+				copier.copyReferences();
+				HashBiMap<EObject, EObject> copyMap = HashBiMap.create(copier);
+
+				List<Object> childrenCopy = new LinkedList<Object>(childrenAndEdgesCopy);
 				compositeCommand.add(new AddDiagramEdgesAndNodesCommand(transactionalEditingDomain, workspaceDiagram,
 						(View) childView, filterEdges(childrenCopy), filterNonEdges(childrenCopy), diagram.getType()));
+
+				compositeCommand.add(new AddOverlayNodesCommand(transactionalEditingDomain,
+						modelReview.getSelectedDiagramComparison(), copyMap, childView, preferencesHint,
+						reviewFactory));
+
 				executeCommand(compositeCommand.reduce(), editDomain);
 			}
 		}
@@ -281,6 +313,70 @@ public class GMFDiagramDiffViewService {
 				eAnnotation.getDetails().put("modelID", originalDiagramType);
 				view.getEAnnotations().add(eAnnotation);
 			}
+		}
+	}
+
+	private class AddOverlayNodesCommand extends AbstractTransactionalCommand {
+
+		private Comparison diagramComparison;
+		private View container;
+		private BiMap<EObject, EObject> inverseCopyMap;
+		private PreferencesHint preferencesHint;
+		private ModelReviewFactory reviewFactory;
+
+		public AddOverlayNodesCommand(TransactionalEditingDomain domain, Comparison diagramComparison,
+				BiMap<EObject, EObject> copyMap, View container, PreferencesHint preferencesHint,
+				ModelReviewFactory reviewFactory) {
+			super(domain, "", null);
+			this.diagramComparison = diagramComparison;
+			this.container = container;
+			this.inverseCopyMap = copyMap.inverse();
+			this.preferencesHint = preferencesHint;
+			this.reviewFactory = reviewFactory;
+		}
+
+		@Override
+		protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
+				throws ExecutionException {
+
+			for (Object child : container.getChildren()) {
+
+				if (child instanceof View) {
+
+					View childView = (View) child;
+					EObject element = childView.getElement();
+					EObject originalElement = inverseCopyMap.get(childView);
+					Match match = diagramComparison.getMatch(originalElement);
+
+					for (Diff difference : match.getAllDifferences()) {
+
+						if (difference instanceof ReferenceChange || difference instanceof AttributeChange) {
+
+							ChangeOverlay changeOverlay = reviewFactory.createChangeOverlay();
+							changeOverlay.setDiff(difference);
+
+							String type = "";
+
+							switch (difference.getKind()) {
+							case ADD:
+								type = ModelReviewElementTypes.OVERLAY_ADDITION_SEMANTIC_HINT;
+								break;
+							case DELETE:
+								type = ModelReviewElementTypes.OVERLAY_DELETION_SEMANTIC_HINT;
+								break;
+							case CHANGE:
+							case MOVE:
+								type = ModelReviewElementTypes.OVERLAY_MODIFICATION_SEMANTIC_HINT;
+								break;
+							}
+
+							ViewService.createNode(container, changeOverlay, type, preferencesHint);
+						}
+					}
+				}
+			}
+
+			return CommandResult.newOKCommandResult();
 		}
 	}
 

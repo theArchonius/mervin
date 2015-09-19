@@ -94,6 +94,15 @@ public interface ModelReviewFactory extends EFactory {
 	DiagramInstance createDiagramInstance();
 
 	/**
+	 * Returns a new object of class '<em>Change Overlay</em>'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>Change Overlay</em>'.
+	 * @generated
+	 */
+	ChangeOverlay createChangeOverlay();
+
+	/**
 	 * Returns the package supported by this factory. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 

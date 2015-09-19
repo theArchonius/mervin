@@ -25,4 +25,16 @@ public class ModelReviewElementTypes extends AbstractElementTypeEnumerator {
 	public static final IElementType DIAGRAM = getElementType("at.bitandart.zoubek.mervin.model.Diagram");
 	public static final String DIAGRAM_SEMANTIC_HINT = "Mervin_ModelReview_Diagram";
 
+	public static final IElementType OVERLAY_ADDITION = getElementType(
+			"at.bitandart.zoubek.mervin.model.overlay.Additon");
+	public static final String OVERLAY_ADDITION_SEMANTIC_HINT = "Mervin_ModelReview_Overlay_Addition";
+
+	public static final IElementType OVERLAY_MODIFICATION = getElementType(
+			"at.bitandart.zoubek.mervin.model.overlay.Modification");
+	public static final String OVERLAY_MODIFICATION_SEMANTIC_HINT = "Mervin_ModelReview_Overlay_Modification";
+
+	public static final IElementType OVERLAY_DELETION = getElementType(
+			"at.bitandart.zoubek.mervin.model.overlay.Deletion");
+	public static final String OVERLAY_DELETION_SEMANTIC_HINT = "Mervin_ModelReview_Overlay_Deletion";
+
 }

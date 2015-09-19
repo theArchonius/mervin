@@ -261,6 +261,31 @@ public class ModelReviewItemProviderAdapterFactory extends ModelReviewAdapterFac
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ChangeOverlay}
+	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected ChangeOverlayItemProvider changeOverlayItemProvider;
+
+	/**
+	 * This creates an adapter for a
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ChangeOverlay}. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createChangeOverlayAdapter() {
+		if (changeOverlayItemProvider == null) {
+			changeOverlayItemProvider = new ChangeOverlayItemProvider(this);
+		}
+
+		return changeOverlayItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -372,6 +397,8 @@ public class ModelReviewItemProviderAdapterFactory extends ModelReviewAdapterFac
 			modelInstanceItemProvider.dispose();
 		if (diagramInstanceItemProvider != null)
 			diagramInstanceItemProvider.dispose();
+		if (changeOverlayItemProvider != null)
+			changeOverlayItemProvider.dispose();
 	}
 
 }

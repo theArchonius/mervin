@@ -755,6 +755,45 @@ public interface ModelReviewPackage extends EPackage {
 
 	/**
 	 * The meta object id for the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ChangeOverlayImpl
+	 * <em>Change Overlay</em>}' class. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ChangeOverlayImpl
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getChangeOverlay()
+	 * @generated
+	 */
+	int CHANGE_OVERLAY = 8;
+
+	/**
+	 * The feature id for the '<em><b>Diff</b></em>' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int CHANGE_OVERLAY__DIFF = 0;
+
+	/**
+	 * The number of structural features of the '<em>Change Overlay</em>' class.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int CHANGE_OVERLAY_FEATURE_COUNT = 1;
+
+	/**
+	 * The number of operations of the '<em>Change Overlay</em>' class. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int CHANGE_OVERLAY_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchChangeType
 	 * <em>Patch Change Type</em>}' enum. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -763,7 +802,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getPatchChangeType()
 	 * @generated
 	 */
-	int PATCH_CHANGE_TYPE = 8;
+	int PATCH_CHANGE_TYPE = 9;
 
 	/**
 	 * Returns the meta object for class '
@@ -1319,6 +1358,29 @@ public interface ModelReviewPackage extends EPackage {
 	EOperation getDiagramInstance__GetDiagrams();
 
 	/**
+	 * Returns the meta object for class '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ChangeOverlay
+	 * <em>Change Overlay</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Change Overlay</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ChangeOverlay
+	 * @generated
+	 */
+	EClass getChangeOverlay();
+
+	/**
+	 * Returns the meta object for the reference '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ChangeOverlay#getDiff
+	 * <em>Diff</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference '<em>Diff</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ChangeOverlay#getDiff()
+	 * @see #getChangeOverlay()
+	 * @generated
+	 */
+	EReference getChangeOverlay_Diff();
+
+	/**
 	 * Returns the meta object for enum '
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchChangeType
 	 * <em>Patch Change Type</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
@@ -1750,6 +1812,27 @@ public interface ModelReviewPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation DIAGRAM_INSTANCE___GET_DIAGRAMS = eINSTANCE.getDiagramInstance__GetDiagrams();
+
+		/**
+		 * The meta object literal for the '
+		 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ChangeOverlayImpl
+		 * <em>Change Overlay</em>}' class. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
+		 *      ChangeOverlayImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getChangeOverlay()
+		 * @generated
+		 */
+		EClass CHANGE_OVERLAY = eINSTANCE.getChangeOverlay();
+
+		/**
+		 * The meta object literal for the '<em><b>Diff</b></em>' reference
+		 * feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference CHANGE_OVERLAY__DIFF = eINSTANCE.getChangeOverlay_Diff();
 
 		/**
 		 * The meta object literal for the '

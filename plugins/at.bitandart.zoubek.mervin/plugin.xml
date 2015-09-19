@@ -32,6 +32,36 @@
                   value="Mervin_ModelReview_Diagram">
             </param>
          </metamodelType>
+         <metamodelType
+               eclass="ChangeOverlay"
+               id="at.bitandart.zoubek.mervin.model.overlay.Additon"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               name="OverlayAddition">
+            <param
+                  name="semanticHint"
+                  value="Mervin_ModelReview_Overlay_Addition">
+            </param>
+         </metamodelType>
+         <metamodelType
+               eclass="ChangeOverlay"
+               id="at.bitandart.zoubek.mervin.model.overlay.Modification"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               name="OverlayModification">
+            <param
+                  name="semanticHint"
+                  value="Mervin_ModelReview_Overlay_Modification">
+            </param>
+         </metamodelType>
+         <metamodelType
+               eclass="ChangeOverlay"
+               id="at.bitandart.zoubek.mervin.model.overlay.Deletion"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               name="OverlayDeletion">
+            <param
+                  name="semanticHint"
+                  value="Mervin_ModelReview_Overlay_Deletion">
+            </param>
+         </metamodelType>
       </metamodel>
    </extension>
    <extension

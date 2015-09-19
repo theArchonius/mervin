@@ -97,4 +97,7 @@
     <eLiterals name="MODIFY" value="3"/>
     <eLiterals name="RENAME" value="4"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ChangeOverlay">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="diff" eType="ecore:EClass platform:/plugin/org.eclipse.emf.compare/model/compare.ecore#//Diff"/>
+  </eClassifiers>
 </ecore:EPackage>

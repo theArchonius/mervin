@@ -12,6 +12,7 @@
  */
 package at.bitandart.zoubek.mervin.model.modelreview.impl;
 
+import at.bitandart.zoubek.mervin.model.modelreview.ChangeOverlay;
 import at.bitandart.zoubek.mervin.model.modelreview.Comment;
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance;
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch;
@@ -97,6 +98,13 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * @generated
 	 */
 	private EClass diagramInstanceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass changeOverlayEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -576,6 +584,24 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
+	public EClass getChangeOverlay() {
+		return changeOverlayEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EReference getChangeOverlay_Diff() {
+		return (EReference) changeOverlayEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	public EEnum getPatchChangeType() {
 		return patchChangeTypeEEnum;
 	}
@@ -660,6 +686,9 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 
 		diagramInstanceEClass = createEClass(DIAGRAM_INSTANCE);
 		createEOperation(diagramInstanceEClass, DIAGRAM_INSTANCE___GET_DIAGRAMS);
+
+		changeOverlayEClass = createEClass(CHANGE_OVERLAY);
+		createEReference(changeOverlayEClass, CHANGE_OVERLAY__DIFF);
 
 		// Create enums
 		patchChangeTypeEEnum = createEEnum(PATCH_CHANGE_TYPE);
@@ -835,6 +864,12 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 
 		initEOperation(getDiagramInstance__GetDiagrams(), theNotationPackage.getDiagram(), "getDiagrams", 0, -1,
 				IS_UNIQUE, IS_ORDERED);
+
+		initEClass(changeOverlayEClass, ChangeOverlay.class, "ChangeOverlay", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getChangeOverlay_Diff(), theComparePackage.getDiff(), null, "diff", null, 0, 1,
+				ChangeOverlay.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(patchChangeTypeEEnum, PatchChangeType.class, "PatchChangeType");

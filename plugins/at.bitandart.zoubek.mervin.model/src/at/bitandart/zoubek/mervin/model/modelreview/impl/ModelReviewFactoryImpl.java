@@ -81,6 +81,8 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements ModelReviewF
 			return createModelInstance();
 		case ModelReviewPackage.DIAGRAM_INSTANCE:
 			return createDiagramInstance();
+		case ModelReviewPackage.CHANGE_OVERLAY:
+			return createChangeOverlay();
 		default:
 			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -184,6 +186,16 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements ModelReviewF
 	public DiagramInstance createDiagramInstance() {
 		DiagramInstanceImpl diagramInstance = new DiagramInstanceImpl();
 		return diagramInstance;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public ChangeOverlay createChangeOverlay() {
+		ChangeOverlayImpl changeOverlay = new ChangeOverlayImpl();
+		return changeOverlay;
 	}
 
 	/**

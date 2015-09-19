@@ -11,6 +11,7 @@
 package at.bitandart.zoubek.mervin.model.modelreview.impl.extended;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
@@ -21,6 +22,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
+import at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelInstance;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
@@ -62,8 +64,17 @@ public class ExtendedModelReviewImpl extends ModelReviewImpl {
 				}
 			});
 
-			selectedDiagramComparison = compareModelInstances(leftPatchSet.getNewInvolvedDiagrams(),
-					rightPatchSet.getNewInvolvedDiagrams());
+			EList<DiagramInstance> newInvolvedModelsLeft = new BasicEList<DiagramInstance>();
+			if (leftPatchSet != null) {
+				newInvolvedModelsLeft = leftPatchSet.getNewInvolvedDiagrams();
+			}
+
+			EList<DiagramInstance> newInvolvedModelsRight = new BasicEList<DiagramInstance>();
+			if (rightPatchSet != null) {
+				newInvolvedModelsRight = rightPatchSet.getNewInvolvedDiagrams();
+			}
+
+			selectedDiagramComparison = compareModelInstances(newInvolvedModelsLeft, newInvolvedModelsRight);
 
 			if (eNotificationRequired())
 				eNotify(new ENotificationImpl(this, Notification.SET,
@@ -99,8 +110,17 @@ public class ExtendedModelReviewImpl extends ModelReviewImpl {
 				}
 			});
 
-			selectedModelComparison = compareModelInstances(leftPatchSet.getNewInvolvedModels(),
-					rightPatchSet.getNewInvolvedModels());
+			EList<ModelInstance> newInvolvedModelsLeft = new BasicEList<ModelInstance>();
+			if (leftPatchSet != null) {
+				newInvolvedModelsLeft = leftPatchSet.getNewInvolvedModels();
+			}
+
+			EList<ModelInstance> newInvolvedModelsRight = new BasicEList<ModelInstance>();
+			if (rightPatchSet != null) {
+				newInvolvedModelsRight = rightPatchSet.getNewInvolvedModels();
+			}
+
+			selectedModelComparison = compareModelInstances(newInvolvedModelsLeft, newInvolvedModelsRight);
 
 			if (eNotificationRequired())
 				eNotify(new ENotificationImpl(this, Notification.SET,

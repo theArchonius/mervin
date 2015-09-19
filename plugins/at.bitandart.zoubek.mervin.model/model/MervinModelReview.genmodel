@@ -68,5 +68,8 @@
     <genClasses ecoreClass="MervinModelReview.ecore#//DiagramInstance">
       <genOperations ecoreOperation="MervinModelReview.ecore#//DiagramInstance/getDiagrams"/>
     </genClasses>
+    <genClasses ecoreClass="MervinModelReview.ecore#//ChangeOverlay">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//ChangeOverlay/diff"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>
