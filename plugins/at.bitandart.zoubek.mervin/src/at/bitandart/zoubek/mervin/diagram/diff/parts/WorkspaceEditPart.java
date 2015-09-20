@@ -29,8 +29,8 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
 
-import at.bitandart.zoubek.mervin.diagram.diff.figures.workbench.DiffWorkbench;
-import at.bitandart.zoubek.mervin.diagram.diff.figures.workbench.IDiffWorkbench;
+import at.bitandart.zoubek.mervin.draw2d.figures.workbench.DiffWorkbench;
+import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbench;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 
 /**

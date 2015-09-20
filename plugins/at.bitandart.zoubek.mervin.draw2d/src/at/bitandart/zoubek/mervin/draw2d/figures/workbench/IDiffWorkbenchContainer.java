@@ -11,11 +11,11 @@
 /**
  * 
  */
-package at.bitandart.zoubek.mervin.diagram.diff.figures.workbench;
+package at.bitandart.zoubek.mervin.draw2d.figures.workbench;
 
 import org.eclipse.draw2d.IFigure;
 
-import at.bitandart.zoubek.mervin.diagram.diff.figures.workbench.IDiffWorkbench.DisplayMode;
+import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbench.DisplayMode;
 
 /**
  * Base interface for a container inside a {@link IDiffWorkbench}.

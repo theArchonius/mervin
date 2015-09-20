@@ -26,11 +26,11 @@ import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.gmf.tooling.runtime.linklf.LinkLFShapeCompartmentEditPart;
 
-import at.bitandart.zoubek.mervin.diagram.diff.figures.workbench.DiagramContainerFigure;
-import at.bitandart.zoubek.mervin.diagram.diff.figures.workbench.IDiffWorkbench;
-import at.bitandart.zoubek.mervin.diagram.diff.figures.workbench.IDiffWorkbench.DisplayMode;
-import at.bitandart.zoubek.mervin.diagram.diff.figures.workbench.IDiffWorkbenchContainer;
-import at.bitandart.zoubek.mervin.diagram.diff.figures.workbench.IWorkbenchListener;
+import at.bitandart.zoubek.mervin.draw2d.figures.workbench.DiagramContainerFigure;
+import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbench;
+import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbenchContainer;
+import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IWorkbenchListener;
+import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbench.DisplayMode;
 
 /**
  * An {@link EditPart} that provides a view on a diagram.

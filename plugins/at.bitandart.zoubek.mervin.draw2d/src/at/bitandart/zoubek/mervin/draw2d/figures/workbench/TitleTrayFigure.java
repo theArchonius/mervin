@@ -8,7 +8,7 @@
  * Contributors:
  *    Florian Zoubek - initial API and implementation
  *******************************************************************************/
-package at.bitandart.zoubek.mervin.diagram.diff.figures.workbench;
+package at.bitandart.zoubek.mervin.draw2d.figures.workbench;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
@@ -19,7 +19,7 @@ import org.eclipse.draw2d.TextUtilities;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 
-import at.bitandart.zoubek.mervin.diagram.diff.figures.ComposedClickable;
+import at.bitandart.zoubek.mervin.draw2d.figures.ComposedClickable;
 
 /**
  * An {@link IDiffWorkbenchTrayFigure} implementation that shows the containers

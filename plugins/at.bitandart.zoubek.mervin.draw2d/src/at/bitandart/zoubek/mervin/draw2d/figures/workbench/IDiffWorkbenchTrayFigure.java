@@ -8,7 +8,7 @@
  * Contributors:
  *    Florian Zoubek - initial API and implementation
  *******************************************************************************/
-package at.bitandart.zoubek.mervin.diagram.diff.figures.workbench;
+package at.bitandart.zoubek.mervin.draw2d.figures.workbench;
 
 import org.eclipse.draw2d.ActionListener;
 import org.eclipse.draw2d.IFigure;
