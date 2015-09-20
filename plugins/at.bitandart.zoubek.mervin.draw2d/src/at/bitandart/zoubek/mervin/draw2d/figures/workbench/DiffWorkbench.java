@@ -8,7 +8,7 @@
  * Contributors:
  *    Florian Zoubek - initial API and implementation
  *******************************************************************************/
-package at.bitandart.zoubek.mervin.diagram.diff.figures.workbench;
+package at.bitandart.zoubek.mervin.draw2d.figures.workbench;
 
 import java.io.IOException;
 import java.net.URL;
@@ -37,8 +37,8 @@ import org.eclipse.gmf.tooling.runtime.linklf.LinkLFShapeCompartmentEditPart;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
-import at.bitandart.zoubek.mervin.diagram.diff.figures.ComposedClickable;
-import at.bitandart.zoubek.mervin.diagram.diff.figures.WorkbenchContentLayout;
+import at.bitandart.zoubek.mervin.draw2d.figures.ComposedClickable;
+import at.bitandart.zoubek.mervin.draw2d.figures.WorkbenchContentLayout;
 
 /**
  * Default implementation of {@link IDiffWorkbench}.

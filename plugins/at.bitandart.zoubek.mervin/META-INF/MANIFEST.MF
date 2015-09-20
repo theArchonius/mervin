@@ -60,3 +60,5 @@ Require-Bundle: org.eclipse.swt,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: at.bitandart.zoubek.mervin.util.vis
+Import-Package: at.bitandart.zoubek.mervin.draw2d.figures,
+ at.bitandart.zoubek.mervin.draw2d.figures.workbench

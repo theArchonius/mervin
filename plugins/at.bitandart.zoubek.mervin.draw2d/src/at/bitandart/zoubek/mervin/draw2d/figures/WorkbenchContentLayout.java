@@ -8,7 +8,7 @@
  * Contributors:
  *    Florian Zoubek - initial API and implementation
  *******************************************************************************/
-package at.bitandart.zoubek.mervin.diagram.diff.figures;
+package at.bitandart.zoubek.mervin.draw2d.figures;
 
 import java.util.Iterator;
 import java.util.List;
@@ -20,8 +20,8 @@ import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.diagram.ui.layout.FreeFormLayoutEx;
 
-import at.bitandart.zoubek.mervin.diagram.diff.figures.workbench.IDiffWorkbench;
-import at.bitandart.zoubek.mervin.diagram.diff.figures.workbench.IDiffWorkbench.DisplayMode;
+import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbench;
+import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbench.DisplayMode;
 
 /**
  * A {@link LayoutManager} implemtation which is able to switch between stack

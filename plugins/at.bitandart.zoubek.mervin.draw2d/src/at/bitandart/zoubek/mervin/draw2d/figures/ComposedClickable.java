@@ -8,7 +8,7 @@
  * Contributors:
  *    Florian Zoubek - initial API and implementation
  *******************************************************************************/
-package at.bitandart.zoubek.mervin.diagram.diff.figures;
+package at.bitandart.zoubek.mervin.draw2d.figures;
 
 import java.util.List;
 

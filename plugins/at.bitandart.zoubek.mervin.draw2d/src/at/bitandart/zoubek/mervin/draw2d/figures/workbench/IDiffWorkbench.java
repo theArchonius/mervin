@@ -11,7 +11,7 @@
 /**
  * 
  */
-package at.bitandart.zoubek.mervin.diagram.diff.figures.workbench;
+package at.bitandart.zoubek.mervin.draw2d.figures.workbench;
 
 import org.eclipse.draw2d.IFigure;
 
