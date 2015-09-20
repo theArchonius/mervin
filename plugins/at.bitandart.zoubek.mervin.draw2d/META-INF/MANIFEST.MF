@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mervin draw2d components
-Bundle-SymbolicName: at.bitandart.zoubek.mervin.draw2d
+Bundle-SymbolicName: at.bitandart.zoubek.mervin.draw2d;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Florian Zoubek
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
@@ -15,3 +15,4 @@ Import-Package: org.eclipse.draw2d,
 Export-Package: at.bitandart.zoubek.mervin.draw2d.figures,
  at.bitandart.zoubek.mervin.draw2d.figures.workbench
 Require-Bundle: org.eclipse.gmf.runtime.diagram.ui
+Bundle-ActivationPolicy: lazy
