@@ -31,7 +31,7 @@ import org.eclipse.draw2d.Figure;
  * @author Florian Zoubek
  *
  */
-public abstract class ComposedClickable extends Clickable {
+public abstract class ComposedClickable extends Clickable implements IComposedFigure {
 
 	private boolean initialized;
 

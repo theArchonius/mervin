@@ -12,17 +12,18 @@ package at.bitandart.zoubek.mervin.draw2d.figures;
 
 import java.util.List;
 
-import org.eclipse.draw2d.Figure;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 
 /**
- * A {@link Figure} composed by one or more child {@link Figure}s. This figure
- * provides an post-construct initialization mechanism that is invoked when this
- * figure is added in a figure hierarchy, {@link #getChildren()} is called or
- * explicitly when {@link #initialize()} is invoked. This makes sure that the
- * figure's state is initialized properly through their constructors before
- * invoking the initialization mechanism, although the initialization mechanism
- * may be overridden or calls overrideable methods. The initialization state can
- * be retrieved by {@link #isInitialized()}. Subclasses must override
+ * A {@link NodeFigure} composed by one or more child {@link IFigure}s. This
+ * figure provides an post-construct initialization mechanism that is invoked
+ * when this figure is added in a figure hierarchy, {@link #getChildren()} is
+ * called or explicitly when {@link #initialize()} is invoked. This makes sure
+ * that the figure's state is initialized properly through their constructors
+ * before invoking the initialization mechanism, although the initialization
+ * mechanism may be overridden or calls overrideable methods. The initialization
+ * state can be retrieved by {@link #isInitialized()}. Subclasses must override
  * {@link #initializeFigure()} and {@link #initializeChildren()} to do the
  * initialization logic. {@link #notifyInitializationComplete()} may be
  * overridden to implement some post initialization logic.
@@ -30,11 +31,11 @@ import org.eclipse.draw2d.Figure;
  * @author Florian Zoubek
  *
  */
-public abstract class ComposedFigure extends Figure implements IComposedFigure {
+public abstract class ComposedNodeFigure extends NodeFigure implements IComposedFigure {
 
 	private boolean initialized;
 
-	public ComposedFigure() {
+	public ComposedNodeFigure() {
 		initialized = false;
 	}
 
