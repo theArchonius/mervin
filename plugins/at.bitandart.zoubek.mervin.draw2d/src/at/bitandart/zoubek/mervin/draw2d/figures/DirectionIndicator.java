@@ -55,7 +55,7 @@ public class DirectionIndicator extends Figure {
 	@Override
 	protected void paintFigure(Graphics graphics) {
 		super.paintFigure(graphics);
-		Rectangle bounds = getBounds();
+		Rectangle bounds = getBounds().getCopy().shrink(getInsets());
 
 		double diameter = Math.min(bounds.preciseWidth(), bounds.preciseHeight());
 		double radius = diameter / 2.0;
@@ -90,5 +90,28 @@ public class DirectionIndicator extends Figure {
 
 		graphics.popState();
 
+	}
+
+	/**
+	 * sets the direction of this indicator
+	 * 
+	 * @param direction
+	 *            the direction vector
+	 * @throws IllegalArgumentException
+	 *             if the length of the direction vector is smaller than 0
+	 */
+	public void setDirection(Vector direction) {
+		if (direction.getLength() <= 0) {
+			throw new IllegalArgumentException("The direction vector length must be bigger than 0");
+		}
+		this.direction = direction;
+		repaint();
+	}
+
+	/**
+	 * @return a copy of the current direction vector of this indicator.
+	 */
+	public Vector getDirection() {
+		return new Vector(direction.x, direction.y);
 	}
 }
