@@ -23,8 +23,8 @@ import org.eclipse.draw2d.geometry.Vector;
 
 import at.bitandart.zoubek.mervin.draw2d.figures.ChangeOverlayNodeFigure;
 import at.bitandart.zoubek.mervin.draw2d.figures.ChangeOverlayNodeFigure.DimensionPropertyChangeType;
+import at.bitandart.zoubek.mervin.draw2d.figures.DefaultChangeTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.ChangeOverlayNodeFigure.ChangeType;
-import at.bitandart.zoubek.mervin.draw2d.figures.ChangeOverlayNodeFigure.DefaultChangeTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.DefaultOverlayLocator;
 import at.bitandart.zoubek.mervin.draw2d.figures.OverlayLinkedFigureListener;
 
