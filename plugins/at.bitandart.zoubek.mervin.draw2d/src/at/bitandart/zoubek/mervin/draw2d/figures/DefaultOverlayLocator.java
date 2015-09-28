@@ -18,7 +18,7 @@ import org.eclipse.draw2d.Locator;
 
 /**
  * The default locator for {@link IOverlayFigure}s which calls
- * {@link IOverlayFigure#updateBoundsfromLinkedFigures(Collection)} for
+ * {@link IOverlayFigure#updateFigure(Collection)} for
  * {@link IOverlayFigure}s. Does nothing for figures that do not implement
  * {@link IOverlayFigure}.
  * 
@@ -54,7 +54,7 @@ public class DefaultOverlayLocator implements Locator {
 	@Override
 	public void relocate(IFigure target) {
 		if (target instanceof IOverlayFigure) {
-			((IOverlayFigure) target).updateBoundsfromLinkedFigures(linkedFigures);
+			((IOverlayFigure) target).updateFigure(linkedFigures);
 		}
 	}
 

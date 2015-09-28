@@ -25,11 +25,11 @@ import org.eclipse.draw2d.IFigure;
 public interface IOverlayFigure extends IFigure {
 
 	/**
-	 * updates the figure's bounds based on the given linked figures.
+	 * updates the figure based on the given linked figures.
 	 * 
 	 * @param linkedFigures
 	 * 
 	 */
-	public void updateBoundsfromLinkedFigures(Collection<IFigure> linkedFigures);
+	public void updateFigure(Collection<IFigure> linkedFigures);
 
 }

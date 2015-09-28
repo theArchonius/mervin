@@ -196,7 +196,7 @@ public class ChangeOverlayNodeFigure extends ComposedNodeFigure implements IOver
 	}
 
 	@Override
-	public void updateBoundsfromLinkedFigures(Collection<IFigure> linkedFigures) {
+	public void updateFigure(Collection<IFigure> linkedFigures) {
 
 		Rectangle areaToCover = null;
 
