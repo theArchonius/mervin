@@ -14,8 +14,6 @@ import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
-import at.bitandart.zoubek.mervin.draw2d.figures.ChangeOverlayNodeFigure.ChangeType;
-
 /**
  * The default style advisor for changes.
  * 

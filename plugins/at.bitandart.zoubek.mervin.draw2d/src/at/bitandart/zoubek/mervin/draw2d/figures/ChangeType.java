@@ -10,23 +10,12 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.draw2d.figures;
 
-import org.eclipse.swt.graphics.Color;
-
 /**
- * Base interface for style advisors used to obtain a style for a given
- * {@link ChangeType}.
+ * The change types supported by {@link IOverlayFigure}s.
  * 
  * @author Florian Zoubek
  *
  */
-public interface IChangeTypeStyleAdvisor {
-
-	public Color getForegroundColorForChangeType(ChangeType changeType);
-
-	public Color getBackgroundColorForChangeType(ChangeType changeType);
-
-	public Color getIndicatorColorForChangeType(ChangeType changeType);
-
-	public Color getCommentColorForChangeType(ChangeType changeType);
-
+public enum ChangeType {
+	ADDITION, DELETION, MODIFICATION, LAYOUT
 }

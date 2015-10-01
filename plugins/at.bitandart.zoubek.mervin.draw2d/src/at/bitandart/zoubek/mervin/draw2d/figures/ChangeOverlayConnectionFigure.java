@@ -20,8 +20,6 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Color;
 
-import at.bitandart.zoubek.mervin.draw2d.figures.ChangeOverlayNodeFigure.ChangeType;
-
 /**
  * An {@link IOverlayFigure} that is able to outline one or more connection
  * figures. An {@link IChangeTypeStyleAdvisor} can be used to control the colors

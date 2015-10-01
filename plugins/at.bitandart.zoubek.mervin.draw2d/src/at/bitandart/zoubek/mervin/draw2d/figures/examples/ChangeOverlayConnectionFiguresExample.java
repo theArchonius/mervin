@@ -30,7 +30,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
 
 import at.bitandart.zoubek.mervin.draw2d.figures.ChangeOverlayConnectionFigure;
-import at.bitandart.zoubek.mervin.draw2d.figures.ChangeOverlayNodeFigure.ChangeType;
+import at.bitandart.zoubek.mervin.draw2d.figures.ChangeType;
 import at.bitandart.zoubek.mervin.draw2d.figures.DefaultChangeTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.DefaultOverlayLocator;
 import at.bitandart.zoubek.mervin.draw2d.figures.OverlayLinkedFigureListener;

@@ -36,17 +36,7 @@ import at.bitandart.zoubek.mervin.draw2d.figures.DimensionPropertyChangeIndicato
 public class ChangeOverlayNodeFigure extends ComposedNodeFigure implements IOverlayFigure {
 
 	/**
-	 * The change types supported by {@link ChangeOverlayNodeFigure}.
-	 * 
-	 * @author Florian Zoubek
-	 *
-	 */
-	public enum ChangeType {
-		ADDITION, DELETION, MODIFICATION, LAYOUT
-	}
-
-	/**
-	 * The diemnsion property change types supported by
+	 * The dimension property change types supported by
 	 * {@link ChangeOverlayNodeFigure}.
 	 * 
 	 * @author Florian Zoubek
@@ -70,7 +60,7 @@ public class ChangeOverlayNodeFigure extends ComposedNodeFigure implements IOver
 	private Dimension defaultBoundsWidthSizeChangeIndicatorSize = new Dimension(50, 20);
 	private Dimension defaultBoundsHeightChangeIndicatorSize = new Dimension(20, 50);
 
-	private IChangeTypeStyleAdvisor styleAdivsor;
+	private IChangeTypeStyleAdvisor styleAdvisor;
 
 	// change properties
 
@@ -94,7 +84,7 @@ public class ChangeOverlayNodeFigure extends ComposedNodeFigure implements IOver
 		if (styleAdivsor == null) {
 			throw new IllegalArgumentException("A valid style advisor must be specified");
 		}
-		this.styleAdivsor = styleAdivsor;
+		this.styleAdvisor = styleAdivsor;
 		this.changeType = changeType;
 	}
 
@@ -118,7 +108,7 @@ public class ChangeOverlayNodeFigure extends ComposedNodeFigure implements IOver
 	@Override
 	protected void initializeChildren() {
 
-		outline = new RectangularChangeOutline(styleAdivsor.getCommentColorForChangeType(changeType));
+		outline = new RectangularChangeOutline(styleAdvisor.getCommentColorForChangeType(changeType));
 		outline.setAlpha(128);
 		outline.setLineWidthFloat(2f);
 		outline.setBounds(new Rectangle(0, 0, 20, 20));
@@ -130,7 +120,7 @@ public class ChangeOverlayNodeFigure extends ComposedNodeFigure implements IOver
 			directionIndicator.setVisible(false);
 		}
 		directionIndicator.setOpaque(true);
-		directionIndicator.setBorder(new LineBorder(styleAdivsor.getForegroundColorForChangeType(changeType), 5));
+		directionIndicator.setBorder(new LineBorder(styleAdvisor.getForegroundColorForChangeType(changeType), 5));
 		directionIndicator.setBounds(Rectangle.SINGLETON.setBounds(20, 0, defaultDirectionIndicatorSize.width,
 				defaultDirectionIndicatorSize.height));
 		add(directionIndicator);
@@ -139,14 +129,14 @@ public class ChangeOverlayNodeFigure extends ComposedNodeFigure implements IOver
 				DimensionChange.BIGGER);
 		boundsWidthSizeChangeIndicator.setOpaque(true);
 		boundsWidthSizeChangeIndicator
-				.setBorder(new LineBorder(styleAdivsor.getForegroundColorForChangeType(changeType), 5));
+				.setBorder(new LineBorder(styleAdvisor.getForegroundColorForChangeType(changeType), 5));
 		add(boundsWidthSizeChangeIndicator);
 
 		boundsHeightSizeChangeIndicator = new DimensionPropertyChangeIndicator(DimensionProperty.HEIGHT,
 				DimensionChange.BIGGER);
 		boundsHeightSizeChangeIndicator.setOpaque(true);
 		boundsHeightSizeChangeIndicator
-				.setBorder(new LineBorder(styleAdivsor.getForegroundColorForChangeType(changeType), 5));
+				.setBorder(new LineBorder(styleAdvisor.getForegroundColorForChangeType(changeType), 5));
 		add(boundsHeightSizeChangeIndicator);
 
 	}
@@ -163,29 +153,29 @@ public class ChangeOverlayNodeFigure extends ComposedNodeFigure implements IOver
 	 */
 	private void applyChangeStyles() {
 
-		Color foregroundColor = styleAdivsor.getForegroundColorForChangeType(changeType);
-		Color backgroundColor = styleAdivsor.getBackgroundColorForChangeType(changeType);
+		Color foregroundColor = styleAdvisor.getForegroundColorForChangeType(changeType);
+		Color backgroundColor = styleAdvisor.getBackgroundColorForChangeType(changeType);
 
 		outline.setForegroundColor(foregroundColor);
 		outline.setBackgroundColor(backgroundColor);
 		outline.setFill(changeType != ChangeType.LAYOUT);
 
 		directionIndicator.setBackgroundColor(foregroundColor);
-		directionIndicator.setForegroundColor(styleAdivsor.getIndicatorColorForChangeType(changeType));
+		directionIndicator.setForegroundColor(styleAdvisor.getIndicatorColorForChangeType(changeType));
 		Border indicatorBorder = directionIndicator.getBorder();
 		if (indicatorBorder instanceof LineBorder) {
 			((LineBorder) indicatorBorder).setColor(foregroundColor);
 		}
 
 		boundsHeightSizeChangeIndicator.setBackgroundColor(foregroundColor);
-		boundsHeightSizeChangeIndicator.setForegroundColor(styleAdivsor.getIndicatorColorForChangeType(changeType));
+		boundsHeightSizeChangeIndicator.setForegroundColor(styleAdvisor.getIndicatorColorForChangeType(changeType));
 		indicatorBorder = boundsHeightSizeChangeIndicator.getBorder();
 		if (indicatorBorder instanceof LineBorder) {
 			((LineBorder) indicatorBorder).setColor(foregroundColor);
 		}
 
 		boundsWidthSizeChangeIndicator.setBackgroundColor(foregroundColor);
-		boundsWidthSizeChangeIndicator.setForegroundColor(styleAdivsor.getIndicatorColorForChangeType(changeType));
+		boundsWidthSizeChangeIndicator.setForegroundColor(styleAdvisor.getIndicatorColorForChangeType(changeType));
 		indicatorBorder = boundsWidthSizeChangeIndicator.getBorder();
 		if (indicatorBorder instanceof LineBorder) {
 			((LineBorder) indicatorBorder).setColor(foregroundColor);
