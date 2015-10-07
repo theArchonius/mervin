@@ -262,27 +262,102 @@ public class ModelReviewItemProviderAdapterFactory extends ModelReviewAdapterFac
 
 	/**
 	 * This keeps track of the one adapter used for all
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ChangeOverlay}
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay}
 	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected ChangeOverlayItemProvider changeOverlayItemProvider;
+	protected DifferenceOverlayItemProvider differenceOverlayItemProvider;
 
 	/**
 	 * This creates an adapter for a
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ChangeOverlay}. <!--
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay}.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createDifferenceOverlayAdapter() {
+		if (differenceOverlayItemProvider == null) {
+			differenceOverlayItemProvider = new DifferenceOverlayItemProvider(this);
+		}
+
+		return differenceOverlayItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.LocationDifference}
+	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected LocationDifferenceItemProvider locationDifferenceItemProvider;
+
+	/**
+	 * This creates an adapter for a
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.LocationDifference}.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createLocationDifferenceAdapter() {
+		if (locationDifferenceItemProvider == null) {
+			locationDifferenceItemProvider = new LocationDifferenceItemProvider(this);
+		}
+
+		return locationDifferenceItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.SizeDifference}
+	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected SizeDifferenceItemProvider sizeDifferenceItemProvider;
+
+	/**
+	 * This creates an adapter for a
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.SizeDifference}. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
 	@Override
-	public Adapter createChangeOverlayAdapter() {
-		if (changeOverlayItemProvider == null) {
-			changeOverlayItemProvider = new ChangeOverlayItemProvider(this);
+	public Adapter createSizeDifferenceAdapter() {
+		if (sizeDifferenceItemProvider == null) {
+			sizeDifferenceItemProvider = new SizeDifferenceItemProvider(this);
 		}
 
-		return changeOverlayItemProvider;
+		return sizeDifferenceItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.StateDifference}
+	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected StateDifferenceItemProvider stateDifferenceItemProvider;
+
+	/**
+	 * This creates an adapter for a
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.StateDifference}.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createStateDifferenceAdapter() {
+		if (stateDifferenceItemProvider == null) {
+			stateDifferenceItemProvider = new StateDifferenceItemProvider(this);
+		}
+
+		return stateDifferenceItemProvider;
 	}
 
 	/**
@@ -397,8 +472,14 @@ public class ModelReviewItemProviderAdapterFactory extends ModelReviewAdapterFac
 			modelInstanceItemProvider.dispose();
 		if (diagramInstanceItemProvider != null)
 			diagramInstanceItemProvider.dispose();
-		if (changeOverlayItemProvider != null)
-			changeOverlayItemProvider.dispose();
+		if (differenceOverlayItemProvider != null)
+			differenceOverlayItemProvider.dispose();
+		if (locationDifferenceItemProvider != null)
+			locationDifferenceItemProvider.dispose();
+		if (sizeDifferenceItemProvider != null)
+			sizeDifferenceItemProvider.dispose();
+		if (stateDifferenceItemProvider != null)
+			stateDifferenceItemProvider.dispose();
 	}
 
 }

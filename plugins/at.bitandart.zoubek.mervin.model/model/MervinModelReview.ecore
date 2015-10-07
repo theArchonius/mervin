@@ -97,7 +97,39 @@
     <eLiterals name="MODIFY" value="3"/>
     <eLiterals name="RENAME" value="4"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ChangeOverlay">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="diff" eType="ecore:EClass platform:/plugin/org.eclipse.emf.compare/model/compare.ecore#//Diff"/>
+  <eClassifiers xsi:type="ecore:EClass" name="DifferenceOverlay">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="linkedView" eType="ecore:EClass ../../org.eclipse.gmf.runtime.notation/model/notation.ecore#//View"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="differences" upperBound="-1"
+        eType="#//Difference" containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Difference" abstract="true" interface="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rawDiffs" upperBound="-1"
+        eType="ecore:EClass platform:/plugin/org.eclipse.emf.compare/model/compare.ecore#//Diff"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LayoutDifference" abstract="true" interface="true"
+      eSuperTypes="#//Difference"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ModelDifference" abstract="true" interface="true"
+      eSuperTypes="#//Difference"/>
+  <eClassifiers xsi:type="ecore:EClass" name="LocationDifference" eSuperTypes="#//LayoutDifference">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="moveDirection" eType="#//Vector"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SizeDifference" eSuperTypes="#//LayoutDifference">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="widthChange" eType="#//DimensionChange"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="heightChange" eType="#//DimensionChange"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StateDifference" eSuperTypes="#//ModelDifference">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//StateDifferenceType"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="StateDifferenceType">
+    <eLiterals name="ADDED" literal="ADDED"/>
+    <eLiterals name="DELETED" value="1"/>
+    <eLiterals name="MODIFIED" value="2"/>
+    <eLiterals name="UNKNOWN" value="3" literal="UNKNOWN"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="DimensionChange">
+    <eLiterals name="SMALLER"/>
+    <eLiterals name="BIGGER" value="1"/>
+    <eLiterals name="UNKNOWN" value="2"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="Vector" instanceClassName="org.eclipse.draw2d.geometry.Vector"/>
 </ecore:EPackage>

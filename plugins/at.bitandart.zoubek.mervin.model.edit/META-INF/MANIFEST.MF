@@ -17,5 +17,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.gmf.runtime.notation;visibility:=reexport,
  org.eclipse.gmf.runtime.notation.edit;visibility:=reexport,
  org.eclipse.emf.compare;visibility:=reexport,
- org.eclipse.emf.compare.edit;visibility:=reexport
+ org.eclipse.emf.compare.edit;visibility:=reexport,
+ org.eclipse.draw2d;bundle-version="3.10.0"
 Bundle-ActivationPolicy: lazy

@@ -14,6 +14,7 @@ package at.bitandart.zoubek.mervin.model.modelreview.impl;
 
 import at.bitandart.zoubek.mervin.model.modelreview.*;
 
+import org.eclipse.draw2d.geometry.Vector;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
@@ -81,8 +82,14 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements ModelReviewF
 			return createModelInstance();
 		case ModelReviewPackage.DIAGRAM_INSTANCE:
 			return createDiagramInstance();
-		case ModelReviewPackage.CHANGE_OVERLAY:
-			return createChangeOverlay();
+		case ModelReviewPackage.DIFFERENCE_OVERLAY:
+			return createDifferenceOverlay();
+		case ModelReviewPackage.LOCATION_DIFFERENCE:
+			return createLocationDifference();
+		case ModelReviewPackage.SIZE_DIFFERENCE:
+			return createSizeDifference();
+		case ModelReviewPackage.STATE_DIFFERENCE:
+			return createStateDifference();
 		default:
 			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -98,6 +105,12 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements ModelReviewF
 		switch (eDataType.getClassifierID()) {
 		case ModelReviewPackage.PATCH_CHANGE_TYPE:
 			return createPatchChangeTypeFromString(eDataType, initialValue);
+		case ModelReviewPackage.STATE_DIFFERENCE_TYPE:
+			return createStateDifferenceTypeFromString(eDataType, initialValue);
+		case ModelReviewPackage.DIMENSION_CHANGE:
+			return createDimensionChangeFromString(eDataType, initialValue);
+		case ModelReviewPackage.VECTOR:
+			return createVectorFromString(eDataType, initialValue);
 		default:
 			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -113,6 +126,12 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements ModelReviewF
 		switch (eDataType.getClassifierID()) {
 		case ModelReviewPackage.PATCH_CHANGE_TYPE:
 			return convertPatchChangeTypeToString(eDataType, instanceValue);
+		case ModelReviewPackage.STATE_DIFFERENCE_TYPE:
+			return convertStateDifferenceTypeToString(eDataType, instanceValue);
+		case ModelReviewPackage.DIMENSION_CHANGE:
+			return convertDimensionChangeToString(eDataType, instanceValue);
+		case ModelReviewPackage.VECTOR:
+			return convertVectorToString(eDataType, instanceValue);
 		default:
 			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -193,9 +212,39 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements ModelReviewF
 	 * 
 	 * @generated
 	 */
-	public ChangeOverlay createChangeOverlay() {
-		ChangeOverlayImpl changeOverlay = new ChangeOverlayImpl();
-		return changeOverlay;
+	public DifferenceOverlay createDifferenceOverlay() {
+		DifferenceOverlayImpl differenceOverlay = new DifferenceOverlayImpl();
+		return differenceOverlay;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public LocationDifference createLocationDifference() {
+		LocationDifferenceImpl locationDifference = new LocationDifferenceImpl();
+		return locationDifference;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public SizeDifference createSizeDifference() {
+		SizeDifferenceImpl sizeDifference = new SizeDifferenceImpl();
+		return sizeDifference;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public StateDifference createStateDifference() {
+		StateDifferenceImpl stateDifference = new StateDifferenceImpl();
+		return stateDifference;
 	}
 
 	/**
@@ -218,6 +267,68 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements ModelReviewF
 	 */
 	public String convertPatchChangeTypeToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public StateDifferenceType createStateDifferenceTypeFromString(EDataType eDataType, String initialValue) {
+		StateDifferenceType result = StateDifferenceType.get(initialValue);
+		if (result == null)
+			throw new IllegalArgumentException(
+					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public String convertStateDifferenceTypeToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public DimensionChange createDimensionChangeFromString(EDataType eDataType, String initialValue) {
+		DimensionChange result = DimensionChange.get(initialValue);
+		if (result == null)
+			throw new IllegalArgumentException(
+					"The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public String convertDimensionChangeToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public Vector createVectorFromString(EDataType eDataType, String initialValue) {
+		return (Vector) super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public String convertVectorToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
 	}
 
 	/**

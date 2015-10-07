@@ -23,13 +23,14 @@ import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
@@ -50,17 +51,20 @@ import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
 import at.bitandart.zoubek.mervin.diagram.diff.gmf.ModelReviewElementTypes;
-import at.bitandart.zoubek.mervin.model.modelreview.ChangeOverlay;
+import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
+import at.bitandart.zoubek.mervin.model.modelreview.StateDifference;
+import at.bitandart.zoubek.mervin.model.modelreview.StateDifferenceType;
 
 // TODO remove Createable annotation and move creation in addon
 /**
@@ -342,42 +346,108 @@ public class GMFDiagramDiffViewService {
 			for (Object child : container.getChildren()) {
 
 				if (child instanceof View) {
-
 					View childView = (View) child;
-					EObject element = childView.getElement();
-					EObject originalElement = inverseCopyMap.get(childView);
-					Match match = diagramComparison.getMatch(originalElement);
-
-					for (Diff difference : match.getAllDifferences()) {
-
-						if (difference instanceof ReferenceChange || difference instanceof AttributeChange) {
-
-							ChangeOverlay changeOverlay = reviewFactory.createChangeOverlay();
-							changeOverlay.setDiff(difference);
-
-							String type = "";
-
-							switch (difference.getKind()) {
-							case ADD:
-								type = ModelReviewElementTypes.OVERLAY_ADDITION_SEMANTIC_HINT;
-								break;
-							case DELETE:
-								type = ModelReviewElementTypes.OVERLAY_DELETION_SEMANTIC_HINT;
-								break;
-							case CHANGE:
-							case MOVE:
-								type = ModelReviewElementTypes.OVERLAY_MODIFICATION_SEMANTIC_HINT;
-								break;
-							}
-
-							ViewService.createNode(container, changeOverlay, type, preferencesHint);
-						}
-					}
+					View originalView = (View) inverseCopyMap.get(childView);
+					Match match = diagramComparison.getMatch(originalView);
+					createOverlayForView(childView, true);
 				}
 			}
 
 			return CommandResult.newOKCommandResult();
 		}
+
+		private void createOverlayForView(View view, boolean includeChildren) {
+
+			View originalView = (View) inverseCopyMap.get(view);
+			if (originalView == null) {
+				/*
+				 * FIXME quick fix to avoid NPE - needs further investigation
+				 * this should not happen as all copied views should have an
+				 * original version
+				 */
+				return;
+			}
+			EList<Diff> referencingDifferences = diagramComparison.getDifferences(originalView);
+			ReferenceChange viewReferenceChange = null;
+			for (Diff difference : referencingDifferences) {
+				if (difference instanceof ReferenceChange) {
+					EReference reference = ((ReferenceChange) difference).getReference();
+					if (reference == NotationPackage.Literals.VIEW__PERSISTED_CHILDREN
+							|| reference == NotationPackage.Literals.VIEW__PERSISTED_CHILDREN) {
+						viewReferenceChange = (ReferenceChange) difference;
+						break;
+					}
+				}
+			}
+			EList<Diff> differences = diagramComparison.getMatch(originalView).getDifferences();
+			Match viewElementSubmatch = diagramComparison.getMatch(view.getElement());
+
+			boolean hasChanged = !differences.isEmpty() || !viewElementSubmatch.getDifferences().isEmpty()
+					|| viewReferenceChange != null;
+			if (hasChanged) {
+
+				DifferenceOverlay differenceOverlay = reviewFactory.createDifferenceOverlay();
+				differenceOverlay.setLinkedView(view);
+
+				// Determine actual differences
+
+				for (Diff difference : differences) {
+
+					// TODO update DifferenceOverlay properties based on the
+					// differences
+
+					if (difference instanceof ReferenceChange) {
+						if (((ReferenceChange) difference).getReference() != NotationPackage.Literals.VIEW__ELEMENT) {
+
+							// TODO layout changes
+
+						}
+
+					}
+				}
+
+				/*
+				 * determine state difference type based on the reference change
+				 * of the view in its parent
+				 */
+
+				if (viewReferenceChange != null) {
+
+					StateDifference stateDifference = reviewFactory.createStateDifference();
+					stateDifference.getRawDiffs().add(viewReferenceChange);
+					stateDifference.setType(toStateDifferenceType(viewReferenceChange.getKind()));
+					differenceOverlay.getDifferences().add(stateDifference);
+				}
+
+				ViewService.createNode(container, differenceOverlay,
+						ModelReviewElementTypes.OVERLAY_DIFFERENCE_SEMANTIC_HINT, preferencesHint);
+			}
+
+			if (includeChildren) {
+				for (Object child : view.getChildren()) {
+					if (child instanceof View) {
+						View childView = (View) child;
+						createOverlayForView(childView, true);
+					}
+				}
+			}
+		}
+
+		private StateDifferenceType toStateDifferenceType(DifferenceKind diffKind) {
+
+			switch (diffKind) {
+			case ADD:
+				return StateDifferenceType.ADDED;
+			case MOVE:
+			case CHANGE:
+				return StateDifferenceType.MODIFIED;
+			case DELETE:
+				return StateDifferenceType.DELETED;
+			default:
+				return StateDifferenceType.UNKNOWN;
+			}
+		}
+
 	}
 
 	/**

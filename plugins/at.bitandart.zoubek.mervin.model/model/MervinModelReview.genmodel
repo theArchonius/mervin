@@ -16,6 +16,18 @@
       <genEnumLiterals ecoreEnumLiteral="MervinModelReview.ecore#//PatchChangeType/MODIFY"/>
       <genEnumLiterals ecoreEnumLiteral="MervinModelReview.ecore#//PatchChangeType/RENAME"/>
     </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="MervinModelReview.ecore#//StateDifferenceType">
+      <genEnumLiterals ecoreEnumLiteral="MervinModelReview.ecore#//StateDifferenceType/ADDED"/>
+      <genEnumLiterals ecoreEnumLiteral="MervinModelReview.ecore#//StateDifferenceType/DELETED"/>
+      <genEnumLiterals ecoreEnumLiteral="MervinModelReview.ecore#//StateDifferenceType/MODIFIED"/>
+      <genEnumLiterals ecoreEnumLiteral="MervinModelReview.ecore#//StateDifferenceType/UNKNOWN"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="MervinModelReview.ecore#//DimensionChange">
+      <genEnumLiterals ecoreEnumLiteral="MervinModelReview.ecore#//DimensionChange/SMALLER"/>
+      <genEnumLiterals ecoreEnumLiteral="MervinModelReview.ecore#//DimensionChange/BIGGER"/>
+      <genEnumLiterals ecoreEnumLiteral="MervinModelReview.ecore#//DimensionChange/UNKNOWN"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="MervinModelReview.ecore#//Vector"/>
     <genClasses ecoreClass="MervinModelReview.ecore#//ModelReview">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//ModelReview/id"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//ModelReview/patchSets"/>
@@ -68,8 +80,24 @@
     <genClasses ecoreClass="MervinModelReview.ecore#//DiagramInstance">
       <genOperations ecoreOperation="MervinModelReview.ecore#//DiagramInstance/getDiagrams"/>
     </genClasses>
-    <genClasses ecoreClass="MervinModelReview.ecore#//ChangeOverlay">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//ChangeOverlay/diff"/>
+    <genClasses ecoreClass="MervinModelReview.ecore#//DifferenceOverlay">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//DifferenceOverlay/linkedView"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//DifferenceOverlay/differences"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="MervinModelReview.ecore#//Difference">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//Difference/rawDiffs"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="MervinModelReview.ecore#//LayoutDifference"/>
+    <genClasses image="false" ecoreClass="MervinModelReview.ecore#//ModelDifference"/>
+    <genClasses ecoreClass="MervinModelReview.ecore#//LocationDifference">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//LocationDifference/moveDirection"/>
+    </genClasses>
+    <genClasses ecoreClass="MervinModelReview.ecore#//SizeDifference">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//SizeDifference/widthChange"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//SizeDifference/heightChange"/>
+    </genClasses>
+    <genClasses ecoreClass="MervinModelReview.ecore#//StateDifference">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//StateDifference/type"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

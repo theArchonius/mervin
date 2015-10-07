@@ -12,8 +12,8 @@
  */
 package at.bitandart.zoubek.mervin.model.modelreview.tests;
 
-import at.bitandart.zoubek.mervin.model.modelreview.ChangeOverlay;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
+import at.bitandart.zoubek.mervin.model.modelreview.SizeDifference;
 
 import junit.framework.TestCase;
 
@@ -21,19 +21,19 @@ import junit.textui.TestRunner;
 
 /**
  * <!-- begin-user-doc --> A test case for the model object '
- * <em><b>Change Overlay</b></em>'. <!-- end-user-doc -->
+ * <em><b>Size Difference</b></em>'. <!-- end-user-doc -->
  * 
  * @generated
  */
-public class ChangeOverlayTest extends TestCase {
+public class SizeDifferenceTest extends TestCase {
 
 	/**
-	 * The fixture for this Change Overlay test case. <!-- begin-user-doc -->
+	 * The fixture for this Size Difference test case. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected ChangeOverlay fixture = null;
+	protected SizeDifference fixture = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -41,36 +41,36 @@ public class ChangeOverlayTest extends TestCase {
 	 * @generated
 	 */
 	public static void main(String[] args) {
-		TestRunner.run(ChangeOverlayTest.class);
+		TestRunner.run(SizeDifferenceTest.class);
 	}
 
 	/**
-	 * Constructs a new Change Overlay test case with the given name. <!--
+	 * Constructs a new Size Difference test case with the given name. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	public ChangeOverlayTest(String name) {
+	public SizeDifferenceTest(String name) {
 		super(name);
 	}
 
 	/**
-	 * Sets the fixture for this Change Overlay test case. <!-- begin-user-doc
+	 * Sets the fixture for this Size Difference test case. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected void setFixture(ChangeOverlay fixture) {
+	protected void setFixture(SizeDifference fixture) {
 		this.fixture = fixture;
 	}
 
 	/**
-	 * Returns the fixture for this Change Overlay test case. <!--
+	 * Returns the fixture for this Size Difference test case. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected ChangeOverlay getFixture() {
+	protected SizeDifference getFixture() {
 		return fixture;
 	}
 
@@ -82,7 +82,7 @@ public class ChangeOverlayTest extends TestCase {
 	 */
 	@Override
 	protected void setUp() throws Exception {
-		setFixture(ModelReviewFactory.eINSTANCE.createChangeOverlay());
+		setFixture(ModelReviewFactory.eINSTANCE.createSizeDifference());
 	}
 
 	/**
@@ -96,4 +96,4 @@ public class ChangeOverlayTest extends TestCase {
 		setFixture(null);
 	}
 
-} // ChangeOverlayTest
+} // SizeDifferenceTest

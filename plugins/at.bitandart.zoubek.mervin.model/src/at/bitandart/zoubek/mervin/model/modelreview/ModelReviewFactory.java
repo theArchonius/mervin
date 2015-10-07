@@ -94,13 +94,40 @@ public interface ModelReviewFactory extends EFactory {
 	DiagramInstance createDiagramInstance();
 
 	/**
-	 * Returns a new object of class '<em>Change Overlay</em>'. <!--
+	 * Returns a new object of class '<em>Difference Overlay</em>'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @return a new object of class '<em>Change Overlay</em>'.
+	 * @return a new object of class '<em>Difference Overlay</em>'.
 	 * @generated
 	 */
-	ChangeOverlay createChangeOverlay();
+	DifferenceOverlay createDifferenceOverlay();
+
+	/**
+	 * Returns a new object of class '<em>Location Difference</em>'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>Location Difference</em>'.
+	 * @generated
+	 */
+	LocationDifference createLocationDifference();
+
+	/**
+	 * Returns a new object of class '<em>Size Difference</em>'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>Size Difference</em>'.
+	 * @generated
+	 */
+	SizeDifference createSizeDifference();
+
+	/**
+	 * Returns a new object of class '<em>State Difference</em>'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>State Difference</em>'.
+	 * @generated
+	 */
+	StateDifference createStateDifference();
 
 	/**
 	 * Returns the package supported by this factory. <!-- begin-user-doc -->

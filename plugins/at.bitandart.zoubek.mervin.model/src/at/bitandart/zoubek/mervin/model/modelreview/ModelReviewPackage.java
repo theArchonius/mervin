@@ -14,6 +14,7 @@ package at.bitandart.zoubek.mervin.model.modelreview;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
@@ -755,42 +756,324 @@ public interface ModelReviewPackage extends EPackage {
 
 	/**
 	 * The meta object id for the '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ChangeOverlayImpl
-	 * <em>Change Overlay</em>}' class. <!-- begin-user-doc --> <!--
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.DifferenceOverlayImpl
+	 * <em>Difference Overlay</em>}' class. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ChangeOverlayImpl
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getChangeOverlay()
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
+	 *      DifferenceOverlayImpl
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDifferenceOverlay()
 	 * @generated
 	 */
-	int CHANGE_OVERLAY = 8;
+	int DIFFERENCE_OVERLAY = 8;
 
 	/**
-	 * The feature id for the '<em><b>Diff</b></em>' reference. <!--
+	 * The feature id for the '<em><b>Linked View</b></em>' reference. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int CHANGE_OVERLAY__DIFF = 0;
+	int DIFFERENCE_OVERLAY__LINKED_VIEW = 0;
 
 	/**
-	 * The number of structural features of the '<em>Change Overlay</em>' class.
+	 * The feature id for the '<em><b>Differences</b></em>' containment
+	 * reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int DIFFERENCE_OVERLAY__DIFFERENCES = 1;
+
+	/**
+	 * The number of structural features of the '<em>Difference Overlay</em>'
+	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int DIFFERENCE_OVERLAY_FEATURE_COUNT = 2;
+
+	/**
+	 * The number of operations of the '<em>Difference Overlay</em>' class. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int DIFFERENCE_OVERLAY_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Difference
+	 * <em>Difference</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.Difference
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDifference()
+	 * @generated
+	 */
+	int DIFFERENCE = 9;
+
+	/**
+	 * The feature id for the '<em><b>Raw Diffs</b></em>' reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int DIFFERENCE__RAW_DIFFS = 0;
+
+	/**
+	 * The number of structural features of the '<em>Difference</em>' class.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int CHANGE_OVERLAY_FEATURE_COUNT = 1;
+	int DIFFERENCE_FEATURE_COUNT = 1;
 
 	/**
-	 * The number of operations of the '<em>Change Overlay</em>' class. <!--
+	 * The number of operations of the '<em>Difference</em>' class. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int CHANGE_OVERLAY_OPERATION_COUNT = 0;
+	int DIFFERENCE_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.LayoutDifference
+	 * <em>Layout Difference</em>}' class. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.LayoutDifference
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getLayoutDifference()
+	 * @generated
+	 */
+	int LAYOUT_DIFFERENCE = 10;
+
+	/**
+	 * The feature id for the '<em><b>Raw Diffs</b></em>' reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int LAYOUT_DIFFERENCE__RAW_DIFFS = DIFFERENCE__RAW_DIFFS;
+
+	/**
+	 * The number of structural features of the '<em>Layout Difference</em>'
+	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int LAYOUT_DIFFERENCE_FEATURE_COUNT = DIFFERENCE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of operations of the '<em>Layout Difference</em>' class. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int LAYOUT_DIFFERENCE_OPERATION_COUNT = DIFFERENCE_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelDifference
+	 * <em>Model Difference</em>}' class. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelDifference
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getModelDifference()
+	 * @generated
+	 */
+	int MODEL_DIFFERENCE = 11;
+
+	/**
+	 * The feature id for the '<em><b>Raw Diffs</b></em>' reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_DIFFERENCE__RAW_DIFFS = DIFFERENCE__RAW_DIFFS;
+
+	/**
+	 * The number of structural features of the '<em>Model Difference</em>'
+	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_DIFFERENCE_FEATURE_COUNT = DIFFERENCE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of operations of the '<em>Model Difference</em>' class. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_DIFFERENCE_OPERATION_COUNT = DIFFERENCE_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.LocationDifferenceImpl
+	 * <em>Location Difference</em>}' class. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
+	 *      LocationDifferenceImpl
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getLocationDifference()
+	 * @generated
+	 */
+	int LOCATION_DIFFERENCE = 12;
+
+	/**
+	 * The feature id for the '<em><b>Raw Diffs</b></em>' reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int LOCATION_DIFFERENCE__RAW_DIFFS = LAYOUT_DIFFERENCE__RAW_DIFFS;
+
+	/**
+	 * The feature id for the '<em><b>Move Direction</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int LOCATION_DIFFERENCE__MOVE_DIRECTION = LAYOUT_DIFFERENCE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Location Difference</em>'
+	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int LOCATION_DIFFERENCE_FEATURE_COUNT = LAYOUT_DIFFERENCE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>Location Difference</em>' class.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int LOCATION_DIFFERENCE_OPERATION_COUNT = LAYOUT_DIFFERENCE_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.SizeDifferenceImpl
+	 * <em>Size Difference</em>}' class. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.SizeDifferenceImpl
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getSizeDifference()
+	 * @generated
+	 */
+	int SIZE_DIFFERENCE = 13;
+
+	/**
+	 * The feature id for the '<em><b>Raw Diffs</b></em>' reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int SIZE_DIFFERENCE__RAW_DIFFS = LAYOUT_DIFFERENCE__RAW_DIFFS;
+
+	/**
+	 * The feature id for the '<em><b>Width Change</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int SIZE_DIFFERENCE__WIDTH_CHANGE = LAYOUT_DIFFERENCE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Height Change</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int SIZE_DIFFERENCE__HEIGHT_CHANGE = LAYOUT_DIFFERENCE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Size Difference</em>'
+	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int SIZE_DIFFERENCE_FEATURE_COUNT = LAYOUT_DIFFERENCE_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of operations of the '<em>Size Difference</em>' class. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int SIZE_DIFFERENCE_OPERATION_COUNT = LAYOUT_DIFFERENCE_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.StateDifferenceImpl
+	 * <em>State Difference</em>}' class. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
+	 *      StateDifferenceImpl
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getStateDifference()
+	 * @generated
+	 */
+	int STATE_DIFFERENCE = 14;
+
+	/**
+	 * The feature id for the '<em><b>Raw Diffs</b></em>' reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int STATE_DIFFERENCE__RAW_DIFFS = MODEL_DIFFERENCE__RAW_DIFFS;
+
+	/**
+	 * The feature id for the '<em><b>Type</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int STATE_DIFFERENCE__TYPE = MODEL_DIFFERENCE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>State Difference</em>'
+	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int STATE_DIFFERENCE_FEATURE_COUNT = MODEL_DIFFERENCE_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>State Difference</em>' class. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int STATE_DIFFERENCE_OPERATION_COUNT = MODEL_DIFFERENCE_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '
@@ -802,7 +1085,41 @@ public interface ModelReviewPackage extends EPackage {
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getPatchChangeType()
 	 * @generated
 	 */
-	int PATCH_CHANGE_TYPE = 9;
+	int PATCH_CHANGE_TYPE = 15;
+
+	/**
+	 * The meta object id for the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.StateDifferenceType
+	 * <em>State Difference Type</em>}' enum. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.StateDifferenceType
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getStateDifferenceType()
+	 * @generated
+	 */
+	int STATE_DIFFERENCE_TYPE = 16;
+
+	/**
+	 * The meta object id for the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DimensionChange
+	 * <em>Dimension Change</em>}' enum. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.DimensionChange
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDimensionChange()
+	 * @generated
+	 */
+	int DIMENSION_CHANGE = 17;
+
+	/**
+	 * The meta object id for the '<em>Vector</em>' data type. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.draw2d.geometry.Vector
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getVector()
+	 * @generated
+	 */
+	int VECTOR = 18;
 
 	/**
 	 * Returns the meta object for class '
@@ -1359,26 +1676,170 @@ public interface ModelReviewPackage extends EPackage {
 
 	/**
 	 * Returns the meta object for class '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ChangeOverlay
-	 * <em>Change Overlay</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay
+	 * <em>Difference Overlay</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
-	 * @return the meta object for class '<em>Change Overlay</em>'.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.ChangeOverlay
+	 * @return the meta object for class '<em>Difference Overlay</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay
 	 * @generated
 	 */
-	EClass getChangeOverlay();
+	EClass getDifferenceOverlay();
 
 	/**
 	 * Returns the meta object for the reference '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ChangeOverlay#getDiff
-	 * <em>Diff</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay#getLinkedView
+	 * <em>Linked View</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @return the meta object for the reference '<em>Diff</em>'.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.ChangeOverlay#getDiff()
-	 * @see #getChangeOverlay()
+	 * @return the meta object for the reference '<em>Linked View</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay#getLinkedView()
+	 * @see #getDifferenceOverlay()
 	 * @generated
 	 */
-	EReference getChangeOverlay_Diff();
+	EReference getDifferenceOverlay_LinkedView();
+
+	/**
+	 * Returns the meta object for the containment reference list '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay#getDifferences
+	 * <em>Differences</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the containment reference list '
+	 *         <em>Differences</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay#getDifferences()
+	 * @see #getDifferenceOverlay()
+	 * @generated
+	 */
+	EReference getDifferenceOverlay_Differences();
+
+	/**
+	 * Returns the meta object for class '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Difference
+	 * <em>Difference</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Difference</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.Difference
+	 * @generated
+	 */
+	EClass getDifference();
+
+	/**
+	 * Returns the meta object for the reference list '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Difference#getRawDiffs
+	 * <em>Raw Diffs</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference list '<em>Raw Diffs</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.Difference#getRawDiffs()
+	 * @see #getDifference()
+	 * @generated
+	 */
+	EReference getDifference_RawDiffs();
+
+	/**
+	 * Returns the meta object for class '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.LayoutDifference
+	 * <em>Layout Difference</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @return the meta object for class '<em>Layout Difference</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.LayoutDifference
+	 * @generated
+	 */
+	EClass getLayoutDifference();
+
+	/**
+	 * Returns the meta object for class '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelDifference
+	 * <em>Model Difference</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @return the meta object for class '<em>Model Difference</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelDifference
+	 * @generated
+	 */
+	EClass getModelDifference();
+
+	/**
+	 * Returns the meta object for class '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.LocationDifference
+	 * <em>Location Difference</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @return the meta object for class '<em>Location Difference</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.LocationDifference
+	 * @generated
+	 */
+	EClass getLocationDifference();
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.LocationDifference#getMoveDirection
+	 * <em>Move Direction</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Move Direction</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.LocationDifference#getMoveDirection()
+	 * @see #getLocationDifference()
+	 * @generated
+	 */
+	EAttribute getLocationDifference_MoveDirection();
+
+	/**
+	 * Returns the meta object for class '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.SizeDifference
+	 * <em>Size Difference</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Size Difference</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.SizeDifference
+	 * @generated
+	 */
+	EClass getSizeDifference();
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.SizeDifference#getWidthChange
+	 * <em>Width Change</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Width Change</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.SizeDifference#getWidthChange()
+	 * @see #getSizeDifference()
+	 * @generated
+	 */
+	EAttribute getSizeDifference_WidthChange();
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.SizeDifference#getHeightChange
+	 * <em>Height Change</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Height Change</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.SizeDifference#getHeightChange()
+	 * @see #getSizeDifference()
+	 * @generated
+	 */
+	EAttribute getSizeDifference_HeightChange();
+
+	/**
+	 * Returns the meta object for class '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.StateDifference
+	 * <em>State Difference</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @return the meta object for class '<em>State Difference</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.StateDifference
+	 * @generated
+	 */
+	EClass getStateDifference();
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.StateDifference#getType
+	 * <em>Type</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Type</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.StateDifference#getType()
+	 * @see #getStateDifference()
+	 * @generated
+	 */
+	EAttribute getStateDifference_Type();
 
 	/**
 	 * Returns the meta object for enum '
@@ -1391,6 +1852,42 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 */
 	EEnum getPatchChangeType();
+
+	/**
+	 * Returns the meta object for enum '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.StateDifferenceType
+	 * <em>State Difference Type</em>}'. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @return the meta object for enum '<em>State Difference Type</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.StateDifferenceType
+	 * @generated
+	 */
+	EEnum getStateDifferenceType();
+
+	/**
+	 * Returns the meta object for enum '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DimensionChange
+	 * <em>Dimension Change</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @return the meta object for enum '<em>Dimension Change</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.DimensionChange
+	 * @generated
+	 */
+	EEnum getDimensionChange();
+
+	/**
+	 * Returns the meta object for data type '
+	 * {@link org.eclipse.draw2d.geometry.Vector <em>Vector</em>}'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for data type '<em>Vector</em>'.
+	 * @see org.eclipse.draw2d.geometry.Vector
+	 * @model instanceClass="org.eclipse.draw2d.geometry.Vector"
+	 * @generated
+	 */
+	EDataType getVector();
 
 	/**
 	 * Returns the factory that creates the instances of the model. <!--
@@ -1815,24 +2312,148 @@ public interface ModelReviewPackage extends EPackage {
 
 		/**
 		 * The meta object literal for the '
-		 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ChangeOverlayImpl
-		 * <em>Change Overlay</em>}' class. <!-- begin-user-doc --> <!--
+		 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.DifferenceOverlayImpl
+		 * <em>Difference Overlay</em>}' class. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
 		 * 
 		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
-		 *      ChangeOverlayImpl
-		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getChangeOverlay()
+		 *      DifferenceOverlayImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDifferenceOverlay()
 		 * @generated
 		 */
-		EClass CHANGE_OVERLAY = eINSTANCE.getChangeOverlay();
+		EClass DIFFERENCE_OVERLAY = eINSTANCE.getDifferenceOverlay();
 
 		/**
-		 * The meta object literal for the '<em><b>Diff</b></em>' reference
+		 * The meta object literal for the '<em><b>Linked View</b></em>'
+		 * reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference DIFFERENCE_OVERLAY__LINKED_VIEW = eINSTANCE.getDifferenceOverlay_LinkedView();
+
+		/**
+		 * The meta object literal for the '<em><b>Differences</b></em>'
+		 * containment reference list feature. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference DIFFERENCE_OVERLAY__DIFFERENCES = eINSTANCE.getDifferenceOverlay_Differences();
+
+		/**
+		 * The meta object literal for the '
+		 * {@link at.bitandart.zoubek.mervin.model.modelreview.Difference
+		 * <em>Difference</em>}' class. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.Difference
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDifference()
+		 * @generated
+		 */
+		EClass DIFFERENCE = eINSTANCE.getDifference();
+
+		/**
+		 * The meta object literal for the '<em><b>Raw Diffs</b></em>' reference
+		 * list feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference DIFFERENCE__RAW_DIFFS = eINSTANCE.getDifference_RawDiffs();
+
+		/**
+		 * The meta object literal for the '
+		 * {@link at.bitandart.zoubek.mervin.model.modelreview.LayoutDifference
+		 * <em>Layout Difference</em>}' class. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.LayoutDifference
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getLayoutDifference()
+		 * @generated
+		 */
+		EClass LAYOUT_DIFFERENCE = eINSTANCE.getLayoutDifference();
+
+		/**
+		 * The meta object literal for the '
+		 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelDifference
+		 * <em>Model Difference</em>}' class. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelDifference
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getModelDifference()
+		 * @generated
+		 */
+		EClass MODEL_DIFFERENCE = eINSTANCE.getModelDifference();
+
+		/**
+		 * The meta object literal for the '
+		 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.LocationDifferenceImpl
+		 * <em>Location Difference</em>}' class. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
+		 *      LocationDifferenceImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getLocationDifference()
+		 * @generated
+		 */
+		EClass LOCATION_DIFFERENCE = eINSTANCE.getLocationDifference();
+
+		/**
+		 * The meta object literal for the '<em><b>Move Direction</b></em>'
+		 * attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute LOCATION_DIFFERENCE__MOVE_DIRECTION = eINSTANCE.getLocationDifference_MoveDirection();
+
+		/**
+		 * The meta object literal for the '
+		 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.SizeDifferenceImpl
+		 * <em>Size Difference</em>}' class. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
+		 *      SizeDifferenceImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getSizeDifference()
+		 * @generated
+		 */
+		EClass SIZE_DIFFERENCE = eINSTANCE.getSizeDifference();
+
+		/**
+		 * The meta object literal for the '<em><b>Width Change</b></em>'
+		 * attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute SIZE_DIFFERENCE__WIDTH_CHANGE = eINSTANCE.getSizeDifference_WidthChange();
+
+		/**
+		 * The meta object literal for the '<em><b>Height Change</b></em>'
+		 * attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute SIZE_DIFFERENCE__HEIGHT_CHANGE = eINSTANCE.getSizeDifference_HeightChange();
+
+		/**
+		 * The meta object literal for the '
+		 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.StateDifferenceImpl
+		 * <em>State Difference</em>}' class. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
+		 *      StateDifferenceImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getStateDifference()
+		 * @generated
+		 */
+		EClass STATE_DIFFERENCE = eINSTANCE.getStateDifference();
+
+		/**
+		 * The meta object literal for the '<em><b>Type</b></em>' attribute
 		 * feature. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
 		 * @generated
 		 */
-		EReference CHANGE_OVERLAY__DIFF = eINSTANCE.getChangeOverlay_Diff();
+		EAttribute STATE_DIFFERENCE__TYPE = eINSTANCE.getStateDifference_Type();
 
 		/**
 		 * The meta object literal for the '
@@ -1845,6 +2466,40 @@ public interface ModelReviewPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum PATCH_CHANGE_TYPE = eINSTANCE.getPatchChangeType();
+
+		/**
+		 * The meta object literal for the '
+		 * {@link at.bitandart.zoubek.mervin.model.modelreview.StateDifferenceType
+		 * <em>State Difference Type</em>}' enum. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.StateDifferenceType
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getStateDifferenceType()
+		 * @generated
+		 */
+		EEnum STATE_DIFFERENCE_TYPE = eINSTANCE.getStateDifferenceType();
+
+		/**
+		 * The meta object literal for the '
+		 * {@link at.bitandart.zoubek.mervin.model.modelreview.DimensionChange
+		 * <em>Dimension Change</em>}' enum. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.DimensionChange
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDimensionChange()
+		 * @generated
+		 */
+		EEnum DIMENSION_CHANGE = eINSTANCE.getDimensionChange();
+
+		/**
+		 * The meta object literal for the '<em>Vector</em>' data type. <!--
+		 * begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.draw2d.geometry.Vector
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getVector()
+		 * @generated
+		 */
+		EDataType VECTOR = eINSTANCE.getVector();
 
 	}
 

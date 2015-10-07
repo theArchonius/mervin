@@ -11,6 +11,7 @@
 package at.bitandart.zoubek.mervin.diagram.diff.parts;
 
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.GraphicalEditPart;
 
 /**
  * Base interface for all {@link EditPart}s that should be placed on an overlay.
@@ -19,5 +20,11 @@ import org.eclipse.gef.EditPart;
  *
  */
 public interface IOverlayEditPart extends EditPart {
-	// intentionally left empty
+
+	/**
+	 * @return the linked editpart to this overlay edit part or null if no edit
+	 *         part is linked.
+	 */
+	public GraphicalEditPart getLinkedEditPart();
+
 }

@@ -14,5 +14,6 @@ Export-Package: at.bitandart.zoubek.mervin.model.modelreview,
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.gmf.runtime.notation;visibility:=reexport,
- org.eclipse.emf.compare;visibility:=reexport
+ org.eclipse.emf.compare;visibility:=reexport,
+ org.eclipse.draw2d;bundle-version="3.10.0"
 Bundle-ActivationPolicy: lazy

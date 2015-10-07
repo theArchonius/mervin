@@ -22,11 +22,9 @@ import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
 
 import at.bitandart.zoubek.mervin.diagram.diff.DiagramDiffView;
-import at.bitandart.zoubek.mervin.diagram.diff.parts.AdditionChangeOverlayEditPart;
-import at.bitandart.zoubek.mervin.diagram.diff.parts.DeletionChangeOverlayEditPart;
 import at.bitandart.zoubek.mervin.diagram.diff.parts.DiagramDiffRootEditPart;
 import at.bitandart.zoubek.mervin.diagram.diff.parts.DiagramEditPart;
-import at.bitandart.zoubek.mervin.diagram.diff.parts.ModificationChangeOverlayEditPart;
+import at.bitandart.zoubek.mervin.diagram.diff.parts.DifferenceOverlayEditPart;
 import at.bitandart.zoubek.mervin.diagram.diff.parts.WorkspaceEditPart;
 
 /**
@@ -43,10 +41,7 @@ public class ModelReviewEditPartProvider extends AbstractEditPartProvider {
 		diagramMap.put(DiagramDiffView.PART_DESCRIPTOR_ID, WorkspaceEditPart.class);
 
 		nodeMap.put(ModelReviewElementTypes.DIAGRAM_SEMANTIC_HINT, DiagramEditPart.class);
-		nodeMap.put(ModelReviewElementTypes.OVERLAY_ADDITION_SEMANTIC_HINT, AdditionChangeOverlayEditPart.class);
-		nodeMap.put(ModelReviewElementTypes.OVERLAY_DELETION_SEMANTIC_HINT, DeletionChangeOverlayEditPart.class);
-		nodeMap.put(ModelReviewElementTypes.OVERLAY_MODIFICATION_SEMANTIC_HINT,
-				ModificationChangeOverlayEditPart.class);
+		nodeMap.put(ModelReviewElementTypes.OVERLAY_DIFFERENCE_SEMANTIC_HINT, DifferenceOverlayEditPart.class);
 	}
 
 	@Override

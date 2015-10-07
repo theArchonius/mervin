@@ -12,10 +12,15 @@
  */
 package at.bitandart.zoubek.mervin.model.modelreview.impl;
 
-import at.bitandart.zoubek.mervin.model.modelreview.ChangeOverlay;
 import at.bitandart.zoubek.mervin.model.modelreview.Comment;
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance;
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch;
+import at.bitandart.zoubek.mervin.model.modelreview.Difference;
+import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
+import at.bitandart.zoubek.mervin.model.modelreview.DimensionChange;
+import at.bitandart.zoubek.mervin.model.modelreview.LayoutDifference;
+import at.bitandart.zoubek.mervin.model.modelreview.LocationDifference;
+import at.bitandart.zoubek.mervin.model.modelreview.ModelDifference;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelInstance;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelPatch;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
@@ -24,9 +29,14 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 import at.bitandart.zoubek.mervin.model.modelreview.Patch;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchChangeType;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
+import at.bitandart.zoubek.mervin.model.modelreview.SizeDifference;
+import at.bitandart.zoubek.mervin.model.modelreview.StateDifference;
+import at.bitandart.zoubek.mervin.model.modelreview.StateDifferenceType;
+import org.eclipse.draw2d.geometry.Vector;
 import org.eclipse.emf.compare.ComparePackage;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EOperation;
@@ -104,7 +114,49 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	private EClass changeOverlayEClass = null;
+	private EClass differenceOverlayEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass differenceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass layoutDifferenceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass modelDifferenceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass locationDifferenceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass sizeDifferenceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass stateDifferenceEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -112,6 +164,27 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * @generated
 	 */
 	private EEnum patchChangeTypeEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EEnum stateDifferenceTypeEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EEnum dimensionChangeEEnum = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EDataType vectorEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -584,8 +657,8 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	public EClass getChangeOverlay() {
-		return changeOverlayEClass;
+	public EClass getDifferenceOverlay() {
+		return differenceOverlayEClass;
 	}
 
 	/**
@@ -593,8 +666,116 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	public EReference getChangeOverlay_Diff() {
-		return (EReference) changeOverlayEClass.getEStructuralFeatures().get(0);
+	public EReference getDifferenceOverlay_LinkedView() {
+		return (EReference) differenceOverlayEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EReference getDifferenceOverlay_Differences() {
+		return (EReference) differenceOverlayEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EClass getDifference() {
+		return differenceEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EReference getDifference_RawDiffs() {
+		return (EReference) differenceEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EClass getLayoutDifference() {
+		return layoutDifferenceEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EClass getModelDifference() {
+		return modelDifferenceEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EClass getLocationDifference() {
+		return locationDifferenceEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getLocationDifference_MoveDirection() {
+		return (EAttribute) locationDifferenceEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EClass getSizeDifference() {
+		return sizeDifferenceEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getSizeDifference_WidthChange() {
+		return (EAttribute) sizeDifferenceEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getSizeDifference_HeightChange() {
+		return (EAttribute) sizeDifferenceEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EClass getStateDifference() {
+		return stateDifferenceEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getStateDifference_Type() {
+		return (EAttribute) stateDifferenceEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -604,6 +785,33 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 */
 	public EEnum getPatchChangeType() {
 		return patchChangeTypeEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EEnum getStateDifferenceType() {
+		return stateDifferenceTypeEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EEnum getDimensionChange() {
+		return dimensionChangeEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EDataType getVector() {
+		return vectorEDataType;
 	}
 
 	/**
@@ -687,11 +895,34 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		diagramInstanceEClass = createEClass(DIAGRAM_INSTANCE);
 		createEOperation(diagramInstanceEClass, DIAGRAM_INSTANCE___GET_DIAGRAMS);
 
-		changeOverlayEClass = createEClass(CHANGE_OVERLAY);
-		createEReference(changeOverlayEClass, CHANGE_OVERLAY__DIFF);
+		differenceOverlayEClass = createEClass(DIFFERENCE_OVERLAY);
+		createEReference(differenceOverlayEClass, DIFFERENCE_OVERLAY__LINKED_VIEW);
+		createEReference(differenceOverlayEClass, DIFFERENCE_OVERLAY__DIFFERENCES);
+
+		differenceEClass = createEClass(DIFFERENCE);
+		createEReference(differenceEClass, DIFFERENCE__RAW_DIFFS);
+
+		layoutDifferenceEClass = createEClass(LAYOUT_DIFFERENCE);
+
+		modelDifferenceEClass = createEClass(MODEL_DIFFERENCE);
+
+		locationDifferenceEClass = createEClass(LOCATION_DIFFERENCE);
+		createEAttribute(locationDifferenceEClass, LOCATION_DIFFERENCE__MOVE_DIRECTION);
+
+		sizeDifferenceEClass = createEClass(SIZE_DIFFERENCE);
+		createEAttribute(sizeDifferenceEClass, SIZE_DIFFERENCE__WIDTH_CHANGE);
+		createEAttribute(sizeDifferenceEClass, SIZE_DIFFERENCE__HEIGHT_CHANGE);
+
+		stateDifferenceEClass = createEClass(STATE_DIFFERENCE);
+		createEAttribute(stateDifferenceEClass, STATE_DIFFERENCE__TYPE);
 
 		// Create enums
 		patchChangeTypeEEnum = createEEnum(PATCH_CHANGE_TYPE);
+		stateDifferenceTypeEEnum = createEEnum(STATE_DIFFERENCE_TYPE);
+		dimensionChangeEEnum = createEEnum(DIMENSION_CHANGE);
+
+		// Create data types
+		vectorEDataType = createEDataType(VECTOR);
 	}
 
 	/**
@@ -733,6 +964,11 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		diagramPatchEClass.getESuperTypes().add(this.getPatch());
 		modelPatchEClass.getESuperTypes().add(this.getPatch());
 		diagramInstanceEClass.getESuperTypes().add(this.getModelInstance());
+		layoutDifferenceEClass.getESuperTypes().add(this.getDifference());
+		modelDifferenceEClass.getESuperTypes().add(this.getDifference());
+		locationDifferenceEClass.getESuperTypes().add(this.getLayoutDifference());
+		sizeDifferenceEClass.getESuperTypes().add(this.getLayoutDifference());
+		stateDifferenceEClass.getESuperTypes().add(this.getModelDifference());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(modelReviewEClass, ModelReview.class, "ModelReview", !IS_ABSTRACT, !IS_INTERFACE,
@@ -865,11 +1101,47 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		initEOperation(getDiagramInstance__GetDiagrams(), theNotationPackage.getDiagram(), "getDiagrams", 0, -1,
 				IS_UNIQUE, IS_ORDERED);
 
-		initEClass(changeOverlayEClass, ChangeOverlay.class, "ChangeOverlay", !IS_ABSTRACT, !IS_INTERFACE,
+		initEClass(differenceOverlayEClass, DifferenceOverlay.class, "DifferenceOverlay", !IS_ABSTRACT, !IS_INTERFACE,
 				IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getChangeOverlay_Diff(), theComparePackage.getDiff(), null, "diff", null, 0, 1,
-				ChangeOverlay.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+		initEReference(getDifferenceOverlay_LinkedView(), theNotationPackage.getView(), null, "linkedView", null, 0, 1,
+				DifferenceOverlay.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDifferenceOverlay_Differences(), this.getDifference(), null, "differences", null, 0, -1,
+				DifferenceOverlay.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(differenceEClass, Difference.class, "Difference", IS_ABSTRACT, IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getDifference_RawDiffs(), theComparePackage.getDiff(), null, "rawDiffs", null, 0, -1,
+				Difference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(layoutDifferenceEClass, LayoutDifference.class, "LayoutDifference", IS_ABSTRACT, IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(modelDifferenceEClass, ModelDifference.class, "ModelDifference", IS_ABSTRACT, IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(locationDifferenceEClass, LocationDifference.class, "LocationDifference", !IS_ABSTRACT,
+				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getLocationDifference_MoveDirection(), this.getVector(), "moveDirection", null, 0, 1,
+				LocationDifference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+
+		initEClass(sizeDifferenceEClass, SizeDifference.class, "SizeDifference", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getSizeDifference_WidthChange(), this.getDimensionChange(), "widthChange", null, 0, 1,
+				SizeDifference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSizeDifference_HeightChange(), this.getDimensionChange(), "heightChange", null, 0, 1,
+				SizeDifference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+
+		initEClass(stateDifferenceEClass, StateDifference.class, "StateDifference", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getStateDifference_Type(), this.getStateDifferenceType(), "type", null, 0, 1,
+				StateDifference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(patchChangeTypeEEnum, PatchChangeType.class, "PatchChangeType");
@@ -878,6 +1150,20 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		addEEnumLiteral(patchChangeTypeEEnum, PatchChangeType.DELETE);
 		addEEnumLiteral(patchChangeTypeEEnum, PatchChangeType.MODIFY);
 		addEEnumLiteral(patchChangeTypeEEnum, PatchChangeType.RENAME);
+
+		initEEnum(stateDifferenceTypeEEnum, StateDifferenceType.class, "StateDifferenceType");
+		addEEnumLiteral(stateDifferenceTypeEEnum, StateDifferenceType.ADDED);
+		addEEnumLiteral(stateDifferenceTypeEEnum, StateDifferenceType.DELETED);
+		addEEnumLiteral(stateDifferenceTypeEEnum, StateDifferenceType.MODIFIED);
+		addEEnumLiteral(stateDifferenceTypeEEnum, StateDifferenceType.UNKNOWN);
+
+		initEEnum(dimensionChangeEEnum, DimensionChange.class, "DimensionChange");
+		addEEnumLiteral(dimensionChangeEEnum, DimensionChange.SMALLER);
+		addEEnumLiteral(dimensionChangeEEnum, DimensionChange.BIGGER);
+		addEEnumLiteral(dimensionChangeEEnum, DimensionChange.UNKNOWN);
+
+		// Initialize data types
+		initEDataType(vectorEDataType, Vector.class, "Vector", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

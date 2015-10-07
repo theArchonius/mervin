@@ -11,6 +11,7 @@
 package at.bitandart.zoubek.mervin.draw2d.figures.workbench;
 
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.DelegatingLayout;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Layer;
@@ -52,7 +53,10 @@ public class DiagramContainerFigure extends LinkLFShapeCompartmentEditPart.Shape
 		IFigure primaryLayer = new BorderItemsAwareFreeFormLayer();
 		primaryLayer.setLayoutManager(new FreeFormLayoutEx());
 		layeredPane.add(primaryLayer, LayerConstants.PRIMARY_LAYER);
-		layeredPane.add(new FreeformLayer(), MervinLayerConstants.DIFF_HIGHLIGHT_LAYER);
+
+		FreeformLayer overlayLayer = new FreeformLayer();
+		overlayLayer.setLayoutManager(new DelegatingLayout());
+		layeredPane.add(overlayLayer, MervinLayerConstants.DIFF_HIGHLIGHT_LAYER);
 		scrollPane.setContents(layeredPane);
 
 		setBorder(new LineBorder(ColorConstants.lightGray, 2));

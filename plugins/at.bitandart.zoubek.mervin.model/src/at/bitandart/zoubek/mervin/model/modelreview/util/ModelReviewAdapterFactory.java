@@ -117,8 +117,38 @@ public class ModelReviewAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
-		public Adapter caseChangeOverlay(ChangeOverlay object) {
-			return createChangeOverlayAdapter();
+		public Adapter caseDifferenceOverlay(DifferenceOverlay object) {
+			return createDifferenceOverlayAdapter();
+		}
+
+		@Override
+		public Adapter caseDifference(Difference object) {
+			return createDifferenceAdapter();
+		}
+
+		@Override
+		public Adapter caseLayoutDifference(LayoutDifference object) {
+			return createLayoutDifferenceAdapter();
+		}
+
+		@Override
+		public Adapter caseModelDifference(ModelDifference object) {
+			return createModelDifferenceAdapter();
+		}
+
+		@Override
+		public Adapter caseLocationDifference(LocationDifference object) {
+			return createLocationDifferenceAdapter();
+		}
+
+		@Override
+		public Adapter caseSizeDifference(SizeDifference object) {
+			return createSizeDifferenceAdapter();
+		}
+
+		@Override
+		public Adapter caseStateDifference(StateDifference object) {
+			return createStateDifferenceAdapter();
 		}
 
 		@Override
@@ -270,17 +300,113 @@ public class ModelReviewAdapterFactory extends AdapterFactoryImpl {
 
 	/**
 	 * Creates a new adapter for an object of class '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ChangeOverlay
-	 * <em>Change Overlay</em>}'. <!-- begin-user-doc --> This default
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay
+	 * <em>Difference Overlay</em>}'. <!-- begin-user-doc --> This default
 	 * implementation returns null so that we can easily ignore cases; it's
 	 * useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * 
 	 * @return the new adapter.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.ChangeOverlay
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay
 	 * @generated
 	 */
-	public Adapter createChangeOverlayAdapter() {
+	public Adapter createDifferenceOverlayAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Difference
+	 * <em>Difference</em>}'. <!-- begin-user-doc --> This default
+	 * implementation returns null so that we can easily ignore cases; it's
+	 * useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.Difference
+	 * @generated
+	 */
+	public Adapter createDifferenceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.LayoutDifference
+	 * <em>Layout Difference</em>}'. <!-- begin-user-doc --> This default
+	 * implementation returns null so that we can easily ignore cases; it's
+	 * useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.LayoutDifference
+	 * @generated
+	 */
+	public Adapter createLayoutDifferenceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelDifference
+	 * <em>Model Difference</em>}'. <!-- begin-user-doc --> This default
+	 * implementation returns null so that we can easily ignore cases; it's
+	 * useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelDifference
+	 * @generated
+	 */
+	public Adapter createModelDifferenceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.LocationDifference
+	 * <em>Location Difference</em>}'. <!-- begin-user-doc --> This default
+	 * implementation returns null so that we can easily ignore cases; it's
+	 * useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.LocationDifference
+	 * @generated
+	 */
+	public Adapter createLocationDifferenceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.SizeDifference
+	 * <em>Size Difference</em>}'. <!-- begin-user-doc --> This default
+	 * implementation returns null so that we can easily ignore cases; it's
+	 * useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.SizeDifference
+	 * @generated
+	 */
+	public Adapter createSizeDifferenceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.StateDifference
+	 * <em>State Difference</em>}'. <!-- begin-user-doc --> This default
+	 * implementation returns null so that we can easily ignore cases; it's
+	 * useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.StateDifference
+	 * @generated
+	 */
+	public Adapter createStateDifferenceAdapter() {
 		return null;
 	}
 
