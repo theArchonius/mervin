@@ -144,6 +144,24 @@ public class ModelReviewSwitch<T> extends Switch<T> {
 				result = defaultCase(theEObject);
 			return result;
 		}
+		case ModelReviewPackage.NODE_DIFFERENCE_OVERLAY: {
+			NodeDifferenceOverlay nodeDifferenceOverlay = (NodeDifferenceOverlay) theEObject;
+			T result = caseNodeDifferenceOverlay(nodeDifferenceOverlay);
+			if (result == null)
+				result = caseDifferenceOverlay(nodeDifferenceOverlay);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case ModelReviewPackage.EDGE_DIFFERENCE_OVERLAY: {
+			EdgeDifferenceOverlay edgeDifferenceOverlay = (EdgeDifferenceOverlay) theEObject;
+			T result = caseEdgeDifferenceOverlay(edgeDifferenceOverlay);
+			if (result == null)
+				result = caseDifferenceOverlay(edgeDifferenceOverlay);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
 		case ModelReviewPackage.DIFFERENCE: {
 			Difference difference = (Difference) theEObject;
 			T result = caseDifference(difference);
@@ -357,6 +375,40 @@ public class ModelReviewSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseDifferenceOverlay(DifferenceOverlay object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '
+	 * <em>Node Difference Overlay</em>'. <!-- begin-user-doc --> This
+	 * implementation returns null; returning a non-null result will terminate
+	 * the switch. <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '
+	 *         <em>Node Difference Overlay</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseNodeDifferenceOverlay(NodeDifferenceOverlay object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '
+	 * <em>Edge Difference Overlay</em>'. <!-- begin-user-doc --> This
+	 * implementation returns null; returning a non-null result will terminate
+	 * the switch. <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '
+	 *         <em>Edge Difference Overlay</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseEdgeDifferenceOverlay(EdgeDifferenceOverlay object) {
 		return null;
 	}
 

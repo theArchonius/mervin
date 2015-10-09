@@ -33,13 +33,23 @@
             </param>
          </metamodelType>
          <metamodelType
-               eclass="DifferenceOverlay"
-               id="at.bitandart.zoubek.mervin.model.overlay.Difference"
+               eclass="NodeDifferenceOverlay"
+               id="at.bitandart.zoubek.mervin.model.overlay.difference.node"
                kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
-               name="DifferenceOverlay">
+               name="NodeDifferenceOverlay">
             <param
                   name="sematicHint"
-                  value="Mervin_ModelReview_Overlay_Difference">
+                  value="Mervin_ModelReview_Overlay_Difference_Node">
+            </param>
+         </metamodelType>
+         <metamodelType
+               eclass="EdgeDifferenceOverlay"
+               id="at.bitandart.zoubek.mervin.model.overlay.difference.edge"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               name="EdgeDifferenceOverlay">
+            <param
+                  name="sematicHint"
+                  value="Mervin_ModelReview_Overlay_Difference_Edge">
             </param>
          </metamodelType>
       </metamodel>

@@ -56,15 +56,15 @@ public enum StateDifferenceType implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	MODIFIED(2, "MODIFIED",
-			"MODIFIED"), /**
-							 * The '<em><b>UNKNOWN</b></em>' literal object.
-							 * <!-- begin-user-doc --> <!-- end-user-doc -->
-							 * 
-							 * @see #UNKNOWN_VALUE
-							 * @generated
-							 * @ordered
-							 */
+	MODIFIED(2, "MODIFIED", "MODIFIED"),
+	/**
+	 * The '<em><b>UNKNOWN</b></em>' literal object. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #UNKNOWN_VALUE
+	 * @generated
+	 * @ordered
+	 */
 	UNKNOWN(3, "UNKNOWN", "UNKNOWN");
 
 	/**

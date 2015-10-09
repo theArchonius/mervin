@@ -16,6 +16,6 @@ import org.eclipse.gmf.runtime.diagram.ui.view.factories.AbstractShapeViewFactor
  * @author Florian Zoubek
  *
  */
-public class ChangeOverlayFactory extends AbstractShapeViewFactory {
+public class EdgeDifferenceOverlayFactory extends AbstractShapeViewFactory {
 	// intentionally left empty
 }

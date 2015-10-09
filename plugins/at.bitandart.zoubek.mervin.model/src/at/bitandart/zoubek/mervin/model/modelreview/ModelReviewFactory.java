@@ -94,13 +94,22 @@ public interface ModelReviewFactory extends EFactory {
 	DiagramInstance createDiagramInstance();
 
 	/**
-	 * Returns a new object of class '<em>Difference Overlay</em>'. <!--
+	 * Returns a new object of class '<em>Node Difference Overlay</em>'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @return a new object of class '<em>Difference Overlay</em>'.
+	 * @return a new object of class '<em>Node Difference Overlay</em>'.
 	 * @generated
 	 */
-	DifferenceOverlay createDifferenceOverlay();
+	NodeDifferenceOverlay createNodeDifferenceOverlay();
+
+	/**
+	 * Returns a new object of class '<em>Edge Difference Overlay</em>'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>Edge Difference Overlay</em>'.
+	 * @generated
+	 */
+	EdgeDifferenceOverlay createEdgeDifferenceOverlay();
 
 	/**
 	 * Returns a new object of class '<em>Location Difference</em>'. <!--

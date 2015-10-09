@@ -13,11 +13,7 @@
 package at.bitandart.zoubek.mervin.model.modelreview.tests;
 
 import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
-import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
-
 import junit.framework.TestCase;
-
-import junit.textui.TestRunner;
 
 /**
  * <!-- begin-user-doc --> A test case for the model object '
@@ -25,7 +21,7 @@ import junit.textui.TestRunner;
  * 
  * @generated
  */
-public class DifferenceOverlayTest extends TestCase {
+public abstract class DifferenceOverlayTest extends TestCase {
 
 	/**
 	 * The fixture for this Difference Overlay test case. <!-- begin-user-doc
@@ -34,15 +30,6 @@ public class DifferenceOverlayTest extends TestCase {
 	 * @generated
 	 */
 	protected DifferenceOverlay fixture = null;
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public static void main(String[] args) {
-		TestRunner.run(DifferenceOverlayTest.class);
-	}
 
 	/**
 	 * Constructs a new Difference Overlay test case with the given name. <!--
@@ -72,28 +59,6 @@ public class DifferenceOverlayTest extends TestCase {
 	 */
 	protected DifferenceOverlay getFixture() {
 		return fixture;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see junit.framework.TestCase#setUp()
-	 * @generated
-	 */
-	@Override
-	protected void setUp() throws Exception {
-		setFixture(ModelReviewFactory.eINSTANCE.createDifferenceOverlay());
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see junit.framework.TestCase#tearDown()
-	 * @generated
-	 */
-	@Override
-	protected void tearDown() throws Exception {
-		setFixture(null);
 	}
 
 } // DifferenceOverlayTest

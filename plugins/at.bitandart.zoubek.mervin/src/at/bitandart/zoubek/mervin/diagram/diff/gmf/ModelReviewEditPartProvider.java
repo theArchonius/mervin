@@ -24,7 +24,8 @@ import org.eclipse.gmf.runtime.notation.View;
 import at.bitandart.zoubek.mervin.diagram.diff.DiagramDiffView;
 import at.bitandart.zoubek.mervin.diagram.diff.parts.DiagramDiffRootEditPart;
 import at.bitandart.zoubek.mervin.diagram.diff.parts.DiagramEditPart;
-import at.bitandart.zoubek.mervin.diagram.diff.parts.DifferenceOverlayEditPart;
+import at.bitandart.zoubek.mervin.diagram.diff.parts.EdgeDifferenceOverlayEditPart;
+import at.bitandart.zoubek.mervin.diagram.diff.parts.NodeDifferenceOverlayEditPart;
 import at.bitandart.zoubek.mervin.diagram.diff.parts.WorkspaceEditPart;
 
 /**
@@ -41,7 +42,8 @@ public class ModelReviewEditPartProvider extends AbstractEditPartProvider {
 		diagramMap.put(DiagramDiffView.PART_DESCRIPTOR_ID, WorkspaceEditPart.class);
 
 		nodeMap.put(ModelReviewElementTypes.DIAGRAM_SEMANTIC_HINT, DiagramEditPart.class);
-		nodeMap.put(ModelReviewElementTypes.OVERLAY_DIFFERENCE_SEMANTIC_HINT, DifferenceOverlayEditPart.class);
+		nodeMap.put(ModelReviewElementTypes.OVERLAY_DIFFERENCE_NODE_SEMANTIC_HINT, NodeDifferenceOverlayEditPart.class);
+		nodeMap.put(ModelReviewElementTypes.OVERLAY_DIFFERENCE_EDGE_SEMANTIC_HINT, EdgeDifferenceOverlayEditPart.class);
 	}
 
 	@Override

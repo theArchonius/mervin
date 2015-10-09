@@ -18,6 +18,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch;
 import at.bitandart.zoubek.mervin.model.modelreview.Difference;
 import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
 import at.bitandart.zoubek.mervin.model.modelreview.DimensionChange;
+import at.bitandart.zoubek.mervin.model.modelreview.EdgeDifferenceOverlay;
 import at.bitandart.zoubek.mervin.model.modelreview.LayoutDifference;
 import at.bitandart.zoubek.mervin.model.modelreview.LocationDifference;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelDifference;
@@ -26,6 +27,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelPatch;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
+import at.bitandart.zoubek.mervin.model.modelreview.NodeDifferenceOverlay;
 import at.bitandart.zoubek.mervin.model.modelreview.Patch;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchChangeType;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
@@ -115,6 +117,20 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * @generated
 	 */
 	private EClass differenceOverlayEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass nodeDifferenceOverlayEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass edgeDifferenceOverlayEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -684,6 +700,24 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
+	public EClass getNodeDifferenceOverlay() {
+		return nodeDifferenceOverlayEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EClass getEdgeDifferenceOverlay() {
+		return edgeDifferenceOverlayEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	public EClass getDifference() {
 		return differenceEClass;
 	}
@@ -899,6 +933,10 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		createEReference(differenceOverlayEClass, DIFFERENCE_OVERLAY__LINKED_VIEW);
 		createEReference(differenceOverlayEClass, DIFFERENCE_OVERLAY__DIFFERENCES);
 
+		nodeDifferenceOverlayEClass = createEClass(NODE_DIFFERENCE_OVERLAY);
+
+		edgeDifferenceOverlayEClass = createEClass(EDGE_DIFFERENCE_OVERLAY);
+
 		differenceEClass = createEClass(DIFFERENCE);
 		createEReference(differenceEClass, DIFFERENCE__RAW_DIFFS);
 
@@ -964,6 +1002,8 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		diagramPatchEClass.getESuperTypes().add(this.getPatch());
 		modelPatchEClass.getESuperTypes().add(this.getPatch());
 		diagramInstanceEClass.getESuperTypes().add(this.getModelInstance());
+		nodeDifferenceOverlayEClass.getESuperTypes().add(this.getDifferenceOverlay());
+		edgeDifferenceOverlayEClass.getESuperTypes().add(this.getDifferenceOverlay());
 		layoutDifferenceEClass.getESuperTypes().add(this.getDifference());
 		modelDifferenceEClass.getESuperTypes().add(this.getDifference());
 		locationDifferenceEClass.getESuperTypes().add(this.getLayoutDifference());
@@ -1101,7 +1141,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		initEOperation(getDiagramInstance__GetDiagrams(), theNotationPackage.getDiagram(), "getDiagrams", 0, -1,
 				IS_UNIQUE, IS_ORDERED);
 
-		initEClass(differenceOverlayEClass, DifferenceOverlay.class, "DifferenceOverlay", !IS_ABSTRACT, !IS_INTERFACE,
+		initEClass(differenceOverlayEClass, DifferenceOverlay.class, "DifferenceOverlay", IS_ABSTRACT, IS_INTERFACE,
 				IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getDifferenceOverlay_LinkedView(), theNotationPackage.getView(), null, "linkedView", null, 0, 1,
 				DifferenceOverlay.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
@@ -1109,6 +1149,12 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		initEReference(getDifferenceOverlay_Differences(), this.getDifference(), null, "differences", null, 0, -1,
 				DifferenceOverlay.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(nodeDifferenceOverlayEClass, NodeDifferenceOverlay.class, "NodeDifferenceOverlay", !IS_ABSTRACT,
+				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(edgeDifferenceOverlayEClass, EdgeDifferenceOverlay.class, "EdgeDifferenceOverlay", !IS_ABSTRACT,
+				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(differenceEClass, Difference.class, "Difference", IS_ABSTRACT, IS_INTERFACE,
 				IS_GENERATED_INSTANCE_CLASS);

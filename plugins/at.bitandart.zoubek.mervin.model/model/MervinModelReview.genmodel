@@ -84,6 +84,8 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//DifferenceOverlay/linkedView"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//DifferenceOverlay/differences"/>
     </genClasses>
+    <genClasses ecoreClass="MervinModelReview.ecore#//NodeDifferenceOverlay"/>
+    <genClasses ecoreClass="MervinModelReview.ecore#//EdgeDifferenceOverlay"/>
     <genClasses image="false" ecoreClass="MervinModelReview.ecore#//Difference">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//Difference/rawDiffs"/>
     </genClasses>

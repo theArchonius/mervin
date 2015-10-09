@@ -262,27 +262,52 @@ public class ModelReviewItemProviderAdapterFactory extends ModelReviewAdapterFac
 
 	/**
 	 * This keeps track of the one adapter used for all
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay}
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.NodeDifferenceOverlay}
 	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected DifferenceOverlayItemProvider differenceOverlayItemProvider;
+	protected NodeDifferenceOverlayItemProvider nodeDifferenceOverlayItemProvider;
 
 	/**
 	 * This creates an adapter for a
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay}.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.NodeDifferenceOverlay}
+	 * . <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
 	@Override
-	public Adapter createDifferenceOverlayAdapter() {
-		if (differenceOverlayItemProvider == null) {
-			differenceOverlayItemProvider = new DifferenceOverlayItemProvider(this);
+	public Adapter createNodeDifferenceOverlayAdapter() {
+		if (nodeDifferenceOverlayItemProvider == null) {
+			nodeDifferenceOverlayItemProvider = new NodeDifferenceOverlayItemProvider(this);
 		}
 
-		return differenceOverlayItemProvider;
+		return nodeDifferenceOverlayItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.EdgeDifferenceOverlay}
+	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected EdgeDifferenceOverlayItemProvider edgeDifferenceOverlayItemProvider;
+
+	/**
+	 * This creates an adapter for a
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.EdgeDifferenceOverlay}
+	 * . <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createEdgeDifferenceOverlayAdapter() {
+		if (edgeDifferenceOverlayItemProvider == null) {
+			edgeDifferenceOverlayItemProvider = new EdgeDifferenceOverlayItemProvider(this);
+		}
+
+		return edgeDifferenceOverlayItemProvider;
 	}
 
 	/**
@@ -472,8 +497,10 @@ public class ModelReviewItemProviderAdapterFactory extends ModelReviewAdapterFac
 			modelInstanceItemProvider.dispose();
 		if (diagramInstanceItemProvider != null)
 			diagramInstanceItemProvider.dispose();
-		if (differenceOverlayItemProvider != null)
-			differenceOverlayItemProvider.dispose();
+		if (nodeDifferenceOverlayItemProvider != null)
+			nodeDifferenceOverlayItemProvider.dispose();
+		if (edgeDifferenceOverlayItemProvider != null)
+			edgeDifferenceOverlayItemProvider.dispose();
 		if (locationDifferenceItemProvider != null)
 			locationDifferenceItemProvider.dispose();
 		if (sizeDifferenceItemProvider != null)

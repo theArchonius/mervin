@@ -239,7 +239,7 @@ public class GMFDiagramDiffViewService {
 						(View) childView, filterEdges(childrenCopy), filterNonEdges(childrenCopy), diagram.getType()));
 
 				compositeCommand.add(new AddOverlayNodesCommand(transactionalEditingDomain,
-						modelReview.getSelectedDiagramComparison(), copyMap, childView, preferencesHint,
+						modelReview.getSelectedDiagramComparison(), copyMap, childView, childrenCopy, preferencesHint,
 						reviewFactory));
 
 				executeCommand(compositeCommand.reduce(), editDomain);
@@ -327,23 +327,25 @@ public class GMFDiagramDiffViewService {
 		private BiMap<EObject, EObject> inverseCopyMap;
 		private PreferencesHint preferencesHint;
 		private ModelReviewFactory reviewFactory;
+		private Collection<Object> overlayedViews;
 
 		public AddOverlayNodesCommand(TransactionalEditingDomain domain, Comparison diagramComparison,
-				BiMap<EObject, EObject> copyMap, View container, PreferencesHint preferencesHint,
-				ModelReviewFactory reviewFactory) {
+				BiMap<EObject, EObject> copyMap, View container, Collection<Object> overlayedViews,
+				PreferencesHint preferencesHint, ModelReviewFactory reviewFactory) {
 			super(domain, "", null);
 			this.diagramComparison = diagramComparison;
 			this.container = container;
 			this.inverseCopyMap = copyMap.inverse();
 			this.preferencesHint = preferencesHint;
 			this.reviewFactory = reviewFactory;
+			this.overlayedViews = overlayedViews;
 		}
 
 		@Override
 		protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
 				throws ExecutionException {
 
-			for (Object child : container.getChildren()) {
+			for (Object child : overlayedViews) {
 
 				if (child instanceof View) {
 					View childView = (View) child;
@@ -373,7 +375,9 @@ public class GMFDiagramDiffViewService {
 				if (difference instanceof ReferenceChange) {
 					EReference reference = ((ReferenceChange) difference).getReference();
 					if (reference == NotationPackage.Literals.VIEW__PERSISTED_CHILDREN
-							|| reference == NotationPackage.Literals.VIEW__PERSISTED_CHILDREN) {
+							|| reference == NotationPackage.Literals.VIEW__PERSISTED_CHILDREN
+							|| reference == NotationPackage.Literals.DIAGRAM__PERSISTED_EDGES
+							|| reference == NotationPackage.Literals.DIAGRAM__TRANSIENT_EDGES) {
 						viewReferenceChange = (ReferenceChange) difference;
 						break;
 					}
@@ -386,7 +390,15 @@ public class GMFDiagramDiffViewService {
 					|| viewReferenceChange != null;
 			if (hasChanged) {
 
-				DifferenceOverlay differenceOverlay = reviewFactory.createDifferenceOverlay();
+				DifferenceOverlay differenceOverlay = null;
+				String type = null;
+				if (view instanceof Edge) {
+					differenceOverlay = reviewFactory.createEdgeDifferenceOverlay();
+					type = ModelReviewElementTypes.OVERLAY_DIFFERENCE_EDGE_SEMANTIC_HINT;
+				} else {
+					differenceOverlay = reviewFactory.createNodeDifferenceOverlay();
+					type = ModelReviewElementTypes.OVERLAY_DIFFERENCE_NODE_SEMANTIC_HINT;
+				}
 				differenceOverlay.setLinkedView(view);
 
 				// Determine actual differences
@@ -419,8 +431,7 @@ public class GMFDiagramDiffViewService {
 					differenceOverlay.getDifferences().add(stateDifference);
 				}
 
-				ViewService.createNode(container, differenceOverlay,
-						ModelReviewElementTypes.OVERLAY_DIFFERENCE_SEMANTIC_HINT, preferencesHint);
+				ViewService.createNode(container, differenceOverlay, type, preferencesHint);
 			}
 
 			if (includeChildren) {

@@ -82,8 +82,10 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements ModelReviewF
 			return createModelInstance();
 		case ModelReviewPackage.DIAGRAM_INSTANCE:
 			return createDiagramInstance();
-		case ModelReviewPackage.DIFFERENCE_OVERLAY:
-			return createDifferenceOverlay();
+		case ModelReviewPackage.NODE_DIFFERENCE_OVERLAY:
+			return createNodeDifferenceOverlay();
+		case ModelReviewPackage.EDGE_DIFFERENCE_OVERLAY:
+			return createEdgeDifferenceOverlay();
 		case ModelReviewPackage.LOCATION_DIFFERENCE:
 			return createLocationDifference();
 		case ModelReviewPackage.SIZE_DIFFERENCE:
@@ -212,9 +214,19 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements ModelReviewF
 	 * 
 	 * @generated
 	 */
-	public DifferenceOverlay createDifferenceOverlay() {
-		DifferenceOverlayImpl differenceOverlay = new DifferenceOverlayImpl();
-		return differenceOverlay;
+	public NodeDifferenceOverlay createNodeDifferenceOverlay() {
+		NodeDifferenceOverlayImpl nodeDifferenceOverlay = new NodeDifferenceOverlayImpl();
+		return nodeDifferenceOverlay;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EdgeDifferenceOverlay createEdgeDifferenceOverlay() {
+		EdgeDifferenceOverlayImpl edgeDifferenceOverlay = new EdgeDifferenceOverlayImpl();
+		return edgeDifferenceOverlay;
 	}
 
 	/**

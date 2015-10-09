@@ -122,6 +122,16 @@ public class ModelReviewAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
+		public Adapter caseNodeDifferenceOverlay(NodeDifferenceOverlay object) {
+			return createNodeDifferenceOverlayAdapter();
+		}
+
+		@Override
+		public Adapter caseEdgeDifferenceOverlay(EdgeDifferenceOverlay object) {
+			return createEdgeDifferenceOverlayAdapter();
+		}
+
+		@Override
 		public Adapter caseDifference(Difference object) {
 			return createDifferenceAdapter();
 		}
@@ -311,6 +321,38 @@ public class ModelReviewAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createDifferenceOverlayAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.NodeDifferenceOverlay
+	 * <em>Node Difference Overlay</em>}'. <!-- begin-user-doc --> This default
+	 * implementation returns null so that we can easily ignore cases; it's
+	 * useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.NodeDifferenceOverlay
+	 * @generated
+	 */
+	public Adapter createNodeDifferenceOverlayAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.EdgeDifferenceOverlay
+	 * <em>Edge Difference Overlay</em>}'. <!-- begin-user-doc --> This default
+	 * implementation returns null so that we can easily ignore cases; it's
+	 * useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.EdgeDifferenceOverlay
+	 * @generated
+	 */
+	public Adapter createEdgeDifferenceOverlayAdapter() {
 		return null;
 	}
 

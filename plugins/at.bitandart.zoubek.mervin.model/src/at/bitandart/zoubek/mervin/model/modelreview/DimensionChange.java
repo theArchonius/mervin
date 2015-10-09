@@ -46,15 +46,15 @@ public enum DimensionChange implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	BIGGER(1, "BIGGER",
-			"BIGGER"), /**
-						 * The '<em><b>UNKNOWN</b></em>' literal object. <!--
-						 * begin-user-doc --> <!-- end-user-doc -->
-						 * 
-						 * @see #UNKNOWN_VALUE
-						 * @generated
-						 * @ordered
-						 */
+	BIGGER(1, "BIGGER", "BIGGER"),
+	/**
+	 * The '<em><b>UNKNOWN</b></em>' literal object. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #UNKNOWN_VALUE
+	 * @generated
+	 * @ordered
+	 */
 	UNKNOWN(2, "UNKNOWN", "UNKNOWN");
 
 	/**

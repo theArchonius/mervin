@@ -756,12 +756,11 @@ public interface ModelReviewPackage extends EPackage {
 
 	/**
 	 * The meta object id for the '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.DifferenceOverlayImpl
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay
 	 * <em>Difference Overlay</em>}' class. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
-	 *      DifferenceOverlayImpl
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDifferenceOverlay()
 	 * @generated
 	 */
@@ -805,6 +804,106 @@ public interface ModelReviewPackage extends EPackage {
 
 	/**
 	 * The meta object id for the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.NodeDifferenceOverlayImpl
+	 * <em>Node Difference Overlay</em>}' class. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
+	 *      NodeDifferenceOverlayImpl
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getNodeDifferenceOverlay()
+	 * @generated
+	 */
+	int NODE_DIFFERENCE_OVERLAY = 9;
+
+	/**
+	 * The feature id for the '<em><b>Linked View</b></em>' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_DIFFERENCE_OVERLAY__LINKED_VIEW = DIFFERENCE_OVERLAY__LINKED_VIEW;
+
+	/**
+	 * The feature id for the '<em><b>Differences</b></em>' containment
+	 * reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_DIFFERENCE_OVERLAY__DIFFERENCES = DIFFERENCE_OVERLAY__DIFFERENCES;
+
+	/**
+	 * The number of structural features of the '
+	 * <em>Node Difference Overlay</em>' class. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_DIFFERENCE_OVERLAY_FEATURE_COUNT = DIFFERENCE_OVERLAY_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of operations of the '<em>Node Difference Overlay</em>' class.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_DIFFERENCE_OVERLAY_OPERATION_COUNT = DIFFERENCE_OVERLAY_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.EdgeDifferenceOverlayImpl
+	 * <em>Edge Difference Overlay</em>}' class. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
+	 *      EdgeDifferenceOverlayImpl
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getEdgeDifferenceOverlay()
+	 * @generated
+	 */
+	int EDGE_DIFFERENCE_OVERLAY = 10;
+
+	/**
+	 * The feature id for the '<em><b>Linked View</b></em>' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int EDGE_DIFFERENCE_OVERLAY__LINKED_VIEW = DIFFERENCE_OVERLAY__LINKED_VIEW;
+
+	/**
+	 * The feature id for the '<em><b>Differences</b></em>' containment
+	 * reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int EDGE_DIFFERENCE_OVERLAY__DIFFERENCES = DIFFERENCE_OVERLAY__DIFFERENCES;
+
+	/**
+	 * The number of structural features of the '
+	 * <em>Edge Difference Overlay</em>' class. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int EDGE_DIFFERENCE_OVERLAY_FEATURE_COUNT = DIFFERENCE_OVERLAY_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of operations of the '<em>Edge Difference Overlay</em>' class.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int EDGE_DIFFERENCE_OVERLAY_OPERATION_COUNT = DIFFERENCE_OVERLAY_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Difference
 	 * <em>Difference</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
@@ -813,7 +912,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDifference()
 	 * @generated
 	 */
-	int DIFFERENCE = 9;
+	int DIFFERENCE = 11;
 
 	/**
 	 * The feature id for the '<em><b>Raw Diffs</b></em>' reference list. <!--
@@ -852,7 +951,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getLayoutDifference()
 	 * @generated
 	 */
-	int LAYOUT_DIFFERENCE = 10;
+	int LAYOUT_DIFFERENCE = 12;
 
 	/**
 	 * The feature id for the '<em><b>Raw Diffs</b></em>' reference list. <!--
@@ -891,7 +990,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getModelDifference()
 	 * @generated
 	 */
-	int MODEL_DIFFERENCE = 11;
+	int MODEL_DIFFERENCE = 13;
 
 	/**
 	 * The feature id for the '<em><b>Raw Diffs</b></em>' reference list. <!--
@@ -931,7 +1030,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getLocationDifference()
 	 * @generated
 	 */
-	int LOCATION_DIFFERENCE = 12;
+	int LOCATION_DIFFERENCE = 14;
 
 	/**
 	 * The feature id for the '<em><b>Raw Diffs</b></em>' reference list. <!--
@@ -979,7 +1078,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getSizeDifference()
 	 * @generated
 	 */
-	int SIZE_DIFFERENCE = 13;
+	int SIZE_DIFFERENCE = 15;
 
 	/**
 	 * The feature id for the '<em><b>Raw Diffs</b></em>' reference list. <!--
@@ -1037,7 +1136,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getStateDifference()
 	 * @generated
 	 */
-	int STATE_DIFFERENCE = 14;
+	int STATE_DIFFERENCE = 16;
 
 	/**
 	 * The feature id for the '<em><b>Raw Diffs</b></em>' reference list. <!--
@@ -1085,7 +1184,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getPatchChangeType()
 	 * @generated
 	 */
-	int PATCH_CHANGE_TYPE = 15;
+	int PATCH_CHANGE_TYPE = 17;
 
 	/**
 	 * The meta object id for the '
@@ -1097,7 +1196,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getStateDifferenceType()
 	 * @generated
 	 */
-	int STATE_DIFFERENCE_TYPE = 16;
+	int STATE_DIFFERENCE_TYPE = 18;
 
 	/**
 	 * The meta object id for the '
@@ -1109,7 +1208,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDimensionChange()
 	 * @generated
 	 */
-	int DIMENSION_CHANGE = 17;
+	int DIMENSION_CHANGE = 19;
 
 	/**
 	 * The meta object id for the '<em>Vector</em>' data type. <!--
@@ -1119,7 +1218,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getVector()
 	 * @generated
 	 */
-	int VECTOR = 18;
+	int VECTOR = 20;
 
 	/**
 	 * Returns the meta object for class '
@@ -1710,6 +1809,30 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getDifferenceOverlay_Differences();
+
+	/**
+	 * Returns the meta object for class '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.NodeDifferenceOverlay
+	 * <em>Node Difference Overlay</em>}'. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Node Difference Overlay</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.NodeDifferenceOverlay
+	 * @generated
+	 */
+	EClass getNodeDifferenceOverlay();
+
+	/**
+	 * Returns the meta object for class '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.EdgeDifferenceOverlay
+	 * <em>Edge Difference Overlay</em>}'. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Edge Difference Overlay</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.EdgeDifferenceOverlay
+	 * @generated
+	 */
+	EClass getEdgeDifferenceOverlay();
 
 	/**
 	 * Returns the meta object for class '
@@ -2312,12 +2435,11 @@ public interface ModelReviewPackage extends EPackage {
 
 		/**
 		 * The meta object literal for the '
-		 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.DifferenceOverlayImpl
+		 * {@link at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay
 		 * <em>Difference Overlay</em>}' class. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
 		 * 
-		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
-		 *      DifferenceOverlayImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay
 		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDifferenceOverlay()
 		 * @generated
 		 */
@@ -2339,6 +2461,32 @@ public interface ModelReviewPackage extends EPackage {
 		 * @generated
 		 */
 		EReference DIFFERENCE_OVERLAY__DIFFERENCES = eINSTANCE.getDifferenceOverlay_Differences();
+
+		/**
+		 * The meta object literal for the '
+		 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.NodeDifferenceOverlayImpl
+		 * <em>Node Difference Overlay</em>}' class. <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
+		 *      NodeDifferenceOverlayImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getNodeDifferenceOverlay()
+		 * @generated
+		 */
+		EClass NODE_DIFFERENCE_OVERLAY = eINSTANCE.getNodeDifferenceOverlay();
+
+		/**
+		 * The meta object literal for the '
+		 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.EdgeDifferenceOverlayImpl
+		 * <em>Edge Difference Overlay</em>}' class. <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * 
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
+		 *      EdgeDifferenceOverlayImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getEdgeDifferenceOverlay()
+		 * @generated
+		 */
+		EClass EDGE_DIFFERENCE_OVERLAY = eINSTANCE.getEdgeDifferenceOverlay();
 
 		/**
 		 * The meta object literal for the '

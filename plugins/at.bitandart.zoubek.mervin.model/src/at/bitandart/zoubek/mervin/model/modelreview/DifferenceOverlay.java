@@ -34,7 +34,7 @@ import org.eclipse.gmf.runtime.notation.View;
  * </ul>
  *
  * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getDifferenceOverlay()
- * @model
+ * @model interface="true" abstract="true"
  * @generated
  */
 public interface DifferenceOverlay extends EObject {
