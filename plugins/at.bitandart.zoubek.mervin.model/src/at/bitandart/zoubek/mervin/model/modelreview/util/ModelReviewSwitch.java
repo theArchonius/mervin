@@ -137,6 +137,89 @@ public class ModelReviewSwitch<T> extends Switch<T> {
 				result = defaultCase(theEObject);
 			return result;
 		}
+		case ModelReviewPackage.DIFFERENCE_OVERLAY: {
+			DifferenceOverlay differenceOverlay = (DifferenceOverlay) theEObject;
+			T result = caseDifferenceOverlay(differenceOverlay);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case ModelReviewPackage.NODE_DIFFERENCE_OVERLAY: {
+			NodeDifferenceOverlay nodeDifferenceOverlay = (NodeDifferenceOverlay) theEObject;
+			T result = caseNodeDifferenceOverlay(nodeDifferenceOverlay);
+			if (result == null)
+				result = caseDifferenceOverlay(nodeDifferenceOverlay);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case ModelReviewPackage.EDGE_DIFFERENCE_OVERLAY: {
+			EdgeDifferenceOverlay edgeDifferenceOverlay = (EdgeDifferenceOverlay) theEObject;
+			T result = caseEdgeDifferenceOverlay(edgeDifferenceOverlay);
+			if (result == null)
+				result = caseDifferenceOverlay(edgeDifferenceOverlay);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case ModelReviewPackage.DIFFERENCE: {
+			Difference difference = (Difference) theEObject;
+			T result = caseDifference(difference);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case ModelReviewPackage.LAYOUT_DIFFERENCE: {
+			LayoutDifference layoutDifference = (LayoutDifference) theEObject;
+			T result = caseLayoutDifference(layoutDifference);
+			if (result == null)
+				result = caseDifference(layoutDifference);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case ModelReviewPackage.MODEL_DIFFERENCE: {
+			ModelDifference modelDifference = (ModelDifference) theEObject;
+			T result = caseModelDifference(modelDifference);
+			if (result == null)
+				result = caseDifference(modelDifference);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case ModelReviewPackage.LOCATION_DIFFERENCE: {
+			LocationDifference locationDifference = (LocationDifference) theEObject;
+			T result = caseLocationDifference(locationDifference);
+			if (result == null)
+				result = caseLayoutDifference(locationDifference);
+			if (result == null)
+				result = caseDifference(locationDifference);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case ModelReviewPackage.SIZE_DIFFERENCE: {
+			SizeDifference sizeDifference = (SizeDifference) theEObject;
+			T result = caseSizeDifference(sizeDifference);
+			if (result == null)
+				result = caseLayoutDifference(sizeDifference);
+			if (result == null)
+				result = caseDifference(sizeDifference);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
+		case ModelReviewPackage.STATE_DIFFERENCE: {
+			StateDifference stateDifference = (StateDifference) theEObject;
+			T result = caseStateDifference(stateDifference);
+			if (result == null)
+				result = caseModelDifference(stateDifference);
+			if (result == null)
+				result = caseDifference(stateDifference);
+			if (result == null)
+				result = defaultCase(theEObject);
+			return result;
+		}
 		default:
 			return defaultCase(theEObject);
 		}
@@ -275,6 +358,159 @@ public class ModelReviewSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseDiagramInstance(DiagramInstance object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '
+	 * <em>Difference Overlay</em>'. <!-- begin-user-doc --> This implementation
+	 * returns null; returning a non-null result will terminate the switch. <!--
+	 * end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '
+	 *         <em>Difference Overlay</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseDifferenceOverlay(DifferenceOverlay object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '
+	 * <em>Node Difference Overlay</em>'. <!-- begin-user-doc --> This
+	 * implementation returns null; returning a non-null result will terminate
+	 * the switch. <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '
+	 *         <em>Node Difference Overlay</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseNodeDifferenceOverlay(NodeDifferenceOverlay object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '
+	 * <em>Edge Difference Overlay</em>'. <!-- begin-user-doc --> This
+	 * implementation returns null; returning a non-null result will terminate
+	 * the switch. <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '
+	 *         <em>Edge Difference Overlay</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseEdgeDifferenceOverlay(EdgeDifferenceOverlay object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '
+	 * <em>Difference</em>'. <!-- begin-user-doc --> This implementation returns
+	 * null; returning a non-null result will terminate the switch. <!--
+	 * end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '
+	 *         <em>Difference</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseDifference(Difference object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '
+	 * <em>Layout Difference</em>'. <!-- begin-user-doc --> This implementation
+	 * returns null; returning a non-null result will terminate the switch. <!--
+	 * end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '
+	 *         <em>Layout Difference</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseLayoutDifference(LayoutDifference object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '
+	 * <em>Model Difference</em>'. <!-- begin-user-doc --> This implementation
+	 * returns null; returning a non-null result will terminate the switch. <!--
+	 * end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '
+	 *         <em>Model Difference</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseModelDifference(ModelDifference object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '
+	 * <em>Location Difference</em>'. <!-- begin-user-doc --> This
+	 * implementation returns null; returning a non-null result will terminate
+	 * the switch. <!-- end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '
+	 *         <em>Location Difference</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseLocationDifference(LocationDifference object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '
+	 * <em>Size Difference</em>'. <!-- begin-user-doc --> This implementation
+	 * returns null; returning a non-null result will terminate the switch. <!--
+	 * end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '
+	 *         <em>Size Difference</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseSizeDifference(SizeDifference object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '
+	 * <em>State Difference</em>'. <!-- begin-user-doc --> This implementation
+	 * returns null; returning a non-null result will terminate the switch. <!--
+	 * end-user-doc -->
+	 * 
+	 * @param object
+	 *            the target of the switch.
+	 * @return the result of interpreting the object as an instance of '
+	 *         <em>State Difference</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseStateDifference(StateDifference object) {
 		return null;
 	}
 

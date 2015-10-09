@@ -12,7 +12,8 @@ Import-Package: org.eclipse.draw2d,
  org.eclipse.swt.graphics,
  org.eclipse.swt.layout,
  org.eclipse.swt.widgets
-Export-Package: at.bitandart.zoubek.mervin.draw2d.figures,
+Export-Package: at.bitandart.zoubek.mervin.draw2d,
+ at.bitandart.zoubek.mervin.draw2d.figures,
  at.bitandart.zoubek.mervin.draw2d.figures.workbench
 Require-Bundle: org.eclipse.gmf.runtime.diagram.ui
 Bundle-ActivationPolicy: lazy

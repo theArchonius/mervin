@@ -94,6 +94,51 @@ public interface ModelReviewFactory extends EFactory {
 	DiagramInstance createDiagramInstance();
 
 	/**
+	 * Returns a new object of class '<em>Node Difference Overlay</em>'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>Node Difference Overlay</em>'.
+	 * @generated
+	 */
+	NodeDifferenceOverlay createNodeDifferenceOverlay();
+
+	/**
+	 * Returns a new object of class '<em>Edge Difference Overlay</em>'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>Edge Difference Overlay</em>'.
+	 * @generated
+	 */
+	EdgeDifferenceOverlay createEdgeDifferenceOverlay();
+
+	/**
+	 * Returns a new object of class '<em>Location Difference</em>'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>Location Difference</em>'.
+	 * @generated
+	 */
+	LocationDifference createLocationDifference();
+
+	/**
+	 * Returns a new object of class '<em>Size Difference</em>'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>Size Difference</em>'.
+	 * @generated
+	 */
+	SizeDifference createSizeDifference();
+
+	/**
+	 * Returns a new object of class '<em>State Difference</em>'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>State Difference</em>'.
+	 * @generated
+	 */
+	StateDifference createStateDifference();
+
+	/**
 	 * Returns the package supported by this factory. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 

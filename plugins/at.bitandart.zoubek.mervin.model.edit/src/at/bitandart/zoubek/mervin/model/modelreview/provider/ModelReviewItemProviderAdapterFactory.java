@@ -261,6 +261,131 @@ public class ModelReviewItemProviderAdapterFactory extends ModelReviewAdapterFac
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.NodeDifferenceOverlay}
+	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected NodeDifferenceOverlayItemProvider nodeDifferenceOverlayItemProvider;
+
+	/**
+	 * This creates an adapter for a
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.NodeDifferenceOverlay}
+	 * . <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createNodeDifferenceOverlayAdapter() {
+		if (nodeDifferenceOverlayItemProvider == null) {
+			nodeDifferenceOverlayItemProvider = new NodeDifferenceOverlayItemProvider(this);
+		}
+
+		return nodeDifferenceOverlayItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.EdgeDifferenceOverlay}
+	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected EdgeDifferenceOverlayItemProvider edgeDifferenceOverlayItemProvider;
+
+	/**
+	 * This creates an adapter for a
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.EdgeDifferenceOverlay}
+	 * . <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createEdgeDifferenceOverlayAdapter() {
+		if (edgeDifferenceOverlayItemProvider == null) {
+			edgeDifferenceOverlayItemProvider = new EdgeDifferenceOverlayItemProvider(this);
+		}
+
+		return edgeDifferenceOverlayItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.LocationDifference}
+	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected LocationDifferenceItemProvider locationDifferenceItemProvider;
+
+	/**
+	 * This creates an adapter for a
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.LocationDifference}.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createLocationDifferenceAdapter() {
+		if (locationDifferenceItemProvider == null) {
+			locationDifferenceItemProvider = new LocationDifferenceItemProvider(this);
+		}
+
+		return locationDifferenceItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.SizeDifference}
+	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected SizeDifferenceItemProvider sizeDifferenceItemProvider;
+
+	/**
+	 * This creates an adapter for a
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.SizeDifference}. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createSizeDifferenceAdapter() {
+		if (sizeDifferenceItemProvider == null) {
+			sizeDifferenceItemProvider = new SizeDifferenceItemProvider(this);
+		}
+
+		return sizeDifferenceItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.StateDifference}
+	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected StateDifferenceItemProvider stateDifferenceItemProvider;
+
+	/**
+	 * This creates an adapter for a
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.StateDifference}.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createStateDifferenceAdapter() {
+		if (stateDifferenceItemProvider == null) {
+			stateDifferenceItemProvider = new StateDifferenceItemProvider(this);
+		}
+
+		return stateDifferenceItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -372,6 +497,16 @@ public class ModelReviewItemProviderAdapterFactory extends ModelReviewAdapterFac
 			modelInstanceItemProvider.dispose();
 		if (diagramInstanceItemProvider != null)
 			diagramInstanceItemProvider.dispose();
+		if (nodeDifferenceOverlayItemProvider != null)
+			nodeDifferenceOverlayItemProvider.dispose();
+		if (edgeDifferenceOverlayItemProvider != null)
+			edgeDifferenceOverlayItemProvider.dispose();
+		if (locationDifferenceItemProvider != null)
+			locationDifferenceItemProvider.dispose();
+		if (sizeDifferenceItemProvider != null)
+			sizeDifferenceItemProvider.dispose();
+		if (stateDifferenceItemProvider != null)
+			stateDifferenceItemProvider.dispose();
 	}
 
 }

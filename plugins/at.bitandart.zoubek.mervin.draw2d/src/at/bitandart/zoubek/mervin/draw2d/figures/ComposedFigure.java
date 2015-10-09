@@ -30,7 +30,7 @@ import org.eclipse.draw2d.Figure;
  * @author Florian Zoubek
  *
  */
-public abstract class ComposedFigure extends Figure {
+public abstract class ComposedFigure extends Figure implements IComposedFigure {
 
 	private boolean initialized;
 

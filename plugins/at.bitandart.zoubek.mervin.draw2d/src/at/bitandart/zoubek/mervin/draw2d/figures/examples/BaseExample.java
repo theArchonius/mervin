@@ -81,6 +81,8 @@ public class BaseExample {
 		while (!shell.isDisposed())
 			while (!d.readAndDispatch())
 				d.sleep();
+
+		cleanUp();
 	}
 
 	/**
@@ -130,6 +132,14 @@ public class BaseExample {
 	 */
 	protected String getTitle() {
 		return "Mervin draw2d example";
+	}
+
+	/**
+	 * called once before the example is shut down. Does nothing by default,
+	 * subclasses may override.
+	 */
+	protected void cleanUp() {
+		// intentionally left empty
 	}
 
 	public IFigure getRootFigure() {

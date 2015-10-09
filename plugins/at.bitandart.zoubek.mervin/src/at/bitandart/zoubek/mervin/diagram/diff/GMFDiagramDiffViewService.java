@@ -10,8 +10,11 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.diagram.diff;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -20,11 +23,17 @@ import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.util.EContentAdapter;
-import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditDomain;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
@@ -33,6 +42,7 @@ import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.core.commands.CreateDiagramCommand;
 import org.eclipse.gmf.runtime.diagram.core.commands.DeleteCommand;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
 import org.eclipse.gmf.runtime.diagram.ui.commands.CreateCommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor;
@@ -41,12 +51,20 @@ import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+
 import at.bitandart.zoubek.mervin.diagram.diff.gmf.ModelReviewElementTypes;
+import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
+import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
+import at.bitandart.zoubek.mervin.model.modelreview.StateDifference;
+import at.bitandart.zoubek.mervin.model.modelreview.StateDifferenceType;
 
 // TODO remove Createable annotation and move creation in addon
 /**
@@ -56,6 +74,9 @@ import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
  */
 @Creatable
 public class GMFDiagramDiffViewService {
+
+	@Inject
+	private ModelReviewFactory reviewFactory;
 
 	/**
 	 * creates a view model for the given {@link ModelReview} instance and adds
@@ -203,9 +224,24 @@ public class GMFDiagramDiffViewService {
 				List<Object> childrenAndEdges = new LinkedList<Object>();
 				childrenAndEdges.addAll((List<?>) diagram.getEdges());
 				childrenAndEdges.addAll((List<?>) diagram.getVisibleChildren());
-				List<Object> childrenCopy = new LinkedList<Object>(EcoreUtil.copyAll(childrenAndEdges));
+
+				/*
+				 * Copy the diagram contents and keep the mapping information to
+				 * associate the copies to the differences later
+				 */
+				Copier copier = new Copier();
+				Collection<Object> childrenAndEdgesCopy = copier.copyAll(childrenAndEdges);
+				copier.copyReferences();
+				HashBiMap<EObject, EObject> copyMap = HashBiMap.create(copier);
+
+				List<Object> childrenCopy = new LinkedList<Object>(childrenAndEdgesCopy);
 				compositeCommand.add(new AddDiagramEdgesAndNodesCommand(transactionalEditingDomain, workspaceDiagram,
 						(View) childView, filterEdges(childrenCopy), filterNonEdges(childrenCopy), diagram.getType()));
+
+				compositeCommand.add(new AddOverlayNodesCommand(transactionalEditingDomain,
+						modelReview.getSelectedDiagramComparison(), copyMap, childView, childrenCopy, preferencesHint,
+						reviewFactory));
+
 				executeCommand(compositeCommand.reduce(), editDomain);
 			}
 		}
@@ -282,6 +318,147 @@ public class GMFDiagramDiffViewService {
 				view.getEAnnotations().add(eAnnotation);
 			}
 		}
+	}
+
+	private class AddOverlayNodesCommand extends AbstractTransactionalCommand {
+
+		private Comparison diagramComparison;
+		private View container;
+		private BiMap<EObject, EObject> inverseCopyMap;
+		private PreferencesHint preferencesHint;
+		private ModelReviewFactory reviewFactory;
+		private Collection<Object> overlayedViews;
+
+		public AddOverlayNodesCommand(TransactionalEditingDomain domain, Comparison diagramComparison,
+				BiMap<EObject, EObject> copyMap, View container, Collection<Object> overlayedViews,
+				PreferencesHint preferencesHint, ModelReviewFactory reviewFactory) {
+			super(domain, "", null);
+			this.diagramComparison = diagramComparison;
+			this.container = container;
+			this.inverseCopyMap = copyMap.inverse();
+			this.preferencesHint = preferencesHint;
+			this.reviewFactory = reviewFactory;
+			this.overlayedViews = overlayedViews;
+		}
+
+		@Override
+		protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
+				throws ExecutionException {
+
+			for (Object child : overlayedViews) {
+
+				if (child instanceof View) {
+					View childView = (View) child;
+					View originalView = (View) inverseCopyMap.get(childView);
+					Match match = diagramComparison.getMatch(originalView);
+					createOverlayForView(childView, true);
+				}
+			}
+
+			return CommandResult.newOKCommandResult();
+		}
+
+		private void createOverlayForView(View view, boolean includeChildren) {
+
+			View originalView = (View) inverseCopyMap.get(view);
+			if (originalView == null) {
+				/*
+				 * FIXME quick fix to avoid NPE - needs further investigation
+				 * this should not happen as all copied views should have an
+				 * original version
+				 */
+				return;
+			}
+			EList<Diff> referencingDifferences = diagramComparison.getDifferences(originalView);
+			ReferenceChange viewReferenceChange = null;
+			for (Diff difference : referencingDifferences) {
+				if (difference instanceof ReferenceChange) {
+					EReference reference = ((ReferenceChange) difference).getReference();
+					if (reference == NotationPackage.Literals.VIEW__PERSISTED_CHILDREN
+							|| reference == NotationPackage.Literals.VIEW__PERSISTED_CHILDREN
+							|| reference == NotationPackage.Literals.DIAGRAM__PERSISTED_EDGES
+							|| reference == NotationPackage.Literals.DIAGRAM__TRANSIENT_EDGES) {
+						viewReferenceChange = (ReferenceChange) difference;
+						break;
+					}
+				}
+			}
+			EList<Diff> differences = diagramComparison.getMatch(originalView).getDifferences();
+			Match viewElementSubmatch = diagramComparison.getMatch(view.getElement());
+
+			boolean hasChanged = !differences.isEmpty() || !viewElementSubmatch.getDifferences().isEmpty()
+					|| viewReferenceChange != null;
+			if (hasChanged) {
+
+				DifferenceOverlay differenceOverlay = null;
+				String type = null;
+				if (view instanceof Edge) {
+					differenceOverlay = reviewFactory.createEdgeDifferenceOverlay();
+					type = ModelReviewElementTypes.OVERLAY_DIFFERENCE_EDGE_SEMANTIC_HINT;
+				} else {
+					differenceOverlay = reviewFactory.createNodeDifferenceOverlay();
+					type = ModelReviewElementTypes.OVERLAY_DIFFERENCE_NODE_SEMANTIC_HINT;
+				}
+				differenceOverlay.setLinkedView(view);
+
+				// Determine actual differences
+
+				for (Diff difference : differences) {
+
+					// TODO update DifferenceOverlay properties based on the
+					// differences
+
+					if (difference instanceof ReferenceChange) {
+						if (((ReferenceChange) difference).getReference() != NotationPackage.Literals.VIEW__ELEMENT) {
+
+							// TODO layout changes
+
+						}
+
+					}
+				}
+
+				/*
+				 * determine state difference type based on the reference change
+				 * of the view in its parent
+				 */
+
+				if (viewReferenceChange != null) {
+
+					StateDifference stateDifference = reviewFactory.createStateDifference();
+					stateDifference.getRawDiffs().add(viewReferenceChange);
+					stateDifference.setType(toStateDifferenceType(viewReferenceChange.getKind()));
+					differenceOverlay.getDifferences().add(stateDifference);
+				}
+
+				ViewService.createNode(container, differenceOverlay, type, preferencesHint);
+			}
+
+			if (includeChildren) {
+				for (Object child : view.getChildren()) {
+					if (child instanceof View) {
+						View childView = (View) child;
+						createOverlayForView(childView, true);
+					}
+				}
+			}
+		}
+
+		private StateDifferenceType toStateDifferenceType(DifferenceKind diffKind) {
+
+			switch (diffKind) {
+			case ADD:
+				return StateDifferenceType.ADDED;
+			case MOVE:
+			case CHANGE:
+				return StateDifferenceType.MODIFIED;
+			case DELETE:
+				return StateDifferenceType.DELETED;
+			default:
+				return StateDifferenceType.UNKNOWN;
+			}
+		}
+
 	}
 
 	/**

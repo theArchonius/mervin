@@ -36,6 +36,8 @@ public class ModelReviewViewProvider extends AbstractViewProvider {
 		diagramMap.put(DiagramDiffView.PART_DESCRIPTOR_ID, ModelReviewDiffDiagramViewFactory.class);
 
 		nodeMap.put(ModelReviewElementTypes.DIAGRAM_SEMANTIC_HINT, WorkspaceDiagramFactory.class);
+		nodeMap.put(ModelReviewElementTypes.OVERLAY_DIFFERENCE_NODE_SEMANTIC_HINT, NodeDifferenceOverlayFactory.class);
+		nodeMap.put(ModelReviewElementTypes.OVERLAY_DIFFERENCE_EDGE_SEMANTIC_HINT, EdgeDifferenceOverlayFactory.class);
 	}
 
 	@Override
