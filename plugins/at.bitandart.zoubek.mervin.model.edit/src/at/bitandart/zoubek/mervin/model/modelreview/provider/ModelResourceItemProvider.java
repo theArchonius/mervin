@@ -33,12 +33,12 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 
 /**
  * This is the item provider adapter for a
- * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelInstance} object.
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelResource} object.
  * <!-- begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
  */
-public class ModelInstanceItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider,
+public class ModelResourceItemProvider extends ItemProviderAdapter implements IEditingDomainItemProvider,
 		IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider, IItemPropertySource {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!--
@@ -46,7 +46,7 @@ public class ModelInstanceItemProvider extends ItemProviderAdapter implements IE
 	 * 
 	 * @generated
 	 */
-	public ModelInstanceItemProvider(AdapterFactory adapterFactory) {
+	public ModelResourceItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -76,10 +76,10 @@ public class ModelInstanceItemProvider extends ItemProviderAdapter implements IE
 	protected void addObjectsPropertyDescriptor(Object object) {
 		itemPropertyDescriptors
 				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(), getString("_UI_ModelInstance_objects_feature"),
-						getString("_UI_PropertyDescriptor_description", "_UI_ModelInstance_objects_feature",
-								"_UI_ModelInstance_type"),
-						ModelReviewPackage.Literals.MODEL_INSTANCE__OBJECTS, true, false, true, null, null, null));
+						getResourceLocator(), getString("_UI_ModelResource_objects_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_ModelResource_objects_feature",
+								"_UI_ModelResource_type"),
+						ModelReviewPackage.Literals.MODEL_RESOURCE__OBJECTS, true, false, true, null, null, null));
 	}
 
 	/**
@@ -91,22 +91,22 @@ public class ModelInstanceItemProvider extends ItemProviderAdapter implements IE
 	protected void addRootPackagesPropertyDescriptor(Object object) {
 		itemPropertyDescriptors
 				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(), getString("_UI_ModelInstance_rootPackages_feature"),
-						getString("_UI_PropertyDescriptor_description", "_UI_ModelInstance_rootPackages_feature",
-								"_UI_ModelInstance_type"),
-						ModelReviewPackage.Literals.MODEL_INSTANCE__ROOT_PACKAGES, true, false, true, null, null,
+						getResourceLocator(), getString("_UI_ModelResource_rootPackages_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_ModelResource_rootPackages_feature",
+								"_UI_ModelResource_type"),
+						ModelReviewPackage.Literals.MODEL_RESOURCE__ROOT_PACKAGES, true, false, true, null, null,
 						null));
 	}
 
 	/**
-	 * This returns ModelInstance.gif. <!-- begin-user-doc --> <!-- end-user-doc
+	 * This returns ModelResource.gif. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
 	 * 
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/ModelInstance"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/ModelResource"));
 	}
 
 	/**
@@ -117,7 +117,7 @@ public class ModelInstanceItemProvider extends ItemProviderAdapter implements IE
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_ModelInstance_type");
+		return getString("_UI_ModelResource_type");
 	}
 
 	/**

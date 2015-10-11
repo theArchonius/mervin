@@ -19,25 +19,25 @@ import org.eclipse.emf.ecore.EPackage;
 
 /**
  * <!-- begin-user-doc --> A representation of the model object '
- * <em><b>Model Instance</b></em>'. <!-- end-user-doc -->
+ * <em><b>Model Resource</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
  * <li>
- * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelInstance#getObjects
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelResource#getObjects
  * <em>Objects</em>}</li>
  * <li>
- * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelInstance#getRootPackages
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelResource#getRootPackages
  * <em>Root Packages</em>}</li>
  * </ul>
  *
- * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelInstance()
+ * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelResource()
  * @model
  * @generated
  */
-public interface ModelInstance extends EObject {
+public interface ModelResource extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Objects</b></em>' reference list. The
 	 * list contents are of type {@link org.eclipse.emf.ecore.EObject}. <!--
@@ -49,7 +49,7 @@ public interface ModelInstance extends EObject {
 	 * <!-- end-user-doc -->
 	 * 
 	 * @return the value of the '<em>Objects</em>' reference list.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelInstance_Objects()
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelResource_Objects()
 	 * @model
 	 * @generated
 	 */
@@ -66,10 +66,10 @@ public interface ModelInstance extends EObject {
 	 * <!-- end-user-doc -->
 	 * 
 	 * @return the value of the '<em>Root Packages</em>' reference list.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelInstance_RootPackages()
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelResource_RootPackages()
 	 * @model
 	 * @generated
 	 */
 	EList<EPackage> getRootPackages();
 
-} // ModelInstance
+} // ModelResource

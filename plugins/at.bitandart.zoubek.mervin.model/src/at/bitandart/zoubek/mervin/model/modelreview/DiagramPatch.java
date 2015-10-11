@@ -21,11 +21,11 @@ package at.bitandart.zoubek.mervin.model.modelreview;
  * </p>
  * <ul>
  * <li>
- * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getNewDiagramInstance
- * <em>New Diagram Instance</em>}</li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getNewDiagramResource
+ * <em>New Diagram Resource</em>}</li>
  * <li>
- * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getOldDiagramInstance
- * <em>Old Diagram Instance</em>}</li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getOldDiagramResource
+ * <em>Old Diagram Resource</em>}</li>
  * </ul>
  *
  * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getDiagramPatch()
@@ -35,64 +35,64 @@ package at.bitandart.zoubek.mervin.model.modelreview;
 public interface DiagramPatch extends Patch {
 
 	/**
-	 * Returns the value of the '<em><b>New Diagram Instance</b></em>'
+	 * Returns the value of the '<em><b>New Diagram Resource</b></em>'
 	 * reference. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>New Diagram Instance</em>' reference isn't
+	 * If the meaning of the '<em>New Diagram Resource</em>' reference isn't
 	 * clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>New Diagram Instance</em>' reference.
-	 * @see #setNewDiagramInstance(DiagramInstance)
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getDiagramPatch_NewDiagramInstance()
+	 * @return the value of the '<em>New Diagram Resource</em>' reference.
+	 * @see #setNewDiagramResource(DiagramResource)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getDiagramPatch_NewDiagramResource()
 	 * @model
 	 * @generated
 	 */
-	DiagramInstance getNewDiagramInstance();
+	DiagramResource getNewDiagramResource();
 
 	/**
 	 * Sets the value of the '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getNewDiagramInstance
-	 * <em>New Diagram Instance</em>}' reference. <!-- begin-user-doc --> <!--
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getNewDiagramResource
+	 * <em>New Diagram Resource</em>}' reference. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
 	 * @param value
-	 *            the new value of the '<em>New Diagram Instance</em>'
+	 *            the new value of the '<em>New Diagram Resource</em>'
 	 *            reference.
-	 * @see #getNewDiagramInstance()
+	 * @see #getNewDiagramResource()
 	 * @generated
 	 */
-	void setNewDiagramInstance(DiagramInstance value);
+	void setNewDiagramResource(DiagramResource value);
 
 	/**
-	 * Returns the value of the '<em><b>Old Diagram Instance</b></em>'
+	 * Returns the value of the '<em><b>Old Diagram Resource</b></em>'
 	 * reference. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Old Diagram Instance</em>' reference isn't
+	 * If the meaning of the '<em>Old Diagram Resource</em>' reference isn't
 	 * clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Old Diagram Instance</em>' reference.
-	 * @see #setOldDiagramInstance(DiagramInstance)
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getDiagramPatch_OldDiagramInstance()
+	 * @return the value of the '<em>Old Diagram Resource</em>' reference.
+	 * @see #setOldDiagramResource(DiagramResource)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getDiagramPatch_OldDiagramResource()
 	 * @model
 	 * @generated
 	 */
-	DiagramInstance getOldDiagramInstance();
+	DiagramResource getOldDiagramResource();
 
 	/**
 	 * Sets the value of the '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getOldDiagramInstance
-	 * <em>Old Diagram Instance</em>}' reference. <!-- begin-user-doc --> <!--
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getOldDiagramResource
+	 * <em>Old Diagram Resource</em>}' reference. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
 	 * @param value
-	 *            the new value of the '<em>Old Diagram Instance</em>'
+	 *            the new value of the '<em>Old Diagram Resource</em>'
 	 *            reference.
-	 * @see #getOldDiagramInstance()
+	 * @see #getOldDiagramResource()
 	 * @generated
 	 */
-	void setOldDiagramInstance(DiagramInstance value);
+	void setOldDiagramResource(DiagramResource value);
 } // DiagramPatch

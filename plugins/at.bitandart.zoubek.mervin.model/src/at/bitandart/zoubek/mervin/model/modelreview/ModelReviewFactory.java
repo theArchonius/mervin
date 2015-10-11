@@ -76,22 +76,22 @@ public interface ModelReviewFactory extends EFactory {
 	ModelPatch createModelPatch();
 
 	/**
-	 * Returns a new object of class '<em>Model Instance</em>'. <!--
+	 * Returns a new object of class '<em>Model Resource</em>'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @return a new object of class '<em>Model Instance</em>'.
+	 * @return a new object of class '<em>Model Resource</em>'.
 	 * @generated
 	 */
-	ModelInstance createModelInstance();
+	ModelResource createModelResource();
 
 	/**
-	 * Returns a new object of class '<em>Diagram Instance</em>'. <!--
+	 * Returns a new object of class '<em>Diagram Resource</em>'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @return a new object of class '<em>Diagram Instance</em>'.
+	 * @return a new object of class '<em>Diagram Resource</em>'.
 	 * @generated
 	 */
-	DiagramInstance createDiagramInstance();
+	DiagramResource createDiagramResource();
 
 	/**
 	 * Returns a new object of class '<em>Node Difference Overlay</em>'. <!--

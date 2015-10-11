@@ -121,18 +121,18 @@ public class ModelReviewSwitch<T> extends Switch<T> {
 				result = defaultCase(theEObject);
 			return result;
 		}
-		case ModelReviewPackage.MODEL_INSTANCE: {
-			ModelInstance modelInstance = (ModelInstance) theEObject;
-			T result = caseModelInstance(modelInstance);
+		case ModelReviewPackage.MODEL_RESOURCE: {
+			ModelResource modelResource = (ModelResource) theEObject;
+			T result = caseModelResource(modelResource);
 			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
 		}
-		case ModelReviewPackage.DIAGRAM_INSTANCE: {
-			DiagramInstance diagramInstance = (DiagramInstance) theEObject;
-			T result = caseDiagramInstance(diagramInstance);
+		case ModelReviewPackage.DIAGRAM_RESOURCE: {
+			DiagramResource diagramResource = (DiagramResource) theEObject;
+			T result = caseDiagramResource(diagramResource);
 			if (result == null)
-				result = caseModelInstance(diagramInstance);
+				result = caseModelResource(diagramResource);
 			if (result == null)
 				result = defaultCase(theEObject);
 			return result;
@@ -329,35 +329,35 @@ public class ModelReviewSwitch<T> extends Switch<T> {
 
 	/**
 	 * Returns the result of interpreting the object as an instance of '
-	 * <em>Model Instance</em>'. <!-- begin-user-doc --> This implementation
+	 * <em>Model Resource</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch. <!--
 	 * end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '
-	 *         <em>Model Instance</em>'.
+	 *         <em>Model Resource</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseModelInstance(ModelInstance object) {
+	public T caseModelResource(ModelResource object) {
 		return null;
 	}
 
 	/**
 	 * Returns the result of interpreting the object as an instance of '
-	 * <em>Diagram Instance</em>'. <!-- begin-user-doc --> This implementation
+	 * <em>Diagram Resource</em>'. <!-- begin-user-doc --> This implementation
 	 * returns null; returning a non-null result will terminate the switch. <!--
 	 * end-user-doc -->
 	 * 
 	 * @param object
 	 *            the target of the switch.
 	 * @return the result of interpreting the object as an instance of '
-	 *         <em>Diagram Instance</em>'.
+	 *         <em>Diagram Resource</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseDiagramInstance(DiagramInstance object) {
+	public T caseDiagramResource(DiagramResource object) {
 		return null;
 	}
 

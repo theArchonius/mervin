@@ -60,10 +60,10 @@ import at.bitandart.zoubek.mervin.IReviewRepositoryService;
 import at.bitandart.zoubek.mervin.exceptions.InvalidReviewException;
 import at.bitandart.zoubek.mervin.exceptions.InvalidReviewRepositoryException;
 import at.bitandart.zoubek.mervin.exceptions.RepositoryIOException;
-import at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance;
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch;
-import at.bitandart.zoubek.mervin.model.modelreview.ModelInstance;
+import at.bitandart.zoubek.mervin.model.modelreview.DiagramResource;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelPatch;
+import at.bitandart.zoubek.mervin.model.modelreview.ModelResource;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
 import at.bitandart.zoubek.mervin.model.modelreview.Patch;
@@ -305,8 +305,8 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 	 */
 	public Comparison compareModels(PatchSet patchSet) {
 
-		EList<ModelInstance> oldInvolvedModels = patchSet.getOldInvolvedModels();
-		EList<ModelInstance> newInvolvedModels = patchSet.getNewInvolvedModels();
+		EList<ModelResource> oldInvolvedModels = patchSet.getOldInvolvedModels();
+		EList<ModelResource> newInvolvedModels = patchSet.getNewInvolvedModels();
 		ResourceSet oldResourceSet = new ResourceSetImpl();
 		ResourceSet newResourceSet = new ResourceSetImpl();
 
@@ -337,8 +337,8 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 	 */
 	public Comparison compareDiagrams(PatchSet patchSet) {
 
-		EList<DiagramInstance> oldInvolvedDiagrams = patchSet.getOldInvolvedDiagrams();
-		EList<DiagramInstance> newInvolvedDiagrams = patchSet.getNewInvolvedDiagrams();
+		EList<DiagramResource> oldInvolvedDiagrams = patchSet.getOldInvolvedDiagrams();
+		EList<DiagramResource> newInvolvedDiagrams = patchSet.getNewInvolvedDiagrams();
 		ResourceSet oldResourceSet = new ResourceSetImpl();
 		ResourceSet newResourceSet = new ResourceSetImpl();
 
@@ -457,8 +457,8 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 	 */
 	private void applyResourceContent(Resource resource, Patch patch, boolean old) throws IOException {
 		PatchSet patchSet = patch.getPatchSet();
-		EList<ModelInstance> involvedModels = null;
-		EList<DiagramInstance> involvedDiagrams = null;
+		EList<ModelResource> involvedModels = null;
+		EList<DiagramResource> involvedDiagrams = null;
 		if (old) {
 			involvedModels = patchSet.getOldInvolvedModels();
 			involvedDiagrams = patchSet.getOldInvolvedDiagrams();
@@ -471,19 +471,19 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 
 		if (patch instanceof ModelPatch) {
 
-			// create a new model instance and add all objects from
+			// create a new model resource and add all objects from
 			// the resource to the object list
-			ModelInstance modelInstance = modelReviewFactory.createModelInstance();
-			EList<EObject> containedObjects = modelInstance.getObjects();
+			ModelResource modelResource = modelReviewFactory.createModelResource();
+			EList<EObject> containedObjects = modelResource.getObjects();
 			containedObjects.addAll(resource.getContents());
 
 			// determine the root package if possible
 			List<EPackage> rootPackages = findRootPackages(containedObjects);
-			modelInstance.getRootPackages().addAll(rootPackages);
+			modelResource.getRootPackages().addAll(rootPackages);
 			if (old) {
-				((ModelPatch) patch).setOldModelInstance(modelInstance);
+				((ModelPatch) patch).setOldModelResource(modelResource);
 			} else {
-				((ModelPatch) patch).setNewModelInstance(modelInstance);
+				((ModelPatch) patch).setNewModelResource(modelResource);
 			}
 
 			// also update the involved models
@@ -491,19 +491,19 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 
 		} else if (patch instanceof DiagramPatch) {
 
-			// create a new diagram instance and add all objects from
+			// create a new diagram resource and add all objects from
 			// the resource to the object list
-			DiagramInstance diagramInstance = modelReviewFactory.createDiagramInstance();
-			EList<EObject> containedObjects = diagramInstance.getObjects();
+			DiagramResource diagramResource = modelReviewFactory.createDiagramResource();
+			EList<EObject> containedObjects = diagramResource.getObjects();
 			containedObjects.addAll(resource.getContents());
 
 			// determine the root package if possible
 			List<EPackage> rootPackages = findRootPackages(containedObjects);
-			diagramInstance.getRootPackages().addAll(rootPackages);
+			diagramResource.getRootPackages().addAll(rootPackages);
 			if (old) {
-				((DiagramPatch) patch).setOldDiagramInstance(diagramInstance);
+				((DiagramPatch) patch).setOldDiagramResource(diagramResource);
 			} else {
-				((DiagramPatch) patch).setNewDiagramInstance(diagramInstance);
+				((DiagramPatch) patch).setNewDiagramResource(diagramResource);
 			}
 
 			// also update the involved diagrams
@@ -519,28 +519,28 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 	 * @param objects
 	 *            the objects used to update the list of involved models
 	 */
-	private void updateInvolvedModels(List<ModelInstance> involvedModels, List<EObject> objects) {
+	private void updateInvolvedModels(List<ModelResource> involvedModels, List<EObject> objects) {
 		for (EObject object : objects) {
 			EPackage rootPackage = findRootPackage(object);
 
-			ModelInstance modelInstance = null;
+			ModelResource modelResource = null;
 
-			// search for already existing model instances
-			for (ModelInstance existingModel : involvedModels) {
+			// search for already existing model resources
+			for (ModelResource existingModel : involvedModels) {
 				if (existingModel.getRootPackages().contains(rootPackage)) {
-					modelInstance = existingModel;
+					modelResource = existingModel;
 					break;
 				}
 			}
 
-			if (modelInstance == null) {
-				// there is no existing model instance for the given root
+			if (modelResource == null) {
+				// there is no existing model resource for the given root
 				// package, so we have to create it
-				modelInstance = modelReviewFactory.createModelInstance();
-				modelInstance.getRootPackages().add(rootPackage);
-				involvedModels.add(modelInstance);
+				modelResource = modelReviewFactory.createModelResource();
+				modelResource.getRootPackages().add(rootPackage);
+				involvedModels.add(modelResource);
 			}
-			modelInstance.getObjects().add(object);
+			modelResource.getObjects().add(object);
 		}
 	}
 
@@ -553,28 +553,28 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 	 * @param objects
 	 *            the objects used to update the list of involved diagrams
 	 */
-	private void updateInvolvedDiagrams(List<DiagramInstance> involvedDiagrams, List<EObject> objects) {
+	private void updateInvolvedDiagrams(List<DiagramResource> involvedDiagrams, List<EObject> objects) {
 		for (EObject object : objects) {
 			EPackage rootPackage = findRootPackage(object);
 
-			DiagramInstance diagramInstance = null;
+			DiagramResource diagramResource = null;
 
-			// search for already existing diagram instances
-			for (DiagramInstance existingDiagram : involvedDiagrams) {
+			// search for already existing diagram resource
+			for (DiagramResource existingDiagram : involvedDiagrams) {
 				if (existingDiagram.getRootPackages().contains(rootPackage)) {
-					diagramInstance = existingDiagram;
+					diagramResource = existingDiagram;
 					break;
 				}
 			}
 
-			if (diagramInstance == null) {
-				// there is no existing diagram instance for the given root
+			if (diagramResource == null) {
+				// there is no existing diagram resource for the given root
 				// package, so we have to create it
-				diagramInstance = modelReviewFactory.createDiagramInstance();
-				diagramInstance.getRootPackages().add(rootPackage);
-				involvedDiagrams.add(diagramInstance);
+				diagramResource = modelReviewFactory.createDiagramResource();
+				diagramResource.getRootPackages().add(rootPackage);
+				involvedDiagrams.add(diagramResource);
 			}
-			diagramInstance.getObjects().add(object);
+			diagramResource.getObjects().add(object);
 		}
 	}
 

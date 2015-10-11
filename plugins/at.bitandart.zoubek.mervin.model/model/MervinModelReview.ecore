@@ -24,13 +24,13 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="patches" upperBound="-1"
         eType="#//Patch" eOpposite="#//Patch/patchSet"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="newInvolvedModels" upperBound="-1"
-        eType="#//ModelInstance"/>
+        eType="#//ModelResource"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="newInvolvedDiagrams" upperBound="-1"
-        eType="#//DiagramInstance"/>
+        eType="#//DiagramResource"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="oldInvolvedModels" upperBound="-1"
-        eType="#//ModelInstance"/>
+        eType="#//ModelResource"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="oldInvolvedDiagrams" upperBound="-1"
-        eType="#//DiagramInstance"/>
+        eType="#//DiagramResource"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="modelComparison" eType="ecore:EClass platform:/plugin/org.eclipse.emf.compare/model/compare.ecore#//Comparison"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="diagramComparison" eType="ecore:EClass platform:/plugin/org.eclipse.emf.compare/model/compare.ecore#//Comparison"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="objectChangeCount" changeable="false"
@@ -71,23 +71,23 @@
         eOpposite="#//PatchSet/patches"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DiagramPatch" eSuperTypes="#//Patch">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="newDiagramInstance" eType="#//DiagramInstance"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="oldDiagramInstance" eType="#//DiagramInstance"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="newDiagramResource" eType="#//DiagramResource"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="oldDiagramResource" eType="#//DiagramResource"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ModelPatch" eSuperTypes="#//Patch">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="newModelInstance" eType="#//ModelInstance"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="oldModelInstance" eType="#//ModelInstance"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="newModelResource" eType="#//ModelResource"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="oldModelResource" eType="#//ModelResource"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Comment" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ModelInstance">
+  <eClassifiers xsi:type="ecore:EClass" name="ModelResource">
     <eStructuralFeatures xsi:type="ecore:EReference" name="objects" upperBound="-1"
         eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rootPackages" upperBound="-1"
         eType="ecore:EClass ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EPackage"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="DiagramInstance" eSuperTypes="#//ModelInstance">
+  <eClassifiers xsi:type="ecore:EClass" name="DiagramResource" eSuperTypes="#//ModelResource">
     <eOperations name="getDiagrams" upperBound="-1" eType="ecore:EClass ../../org.eclipse.gmf.runtime.notation/model/notation.ecore#//Diagram"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="PatchChangeType">

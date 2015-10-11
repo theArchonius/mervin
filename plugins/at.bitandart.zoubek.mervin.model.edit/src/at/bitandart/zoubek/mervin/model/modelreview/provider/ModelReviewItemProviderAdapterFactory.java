@@ -212,52 +212,52 @@ public class ModelReviewItemProviderAdapterFactory extends ModelReviewAdapterFac
 
 	/**
 	 * This keeps track of the one adapter used for all
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelInstance}
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelResource}
 	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected ModelInstanceItemProvider modelInstanceItemProvider;
+	protected ModelResourceItemProvider modelResourceItemProvider;
 
 	/**
 	 * This creates an adapter for a
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelInstance}. <!--
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelResource}. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
 	@Override
-	public Adapter createModelInstanceAdapter() {
-		if (modelInstanceItemProvider == null) {
-			modelInstanceItemProvider = new ModelInstanceItemProvider(this);
+	public Adapter createModelResourceAdapter() {
+		if (modelResourceItemProvider == null) {
+			modelResourceItemProvider = new ModelResourceItemProvider(this);
 		}
 
-		return modelInstanceItemProvider;
+		return modelResourceItemProvider;
 	}
 
 	/**
 	 * This keeps track of the one adapter used for all
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance}
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramResource}
 	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected DiagramInstanceItemProvider diagramInstanceItemProvider;
+	protected DiagramResourceItemProvider diagramResourceItemProvider;
 
 	/**
 	 * This creates an adapter for a
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance}.
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramResource}.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
 	@Override
-	public Adapter createDiagramInstanceAdapter() {
-		if (diagramInstanceItemProvider == null) {
-			diagramInstanceItemProvider = new DiagramInstanceItemProvider(this);
+	public Adapter createDiagramResourceAdapter() {
+		if (diagramResourceItemProvider == null) {
+			diagramResourceItemProvider = new DiagramResourceItemProvider(this);
 		}
 
-		return diagramInstanceItemProvider;
+		return diagramResourceItemProvider;
 	}
 
 	/**
@@ -493,10 +493,10 @@ public class ModelReviewItemProviderAdapterFactory extends ModelReviewAdapterFac
 			diagramPatchItemProvider.dispose();
 		if (modelPatchItemProvider != null)
 			modelPatchItemProvider.dispose();
-		if (modelInstanceItemProvider != null)
-			modelInstanceItemProvider.dispose();
-		if (diagramInstanceItemProvider != null)
-			diagramInstanceItemProvider.dispose();
+		if (modelResourceItemProvider != null)
+			modelResourceItemProvider.dispose();
+		if (diagramResourceItemProvider != null)
+			diagramResourceItemProvider.dispose();
 		if (nodeDifferenceOverlayItemProvider != null)
 			nodeDifferenceOverlayItemProvider.dispose();
 		if (edgeDifferenceOverlayItemProvider != null)

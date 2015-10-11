@@ -50,41 +50,41 @@ public class ModelPatchItemProvider extends PatchItemProvider {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addNewModelInstancePropertyDescriptor(object);
-			addOldModelInstancePropertyDescriptor(object);
+			addNewModelResourcePropertyDescriptor(object);
+			addOldModelResourcePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the New Model Instance feature. <!--
+	 * This adds a property descriptor for the New Model Resource feature. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected void addNewModelInstancePropertyDescriptor(Object object) {
+	protected void addNewModelResourcePropertyDescriptor(Object object) {
 		itemPropertyDescriptors
 				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(), getString("_UI_ModelPatch_newModelInstance_feature"),
-						getString("_UI_PropertyDescriptor_description", "_UI_ModelPatch_newModelInstance_feature",
+						getResourceLocator(), getString("_UI_ModelPatch_newModelResource_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_ModelPatch_newModelResource_feature",
 								"_UI_ModelPatch_type"),
-						ModelReviewPackage.Literals.MODEL_PATCH__NEW_MODEL_INSTANCE, true, false, true, null, null,
+						ModelReviewPackage.Literals.MODEL_PATCH__NEW_MODEL_RESOURCE, true, false, true, null, null,
 						null));
 	}
 
 	/**
-	 * This adds a property descriptor for the Old Model Instance feature. <!--
+	 * This adds a property descriptor for the Old Model Resource feature. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected void addOldModelInstancePropertyDescriptor(Object object) {
+	protected void addOldModelResourcePropertyDescriptor(Object object) {
 		itemPropertyDescriptors
 				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(), getString("_UI_ModelPatch_oldModelInstance_feature"),
-						getString("_UI_PropertyDescriptor_description", "_UI_ModelPatch_oldModelInstance_feature",
+						getResourceLocator(), getString("_UI_ModelPatch_oldModelResource_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_ModelPatch_oldModelResource_feature",
 								"_UI_ModelPatch_type"),
-						ModelReviewPackage.Literals.MODEL_PATCH__OLD_MODEL_INSTANCE, true, false, true, null, null,
+						ModelReviewPackage.Literals.MODEL_PATCH__OLD_MODEL_RESOURCE, true, false, true, null, null,
 						null));
 	}
 

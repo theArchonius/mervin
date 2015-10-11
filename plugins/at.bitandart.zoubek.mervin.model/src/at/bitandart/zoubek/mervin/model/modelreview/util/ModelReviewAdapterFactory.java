@@ -107,13 +107,13 @@ public class ModelReviewAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
-		public Adapter caseModelInstance(ModelInstance object) {
-			return createModelInstanceAdapter();
+		public Adapter caseModelResource(ModelResource object) {
+			return createModelResourceAdapter();
 		}
 
 		@Override
-		public Adapter caseDiagramInstance(DiagramInstance object) {
-			return createDiagramInstanceAdapter();
+		public Adapter caseDiagramResource(DiagramResource object) {
+			return createDiagramResourceAdapter();
 		}
 
 		@Override
@@ -278,33 +278,33 @@ public class ModelReviewAdapterFactory extends AdapterFactoryImpl {
 
 	/**
 	 * Creates a new adapter for an object of class '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelInstance
-	 * <em>Model Instance</em>}'. <!-- begin-user-doc --> This default
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelResource
+	 * <em>Model Resource</em>}'. <!-- begin-user-doc --> This default
 	 * implementation returns null so that we can easily ignore cases; it's
 	 * useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * 
 	 * @return the new adapter.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelInstance
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelResource
 	 * @generated
 	 */
-	public Adapter createModelInstanceAdapter() {
+	public Adapter createModelResourceAdapter() {
 		return null;
 	}
 
 	/**
 	 * Creates a new adapter for an object of class '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance
-	 * <em>Diagram Instance</em>}'. <!-- begin-user-doc --> This default
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramResource
+	 * <em>Diagram Resource</em>}'. <!-- begin-user-doc --> This default
 	 * implementation returns null so that we can easily ignore cases; it's
 	 * useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * 
 	 * @return the new adapter.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.DiagramResource
 	 * @generated
 	 */
-	public Adapter createDiagramInstanceAdapter() {
+	public Adapter createDiagramResourceAdapter() {
 		return null;
 	}
 

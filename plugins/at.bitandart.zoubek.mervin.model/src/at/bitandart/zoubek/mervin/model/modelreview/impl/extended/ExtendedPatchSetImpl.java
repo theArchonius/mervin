@@ -28,8 +28,8 @@ import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 
-import at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance;
-import at.bitandart.zoubek.mervin.model.modelreview.ModelInstance;
+import at.bitandart.zoubek.mervin.model.modelreview.DiagramResource;
+import at.bitandart.zoubek.mervin.model.modelreview.ModelResource;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.model.modelreview.impl.PatchSetImpl;
@@ -89,18 +89,18 @@ public class ExtendedPatchSetImpl extends PatchSetImpl {
 
 	/**
 	 * updates the change count for all objects within the given collection of
-	 * {@link ModelInstance}s.
+	 * {@link ModelResource}s.
 	 * 
 	 * @param modelInstances
-	 *            the {@link ModelInstance}s that contain the objects to
+	 *            the {@link ModelResource}s that contain the objects to
 	 *            calculate the change count for.
 	 * @param comparison
 	 *            the associated {@link Comparison} for the given
-	 *            {@link ModelInstance}s
+	 *            {@link ModelResource}s
 	 */
-	private void updateChangeCount(Collection<? extends ModelInstance> modelInstances, Comparison comparison) {
+	private void updateChangeCount(Collection<? extends ModelResource> modelInstances, Comparison comparison) {
 
-		for (ModelInstance modelInstance : modelInstances) {
+		for (ModelResource modelInstance : modelInstances) {
 
 			Stack<EObject> objectsToVisit = new Stack<>();
 			objectsToVisit.addAll(modelInstance.getObjects());
@@ -179,18 +179,18 @@ public class ExtendedPatchSetImpl extends PatchSetImpl {
 
 	/**
 	 * updates the reference count for all objects within the given collection
-	 * of {@link ModelInstance}s.
+	 * of {@link ModelResource}s.
 	 * 
 	 * @param modelInstances
-	 *            the {@link ModelInstance}s that contain the objects to
+	 *            the {@link ModelResource}s that contain the objects to
 	 *            calculate the reference count for.
 	 * @param comparison
 	 *            the associated {@link Comparison} for the given
-	 *            {@link ModelInstance}s
+	 *            {@link ModelResource}s
 	 */
-	private void updateChangeRefCount(Collection<? extends ModelInstance> modelInstances, Comparison comparison) {
+	private void updateChangeRefCount(Collection<? extends ModelResource> modelInstances, Comparison comparison) {
 
-		for (ModelInstance modelInstance : modelInstances) {
+		for (ModelResource modelInstance : modelInstances) {
 
 			Stack<EObject> objectsToVisit = new Stack<>();
 			objectsToVisit.addAll(modelInstance.getObjects());
@@ -221,8 +221,8 @@ public class ExtendedPatchSetImpl extends PatchSetImpl {
 	@Override
 	public EList<Diagram> getAllNewInvolvedDiagrams() {
 		EList<Diagram> diagrams = new BasicEList<Diagram>();
-		for (DiagramInstance diagramInstance : getNewInvolvedDiagrams()) {
-			diagrams.addAll(diagramInstance.getDiagrams());
+		for (DiagramResource diagramResource : getNewInvolvedDiagrams()) {
+			diagrams.addAll(diagramResource.getDiagrams());
 		}
 		return diagrams;
 	}
@@ -230,8 +230,8 @@ public class ExtendedPatchSetImpl extends PatchSetImpl {
 	@Override
 	public EList<Diagram> getAllOldInvolvedDiagrams() {
 		EList<Diagram> diagrams = new BasicEList<Diagram>();
-		for (DiagramInstance diagramInstance : getOldInvolvedDiagrams()) {
-			diagrams.addAll(diagramInstance.getDiagrams());
+		for (DiagramResource diagramResource : getOldInvolvedDiagrams()) {
+			diagrams.addAll(diagramResource.getDiagrams());
 		}
 		return diagrams;
 	}

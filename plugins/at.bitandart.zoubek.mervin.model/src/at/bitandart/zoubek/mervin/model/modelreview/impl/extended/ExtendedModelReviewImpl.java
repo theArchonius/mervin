@@ -22,8 +22,8 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
-import at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance;
-import at.bitandart.zoubek.mervin.model.modelreview.ModelInstance;
+import at.bitandart.zoubek.mervin.model.modelreview.DiagramResource;
+import at.bitandart.zoubek.mervin.model.modelreview.ModelResource;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
@@ -64,12 +64,12 @@ public class ExtendedModelReviewImpl extends ModelReviewImpl {
 				}
 			});
 
-			EList<DiagramInstance> newInvolvedModelsLeft = new BasicEList<DiagramInstance>();
+			EList<DiagramResource> newInvolvedModelsLeft = new BasicEList<DiagramResource>();
 			if (leftPatchSet != null) {
 				newInvolvedModelsLeft = leftPatchSet.getNewInvolvedDiagrams();
 			}
 
-			EList<DiagramInstance> newInvolvedModelsRight = new BasicEList<DiagramInstance>();
+			EList<DiagramResource> newInvolvedModelsRight = new BasicEList<DiagramResource>();
 			if (rightPatchSet != null) {
 				newInvolvedModelsRight = rightPatchSet.getNewInvolvedDiagrams();
 			}
@@ -110,12 +110,12 @@ public class ExtendedModelReviewImpl extends ModelReviewImpl {
 				}
 			});
 
-			EList<ModelInstance> newInvolvedModelsLeft = new BasicEList<ModelInstance>();
+			EList<ModelResource> newInvolvedModelsLeft = new BasicEList<ModelResource>();
 			if (leftPatchSet != null) {
 				newInvolvedModelsLeft = leftPatchSet.getNewInvolvedModels();
 			}
 
-			EList<ModelInstance> newInvolvedModelsRight = new BasicEList<ModelInstance>();
+			EList<ModelResource> newInvolvedModelsRight = new BasicEList<ModelResource>();
 			if (rightPatchSet != null) {
 				newInvolvedModelsRight = rightPatchSet.getNewInvolvedModels();
 			}
@@ -137,8 +137,8 @@ public class ExtendedModelReviewImpl extends ModelReviewImpl {
 	 * @param rightInvolvedModels
 	 * @return the result of the comparison
 	 */
-	private Comparison compareModelInstances(EList<? extends ModelInstance> leftInvolvedModels,
-			EList<? extends ModelInstance> rightInvolvedModels) {
+	private Comparison compareModelInstances(EList<? extends ModelResource> leftInvolvedModels,
+			EList<? extends ModelResource> rightInvolvedModels) {
 		ResourceSet oldResourceSet = new ResourceSetImpl();
 		ResourceSet newResourceSet = new ResourceSetImpl();
 

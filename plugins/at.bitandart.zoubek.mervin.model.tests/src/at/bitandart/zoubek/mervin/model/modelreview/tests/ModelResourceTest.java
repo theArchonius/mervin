@@ -12,7 +12,7 @@
  */
 package at.bitandart.zoubek.mervin.model.modelreview.tests;
 
-import at.bitandart.zoubek.mervin.model.modelreview.ModelInstance;
+import at.bitandart.zoubek.mervin.model.modelreview.ModelResource;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
 
 import junit.framework.TestCase;
@@ -21,19 +21,19 @@ import junit.textui.TestRunner;
 
 /**
  * <!-- begin-user-doc --> A test case for the model object '
- * <em><b>Model Instance</b></em>'. <!-- end-user-doc -->
+ * <em><b>Model Resource</b></em>'. <!-- end-user-doc -->
  * 
  * @generated
  */
-public class ModelInstanceTest extends TestCase {
+public class ModelResourceTest extends TestCase {
 
 	/**
-	 * The fixture for this Model Instance test case. <!-- begin-user-doc -->
+	 * The fixture for this Model Resource test case. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected ModelInstance fixture = null;
+	protected ModelResource fixture = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -41,36 +41,36 @@ public class ModelInstanceTest extends TestCase {
 	 * @generated
 	 */
 	public static void main(String[] args) {
-		TestRunner.run(ModelInstanceTest.class);
+		TestRunner.run(ModelResourceTest.class);
 	}
 
 	/**
-	 * Constructs a new Model Instance test case with the given name. <!--
+	 * Constructs a new Model Resource test case with the given name. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	public ModelInstanceTest(String name) {
+	public ModelResourceTest(String name) {
 		super(name);
 	}
 
 	/**
-	 * Sets the fixture for this Model Instance test case. <!-- begin-user-doc
+	 * Sets the fixture for this Model Resource test case. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected void setFixture(ModelInstance fixture) {
+	protected void setFixture(ModelResource fixture) {
 		this.fixture = fixture;
 	}
 
 	/**
-	 * Returns the fixture for this Model Instance test case. <!--
+	 * Returns the fixture for this Model Resource test case. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected ModelInstance getFixture() {
+	protected ModelResource getFixture() {
 		return fixture;
 	}
 
@@ -82,7 +82,7 @@ public class ModelInstanceTest extends TestCase {
 	 */
 	@Override
 	protected void setUp() throws Exception {
-		setFixture(ModelReviewFactory.eINSTANCE.createModelInstance());
+		setFixture(ModelReviewFactory.eINSTANCE.createModelResource());
 	}
 
 	/**
@@ -96,4 +96,4 @@ public class ModelInstanceTest extends TestCase {
 		setFixture(null);
 	}
 
-} // ModelInstanceTest
+} // ModelResourceTest

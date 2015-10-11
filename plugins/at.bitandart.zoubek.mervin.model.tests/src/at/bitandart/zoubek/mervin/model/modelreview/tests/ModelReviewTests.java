@@ -43,7 +43,7 @@ public class ModelReviewTests extends TestSuite {
 		TestSuite suite = new ModelReviewTests("modelreview Tests");
 		suite.addTestSuite(ModelReviewTest.class);
 		suite.addTestSuite(PatchSetTest.class);
-		suite.addTestSuite(DiagramInstanceTest.class);
+		suite.addTestSuite(DiagramResourceTest.class);
 		return suite;
 	}
 

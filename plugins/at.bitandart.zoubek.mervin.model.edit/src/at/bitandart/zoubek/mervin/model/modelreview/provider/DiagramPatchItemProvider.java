@@ -53,40 +53,40 @@ public class DiagramPatchItemProvider extends PatchItemProvider {
 		if (itemPropertyDescriptors == null) {
 			super.getPropertyDescriptors(object);
 
-			addNewDiagramInstancePropertyDescriptor(object);
-			addOldDiagramInstancePropertyDescriptor(object);
+			addNewDiagramResourcePropertyDescriptor(object);
+			addOldDiagramResourcePropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
 
 	/**
-	 * This adds a property descriptor for the New Diagram Instance feature.
+	 * This adds a property descriptor for the New Diagram Resource feature.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected void addNewDiagramInstancePropertyDescriptor(Object object) {
+	protected void addNewDiagramResourcePropertyDescriptor(Object object) {
 		itemPropertyDescriptors
 				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(), getString("_UI_DiagramPatch_newDiagramInstance_feature"),
-						getString("_UI_PropertyDescriptor_description", "_UI_DiagramPatch_newDiagramInstance_feature",
+						getResourceLocator(), getString("_UI_DiagramPatch_newDiagramResource_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_DiagramPatch_newDiagramResource_feature",
 								"_UI_DiagramPatch_type"),
-				ModelReviewPackage.Literals.DIAGRAM_PATCH__NEW_DIAGRAM_INSTANCE, true, false, true, null, null, null));
+				ModelReviewPackage.Literals.DIAGRAM_PATCH__NEW_DIAGRAM_RESOURCE, true, false, true, null, null, null));
 	}
 
 	/**
-	 * This adds a property descriptor for the Old Diagram Instance feature.
+	 * This adds a property descriptor for the Old Diagram Resource feature.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected void addOldDiagramInstancePropertyDescriptor(Object object) {
+	protected void addOldDiagramResourcePropertyDescriptor(Object object) {
 		itemPropertyDescriptors
 				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(), getString("_UI_DiagramPatch_oldDiagramInstance_feature"),
-						getString("_UI_PropertyDescriptor_description", "_UI_DiagramPatch_oldDiagramInstance_feature",
+						getResourceLocator(), getString("_UI_DiagramPatch_oldDiagramResource_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_DiagramPatch_oldDiagramResource_feature",
 								"_UI_DiagramPatch_type"),
-				ModelReviewPackage.Literals.DIAGRAM_PATCH__OLD_DIAGRAM_INSTANCE, true, false, true, null, null, null));
+				ModelReviewPackage.Literals.DIAGRAM_PATCH__OLD_DIAGRAM_RESOURCE, true, false, true, null, null, null));
 	}
 
 	/**

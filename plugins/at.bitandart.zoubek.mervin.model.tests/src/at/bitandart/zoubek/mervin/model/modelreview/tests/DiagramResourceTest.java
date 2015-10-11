@@ -12,25 +12,26 @@
  */
 package at.bitandart.zoubek.mervin.model.modelreview.tests;
 
-import at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance;
+import at.bitandart.zoubek.mervin.model.modelreview.DiagramResource;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
+
 import junit.textui.TestRunner;
 
 /**
  * <!-- begin-user-doc --> A test case for the model object '
- * <em><b>Diagram Instance</b></em>'. <!-- end-user-doc -->
+ * <em><b>Diagram Resource</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following operations are tested:
  * <ul>
  * <li>
- * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance#getDiagrams()
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramResource#getDiagrams()
  * <em>Get Diagrams</em>}</li>
  * </ul>
  * </p>
  * 
  * @generated
  */
-public class DiagramInstanceTest extends ModelInstanceTest {
+public class DiagramResourceTest extends ModelResourceTest {
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -38,28 +39,28 @@ public class DiagramInstanceTest extends ModelInstanceTest {
 	 * @generated
 	 */
 	public static void main(String[] args) {
-		TestRunner.run(DiagramInstanceTest.class);
+		TestRunner.run(DiagramResourceTest.class);
 	}
 
 	/**
-	 * Constructs a new Diagram Instance test case with the given name. <!--
+	 * Constructs a new Diagram Resource test case with the given name. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	public DiagramInstanceTest(String name) {
+	public DiagramResourceTest(String name) {
 		super(name);
 	}
 
 	/**
-	 * Returns the fixture for this Diagram Instance test case. <!--
+	 * Returns the fixture for this Diagram Resource test case. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
 	@Override
-	protected DiagramInstance getFixture() {
-		return (DiagramInstance) fixture;
+	protected DiagramResource getFixture() {
+		return (DiagramResource) fixture;
 	}
 
 	/**
@@ -70,7 +71,7 @@ public class DiagramInstanceTest extends ModelInstanceTest {
 	 */
 	@Override
 	protected void setUp() throws Exception {
-		setFixture(ModelReviewFactory.eINSTANCE.createDiagramInstance());
+		setFixture(ModelReviewFactory.eINSTANCE.createDiagramResource());
 	}
 
 	/**
@@ -86,11 +87,11 @@ public class DiagramInstanceTest extends ModelInstanceTest {
 
 	/**
 	 * Tests the '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance#getDiagrams()
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramResource#getDiagrams()
 	 * <em>Get Diagrams</em>}' operation. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance#getDiagrams()
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.DiagramResource#getDiagrams()
 	 * @generated
 	 */
 	public void testGetDiagrams() {
@@ -99,4 +100,4 @@ public class DiagramInstanceTest extends ModelInstanceTest {
 		fail();
 	}
 
-} // DiagramInstanceTest
+} // DiagramResourceTest

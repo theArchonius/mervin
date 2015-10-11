@@ -13,19 +13,19 @@
 package at.bitandart.zoubek.mervin.model.modelreview;
 
 import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
  * <!-- begin-user-doc --> A representation of the model object '
- * <em><b>Diagram Instance</b></em>'. <!-- end-user-doc -->
+ * <em><b>Diagram Resource</b></em>'. <!-- end-user-doc -->
  *
  *
- * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getDiagramInstance()
+ * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getDiagramResource()
  * @model
  * @generated
  */
-public interface DiagramInstance extends ModelInstance {
-
+public interface DiagramResource extends ModelResource {
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -34,4 +34,4 @@ public interface DiagramInstance extends ModelInstance {
 	 */
 	EList<Diagram> getDiagrams();
 
-} // DiagramInstance
+} // DiagramResource
