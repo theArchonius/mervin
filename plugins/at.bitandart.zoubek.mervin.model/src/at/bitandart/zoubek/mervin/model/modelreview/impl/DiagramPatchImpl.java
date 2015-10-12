@@ -12,8 +12,8 @@
  */
 package at.bitandart.zoubek.mervin.model.modelreview.impl;
 
-import at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance;
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch;
+import at.bitandart.zoubek.mervin.model.modelreview.DiagramResource;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
@@ -28,36 +28,36 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * </p>
  * <ul>
  * <li>
- * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.DiagramPatchImpl#getNewDiagramInstance
- * <em>New Diagram Instance</em>}</li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.DiagramPatchImpl#getNewDiagramResource
+ * <em>New Diagram Resource</em>}</li>
  * <li>
- * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.DiagramPatchImpl#getOldDiagramInstance
- * <em>Old Diagram Instance</em>}</li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.DiagramPatchImpl#getOldDiagramResource
+ * <em>Old Diagram Resource</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class DiagramPatchImpl extends PatchImpl implements DiagramPatch {
 	/**
-	 * The cached value of the '{@link #getNewDiagramInstance()
-	 * <em>New Diagram Instance</em>}' reference. <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getNewDiagramResource()
+	 * <em>New Diagram Resource</em>}' reference. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
-	 * @see #getNewDiagramInstance()
+	 * @see #getNewDiagramResource()
 	 * @generated
 	 * @ordered
 	 */
-	protected DiagramInstance newDiagramInstance;
+	protected DiagramResource newDiagramResource;
 	/**
-	 * The cached value of the '{@link #getOldDiagramInstance()
-	 * <em>Old Diagram Instance</em>}' reference. <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getOldDiagramResource()
+	 * <em>Old Diagram Resource</em>}' reference. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
-	 * @see #getOldDiagramInstance()
+	 * @see #getOldDiagramResource()
 	 * @generated
 	 * @ordered
 	 */
-	protected DiagramInstance oldDiagramInstance;
+	protected DiagramResource oldDiagramResource;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -83,18 +83,18 @@ public class DiagramPatchImpl extends PatchImpl implements DiagramPatch {
 	 * 
 	 * @generated
 	 */
-	public DiagramInstance getNewDiagramInstance() {
-		if (newDiagramInstance != null && newDiagramInstance.eIsProxy()) {
-			InternalEObject oldNewDiagramInstance = (InternalEObject) newDiagramInstance;
-			newDiagramInstance = (DiagramInstance) eResolveProxy(oldNewDiagramInstance);
-			if (newDiagramInstance != oldNewDiagramInstance) {
+	public DiagramResource getNewDiagramResource() {
+		if (newDiagramResource != null && newDiagramResource.eIsProxy()) {
+			InternalEObject oldNewDiagramResource = (InternalEObject) newDiagramResource;
+			newDiagramResource = (DiagramResource) eResolveProxy(oldNewDiagramResource);
+			if (newDiagramResource != oldNewDiagramResource) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							ModelReviewPackage.DIAGRAM_PATCH__NEW_DIAGRAM_INSTANCE, oldNewDiagramInstance,
-							newDiagramInstance));
+							ModelReviewPackage.DIAGRAM_PATCH__NEW_DIAGRAM_RESOURCE, oldNewDiagramResource,
+							newDiagramResource));
 			}
 		}
-		return newDiagramInstance;
+		return newDiagramResource;
 	}
 
 	/**
@@ -102,8 +102,8 @@ public class DiagramPatchImpl extends PatchImpl implements DiagramPatch {
 	 * 
 	 * @generated
 	 */
-	public DiagramInstance basicGetNewDiagramInstance() {
-		return newDiagramInstance;
+	public DiagramResource basicGetNewDiagramResource() {
+		return newDiagramResource;
 	}
 
 	/**
@@ -111,12 +111,12 @@ public class DiagramPatchImpl extends PatchImpl implements DiagramPatch {
 	 * 
 	 * @generated
 	 */
-	public void setNewDiagramInstance(DiagramInstance newNewDiagramInstance) {
-		DiagramInstance oldNewDiagramInstance = newDiagramInstance;
-		newDiagramInstance = newNewDiagramInstance;
+	public void setNewDiagramResource(DiagramResource newNewDiagramResource) {
+		DiagramResource oldNewDiagramResource = newDiagramResource;
+		newDiagramResource = newNewDiagramResource;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
-					ModelReviewPackage.DIAGRAM_PATCH__NEW_DIAGRAM_INSTANCE, oldNewDiagramInstance, newDiagramInstance));
+					ModelReviewPackage.DIAGRAM_PATCH__NEW_DIAGRAM_RESOURCE, oldNewDiagramResource, newDiagramResource));
 	}
 
 	/**
@@ -124,18 +124,18 @@ public class DiagramPatchImpl extends PatchImpl implements DiagramPatch {
 	 * 
 	 * @generated
 	 */
-	public DiagramInstance getOldDiagramInstance() {
-		if (oldDiagramInstance != null && oldDiagramInstance.eIsProxy()) {
-			InternalEObject oldOldDiagramInstance = (InternalEObject) oldDiagramInstance;
-			oldDiagramInstance = (DiagramInstance) eResolveProxy(oldOldDiagramInstance);
-			if (oldDiagramInstance != oldOldDiagramInstance) {
+	public DiagramResource getOldDiagramResource() {
+		if (oldDiagramResource != null && oldDiagramResource.eIsProxy()) {
+			InternalEObject oldOldDiagramResource = (InternalEObject) oldDiagramResource;
+			oldDiagramResource = (DiagramResource) eResolveProxy(oldOldDiagramResource);
+			if (oldDiagramResource != oldOldDiagramResource) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							ModelReviewPackage.DIAGRAM_PATCH__OLD_DIAGRAM_INSTANCE, oldOldDiagramInstance,
-							oldDiagramInstance));
+							ModelReviewPackage.DIAGRAM_PATCH__OLD_DIAGRAM_RESOURCE, oldOldDiagramResource,
+							oldDiagramResource));
 			}
 		}
-		return oldDiagramInstance;
+		return oldDiagramResource;
 	}
 
 	/**
@@ -143,8 +143,8 @@ public class DiagramPatchImpl extends PatchImpl implements DiagramPatch {
 	 * 
 	 * @generated
 	 */
-	public DiagramInstance basicGetOldDiagramInstance() {
-		return oldDiagramInstance;
+	public DiagramResource basicGetOldDiagramResource() {
+		return oldDiagramResource;
 	}
 
 	/**
@@ -152,12 +152,12 @@ public class DiagramPatchImpl extends PatchImpl implements DiagramPatch {
 	 * 
 	 * @generated
 	 */
-	public void setOldDiagramInstance(DiagramInstance newOldDiagramInstance) {
-		DiagramInstance oldOldDiagramInstance = oldDiagramInstance;
-		oldDiagramInstance = newOldDiagramInstance;
+	public void setOldDiagramResource(DiagramResource newOldDiagramResource) {
+		DiagramResource oldOldDiagramResource = oldDiagramResource;
+		oldDiagramResource = newOldDiagramResource;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET,
-					ModelReviewPackage.DIAGRAM_PATCH__OLD_DIAGRAM_INSTANCE, oldOldDiagramInstance, oldDiagramInstance));
+					ModelReviewPackage.DIAGRAM_PATCH__OLD_DIAGRAM_RESOURCE, oldOldDiagramResource, oldDiagramResource));
 	}
 
 	/**
@@ -168,14 +168,14 @@ public class DiagramPatchImpl extends PatchImpl implements DiagramPatch {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case ModelReviewPackage.DIAGRAM_PATCH__NEW_DIAGRAM_INSTANCE:
+		case ModelReviewPackage.DIAGRAM_PATCH__NEW_DIAGRAM_RESOURCE:
 			if (resolve)
-				return getNewDiagramInstance();
-			return basicGetNewDiagramInstance();
-		case ModelReviewPackage.DIAGRAM_PATCH__OLD_DIAGRAM_INSTANCE:
+				return getNewDiagramResource();
+			return basicGetNewDiagramResource();
+		case ModelReviewPackage.DIAGRAM_PATCH__OLD_DIAGRAM_RESOURCE:
 			if (resolve)
-				return getOldDiagramInstance();
-			return basicGetOldDiagramInstance();
+				return getOldDiagramResource();
+			return basicGetOldDiagramResource();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -188,11 +188,11 @@ public class DiagramPatchImpl extends PatchImpl implements DiagramPatch {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case ModelReviewPackage.DIAGRAM_PATCH__NEW_DIAGRAM_INSTANCE:
-			setNewDiagramInstance((DiagramInstance) newValue);
+		case ModelReviewPackage.DIAGRAM_PATCH__NEW_DIAGRAM_RESOURCE:
+			setNewDiagramResource((DiagramResource) newValue);
 			return;
-		case ModelReviewPackage.DIAGRAM_PATCH__OLD_DIAGRAM_INSTANCE:
-			setOldDiagramInstance((DiagramInstance) newValue);
+		case ModelReviewPackage.DIAGRAM_PATCH__OLD_DIAGRAM_RESOURCE:
+			setOldDiagramResource((DiagramResource) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -206,11 +206,11 @@ public class DiagramPatchImpl extends PatchImpl implements DiagramPatch {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case ModelReviewPackage.DIAGRAM_PATCH__NEW_DIAGRAM_INSTANCE:
-			setNewDiagramInstance((DiagramInstance) null);
+		case ModelReviewPackage.DIAGRAM_PATCH__NEW_DIAGRAM_RESOURCE:
+			setNewDiagramResource((DiagramResource) null);
 			return;
-		case ModelReviewPackage.DIAGRAM_PATCH__OLD_DIAGRAM_INSTANCE:
-			setOldDiagramInstance((DiagramInstance) null);
+		case ModelReviewPackage.DIAGRAM_PATCH__OLD_DIAGRAM_RESOURCE:
+			setOldDiagramResource((DiagramResource) null);
 			return;
 		}
 		super.eUnset(featureID);
@@ -224,10 +224,10 @@ public class DiagramPatchImpl extends PatchImpl implements DiagramPatch {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case ModelReviewPackage.DIAGRAM_PATCH__NEW_DIAGRAM_INSTANCE:
-			return newDiagramInstance != null;
-		case ModelReviewPackage.DIAGRAM_PATCH__OLD_DIAGRAM_INSTANCE:
-			return oldDiagramInstance != null;
+		case ModelReviewPackage.DIAGRAM_PATCH__NEW_DIAGRAM_RESOURCE:
+			return newDiagramResource != null;
+		case ModelReviewPackage.DIAGRAM_PATCH__OLD_DIAGRAM_RESOURCE:
+			return oldDiagramResource != null;
 		}
 		return super.eIsSet(featureID);
 	}

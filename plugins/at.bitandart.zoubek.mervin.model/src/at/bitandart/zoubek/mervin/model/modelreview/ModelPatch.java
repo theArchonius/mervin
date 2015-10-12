@@ -21,11 +21,11 @@ package at.bitandart.zoubek.mervin.model.modelreview;
  * </p>
  * <ul>
  * <li>
- * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getNewModelInstance
- * <em>New Model Instance</em>}</li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getNewModelResource
+ * <em>New Model Resource</em>}</li>
  * <li>
- * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getOldModelInstance
- * <em>Old Model Instance</em>}</li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getOldModelResource
+ * <em>Old Model Resource</em>}</li>
  * </ul>
  *
  * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelPatch()
@@ -35,62 +35,62 @@ package at.bitandart.zoubek.mervin.model.modelreview;
 public interface ModelPatch extends Patch {
 
 	/**
-	 * Returns the value of the '<em><b>New Model Instance</b></em>' reference.
+	 * Returns the value of the '<em><b>New Model Resource</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>New Model Instance</em>' reference isn't
+	 * If the meaning of the '<em>New Model Resource</em>' reference isn't
 	 * clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>New Model Instance</em>' reference.
-	 * @see #setNewModelInstance(ModelInstance)
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelPatch_NewModelInstance()
+	 * @return the value of the '<em>New Model Resource</em>' reference.
+	 * @see #setNewModelResource(ModelResource)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelPatch_NewModelResource()
 	 * @model
 	 * @generated
 	 */
-	ModelInstance getNewModelInstance();
+	ModelResource getNewModelResource();
 
 	/**
 	 * Sets the value of the '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getNewModelInstance
-	 * <em>New Model Instance</em>}' reference. <!-- begin-user-doc --> <!--
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getNewModelResource
+	 * <em>New Model Resource</em>}' reference. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
 	 * @param value
-	 *            the new value of the '<em>New Model Instance</em>' reference.
-	 * @see #getNewModelInstance()
+	 *            the new value of the '<em>New Model Resource</em>' reference.
+	 * @see #getNewModelResource()
 	 * @generated
 	 */
-	void setNewModelInstance(ModelInstance value);
+	void setNewModelResource(ModelResource value);
 
 	/**
-	 * Returns the value of the '<em><b>Old Model Instance</b></em>' reference.
+	 * Returns the value of the '<em><b>Old Model Resource</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Old Model Instance</em>' reference isn't
+	 * If the meaning of the '<em>Old Model Resource</em>' reference isn't
 	 * clear, there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Old Model Instance</em>' reference.
-	 * @see #setOldModelInstance(ModelInstance)
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelPatch_OldModelInstance()
+	 * @return the value of the '<em>Old Model Resource</em>' reference.
+	 * @see #setOldModelResource(ModelResource)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelPatch_OldModelResource()
 	 * @model
 	 * @generated
 	 */
-	ModelInstance getOldModelInstance();
+	ModelResource getOldModelResource();
 
 	/**
 	 * Sets the value of the '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getOldModelInstance
-	 * <em>Old Model Instance</em>}' reference. <!-- begin-user-doc --> <!--
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getOldModelResource
+	 * <em>Old Model Resource</em>}' reference. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
 	 * @param value
-	 *            the new value of the '<em>Old Model Instance</em>' reference.
-	 * @see #getOldModelInstance()
+	 *            the new value of the '<em>Old Model Resource</em>' reference.
+	 * @see #getOldModelResource()
 	 * @generated
 	 */
-	void setOldModelInstance(ModelInstance value);
+	void setOldModelResource(ModelResource value);
 } // ModelPatch

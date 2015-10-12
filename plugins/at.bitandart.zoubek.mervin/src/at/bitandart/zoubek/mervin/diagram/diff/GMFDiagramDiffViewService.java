@@ -386,7 +386,8 @@ public class GMFDiagramDiffViewService {
 			EList<Diff> differences = diagramComparison.getMatch(originalView).getDifferences();
 			Match viewElementSubmatch = diagramComparison.getMatch(view.getElement());
 
-			boolean hasChanged = !differences.isEmpty() || !viewElementSubmatch.getDifferences().isEmpty()
+			boolean hasChanged = !differences.isEmpty()
+					|| (viewElementSubmatch != null && !viewElementSubmatch.getDifferences().isEmpty())
 					|| viewReferenceChange != null;
 			if (hasChanged) {
 

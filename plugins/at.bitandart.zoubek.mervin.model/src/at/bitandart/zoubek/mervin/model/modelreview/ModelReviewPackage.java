@@ -473,22 +473,22 @@ public interface ModelReviewPackage extends EPackage {
 	int DIAGRAM_PATCH__PATCH_SET = PATCH__PATCH_SET;
 
 	/**
-	 * The feature id for the '<em><b>New Diagram Instance</b></em>' reference.
+	 * The feature id for the '<em><b>New Diagram Resource</b></em>' reference.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM_PATCH__NEW_DIAGRAM_INSTANCE = PATCH_FEATURE_COUNT + 0;
+	int DIAGRAM_PATCH__NEW_DIAGRAM_RESOURCE = PATCH_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Old Diagram Instance</b></em>' reference.
+	 * The feature id for the '<em><b>Old Diagram Resource</b></em>' reference.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM_PATCH__OLD_DIAGRAM_INSTANCE = PATCH_FEATURE_COUNT + 1;
+	int DIAGRAM_PATCH__OLD_DIAGRAM_RESOURCE = PATCH_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Diagram Patch</em>' class.
@@ -575,22 +575,22 @@ public interface ModelReviewPackage extends EPackage {
 	int MODEL_PATCH__PATCH_SET = PATCH__PATCH_SET;
 
 	/**
-	 * The feature id for the '<em><b>New Model Instance</b></em>' reference.
+	 * The feature id for the '<em><b>New Model Resource</b></em>' reference.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_PATCH__NEW_MODEL_INSTANCE = PATCH_FEATURE_COUNT + 0;
+	int MODEL_PATCH__NEW_MODEL_RESOURCE = PATCH_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Old Model Instance</b></em>' reference.
+	 * The feature id for the '<em><b>Old Model Resource</b></em>' reference.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_PATCH__OLD_MODEL_INSTANCE = PATCH_FEATURE_COUNT + 1;
+	int MODEL_PATCH__OLD_MODEL_RESOURCE = PATCH_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Model Patch</em>' class.
@@ -650,15 +650,15 @@ public interface ModelReviewPackage extends EPackage {
 
 	/**
 	 * The meta object id for the '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelInstanceImpl
-	 * <em>Model Instance</em>}' class. <!-- begin-user-doc --> <!--
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelResourceImpl
+	 * <em>Model Resource</em>}' class. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelInstanceImpl
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getModelInstance()
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelResourceImpl
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getModelResource()
 	 * @generated
 	 */
-	int MODEL_INSTANCE = 6;
+	int MODEL_RESOURCE = 6;
 
 	/**
 	 * The feature id for the '<em><b>Objects</b></em>' reference list. <!--
@@ -667,7 +667,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_INSTANCE__OBJECTS = 0;
+	int MODEL_RESOURCE__OBJECTS = 0;
 
 	/**
 	 * The feature id for the '<em><b>Root Packages</b></em>' reference list.
@@ -676,38 +676,38 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_INSTANCE__ROOT_PACKAGES = 1;
+	int MODEL_RESOURCE__ROOT_PACKAGES = 1;
 
 	/**
-	 * The number of structural features of the '<em>Model Instance</em>' class.
+	 * The number of structural features of the '<em>Model Resource</em>' class.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_INSTANCE_FEATURE_COUNT = 2;
+	int MODEL_RESOURCE_FEATURE_COUNT = 2;
 
 	/**
-	 * The number of operations of the '<em>Model Instance</em>' class. <!--
+	 * The number of operations of the '<em>Model Resource</em>' class. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_INSTANCE_OPERATION_COUNT = 0;
+	int MODEL_RESOURCE_OPERATION_COUNT = 0;
 
 	/**
 	 * The meta object id for the '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.DiagramInstanceImpl
-	 * <em>Diagram Instance</em>}' class. <!-- begin-user-doc --> <!--
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.DiagramResourceImpl
+	 * <em>Diagram Resource</em>}' class. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
-	 *      DiagramInstanceImpl
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDiagramInstance()
+	 *      DiagramResourceImpl
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDiagramResource()
 	 * @generated
 	 */
-	int DIAGRAM_INSTANCE = 7;
+	int DIAGRAM_RESOURCE = 7;
 
 	/**
 	 * The feature id for the '<em><b>Objects</b></em>' reference list. <!--
@@ -716,7 +716,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM_INSTANCE__OBJECTS = MODEL_INSTANCE__OBJECTS;
+	int DIAGRAM_RESOURCE__OBJECTS = MODEL_RESOURCE__OBJECTS;
 
 	/**
 	 * The feature id for the '<em><b>Root Packages</b></em>' reference list.
@@ -725,16 +725,16 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM_INSTANCE__ROOT_PACKAGES = MODEL_INSTANCE__ROOT_PACKAGES;
+	int DIAGRAM_RESOURCE__ROOT_PACKAGES = MODEL_RESOURCE__ROOT_PACKAGES;
 
 	/**
-	 * The number of structural features of the '<em>Diagram Instance</em>'
+	 * The number of structural features of the '<em>Diagram Resource</em>'
 	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM_INSTANCE_FEATURE_COUNT = MODEL_INSTANCE_FEATURE_COUNT + 0;
+	int DIAGRAM_RESOURCE_FEATURE_COUNT = MODEL_RESOURCE_FEATURE_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>Get Diagrams</em>' operation. <!--
@@ -743,16 +743,16 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM_INSTANCE___GET_DIAGRAMS = MODEL_INSTANCE_OPERATION_COUNT + 0;
+	int DIAGRAM_RESOURCE___GET_DIAGRAMS = MODEL_RESOURCE_OPERATION_COUNT + 0;
 
 	/**
-	 * The number of operations of the '<em>Diagram Instance</em>' class. <!--
+	 * The number of operations of the '<em>Diagram Resource</em>' class. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM_INSTANCE_OPERATION_COUNT = MODEL_INSTANCE_OPERATION_COUNT + 1;
+	int DIAGRAM_RESOURCE_OPERATION_COUNT = MODEL_RESOURCE_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '
@@ -1628,31 +1628,31 @@ public interface ModelReviewPackage extends EPackage {
 
 	/**
 	 * Returns the meta object for the reference '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getNewDiagramInstance
-	 * <em>New Diagram Instance</em>}'. <!-- begin-user-doc --> <!--
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getNewDiagramResource
+	 * <em>New Diagram Resource</em>}'. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
-	 * @return the meta object for the reference '<em>New Diagram Instance</em>
+	 * @return the meta object for the reference '<em>New Diagram Resource</em>
 	 *         '.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getNewDiagramInstance()
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getNewDiagramResource()
 	 * @see #getDiagramPatch()
 	 * @generated
 	 */
-	EReference getDiagramPatch_NewDiagramInstance();
+	EReference getDiagramPatch_NewDiagramResource();
 
 	/**
 	 * Returns the meta object for the reference '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getOldDiagramInstance
-	 * <em>Old Diagram Instance</em>}'. <!-- begin-user-doc --> <!--
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getOldDiagramResource
+	 * <em>Old Diagram Resource</em>}'. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
-	 * @return the meta object for the reference '<em>Old Diagram Instance</em>
+	 * @return the meta object for the reference '<em>Old Diagram Resource</em>
 	 *         '.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getOldDiagramInstance()
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch#getOldDiagramResource()
 	 * @see #getDiagramPatch()
 	 * @generated
 	 */
-	EReference getDiagramPatch_OldDiagramInstance();
+	EReference getDiagramPatch_OldDiagramResource();
 
 	/**
 	 * Returns the meta object for class '
@@ -1667,29 +1667,29 @@ public interface ModelReviewPackage extends EPackage {
 
 	/**
 	 * Returns the meta object for the reference '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getNewModelInstance
-	 * <em>New Model Instance</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getNewModelResource
+	 * <em>New Model Resource</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
 	 * 
-	 * @return the meta object for the reference '<em>New Model Instance</em>'.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getNewModelInstance()
+	 * @return the meta object for the reference '<em>New Model Resource</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getNewModelResource()
 	 * @see #getModelPatch()
 	 * @generated
 	 */
-	EReference getModelPatch_NewModelInstance();
+	EReference getModelPatch_NewModelResource();
 
 	/**
 	 * Returns the meta object for the reference '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getOldModelInstance
-	 * <em>Old Model Instance</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getOldModelResource
+	 * <em>Old Model Resource</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
 	 * 
-	 * @return the meta object for the reference '<em>Old Model Instance</em>'.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getOldModelInstance()
+	 * @return the meta object for the reference '<em>Old Model Resource</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelPatch#getOldModelResource()
 	 * @see #getModelPatch()
 	 * @generated
 	 */
-	EReference getModelPatch_OldModelInstance();
+	EReference getModelPatch_OldModelResource();
 
 	/**
 	 * Returns the meta object for class '
@@ -1716,62 +1716,62 @@ public interface ModelReviewPackage extends EPackage {
 
 	/**
 	 * Returns the meta object for class '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelInstance
-	 * <em>Model Instance</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelResource
+	 * <em>Model Resource</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @return the meta object for class '<em>Model Instance</em>'.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelInstance
+	 * @return the meta object for class '<em>Model Resource</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelResource
 	 * @generated
 	 */
-	EClass getModelInstance();
+	EClass getModelResource();
 
 	/**
 	 * Returns the meta object for the reference list '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelInstance#getObjects
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelResource#getObjects
 	 * <em>Objects</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for the reference list '<em>Objects</em>'.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelInstance#getObjects()
-	 * @see #getModelInstance()
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelResource#getObjects()
+	 * @see #getModelResource()
 	 * @generated
 	 */
-	EReference getModelInstance_Objects();
+	EReference getModelResource_Objects();
 
 	/**
 	 * Returns the meta object for the reference list '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelInstance#getRootPackages
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelResource#getRootPackages
 	 * <em>Root Packages</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for the reference list '<em>Root Packages</em>'.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelInstance#getRootPackages()
-	 * @see #getModelInstance()
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelResource#getRootPackages()
+	 * @see #getModelResource()
 	 * @generated
 	 */
-	EReference getModelInstance_RootPackages();
+	EReference getModelResource_RootPackages();
 
 	/**
 	 * Returns the meta object for class '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance
-	 * <em>Diagram Instance</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramResource
+	 * <em>Diagram Resource</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
 	 * -->
 	 * 
-	 * @return the meta object for class '<em>Diagram Instance</em>'.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance
+	 * @return the meta object for class '<em>Diagram Resource</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.DiagramResource
 	 * @generated
 	 */
-	EClass getDiagramInstance();
+	EClass getDiagramResource();
 
 	/**
 	 * Returns the meta object for the '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance#getDiagrams()
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramResource#getDiagrams()
 	 * <em>Get Diagrams</em>}' operation. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
 	 * @return the meta object for the '<em>Get Diagrams</em>' operation.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance#getDiagrams()
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.DiagramResource#getDiagrams()
 	 * @generated
 	 */
-	EOperation getDiagramInstance__GetDiagrams();
+	EOperation getDiagramResource__GetDiagrams();
 
 	/**
 	 * Returns the meta object for class '
@@ -2320,20 +2320,20 @@ public interface ModelReviewPackage extends EPackage {
 		EClass DIAGRAM_PATCH = eINSTANCE.getDiagramPatch();
 
 		/**
-		 * The meta object literal for the '<em><b>New Diagram Instance</b></em>
+		 * The meta object literal for the '<em><b>New Diagram Resource</b></em>
 		 * ' reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
 		 * @generated
 		 */
-		EReference DIAGRAM_PATCH__NEW_DIAGRAM_INSTANCE = eINSTANCE.getDiagramPatch_NewDiagramInstance();
+		EReference DIAGRAM_PATCH__NEW_DIAGRAM_RESOURCE = eINSTANCE.getDiagramPatch_NewDiagramResource();
 
 		/**
-		 * The meta object literal for the '<em><b>Old Diagram Instance</b></em>
+		 * The meta object literal for the '<em><b>Old Diagram Resource</b></em>
 		 * ' reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
 		 * @generated
 		 */
-		EReference DIAGRAM_PATCH__OLD_DIAGRAM_INSTANCE = eINSTANCE.getDiagramPatch_OldDiagramInstance();
+		EReference DIAGRAM_PATCH__OLD_DIAGRAM_RESOURCE = eINSTANCE.getDiagramPatch_OldDiagramResource();
 
 		/**
 		 * The meta object literal for the '
@@ -2348,20 +2348,20 @@ public interface ModelReviewPackage extends EPackage {
 		EClass MODEL_PATCH = eINSTANCE.getModelPatch();
 
 		/**
-		 * The meta object literal for the '<em><b>New Model Instance</b></em>'
+		 * The meta object literal for the '<em><b>New Model Resource</b></em>'
 		 * reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
 		 * @generated
 		 */
-		EReference MODEL_PATCH__NEW_MODEL_INSTANCE = eINSTANCE.getModelPatch_NewModelInstance();
+		EReference MODEL_PATCH__NEW_MODEL_RESOURCE = eINSTANCE.getModelPatch_NewModelResource();
 
 		/**
-		 * The meta object literal for the '<em><b>Old Model Instance</b></em>'
+		 * The meta object literal for the '<em><b>Old Model Resource</b></em>'
 		 * reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
 		 * @generated
 		 */
-		EReference MODEL_PATCH__OLD_MODEL_INSTANCE = eINSTANCE.getModelPatch_OldModelInstance();
+		EReference MODEL_PATCH__OLD_MODEL_RESOURCE = eINSTANCE.getModelPatch_OldModelResource();
 
 		/**
 		 * The meta object literal for the '
@@ -2385,16 +2385,16 @@ public interface ModelReviewPackage extends EPackage {
 
 		/**
 		 * The meta object literal for the '
-		 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelInstanceImpl
-		 * <em>Model Instance</em>}' class. <!-- begin-user-doc --> <!--
+		 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelResourceImpl
+		 * <em>Model Resource</em>}' class. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
 		 * 
 		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
-		 *      ModelInstanceImpl
-		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getModelInstance()
+		 *      ModelResourceImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getModelResource()
 		 * @generated
 		 */
-		EClass MODEL_INSTANCE = eINSTANCE.getModelInstance();
+		EClass MODEL_RESOURCE = eINSTANCE.getModelResource();
 
 		/**
 		 * The meta object literal for the '<em><b>Objects</b></em>' reference
@@ -2402,7 +2402,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * 
 		 * @generated
 		 */
-		EReference MODEL_INSTANCE__OBJECTS = eINSTANCE.getModelInstance_Objects();
+		EReference MODEL_RESOURCE__OBJECTS = eINSTANCE.getModelResource_Objects();
 
 		/**
 		 * The meta object literal for the '<em><b>Root Packages</b></em>'
@@ -2410,20 +2410,20 @@ public interface ModelReviewPackage extends EPackage {
 		 * 
 		 * @generated
 		 */
-		EReference MODEL_INSTANCE__ROOT_PACKAGES = eINSTANCE.getModelInstance_RootPackages();
+		EReference MODEL_RESOURCE__ROOT_PACKAGES = eINSTANCE.getModelResource_RootPackages();
 
 		/**
 		 * The meta object literal for the '
-		 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.DiagramInstanceImpl
-		 * <em>Diagram Instance</em>}' class. <!-- begin-user-doc --> <!--
+		 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.DiagramResourceImpl
+		 * <em>Diagram Resource</em>}' class. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
 		 * 
 		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
-		 *      DiagramInstanceImpl
-		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDiagramInstance()
+		 *      DiagramResourceImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDiagramResource()
 		 * @generated
 		 */
-		EClass DIAGRAM_INSTANCE = eINSTANCE.getDiagramInstance();
+		EClass DIAGRAM_RESOURCE = eINSTANCE.getDiagramResource();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Diagrams</b></em>'
@@ -2431,7 +2431,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * 
 		 * @generated
 		 */
-		EOperation DIAGRAM_INSTANCE___GET_DIAGRAMS = eINSTANCE.getDiagramInstance__GetDiagrams();
+		EOperation DIAGRAM_RESOURCE___GET_DIAGRAMS = eINSTANCE.getDiagramResource__GetDiagrams();
 
 		/**
 		 * The meta object literal for the '

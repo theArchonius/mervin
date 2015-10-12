@@ -22,8 +22,8 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
-import at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance;
-import at.bitandart.zoubek.mervin.model.modelreview.ModelInstance;
+import at.bitandart.zoubek.mervin.model.modelreview.DiagramResource;
+import at.bitandart.zoubek.mervin.model.modelreview.ModelResource;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
@@ -64,17 +64,21 @@ public class ExtendedModelReviewImpl extends ModelReviewImpl {
 				}
 			});
 
-			EList<DiagramInstance> newInvolvedModelsLeft = new BasicEList<DiagramInstance>();
+			EList<DiagramResource> involvedModelsLeft = new BasicEList<DiagramResource>();
+			EList<DiagramResource> involvedModelsRight = new BasicEList<DiagramResource>();
 			if (leftPatchSet != null) {
-				newInvolvedModelsLeft = leftPatchSet.getNewInvolvedDiagrams();
+				involvedModelsLeft = leftPatchSet.getNewInvolvedDiagrams();
+				involvedModelsRight = leftPatchSet.getOldInvolvedDiagrams();
 			}
 
-			EList<DiagramInstance> newInvolvedModelsRight = new BasicEList<DiagramInstance>();
 			if (rightPatchSet != null) {
-				newInvolvedModelsRight = rightPatchSet.getNewInvolvedDiagrams();
+				involvedModelsRight = rightPatchSet.getNewInvolvedDiagrams();
+				if (leftPatchSet == null) {
+					involvedModelsLeft = rightPatchSet.getOldInvolvedDiagrams();
+				}
 			}
 
-			selectedDiagramComparison = compareModelInstances(newInvolvedModelsLeft, newInvolvedModelsRight);
+			selectedDiagramComparison = compareModelInstances(involvedModelsLeft, involvedModelsRight);
 
 			if (eNotificationRequired())
 				eNotify(new ENotificationImpl(this, Notification.SET,
@@ -110,17 +114,21 @@ public class ExtendedModelReviewImpl extends ModelReviewImpl {
 				}
 			});
 
-			EList<ModelInstance> newInvolvedModelsLeft = new BasicEList<ModelInstance>();
+			EList<ModelResource> involvedModelsLeft = new BasicEList<ModelResource>();
+			EList<ModelResource> involvedModelsRight = new BasicEList<ModelResource>();
 			if (leftPatchSet != null) {
-				newInvolvedModelsLeft = leftPatchSet.getNewInvolvedModels();
+				involvedModelsLeft = leftPatchSet.getNewInvolvedModels();
+				involvedModelsRight = leftPatchSet.getOldInvolvedModels();
 			}
 
-			EList<ModelInstance> newInvolvedModelsRight = new BasicEList<ModelInstance>();
 			if (rightPatchSet != null) {
-				newInvolvedModelsRight = rightPatchSet.getNewInvolvedModels();
+				involvedModelsRight = rightPatchSet.getNewInvolvedModels();
+				if (leftPatchSet == null) {
+					involvedModelsLeft = rightPatchSet.getOldInvolvedModels();
+				}
 			}
 
-			selectedModelComparison = compareModelInstances(newInvolvedModelsLeft, newInvolvedModelsRight);
+			selectedModelComparison = compareModelInstances(involvedModelsLeft, involvedModelsRight);
 
 			if (eNotificationRequired())
 				eNotify(new ENotificationImpl(this, Notification.SET,
@@ -137,8 +145,8 @@ public class ExtendedModelReviewImpl extends ModelReviewImpl {
 	 * @param rightInvolvedModels
 	 * @return the result of the comparison
 	 */
-	private Comparison compareModelInstances(EList<? extends ModelInstance> leftInvolvedModels,
-			EList<? extends ModelInstance> rightInvolvedModels) {
+	private Comparison compareModelInstances(EList<? extends ModelResource> leftInvolvedModels,
+			EList<? extends ModelResource> rightInvolvedModels) {
 		ResourceSet oldResourceSet = new ResourceSetImpl();
 		ResourceSet newResourceSet = new ResourceSetImpl();
 

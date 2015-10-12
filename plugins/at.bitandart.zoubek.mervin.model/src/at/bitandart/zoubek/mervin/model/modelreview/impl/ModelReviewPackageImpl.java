@@ -13,8 +13,8 @@
 package at.bitandart.zoubek.mervin.model.modelreview.impl;
 
 import at.bitandart.zoubek.mervin.model.modelreview.Comment;
-import at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance;
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch;
+import at.bitandart.zoubek.mervin.model.modelreview.DiagramResource;
 import at.bitandart.zoubek.mervin.model.modelreview.Difference;
 import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
 import at.bitandart.zoubek.mervin.model.modelreview.DimensionChange;
@@ -22,8 +22,8 @@ import at.bitandart.zoubek.mervin.model.modelreview.EdgeDifferenceOverlay;
 import at.bitandart.zoubek.mervin.model.modelreview.LayoutDifference;
 import at.bitandart.zoubek.mervin.model.modelreview.LocationDifference;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelDifference;
-import at.bitandart.zoubek.mervin.model.modelreview.ModelInstance;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelPatch;
+import at.bitandart.zoubek.mervin.model.modelreview.ModelResource;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
@@ -102,14 +102,14 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	private EClass modelInstanceEClass = null;
+	private EClass modelResourceEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	private EClass diagramInstanceEClass = null;
+	private EClass diagramResourceEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -565,7 +565,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	public EReference getDiagramPatch_NewDiagramInstance() {
+	public EReference getDiagramPatch_NewDiagramResource() {
 		return (EReference) diagramPatchEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -574,7 +574,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	public EReference getDiagramPatch_OldDiagramInstance() {
+	public EReference getDiagramPatch_OldDiagramResource() {
 		return (EReference) diagramPatchEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -592,7 +592,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	public EReference getModelPatch_NewModelInstance() {
+	public EReference getModelPatch_NewModelResource() {
 		return (EReference) modelPatchEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -601,7 +601,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	public EReference getModelPatch_OldModelInstance() {
+	public EReference getModelPatch_OldModelResource() {
 		return (EReference) modelPatchEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -628,8 +628,8 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	public EClass getModelInstance() {
-		return modelInstanceEClass;
+	public EClass getModelResource() {
+		return modelResourceEClass;
 	}
 
 	/**
@@ -637,8 +637,8 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	public EReference getModelInstance_Objects() {
-		return (EReference) modelInstanceEClass.getEStructuralFeatures().get(0);
+	public EReference getModelResource_Objects() {
+		return (EReference) modelResourceEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -646,8 +646,8 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	public EReference getModelInstance_RootPackages() {
-		return (EReference) modelInstanceEClass.getEStructuralFeatures().get(1);
+	public EReference getModelResource_RootPackages() {
+		return (EReference) modelResourceEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -655,8 +655,8 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	public EClass getDiagramInstance() {
-		return diagramInstanceEClass;
+	public EClass getDiagramResource() {
+		return diagramResourceEClass;
 	}
 
 	/**
@@ -664,8 +664,8 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	public EOperation getDiagramInstance__GetDiagrams() {
-		return diagramInstanceEClass.getEOperations().get(0);
+	public EOperation getDiagramResource__GetDiagrams() {
+		return diagramResourceEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -912,22 +912,22 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		createEReference(patchEClass, PATCH__PATCH_SET);
 
 		diagramPatchEClass = createEClass(DIAGRAM_PATCH);
-		createEReference(diagramPatchEClass, DIAGRAM_PATCH__NEW_DIAGRAM_INSTANCE);
-		createEReference(diagramPatchEClass, DIAGRAM_PATCH__OLD_DIAGRAM_INSTANCE);
+		createEReference(diagramPatchEClass, DIAGRAM_PATCH__NEW_DIAGRAM_RESOURCE);
+		createEReference(diagramPatchEClass, DIAGRAM_PATCH__OLD_DIAGRAM_RESOURCE);
 
 		modelPatchEClass = createEClass(MODEL_PATCH);
-		createEReference(modelPatchEClass, MODEL_PATCH__NEW_MODEL_INSTANCE);
-		createEReference(modelPatchEClass, MODEL_PATCH__OLD_MODEL_INSTANCE);
+		createEReference(modelPatchEClass, MODEL_PATCH__NEW_MODEL_RESOURCE);
+		createEReference(modelPatchEClass, MODEL_PATCH__OLD_MODEL_RESOURCE);
 
 		commentEClass = createEClass(COMMENT);
 		createEAttribute(commentEClass, COMMENT__ID);
 
-		modelInstanceEClass = createEClass(MODEL_INSTANCE);
-		createEReference(modelInstanceEClass, MODEL_INSTANCE__OBJECTS);
-		createEReference(modelInstanceEClass, MODEL_INSTANCE__ROOT_PACKAGES);
+		modelResourceEClass = createEClass(MODEL_RESOURCE);
+		createEReference(modelResourceEClass, MODEL_RESOURCE__OBJECTS);
+		createEReference(modelResourceEClass, MODEL_RESOURCE__ROOT_PACKAGES);
 
-		diagramInstanceEClass = createEClass(DIAGRAM_INSTANCE);
-		createEOperation(diagramInstanceEClass, DIAGRAM_INSTANCE___GET_DIAGRAMS);
+		diagramResourceEClass = createEClass(DIAGRAM_RESOURCE);
+		createEOperation(diagramResourceEClass, DIAGRAM_RESOURCE___GET_DIAGRAMS);
 
 		differenceOverlayEClass = createEClass(DIFFERENCE_OVERLAY);
 		createEReference(differenceOverlayEClass, DIFFERENCE_OVERLAY__LINKED_VIEW);
@@ -1001,7 +1001,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		// Add supertypes to classes
 		diagramPatchEClass.getESuperTypes().add(this.getPatch());
 		modelPatchEClass.getESuperTypes().add(this.getPatch());
-		diagramInstanceEClass.getESuperTypes().add(this.getModelInstance());
+		diagramResourceEClass.getESuperTypes().add(this.getModelResource());
 		nodeDifferenceOverlayEClass.getESuperTypes().add(this.getDifferenceOverlay());
 		edgeDifferenceOverlayEClass.getESuperTypes().add(this.getDifferenceOverlay());
 		layoutDifferenceEClass.getESuperTypes().add(this.getDifference());
@@ -1044,16 +1044,16 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		initEReference(getPatchSet_Patches(), this.getPatch(), this.getPatch_PatchSet(), "patches", null, 0, -1,
 				PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getPatchSet_NewInvolvedModels(), this.getModelInstance(), null, "newInvolvedModels", null, 0, -1,
+		initEReference(getPatchSet_NewInvolvedModels(), this.getModelResource(), null, "newInvolvedModels", null, 0, -1,
 				PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getPatchSet_NewInvolvedDiagrams(), this.getDiagramInstance(), null, "newInvolvedDiagrams", null,
+		initEReference(getPatchSet_NewInvolvedDiagrams(), this.getDiagramResource(), null, "newInvolvedDiagrams", null,
 				0, -1, PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getPatchSet_OldInvolvedModels(), this.getModelInstance(), null, "oldInvolvedModels", null, 0, -1,
+		initEReference(getPatchSet_OldInvolvedModels(), this.getModelResource(), null, "oldInvolvedModels", null, 0, -1,
 				PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getPatchSet_OldInvolvedDiagrams(), this.getDiagramInstance(), null, "oldInvolvedDiagrams", null,
+		initEReference(getPatchSet_OldInvolvedDiagrams(), this.getDiagramResource(), null, "oldInvolvedDiagrams", null,
 				0, -1, PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getPatchSet_ModelComparison(), theComparePackage.getComparison(), null, "modelComparison", null,
@@ -1106,19 +1106,19 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 
 		initEClass(diagramPatchEClass, DiagramPatch.class, "DiagramPatch", !IS_ABSTRACT, !IS_INTERFACE,
 				IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getDiagramPatch_NewDiagramInstance(), this.getDiagramInstance(), null, "newDiagramInstance",
+		initEReference(getDiagramPatch_NewDiagramResource(), this.getDiagramResource(), null, "newDiagramResource",
 				null, 0, 1, DiagramPatch.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
 				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getDiagramPatch_OldDiagramInstance(), this.getDiagramInstance(), null, "oldDiagramInstance",
+		initEReference(getDiagramPatch_OldDiagramResource(), this.getDiagramResource(), null, "oldDiagramResource",
 				null, 0, 1, DiagramPatch.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
 				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(modelPatchEClass, ModelPatch.class, "ModelPatch", !IS_ABSTRACT, !IS_INTERFACE,
 				IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getModelPatch_NewModelInstance(), this.getModelInstance(), null, "newModelInstance", null, 0, 1,
+		initEReference(getModelPatch_NewModelResource(), this.getModelResource(), null, "newModelResource", null, 0, 1,
 				ModelPatch.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getModelPatch_OldModelInstance(), this.getModelInstance(), null, "oldModelInstance", null, 0, 1,
+		initEReference(getModelPatch_OldModelResource(), this.getModelResource(), null, "oldModelResource", null, 0, 1,
 				ModelPatch.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -1126,19 +1126,19 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		initEAttribute(getComment_Id(), ecorePackage.getEString(), "id", null, 0, 1, Comment.class, !IS_TRANSIENT,
 				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(modelInstanceEClass, ModelInstance.class, "ModelInstance", !IS_ABSTRACT, !IS_INTERFACE,
+		initEClass(modelResourceEClass, ModelResource.class, "ModelResource", !IS_ABSTRACT, !IS_INTERFACE,
 				IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getModelInstance_Objects(), ecorePackage.getEObject(), null, "objects", null, 0, -1,
-				ModelInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+		initEReference(getModelResource_Objects(), ecorePackage.getEObject(), null, "objects", null, 0, -1,
+				ModelResource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getModelInstance_RootPackages(), theEcorePackage.getEPackage(), null, "rootPackages", null, 0,
-				-1, ModelInstance.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+		initEReference(getModelResource_RootPackages(), theEcorePackage.getEPackage(), null, "rootPackages", null, 0,
+				-1, ModelResource.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(diagramInstanceEClass, DiagramInstance.class, "DiagramInstance", !IS_ABSTRACT, !IS_INTERFACE,
+		initEClass(diagramResourceEClass, DiagramResource.class, "DiagramResource", !IS_ABSTRACT, !IS_INTERFACE,
 				IS_GENERATED_INSTANCE_CLASS);
 
-		initEOperation(getDiagramInstance__GetDiagrams(), theNotationPackage.getDiagram(), "getDiagrams", 0, -1,
+		initEOperation(getDiagramResource__GetDiagrams(), theNotationPackage.getDiagram(), "getDiagrams", 0, -1,
 				IS_UNIQUE, IS_ORDERED);
 
 		initEClass(differenceOverlayEClass, DifferenceOverlay.class, "DifferenceOverlay", IS_ABSTRACT, IS_INTERFACE,

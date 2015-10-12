@@ -12,8 +12,8 @@
  */
 package at.bitandart.zoubek.mervin.model.modelreview.impl;
 
-import at.bitandart.zoubek.mervin.model.modelreview.ModelInstance;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelPatch;
+import at.bitandart.zoubek.mervin.model.modelreview.ModelResource;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
@@ -28,36 +28,36 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * </p>
  * <ul>
  * <li>
- * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelPatchImpl#getNewModelInstance
- * <em>New Model Instance</em>}</li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelPatchImpl#getNewModelResource
+ * <em>New Model Resource</em>}</li>
  * <li>
- * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelPatchImpl#getOldModelInstance
- * <em>Old Model Instance</em>}</li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelPatchImpl#getOldModelResource
+ * <em>Old Model Resource</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class ModelPatchImpl extends PatchImpl implements ModelPatch {
 	/**
-	 * The cached value of the '{@link #getNewModelInstance()
-	 * <em>New Model Instance</em>}' reference. <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getNewModelResource()
+	 * <em>New Model Resource</em>}' reference. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
-	 * @see #getNewModelInstance()
+	 * @see #getNewModelResource()
 	 * @generated
 	 * @ordered
 	 */
-	protected ModelInstance newModelInstance;
+	protected ModelResource newModelResource;
 	/**
-	 * The cached value of the '{@link #getOldModelInstance()
-	 * <em>Old Model Instance</em>}' reference. <!-- begin-user-doc --> <!--
+	 * The cached value of the '{@link #getOldModelResource()
+	 * <em>Old Model Resource</em>}' reference. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
-	 * @see #getOldModelInstance()
+	 * @see #getOldModelResource()
 	 * @generated
 	 * @ordered
 	 */
-	protected ModelInstance oldModelInstance;
+	protected ModelResource oldModelResource;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -83,17 +83,17 @@ public class ModelPatchImpl extends PatchImpl implements ModelPatch {
 	 * 
 	 * @generated
 	 */
-	public ModelInstance getNewModelInstance() {
-		if (newModelInstance != null && newModelInstance.eIsProxy()) {
-			InternalEObject oldNewModelInstance = (InternalEObject) newModelInstance;
-			newModelInstance = (ModelInstance) eResolveProxy(oldNewModelInstance);
-			if (newModelInstance != oldNewModelInstance) {
+	public ModelResource getNewModelResource() {
+		if (newModelResource != null && newModelResource.eIsProxy()) {
+			InternalEObject oldNewModelResource = (InternalEObject) newModelResource;
+			newModelResource = (ModelResource) eResolveProxy(oldNewModelResource);
+			if (newModelResource != oldNewModelResource) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							ModelReviewPackage.MODEL_PATCH__NEW_MODEL_INSTANCE, oldNewModelInstance, newModelInstance));
+							ModelReviewPackage.MODEL_PATCH__NEW_MODEL_RESOURCE, oldNewModelResource, newModelResource));
 			}
 		}
-		return newModelInstance;
+		return newModelResource;
 	}
 
 	/**
@@ -101,8 +101,8 @@ public class ModelPatchImpl extends PatchImpl implements ModelPatch {
 	 * 
 	 * @generated
 	 */
-	public ModelInstance basicGetNewModelInstance() {
-		return newModelInstance;
+	public ModelResource basicGetNewModelResource() {
+		return newModelResource;
 	}
 
 	/**
@@ -110,12 +110,12 @@ public class ModelPatchImpl extends PatchImpl implements ModelPatch {
 	 * 
 	 * @generated
 	 */
-	public void setNewModelInstance(ModelInstance newNewModelInstance) {
-		ModelInstance oldNewModelInstance = newModelInstance;
-		newModelInstance = newNewModelInstance;
+	public void setNewModelResource(ModelResource newNewModelResource) {
+		ModelResource oldNewModelResource = newModelResource;
+		newModelResource = newNewModelResource;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.MODEL_PATCH__NEW_MODEL_INSTANCE,
-					oldNewModelInstance, newModelInstance));
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.MODEL_PATCH__NEW_MODEL_RESOURCE,
+					oldNewModelResource, newModelResource));
 	}
 
 	/**
@@ -123,17 +123,17 @@ public class ModelPatchImpl extends PatchImpl implements ModelPatch {
 	 * 
 	 * @generated
 	 */
-	public ModelInstance getOldModelInstance() {
-		if (oldModelInstance != null && oldModelInstance.eIsProxy()) {
-			InternalEObject oldOldModelInstance = (InternalEObject) oldModelInstance;
-			oldModelInstance = (ModelInstance) eResolveProxy(oldOldModelInstance);
-			if (oldModelInstance != oldOldModelInstance) {
+	public ModelResource getOldModelResource() {
+		if (oldModelResource != null && oldModelResource.eIsProxy()) {
+			InternalEObject oldOldModelResource = (InternalEObject) oldModelResource;
+			oldModelResource = (ModelResource) eResolveProxy(oldOldModelResource);
+			if (oldModelResource != oldOldModelResource) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
-							ModelReviewPackage.MODEL_PATCH__OLD_MODEL_INSTANCE, oldOldModelInstance, oldModelInstance));
+							ModelReviewPackage.MODEL_PATCH__OLD_MODEL_RESOURCE, oldOldModelResource, oldModelResource));
 			}
 		}
-		return oldModelInstance;
+		return oldModelResource;
 	}
 
 	/**
@@ -141,8 +141,8 @@ public class ModelPatchImpl extends PatchImpl implements ModelPatch {
 	 * 
 	 * @generated
 	 */
-	public ModelInstance basicGetOldModelInstance() {
-		return oldModelInstance;
+	public ModelResource basicGetOldModelResource() {
+		return oldModelResource;
 	}
 
 	/**
@@ -150,12 +150,12 @@ public class ModelPatchImpl extends PatchImpl implements ModelPatch {
 	 * 
 	 * @generated
 	 */
-	public void setOldModelInstance(ModelInstance newOldModelInstance) {
-		ModelInstance oldOldModelInstance = oldModelInstance;
-		oldModelInstance = newOldModelInstance;
+	public void setOldModelResource(ModelResource newOldModelResource) {
+		ModelResource oldOldModelResource = oldModelResource;
+		oldModelResource = newOldModelResource;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.MODEL_PATCH__OLD_MODEL_INSTANCE,
-					oldOldModelInstance, oldModelInstance));
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.MODEL_PATCH__OLD_MODEL_RESOURCE,
+					oldOldModelResource, oldModelResource));
 	}
 
 	/**
@@ -166,14 +166,14 @@ public class ModelPatchImpl extends PatchImpl implements ModelPatch {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-		case ModelReviewPackage.MODEL_PATCH__NEW_MODEL_INSTANCE:
+		case ModelReviewPackage.MODEL_PATCH__NEW_MODEL_RESOURCE:
 			if (resolve)
-				return getNewModelInstance();
-			return basicGetNewModelInstance();
-		case ModelReviewPackage.MODEL_PATCH__OLD_MODEL_INSTANCE:
+				return getNewModelResource();
+			return basicGetNewModelResource();
+		case ModelReviewPackage.MODEL_PATCH__OLD_MODEL_RESOURCE:
 			if (resolve)
-				return getOldModelInstance();
-			return basicGetOldModelInstance();
+				return getOldModelResource();
+			return basicGetOldModelResource();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -186,11 +186,11 @@ public class ModelPatchImpl extends PatchImpl implements ModelPatch {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-		case ModelReviewPackage.MODEL_PATCH__NEW_MODEL_INSTANCE:
-			setNewModelInstance((ModelInstance) newValue);
+		case ModelReviewPackage.MODEL_PATCH__NEW_MODEL_RESOURCE:
+			setNewModelResource((ModelResource) newValue);
 			return;
-		case ModelReviewPackage.MODEL_PATCH__OLD_MODEL_INSTANCE:
-			setOldModelInstance((ModelInstance) newValue);
+		case ModelReviewPackage.MODEL_PATCH__OLD_MODEL_RESOURCE:
+			setOldModelResource((ModelResource) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -204,11 +204,11 @@ public class ModelPatchImpl extends PatchImpl implements ModelPatch {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-		case ModelReviewPackage.MODEL_PATCH__NEW_MODEL_INSTANCE:
-			setNewModelInstance((ModelInstance) null);
+		case ModelReviewPackage.MODEL_PATCH__NEW_MODEL_RESOURCE:
+			setNewModelResource((ModelResource) null);
 			return;
-		case ModelReviewPackage.MODEL_PATCH__OLD_MODEL_INSTANCE:
-			setOldModelInstance((ModelInstance) null);
+		case ModelReviewPackage.MODEL_PATCH__OLD_MODEL_RESOURCE:
+			setOldModelResource((ModelResource) null);
 			return;
 		}
 		super.eUnset(featureID);
@@ -222,10 +222,10 @@ public class ModelPatchImpl extends PatchImpl implements ModelPatch {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-		case ModelReviewPackage.MODEL_PATCH__NEW_MODEL_INSTANCE:
-			return newModelInstance != null;
-		case ModelReviewPackage.MODEL_PATCH__OLD_MODEL_INSTANCE:
-			return oldModelInstance != null;
+		case ModelReviewPackage.MODEL_PATCH__NEW_MODEL_RESOURCE:
+			return newModelResource != null;
+		case ModelReviewPackage.MODEL_PATCH__OLD_MODEL_RESOURCE:
+			return oldModelResource != null;
 		}
 		return super.eIsSet(featureID);
 	}

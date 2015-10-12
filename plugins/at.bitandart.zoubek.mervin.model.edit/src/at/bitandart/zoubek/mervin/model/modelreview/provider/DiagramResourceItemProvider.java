@@ -14,25 +14,27 @@ package at.bitandart.zoubek.mervin.model.modelreview.provider;
 
 import java.util.Collection;
 import java.util.List;
+
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
+
 import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 
 /**
  * This is the item provider adapter for a
- * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance} object.
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramResource} object.
  * <!-- begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
  */
-public class DiagramInstanceItemProvider extends ModelInstanceItemProvider {
+public class DiagramResourceItemProvider extends ModelResourceItemProvider {
 	/**
 	 * This constructs an instance from a factory and a notifier. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	public DiagramInstanceItemProvider(AdapterFactory adapterFactory) {
+	public DiagramResourceItemProvider(AdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
@@ -52,14 +54,14 @@ public class DiagramInstanceItemProvider extends ModelInstanceItemProvider {
 	}
 
 	/**
-	 * This returns DiagramInstance.gif. <!-- begin-user-doc --> <!--
+	 * This returns DiagramResource.gif. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
 	 * @generated
 	 */
 	@Override
 	public Object getImage(Object object) {
-		return overlayImage(object, getResourceLocator().getImage("full/obj16/DiagramInstance"));
+		return overlayImage(object, getResourceLocator().getImage("full/obj16/DiagramResource"));
 	}
 
 	/**
@@ -70,7 +72,7 @@ public class DiagramInstanceItemProvider extends ModelInstanceItemProvider {
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_DiagramInstance_type");
+		return getString("_UI_DiagramResource_type");
 	}
 
 	/**

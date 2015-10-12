@@ -17,7 +17,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.notation.Diagram;
 
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
-import at.bitandart.zoubek.mervin.model.modelreview.impl.DiagramInstanceImpl;
+import at.bitandart.zoubek.mervin.model.modelreview.impl.DiagramResourceImpl;
 
 /**
  * An {@link ModelReview} implementation that supports the derived attributes of
@@ -26,7 +26,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.impl.DiagramInstanceImpl;
  * @author Florian Zoubek
  *
  */
-public class ExtendedDiagramInstanceImpl extends DiagramInstanceImpl {
+public class ExtendedDiagramInstanceImpl extends DiagramResourceImpl {
 	@Override
 	public EList<Diagram> getDiagrams() {
 

@@ -78,10 +78,10 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements ModelReviewF
 			return createDiagramPatch();
 		case ModelReviewPackage.MODEL_PATCH:
 			return createModelPatch();
-		case ModelReviewPackage.MODEL_INSTANCE:
-			return createModelInstance();
-		case ModelReviewPackage.DIAGRAM_INSTANCE:
-			return createDiagramInstance();
+		case ModelReviewPackage.MODEL_RESOURCE:
+			return createModelResource();
+		case ModelReviewPackage.DIAGRAM_RESOURCE:
+			return createDiagramResource();
 		case ModelReviewPackage.NODE_DIFFERENCE_OVERLAY:
 			return createNodeDifferenceOverlay();
 		case ModelReviewPackage.EDGE_DIFFERENCE_OVERLAY:
@@ -194,9 +194,9 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements ModelReviewF
 	 * 
 	 * @generated
 	 */
-	public ModelInstance createModelInstance() {
-		ModelInstanceImpl modelInstance = new ModelInstanceImpl();
-		return modelInstance;
+	public ModelResource createModelResource() {
+		ModelResourceImpl modelResource = new ModelResourceImpl();
+		return modelResource;
 	}
 
 	/**
@@ -204,9 +204,9 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements ModelReviewF
 	 * 
 	 * @generated
 	 */
-	public DiagramInstance createDiagramInstance() {
-		DiagramInstanceImpl diagramInstance = new DiagramInstanceImpl();
-		return diagramInstance;
+	public DiagramResource createDiagramResource() {
+		DiagramResourceImpl diagramResource = new DiagramResourceImpl();
+		return diagramResource;
 	}
 
 	/**

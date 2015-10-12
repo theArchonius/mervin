@@ -172,12 +172,12 @@ public interface PatchSet extends EObject {
 	 * @model
 	 * @generated
 	 */
-	EList<ModelInstance> getNewInvolvedModels();
+	EList<ModelResource> getNewInvolvedModels();
 
 	/**
 	 * Returns the value of the '<em><b>New Involved Diagrams</b></em>'
 	 * reference list. The list contents are of type
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance}.
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramResource}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>New Involved Diagrams</em>' reference list
@@ -190,7 +190,7 @@ public interface PatchSet extends EObject {
 	 * @model
 	 * @generated
 	 */
-	EList<DiagramInstance> getNewInvolvedDiagrams();
+	EList<DiagramResource> getNewInvolvedDiagrams();
 
 	/**
 	 * Returns the value of the '<em><b>Old Involved Models</b></em>' reference
@@ -208,12 +208,12 @@ public interface PatchSet extends EObject {
 	 * @model
 	 * @generated
 	 */
-	EList<ModelInstance> getOldInvolvedModels();
+	EList<ModelResource> getOldInvolvedModels();
 
 	/**
 	 * Returns the value of the '<em><b>Old Involved Diagrams</b></em>'
 	 * reference list. The list contents are of type
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance}.
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DiagramResource}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Old Involved Diagrams</em>' reference list
@@ -226,7 +226,7 @@ public interface PatchSet extends EObject {
 	 * @model
 	 * @generated
 	 */
-	EList<DiagramInstance> getOldInvolvedDiagrams();
+	EList<DiagramResource> getOldInvolvedDiagrams();
 
 	/**
 	 * Returns the value of the '<em><b>Model Comparison</b></em>' reference.

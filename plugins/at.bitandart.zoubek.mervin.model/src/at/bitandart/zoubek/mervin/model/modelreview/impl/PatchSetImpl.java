@@ -12,8 +12,8 @@
  */
 package at.bitandart.zoubek.mervin.model.modelreview.impl;
 
-import at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance;
-import at.bitandart.zoubek.mervin.model.modelreview.ModelInstance;
+import at.bitandart.zoubek.mervin.model.modelreview.DiagramResource;
+import at.bitandart.zoubek.mervin.model.modelreview.ModelResource;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 import at.bitandart.zoubek.mervin.model.modelreview.Patch;
@@ -137,7 +137,7 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements PatchS
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<ModelInstance> newInvolvedModels;
+	protected EList<ModelResource> newInvolvedModels;
 
 	/**
 	 * The cached value of the '{@link #getNewInvolvedDiagrams()
@@ -148,7 +148,7 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements PatchS
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<DiagramInstance> newInvolvedDiagrams;
+	protected EList<DiagramResource> newInvolvedDiagrams;
 
 	/**
 	 * The cached value of the '{@link #getOldInvolvedModels()
@@ -159,7 +159,7 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements PatchS
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<ModelInstance> oldInvolvedModels;
+	protected EList<ModelResource> oldInvolvedModels;
 
 	/**
 	 * The cached value of the '{@link #getOldInvolvedDiagrams()
@@ -170,7 +170,7 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements PatchS
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<DiagramInstance> oldInvolvedDiagrams;
+	protected EList<DiagramResource> oldInvolvedDiagrams;
 
 	/**
 	 * The cached value of the '{@link #getModelComparison()
@@ -399,9 +399,9 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements PatchS
 	 * 
 	 * @generated
 	 */
-	public EList<ModelInstance> getNewInvolvedModels() {
+	public EList<ModelResource> getNewInvolvedModels() {
 		if (newInvolvedModels == null) {
-			newInvolvedModels = new EObjectResolvingEList<ModelInstance>(ModelInstance.class, this,
+			newInvolvedModels = new EObjectResolvingEList<ModelResource>(ModelResource.class, this,
 					ModelReviewPackage.PATCH_SET__NEW_INVOLVED_MODELS);
 		}
 		return newInvolvedModels;
@@ -412,9 +412,9 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements PatchS
 	 * 
 	 * @generated
 	 */
-	public EList<DiagramInstance> getNewInvolvedDiagrams() {
+	public EList<DiagramResource> getNewInvolvedDiagrams() {
 		if (newInvolvedDiagrams == null) {
-			newInvolvedDiagrams = new EObjectResolvingEList<DiagramInstance>(DiagramInstance.class, this,
+			newInvolvedDiagrams = new EObjectResolvingEList<DiagramResource>(DiagramResource.class, this,
 					ModelReviewPackage.PATCH_SET__NEW_INVOLVED_DIAGRAMS);
 		}
 		return newInvolvedDiagrams;
@@ -425,9 +425,9 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements PatchS
 	 * 
 	 * @generated
 	 */
-	public EList<ModelInstance> getOldInvolvedModels() {
+	public EList<ModelResource> getOldInvolvedModels() {
 		if (oldInvolvedModels == null) {
-			oldInvolvedModels = new EObjectResolvingEList<ModelInstance>(ModelInstance.class, this,
+			oldInvolvedModels = new EObjectResolvingEList<ModelResource>(ModelResource.class, this,
 					ModelReviewPackage.PATCH_SET__OLD_INVOLVED_MODELS);
 		}
 		return oldInvolvedModels;
@@ -438,9 +438,9 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements PatchS
 	 * 
 	 * @generated
 	 */
-	public EList<DiagramInstance> getOldInvolvedDiagrams() {
+	public EList<DiagramResource> getOldInvolvedDiagrams() {
 		if (oldInvolvedDiagrams == null) {
-			oldInvolvedDiagrams = new EObjectResolvingEList<DiagramInstance>(DiagramInstance.class, this,
+			oldInvolvedDiagrams = new EObjectResolvingEList<DiagramResource>(DiagramResource.class, this,
 					ModelReviewPackage.PATCH_SET__OLD_INVOLVED_DIAGRAMS);
 		}
 		return oldInvolvedDiagrams;
@@ -749,19 +749,19 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements PatchS
 			return;
 		case ModelReviewPackage.PATCH_SET__NEW_INVOLVED_MODELS:
 			getNewInvolvedModels().clear();
-			getNewInvolvedModels().addAll((Collection<? extends ModelInstance>) newValue);
+			getNewInvolvedModels().addAll((Collection<? extends ModelResource>) newValue);
 			return;
 		case ModelReviewPackage.PATCH_SET__NEW_INVOLVED_DIAGRAMS:
 			getNewInvolvedDiagrams().clear();
-			getNewInvolvedDiagrams().addAll((Collection<? extends DiagramInstance>) newValue);
+			getNewInvolvedDiagrams().addAll((Collection<? extends DiagramResource>) newValue);
 			return;
 		case ModelReviewPackage.PATCH_SET__OLD_INVOLVED_MODELS:
 			getOldInvolvedModels().clear();
-			getOldInvolvedModels().addAll((Collection<? extends ModelInstance>) newValue);
+			getOldInvolvedModels().addAll((Collection<? extends ModelResource>) newValue);
 			return;
 		case ModelReviewPackage.PATCH_SET__OLD_INVOLVED_DIAGRAMS:
 			getOldInvolvedDiagrams().clear();
-			getOldInvolvedDiagrams().addAll((Collection<? extends DiagramInstance>) newValue);
+			getOldInvolvedDiagrams().addAll((Collection<? extends DiagramResource>) newValue);
 			return;
 		case ModelReviewPackage.PATCH_SET__MODEL_COMPARISON:
 			setModelComparison((Comparison) newValue);

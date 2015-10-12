@@ -42,8 +42,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 
-import at.bitandart.zoubek.mervin.model.modelreview.DiagramInstance;
-import at.bitandart.zoubek.mervin.model.modelreview.ModelInstance;
+import at.bitandart.zoubek.mervin.model.modelreview.DiagramResource;
+import at.bitandart.zoubek.mervin.model.modelreview.ModelResource;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.Patch;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
@@ -93,8 +93,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 
 		// initialize tree viewer
 
-		reviewTreeViewer = new TreeViewer(mainPanel, SWT.SINGLE | SWT.H_SCROLL
-				| SWT.V_SCROLL);
+		reviewTreeViewer = new TreeViewer(mainPanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
 		reviewTreeViewer.setComparator(new ViewerComparator());
 		reviewTreeViewer.setContentProvider(new ModelReviewContentProvider());
 		Tree reviewTree = reviewTreeViewer.getTree();
@@ -105,8 +104,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 		// set up all columns of the tree
 
 		// main label column
-		TreeViewerColumn labelColumn = new TreeViewerColumn(reviewTreeViewer,
-				SWT.NONE);
+		TreeViewerColumn labelColumn = new TreeViewerColumn(reviewTreeViewer, SWT.NONE);
 		labelColumn.getColumn().setResizable(true);
 		labelColumn.getColumn().setMoveable(true);
 		labelColumn.getColumn().setText("Element");
@@ -114,48 +112,38 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 		ModelReviewExplorerMainColumnLabelProvider labelColumnLabelProvider = new ModelReviewExplorerMainColumnLabelProvider();
 		labelColumn.setLabelProvider(labelColumnLabelProvider);
 		labelColumn.getColumn().addSelectionListener(
-				new ThreeWayLabelTreeViewerComparator(reviewTreeViewer,
-						labelColumn, labelColumnLabelProvider));
+				new ThreeWayLabelTreeViewerComparator(reviewTreeViewer, labelColumn, labelColumnLabelProvider));
 
 		// change count column
-		TreeViewerColumn changeCountColumn = new TreeViewerColumn(
-				reviewTreeViewer, SWT.NONE);
+		TreeViewerColumn changeCountColumn = new TreeViewerColumn(reviewTreeViewer, SWT.NONE);
 		changeCountColumn.getColumn().setResizable(true);
 		changeCountColumn.getColumn().setMoveable(false);
 		changeCountColumn.getColumn().setText("#C");
 		changeCountColumn.getColumn().setAlignment(SWT.CENTER);
-		changeCountColumn.getColumn().setToolTipText(
-				"Number of changed elements");
+		changeCountColumn.getColumn().setToolTipText("Number of changed elements");
 		ChangeCountColumnLabelProvider changeCountColumnLabelProvider = new ChangeCountColumnLabelProvider(
-				reviewTreeViewer, Display.getCurrent().getSystemColor(
-						SWT.COLOR_WHITE), Display.getCurrent().getSystemColor(
-						SWT.COLOR_BLACK));
+				reviewTreeViewer, Display.getCurrent().getSystemColor(SWT.COLOR_WHITE),
+				Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
 		changeCountColumn.setLabelProvider(changeCountColumnLabelProvider);
-		changeCountColumn.getColumn().addSelectionListener(
-				new ThreeWayLabelTreeViewerComparator(reviewTreeViewer,
-						changeCountColumn, changeCountColumnLabelProvider));
+		changeCountColumn.getColumn().addSelectionListener(new ThreeWayLabelTreeViewerComparator(reviewTreeViewer,
+				changeCountColumn, changeCountColumnLabelProvider));
 
 		// reference count column
-		TreeViewerColumn refCountColumn = new TreeViewerColumn(
-				reviewTreeViewer, SWT.NONE);
+		TreeViewerColumn refCountColumn = new TreeViewerColumn(reviewTreeViewer, SWT.NONE);
 		refCountColumn.getColumn().setResizable(true);
 		refCountColumn.getColumn().setMoveable(false);
 		refCountColumn.getColumn().setText("#RC");
 		refCountColumn.getColumn().setAlignment(SWT.CENTER);
-		refCountColumn.getColumn().setToolTipText(
-				"Number of references to the tgiven elements");
+		refCountColumn.getColumn().setToolTipText("Number of references to the tgiven elements");
 		ReferencedChangeCountColumnLabelProvider refChangeCountColumnlabelProvider = new ReferencedChangeCountColumnLabelProvider(
-				reviewTreeViewer, Display.getCurrent().getSystemColor(
-						SWT.COLOR_WHITE), Display.getCurrent().getSystemColor(
-						SWT.COLOR_BLACK));
+				reviewTreeViewer, Display.getCurrent().getSystemColor(SWT.COLOR_WHITE),
+				Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
 		refCountColumn.setLabelProvider(refChangeCountColumnlabelProvider);
-		refCountColumn.getColumn().addSelectionListener(
-				new ThreeWayLabelTreeViewerComparator(reviewTreeViewer,
-						refCountColumn, refChangeCountColumnlabelProvider));
+		refCountColumn.getColumn().addSelectionListener(new ThreeWayLabelTreeViewerComparator(reviewTreeViewer,
+				refCountColumn, refChangeCountColumnlabelProvider));
 
 		// the resource column
-		TreeViewerColumn resourceColumn = new TreeViewerColumn(
-				reviewTreeViewer, SWT.NONE);
+		TreeViewerColumn resourceColumn = new TreeViewerColumn(reviewTreeViewer, SWT.NONE);
 		resourceColumn.getColumn().setResizable(true);
 		resourceColumn.getColumn().setMoveable(true);
 		resourceColumn.getColumn().setText("Resource");
@@ -163,8 +151,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 		ModelReviewExplorerResourceColumnLabelProvider resourceColumnLabelProvider = new ModelReviewExplorerResourceColumnLabelProvider();
 		resourceColumn.setLabelProvider(resourceColumnLabelProvider);
 		resourceColumn.getColumn().addSelectionListener(
-				new ThreeWayLabelTreeViewerComparator(reviewTreeViewer,
-						resourceColumn, resourceColumnLabelProvider));
+				new ThreeWayLabelTreeViewerComparator(reviewTreeViewer, resourceColumn, resourceColumnLabelProvider));
 
 		// all controls updated, now update them with the given values
 		viewInitialized = true;
@@ -183,8 +170,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 			reviewTreeViewer.setInput(currentModelReview);
 			reviewTreeViewer.refresh();
 
-			for (TreeColumn treeColumn : reviewTreeViewer.getTree()
-					.getColumns()) {
+			for (TreeColumn treeColumn : reviewTreeViewer.getTree().getColumns()) {
 				treeColumn.pack();
 			}
 
@@ -199,8 +185,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 	 * @author Florian Zoubek
 	 *
 	 */
-	private class ModelReviewExplorerMainColumnLabelProvider extends
-			ColumnLabelProvider {
+	private class ModelReviewExplorerMainColumnLabelProvider extends ColumnLabelProvider {
 
 		/**
 		 * label provider for model and diagram elements
@@ -213,16 +198,14 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 			 * elements
 			 */
 			adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(
-					new ComposedAdapterFactory(
-							ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
+					new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
 		}
 
 		@Override
 		public String getText(Object element) {
 
 			if (element instanceof PatchSet) {
-				return MessageFormat.format("PatchSet #{0}",
-						((PatchSet) element).getId());
+				return MessageFormat.format("PatchSet #{0}", ((PatchSet) element).getId());
 			}
 
 			if (element instanceof TreeItemContainer) {
@@ -233,9 +216,8 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 				return ((Patch) element).getNewPath();
 			}
 
-			if (element instanceof ModelInstance) {
-				return ((ModelInstance) element).getRootPackages().get(0)
-						.getName();
+			if (element instanceof ModelResource) {
+				return ((ModelResource) element).getRootPackages().get(0).getName();
 			}
 
 			if (element instanceof EObject) {
@@ -269,8 +251,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 
 		@Override
 		public boolean isLabelProperty(Object element, String property) {
-			return adapterFactoryLabelProvider.isLabelProperty(element,
-					property);
+			return adapterFactoryLabelProvider.isLabelProperty(element, property);
 		}
 
 		@Override
@@ -287,8 +268,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 	 * @author Florian Zoubek
 	 *
 	 */
-	private class ModelReviewExplorerResourceColumnLabelProvider extends
-			ColumnLabelProvider {
+	private class ModelReviewExplorerResourceColumnLabelProvider extends ColumnLabelProvider {
 
 		@Override
 		public String getText(Object element) {
@@ -313,13 +293,12 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 	 * @author Florian Zoubek
 	 *
 	 */
-	private abstract class ModelReviewCounterColumnLabelProvider extends
-			NumericColoredColumnLabelProvider {
+	private abstract class ModelReviewCounterColumnLabelProvider extends NumericColoredColumnLabelProvider {
 
 		ContentViewer viewer;
 
-		public ModelReviewCounterColumnLabelProvider(ContentViewer viewer,
-				HSB minHSB, HSB maxHSB, Color fgColor1, Color fgColor2) {
+		public ModelReviewCounterColumnLabelProvider(ContentViewer viewer, HSB minHSB, HSB maxHSB, Color fgColor1,
+				Color fgColor2) {
 			super(minHSB, maxHSB, fgColor1, fgColor2);
 			this.viewer = viewer;
 		}
@@ -332,12 +311,10 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 		 */
 		protected PatchSet findPatchSet(Object element) {
 
-			ITreeContentProvider contentProvider = (ITreeContentProvider) viewer
-					.getContentProvider();
+			ITreeContentProvider contentProvider = (ITreeContentProvider) viewer.getContentProvider();
 			Object currentElement = element;
 
-			while (currentElement != null
-					&& !(currentElement instanceof PatchSet)) {
+			while (currentElement != null && !(currentElement instanceof PatchSet)) {
 				currentElement = contentProvider.getParent(currentElement);
 			}
 
@@ -356,13 +333,10 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 	 * @author Florian Zoubek
 	 *
 	 */
-	private class ChangeCountColumnLabelProvider extends
-			ModelReviewCounterColumnLabelProvider {
+	private class ChangeCountColumnLabelProvider extends ModelReviewCounterColumnLabelProvider {
 
-		public ChangeCountColumnLabelProvider(ContentViewer viewer,
-				Color fgBright, Color fgDark) {
-			super(viewer, new HSB(205.0f, 0.f, 1.0f), new HSB(205.0f, 0.59f,
-					0.32f), fgBright, fgDark);
+		public ChangeCountColumnLabelProvider(ContentViewer viewer, Color fgBright, Color fgDark) {
+			super(viewer, new HSB(205.0f, 0.f, 1.0f), new HSB(205.0f, 0.59f, 0.32f), fgBright, fgDark);
 		}
 
 		@Override
@@ -387,8 +361,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 			PatchSet patchSet = findPatchSet(element);
 			if (patchSet != null) {
 
-				Map<EObject, Integer> objectChangeCount = patchSet
-						.getObjectChangeCount();
+				Map<EObject, Integer> objectChangeCount = patchSet.getObjectChangeCount();
 				if (objectChangeCount.containsKey(element)) {
 					return objectChangeCount.get(element);
 				}
@@ -404,8 +377,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 			PatchSet patchSet = findPatchSet(element);
 			if (patchSet != null) {
 
-				Map<EObject, Integer> objectChangeCount = patchSet
-						.getObjectChangeCount();
+				Map<EObject, Integer> objectChangeCount = patchSet.getObjectChangeCount();
 				return objectChangeCount.containsKey(element);
 			}
 
@@ -421,13 +393,10 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 	 * @author Florian Zoubek
 	 *
 	 */
-	private class ReferencedChangeCountColumnLabelProvider extends
-			ModelReviewCounterColumnLabelProvider {
+	private class ReferencedChangeCountColumnLabelProvider extends ModelReviewCounterColumnLabelProvider {
 
-		public ReferencedChangeCountColumnLabelProvider(ContentViewer viewer,
-				Color fgBright, Color fgDark) {
-			super(viewer, new HSB(205.0f, 0.f, 1.0f), new HSB(205.0f, 0.59f,
-					0.32f), fgBright, fgDark);
+		public ReferencedChangeCountColumnLabelProvider(ContentViewer viewer, Color fgBright, Color fgDark) {
+			super(viewer, new HSB(205.0f, 0.f, 1.0f), new HSB(205.0f, 0.59f, 0.32f), fgBright, fgDark);
 		}
 
 		@Override
@@ -452,8 +421,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 			PatchSet patchSet = findPatchSet(element);
 			if (patchSet != null) {
 
-				Map<EObject, Integer> objectChangeRefCount = patchSet
-						.getObjectChangeRefCount();
+				Map<EObject, Integer> objectChangeRefCount = patchSet.getObjectChangeRefCount();
 				if (objectChangeRefCount.containsKey(element)) {
 					return objectChangeRefCount.get(element);
 				}
@@ -469,8 +437,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 			PatchSet patchSet = findPatchSet(element);
 			if (patchSet != null) {
 
-				Map<EObject, Integer> objectChangeRefCount = patchSet
-						.getObjectChangeRefCount();
+				Map<EObject, Integer> objectChangeRefCount = patchSet.getObjectChangeRefCount();
 				return objectChangeRefCount.containsKey(element);
 			}
 
@@ -496,14 +463,12 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 
 		public ModelReviewContentProvider() {
 			adapterFactoryContentProvider = new AdapterFactoryContentProvider(
-					new ComposedAdapterFactory(
-							ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
+					new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
 		}
 
 		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-			adapterFactoryContentProvider.inputChanged(viewer, oldInput,
-					newInput);
+			adapterFactoryContentProvider.inputChanged(viewer, oldInput, newInput);
 			// we need the root model review to find the parent of some children
 			if (newInput instanceof ModelReview) {
 				modelReview = (ModelReview) newInput;
@@ -528,8 +493,8 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 			if (element instanceof TreeItemContainer) {
 				return ((TreeItemContainer) element).hasChildren();
 			}
-			if (element instanceof ModelInstance) {
-				return !((ModelInstance) element).getObjects().isEmpty();
+			if (element instanceof ModelResource) {
+				return !((ModelResource) element).getObjects().isEmpty();
 			}
 			if (element instanceof EObject) {
 				return adapterFactoryContentProvider.hasChildren(element);
@@ -545,24 +510,21 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 			if (element instanceof PatchSet) {
 				return ((PatchSet) element).getReview();
 			}
-			if (element instanceof DiagramInstance) {
-				DiagramInstance diagramInstance = (DiagramInstance) element;
+			if (element instanceof DiagramResource) {
+				DiagramResource diagramResource = (DiagramResource) element;
 				for (PatchSet patchSet : modelReview.getPatchSets()) {
-					if (patchSet.getNewInvolvedDiagrams().contains(
-							diagramInstance)
-							|| patchSet.getNewInvolvedDiagrams().contains(
-									diagramInstance)) {
+					if (patchSet.getNewInvolvedDiagrams().contains(diagramResource)
+							|| patchSet.getNewInvolvedDiagrams().contains(diagramResource)) {
 						return patchSet;
 					}
 				}
 				return null;
 			}
-			if (element instanceof ModelInstance) {
-				ModelInstance modelInstance = (ModelInstance) element;
+			if (element instanceof ModelResource) {
+				ModelResource modelResource = (ModelResource) element;
 				for (PatchSet patchSet : modelReview.getPatchSets()) {
-					if (patchSet.getNewInvolvedModels().contains(modelInstance)
-							|| patchSet.getOldInvolvedModels().contains(
-									modelInstance)) {
+					if (patchSet.getNewInvolvedModels().contains(modelResource)
+							|| patchSet.getOldInvolvedModels().contains(modelResource)) {
 						return patchSet;
 					}
 				}
@@ -570,33 +532,29 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 			}
 			if (element instanceof EObject) {
 				EObject eObject = (EObject) element;
-				Object parent = adapterFactoryContentProvider
-						.getParent(element);
+				Object parent = adapterFactoryContentProvider.getParent(element);
 
 				/*
 				 * FIXME It might be better to use an own implementation of
 				 * EcoreUtil.UsageCrossReferencer to detect references to the
-				 * model instance
+				 * model resource
 				 */
 				if (parent == null || parent instanceof Resource) {
-					// search for an containing model or diagram instance
+					// search for an containing model or diagram resource
 					for (PatchSet patchSet : modelReview.getPatchSets()) {
-						ModelInstance modelInstance = findContainingModelInstance(
-								patchSet.getNewInvolvedDiagrams(), eObject);
-						if (modelInstance != null)
-							return modelInstance;
-						modelInstance = findContainingModelInstance(
-								patchSet.getOldInvolvedDiagrams(), eObject);
-						if (modelInstance != null)
-							return modelInstance;
-						modelInstance = findContainingModelInstance(
-								patchSet.getNewInvolvedModels(), eObject);
-						if (modelInstance != null)
-							return modelInstance;
-						modelInstance = findContainingModelInstance(
-								patchSet.getOldInvolvedModels(), eObject);
-						if (modelInstance != null)
-							return modelInstance;
+						ModelResource modelResource = findContainingModelResource(patchSet.getNewInvolvedDiagrams(),
+								eObject);
+						if (modelResource != null)
+							return modelResource;
+						modelResource = findContainingModelResource(patchSet.getOldInvolvedDiagrams(), eObject);
+						if (modelResource != null)
+							return modelResource;
+						modelResource = findContainingModelResource(patchSet.getNewInvolvedModels(), eObject);
+						if (modelResource != null)
+							return modelResource;
+						modelResource = findContainingModelResource(patchSet.getOldInvolvedModels(), eObject);
+						if (modelResource != null)
+							return modelResource;
 					}
 				}
 				return parent;
@@ -605,20 +563,19 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 		}
 
 		/**
-		 * finds the {@link ModelInstance} that contains the given object.
+		 * finds the {@link ModelResource} that contains the given object.
 		 * 
-		 * @param modelInstances
-		 *            a {@link Collection} of {@link ModelInstance}s to check
+		 * @param modelResources
+		 *            a {@link Collection} of {@link ModelResource}s to check
 		 * @param object
-		 * @return the {@link ModelInstance} or null if no {@link ModelInstance}
+		 * @return the {@link ModelResource} or null if no {@link ModelResource}
 		 *         contains the object
 		 */
-		private ModelInstance findContainingModelInstance(
-				Collection<? extends ModelInstance> modelInstances,
+		private ModelResource findContainingModelResource(Collection<? extends ModelResource> modelResources,
 				EObject object) {
-			for (ModelInstance modelInstance : modelInstances) {
-				if (modelInstance.getObjects().contains(object)) {
-					return modelInstance;
+			for (ModelResource modelResource : modelResources) {
+				if (modelResource.getObjects().contains(object)) {
+					return modelResource;
 				}
 			}
 			return null;
@@ -654,8 +611,8 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 			if (parentElement instanceof TreeItemContainer) {
 				return ((TreeItemContainer) parentElement).getChildren();
 			}
-			if (parentElement instanceof ModelInstance) {
-				return ((ModelInstance) parentElement).getObjects().toArray();
+			if (parentElement instanceof ModelResource) {
+				return ((ModelResource) parentElement).getObjects().toArray();
 			}
 			if (parentElement instanceof EObject) {
 				return adapterFactoryContentProvider.getChildren(parentElement);
