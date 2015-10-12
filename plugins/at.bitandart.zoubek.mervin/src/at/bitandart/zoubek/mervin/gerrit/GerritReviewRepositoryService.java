@@ -383,7 +383,7 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 		revWalk.parseHeaders(oldCommit);
 		revWalk.close();
 
-		String parentCommitHash = newCommit.getId().name();
+		String parentCommitHash = oldCommit.getId().name();
 
 		URI repoURI = git.getRepository().getDirectory().toURI();
 		String authority = repoURI.getAuthority();
@@ -397,8 +397,9 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 
 		for (Patch patch : patchSet.getPatches()) {
 			if (patch instanceof ModelPatch || patch instanceof DiagramPatch) {
-				org.eclipse.emf.common.util.URI newUri = org.eclipse.emf.common.util.URI.createURI(
-						GitURIParser.GIT_COMMIT_SCHEME + "://" + repoPath + commitHash + "/" + patch.getNewPath());
+				org.eclipse.emf.common.util.URI newUri = org.eclipse.emf.common.util.URI
+						.createURI(GitURIParser.GIT_COMMIT_SCHEME + "://" + repoPath + "/" + commitHash + "/"
+								+ patch.getNewPath());
 
 				org.eclipse.emf.common.util.URI oldUri = org.eclipse.emf.common.util.URI
 						.createURI(GitURIParser.GIT_COMMIT_SCHEME + "://" + repoPath + "/" + parentCommitHash + "/"

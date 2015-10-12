@@ -64,17 +64,21 @@ public class ExtendedModelReviewImpl extends ModelReviewImpl {
 				}
 			});
 
-			EList<DiagramResource> newInvolvedModelsLeft = new BasicEList<DiagramResource>();
+			EList<DiagramResource> involvedModelsLeft = new BasicEList<DiagramResource>();
+			EList<DiagramResource> involvedModelsRight = new BasicEList<DiagramResource>();
 			if (leftPatchSet != null) {
-				newInvolvedModelsLeft = leftPatchSet.getNewInvolvedDiagrams();
+				involvedModelsLeft = leftPatchSet.getNewInvolvedDiagrams();
+				involvedModelsRight = leftPatchSet.getOldInvolvedDiagrams();
 			}
 
-			EList<DiagramResource> newInvolvedModelsRight = new BasicEList<DiagramResource>();
 			if (rightPatchSet != null) {
-				newInvolvedModelsRight = rightPatchSet.getNewInvolvedDiagrams();
+				involvedModelsRight = rightPatchSet.getNewInvolvedDiagrams();
+				if (leftPatchSet == null) {
+					involvedModelsLeft = rightPatchSet.getOldInvolvedDiagrams();
+				}
 			}
 
-			selectedDiagramComparison = compareModelInstances(newInvolvedModelsLeft, newInvolvedModelsRight);
+			selectedDiagramComparison = compareModelInstances(involvedModelsLeft, involvedModelsRight);
 
 			if (eNotificationRequired())
 				eNotify(new ENotificationImpl(this, Notification.SET,
@@ -110,17 +114,21 @@ public class ExtendedModelReviewImpl extends ModelReviewImpl {
 				}
 			});
 
-			EList<ModelResource> newInvolvedModelsLeft = new BasicEList<ModelResource>();
+			EList<ModelResource> involvedModelsLeft = new BasicEList<ModelResource>();
+			EList<ModelResource> involvedModelsRight = new BasicEList<ModelResource>();
 			if (leftPatchSet != null) {
-				newInvolvedModelsLeft = leftPatchSet.getNewInvolvedModels();
+				involvedModelsLeft = leftPatchSet.getNewInvolvedModels();
+				involvedModelsRight = leftPatchSet.getOldInvolvedModels();
 			}
 
-			EList<ModelResource> newInvolvedModelsRight = new BasicEList<ModelResource>();
 			if (rightPatchSet != null) {
-				newInvolvedModelsRight = rightPatchSet.getNewInvolvedModels();
+				involvedModelsRight = rightPatchSet.getNewInvolvedModels();
+				if (leftPatchSet == null) {
+					involvedModelsLeft = rightPatchSet.getOldInvolvedModels();
+				}
 			}
 
-			selectedModelComparison = compareModelInstances(newInvolvedModelsLeft, newInvolvedModelsRight);
+			selectedModelComparison = compareModelInstances(involvedModelsLeft, involvedModelsRight);
 
 			if (eNotificationRequired())
 				eNotify(new ENotificationImpl(this, Notification.SET,
