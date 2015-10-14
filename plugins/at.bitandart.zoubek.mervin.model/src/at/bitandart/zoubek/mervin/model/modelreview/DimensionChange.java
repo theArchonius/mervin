@@ -55,7 +55,16 @@ public enum DimensionChange implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	UNKNOWN(2, "UNKNOWN", "UNKNOWN");
+	UNKNOWN(3, "UNKNOWN", "UNKNOWN"),
+	/**
+	 * The '<em><b>EQUAL</b></em>' literal object. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #EQUAL_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	EQUAL(2, "EQUAL", "EQUAL");
 
 	/**
 	 * The '<em><b>SMALLER</b></em>' literal value. <!-- begin-user-doc -->
@@ -100,7 +109,22 @@ public enum DimensionChange implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final int UNKNOWN_VALUE = 2;
+	public static final int UNKNOWN_VALUE = 3;
+
+	/**
+	 * The '<em><b>EQUAL</b></em>' literal value. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>EQUAL</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #EQUAL
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int EQUAL_VALUE = 2;
 
 	/**
 	 * An array of all the '<em><b>Dimension Change</b></em>' enumerators. <!--
@@ -108,7 +132,7 @@ public enum DimensionChange implements Enumerator {
 	 * 
 	 * @generated
 	 */
-	private static final DimensionChange[] VALUES_ARRAY = new DimensionChange[] { SMALLER, BIGGER, UNKNOWN, };
+	private static final DimensionChange[] VALUES_ARRAY = new DimensionChange[] { SMALLER, BIGGER, UNKNOWN, EQUAL, };
 
 	/**
 	 * A public read-only list of all the '<em><b>Dimension Change</b></em>'
@@ -173,6 +197,8 @@ public enum DimensionChange implements Enumerator {
 			return BIGGER;
 		case UNKNOWN_VALUE:
 			return UNKNOWN;
+		case EQUAL_VALUE:
+			return EQUAL;
 		}
 		return null;
 	}

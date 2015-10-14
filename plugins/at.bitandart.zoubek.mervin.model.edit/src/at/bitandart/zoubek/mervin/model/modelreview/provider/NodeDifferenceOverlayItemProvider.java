@@ -180,6 +180,9 @@ public class NodeDifferenceOverlayItemProvider extends ItemProviderAdapter imple
 
 		newChildDescriptors.add(createChildParameter(ModelReviewPackage.Literals.DIFFERENCE_OVERLAY__DIFFERENCES,
 				ModelReviewFactory.eINSTANCE.createStateDifference()));
+
+		newChildDescriptors.add(createChildParameter(ModelReviewPackage.Literals.DIFFERENCE_OVERLAY__DIFFERENCES,
+				ModelReviewFactory.eINSTANCE.createBendpointsDifference()));
 	}
 
 	/**

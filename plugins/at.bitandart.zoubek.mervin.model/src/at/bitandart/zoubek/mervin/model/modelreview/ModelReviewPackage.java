@@ -1176,6 +1176,46 @@ public interface ModelReviewPackage extends EPackage {
 
 	/**
 	 * The meta object id for the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.BendpointsDifferenceImpl
+	 * <em>Bendpoints Difference</em>}' class. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
+	 *      BendpointsDifferenceImpl
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getBendpointsDifference()
+	 * @generated
+	 */
+	int BENDPOINTS_DIFFERENCE = 17;
+
+	/**
+	 * The feature id for the '<em><b>Raw Diffs</b></em>' reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int BENDPOINTS_DIFFERENCE__RAW_DIFFS = LAYOUT_DIFFERENCE__RAW_DIFFS;
+
+	/**
+	 * The number of structural features of the '<em>Bendpoints Difference</em>'
+	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int BENDPOINTS_DIFFERENCE_FEATURE_COUNT = LAYOUT_DIFFERENCE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of operations of the '<em>Bendpoints Difference</em>' class.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int BENDPOINTS_DIFFERENCE_OPERATION_COUNT = LAYOUT_DIFFERENCE_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchChangeType
 	 * <em>Patch Change Type</em>}' enum. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -1184,7 +1224,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getPatchChangeType()
 	 * @generated
 	 */
-	int PATCH_CHANGE_TYPE = 17;
+	int PATCH_CHANGE_TYPE = 18;
 
 	/**
 	 * The meta object id for the '
@@ -1196,7 +1236,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getStateDifferenceType()
 	 * @generated
 	 */
-	int STATE_DIFFERENCE_TYPE = 18;
+	int STATE_DIFFERENCE_TYPE = 19;
 
 	/**
 	 * The meta object id for the '
@@ -1208,7 +1248,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDimensionChange()
 	 * @generated
 	 */
-	int DIMENSION_CHANGE = 19;
+	int DIMENSION_CHANGE = 20;
 
 	/**
 	 * The meta object id for the '<em>Vector</em>' data type. <!--
@@ -1218,7 +1258,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getVector()
 	 * @generated
 	 */
-	int VECTOR = 20;
+	int VECTOR = 21;
 
 	/**
 	 * Returns the meta object for class '
@@ -1965,6 +2005,18 @@ public interface ModelReviewPackage extends EPackage {
 	EAttribute getStateDifference_Type();
 
 	/**
+	 * Returns the meta object for class '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.BendpointsDifference
+	 * <em>Bendpoints Difference</em>}'. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Bendpoints Difference</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.BendpointsDifference
+	 * @generated
+	 */
+	EClass getBendpointsDifference();
+
+	/**
 	 * Returns the meta object for enum '
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchChangeType
 	 * <em>Patch Change Type</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
@@ -2602,6 +2654,19 @@ public interface ModelReviewPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute STATE_DIFFERENCE__TYPE = eINSTANCE.getStateDifference_Type();
+
+		/**
+		 * The meta object literal for the '
+		 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.BendpointsDifferenceImpl
+		 * <em>Bendpoints Difference</em>}' class. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
+		 *      BendpointsDifferenceImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getBendpointsDifference()
+		 * @generated
+		 */
+		EClass BENDPOINTS_DIFFERENCE = eINSTANCE.getBendpointsDifference();
 
 		/**
 		 * The meta object literal for the '

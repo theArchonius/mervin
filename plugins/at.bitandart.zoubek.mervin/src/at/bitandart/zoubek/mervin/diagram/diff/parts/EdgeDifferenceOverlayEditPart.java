@@ -18,6 +18,7 @@ import org.eclipse.gmf.runtime.notation.View;
 
 import at.bitandart.zoubek.mervin.draw2d.figures.ChangeOverlayConnectionFigure;
 import at.bitandart.zoubek.mervin.draw2d.figures.ChangeType;
+import at.bitandart.zoubek.mervin.model.modelreview.BendpointsDifference;
 import at.bitandart.zoubek.mervin.model.modelreview.Difference;
 import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
 import at.bitandart.zoubek.mervin.model.modelreview.EdgeDifferenceOverlay;
@@ -42,10 +43,17 @@ public class EdgeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 
 		DifferenceOverlay differenceOverlay = getDifferenceOverlay();
 		ChangeOverlayConnectionFigure changeOverlayConnectionFigure = getChangeOverlayConnectionFigure();
+
 		if (differenceOverlay != null && changeOverlayConnectionFigure != null) {
+
+			boolean bendpointsChanged = false;
+			boolean stateChanged = false;
+
 			EList<Difference> differences = differenceOverlay.getDifferences();
 			for (Difference difference : differences) {
+
 				if (difference instanceof StateDifference) {
+
 					switch (((StateDifference) difference).getType()) {
 					case ADDED:
 						changeOverlayConnectionFigure.setChangeType(ChangeType.ADDITION);
@@ -59,9 +67,20 @@ public class EdgeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 					default:
 						// do nothing
 					}
+					stateChanged = true;
+
 				}
+
+				bendpointsChanged |= difference instanceof BendpointsDifference;
+
 			}
+
+			if (bendpointsChanged && !stateChanged) {
+				changeOverlayConnectionFigure.setChangeType(ChangeType.LAYOUT);
+			}
+
 		}
+
 	}
 
 	/*

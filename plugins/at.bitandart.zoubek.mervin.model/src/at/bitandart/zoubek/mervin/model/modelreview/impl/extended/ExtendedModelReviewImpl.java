@@ -141,21 +141,23 @@ public class ExtendedModelReviewImpl extends ModelReviewImpl {
 	/**
 	 * compares to sets of {@link ModelInstance}s.
 	 * 
-	 * @param leftInvolvedModels
-	 * @param rightInvolvedModels
+	 * @param oldInvolvedModels
+	 * @param newInvolvedModels
 	 * @return the result of the comparison
 	 */
-	private Comparison compareModelInstances(EList<? extends ModelResource> leftInvolvedModels,
-			EList<? extends ModelResource> rightInvolvedModels) {
+	private Comparison compareModelInstances(EList<? extends ModelResource> oldInvolvedModels,
+			EList<? extends ModelResource> newInvolvedModels) {
 		ResourceSet oldResourceSet = new ResourceSetImpl();
 		ResourceSet newResourceSet = new ResourceSetImpl();
 
-		if (!leftInvolvedModels.isEmpty()) {
-			oldResourceSet = leftInvolvedModels.get(0).getObjects().get(0).eResource().getResourceSet();
+		if (!oldInvolvedModels.isEmpty()) {
+			// currently all old involved models share the same resource set
+			oldResourceSet = oldInvolvedModels.get(0).getObjects().get(0).eResource().getResourceSet();
 		}
 
-		if (!rightInvolvedModels.isEmpty()) {
-			newResourceSet = rightInvolvedModels.get(0).getObjects().get(0).eResource().getResourceSet();
+		if (!newInvolvedModels.isEmpty()) {
+			// currently all new involved models share the same resource set
+			newResourceSet = newInvolvedModels.get(0).getObjects().get(0).eResource().getResourceSet();
 		}
 
 		EcoreUtil.resolveAll(oldResourceSet);
@@ -163,7 +165,7 @@ public class ExtendedModelReviewImpl extends ModelReviewImpl {
 
 		EMFCompare comparator = EMFCompare.builder().build();
 
-		DefaultComparisonScope scope = new DefaultComparisonScope(oldResourceSet, newResourceSet, null);
+		DefaultComparisonScope scope = new DefaultComparisonScope(newResourceSet, oldResourceSet, null);
 		return comparator.compare(scope);
 	}
 

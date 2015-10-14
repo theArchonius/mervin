@@ -162,6 +162,11 @@ public class ModelReviewAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
+		public Adapter caseBendpointsDifference(BendpointsDifference object) {
+			return createBendpointsDifferenceAdapter();
+		}
+
+		@Override
 		public Adapter defaultCase(EObject object) {
 			return createEObjectAdapter();
 		}
@@ -449,6 +454,22 @@ public class ModelReviewAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createStateDifferenceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.BendpointsDifference
+	 * <em>Bendpoints Difference</em>}'. <!-- begin-user-doc --> This default
+	 * implementation returns null so that we can easily ignore cases; it's
+	 * useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.BendpointsDifference
+	 * @generated
+	 */
+	public Adapter createBendpointsDifferenceAdapter() {
 		return null;
 	}
 

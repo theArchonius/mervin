@@ -12,6 +12,7 @@
  */
 package at.bitandart.zoubek.mervin.model.modelreview.impl;
 
+import at.bitandart.zoubek.mervin.model.modelreview.BendpointsDifference;
 import at.bitandart.zoubek.mervin.model.modelreview.Comment;
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch;
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramResource;
@@ -173,6 +174,13 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * @generated
 	 */
 	private EClass stateDifferenceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass bendpointsDifferenceEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -817,6 +825,15 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
+	public EClass getBendpointsDifference() {
+		return bendpointsDifferenceEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	public EEnum getPatchChangeType() {
 		return patchChangeTypeEEnum;
 	}
@@ -954,6 +971,8 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		stateDifferenceEClass = createEClass(STATE_DIFFERENCE);
 		createEAttribute(stateDifferenceEClass, STATE_DIFFERENCE__TYPE);
 
+		bendpointsDifferenceEClass = createEClass(BENDPOINTS_DIFFERENCE);
+
 		// Create enums
 		patchChangeTypeEEnum = createEEnum(PATCH_CHANGE_TYPE);
 		stateDifferenceTypeEEnum = createEEnum(STATE_DIFFERENCE_TYPE);
@@ -1009,6 +1028,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		locationDifferenceEClass.getESuperTypes().add(this.getLayoutDifference());
 		sizeDifferenceEClass.getESuperTypes().add(this.getLayoutDifference());
 		stateDifferenceEClass.getESuperTypes().add(this.getModelDifference());
+		bendpointsDifferenceEClass.getESuperTypes().add(this.getLayoutDifference());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(modelReviewEClass, ModelReview.class, "ModelReview", !IS_ABSTRACT, !IS_INTERFACE,
@@ -1189,6 +1209,9 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 				StateDifference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
 				!IS_DERIVED, IS_ORDERED);
 
+		initEClass(bendpointsDifferenceEClass, BendpointsDifference.class, "BendpointsDifference", !IS_ABSTRACT,
+				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
 		// Initialize enums and add enum literals
 		initEEnum(patchChangeTypeEEnum, PatchChangeType.class, "PatchChangeType");
 		addEEnumLiteral(patchChangeTypeEEnum, PatchChangeType.ADD);
@@ -1207,6 +1230,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		addEEnumLiteral(dimensionChangeEEnum, DimensionChange.SMALLER);
 		addEEnumLiteral(dimensionChangeEEnum, DimensionChange.BIGGER);
 		addEEnumLiteral(dimensionChangeEEnum, DimensionChange.UNKNOWN);
+		addEEnumLiteral(dimensionChangeEEnum, DimensionChange.EQUAL);
 
 		// Initialize data types
 		initEDataType(vectorEDataType, Vector.class, "Vector", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);

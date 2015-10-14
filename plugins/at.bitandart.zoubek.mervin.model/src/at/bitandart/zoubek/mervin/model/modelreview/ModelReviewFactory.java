@@ -139,6 +139,15 @@ public interface ModelReviewFactory extends EFactory {
 	StateDifference createStateDifference();
 
 	/**
+	 * Returns a new object of class '<em>Bendpoints Difference</em>'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>Bendpoints Difference</em>'.
+	 * @generated
+	 */
+	BendpointsDifference createBendpointsDifference();
+
+	/**
 	 * Returns the package supported by this factory. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 

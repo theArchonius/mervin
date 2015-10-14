@@ -92,6 +92,8 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements ModelReviewF
 			return createSizeDifference();
 		case ModelReviewPackage.STATE_DIFFERENCE:
 			return createStateDifference();
+		case ModelReviewPackage.BENDPOINTS_DIFFERENCE:
+			return createBendpointsDifference();
 		default:
 			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -257,6 +259,16 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements ModelReviewF
 	public StateDifference createStateDifference() {
 		StateDifferenceImpl stateDifference = new StateDifferenceImpl();
 		return stateDifference;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public BendpointsDifference createBendpointsDifference() {
+		BendpointsDifferenceImpl bendpointsDifference = new BendpointsDifferenceImpl();
+		return bendpointsDifference;
 	}
 
 	/**

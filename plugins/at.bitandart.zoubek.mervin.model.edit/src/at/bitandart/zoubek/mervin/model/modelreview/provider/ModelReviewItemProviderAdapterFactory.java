@@ -386,6 +386,31 @@ public class ModelReviewItemProviderAdapterFactory extends ModelReviewAdapterFac
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.BendpointsDifference}
+	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected BendpointsDifferenceItemProvider bendpointsDifferenceItemProvider;
+
+	/**
+	 * This creates an adapter for a
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.BendpointsDifference}
+	 * . <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createBendpointsDifferenceAdapter() {
+		if (bendpointsDifferenceItemProvider == null) {
+			bendpointsDifferenceItemProvider = new BendpointsDifferenceItemProvider(this);
+		}
+
+		return bendpointsDifferenceItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -507,6 +532,8 @@ public class ModelReviewItemProviderAdapterFactory extends ModelReviewAdapterFac
 			sizeDifferenceItemProvider.dispose();
 		if (stateDifferenceItemProvider != null)
 			stateDifferenceItemProvider.dispose();
+		if (bendpointsDifferenceItemProvider != null)
+			bendpointsDifferenceItemProvider.dispose();
 	}
 
 }

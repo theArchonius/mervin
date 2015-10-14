@@ -26,6 +26,7 @@
       <genEnumLiterals ecoreEnumLiteral="MervinModelReview.ecore#//DimensionChange/SMALLER"/>
       <genEnumLiterals ecoreEnumLiteral="MervinModelReview.ecore#//DimensionChange/BIGGER"/>
       <genEnumLiterals ecoreEnumLiteral="MervinModelReview.ecore#//DimensionChange/UNKNOWN"/>
+      <genEnumLiterals ecoreEnumLiteral="MervinModelReview.ecore#//DimensionChange/EQUAL"/>
     </genEnums>
     <genDataTypes ecoreDataType="MervinModelReview.ecore#//Vector"/>
     <genClasses ecoreClass="MervinModelReview.ecore#//ModelReview">
@@ -101,5 +102,6 @@
     <genClasses ecoreClass="MervinModelReview.ecore#//StateDifference">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//StateDifference/type"/>
     </genClasses>
+    <genClasses ecoreClass="MervinModelReview.ecore#//BendpointsDifference"/>
   </genPackages>
 </genmodel:GenModel>
