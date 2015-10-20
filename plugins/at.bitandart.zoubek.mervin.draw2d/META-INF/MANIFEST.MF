@@ -5,7 +5,8 @@ Bundle-SymbolicName: at.bitandart.zoubek.mervin.draw2d;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Florian Zoubek
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Import-Package: org.eclipse.draw2d,
+Import-Package: com.google.common.collect,
+ org.eclipse.draw2d,
  org.eclipse.draw2d.geometry,
  org.eclipse.gmf.tooling.runtime.linklf,
  org.eclipse.swt,
@@ -14,6 +15,7 @@ Import-Package: org.eclipse.draw2d,
  org.eclipse.swt.widgets
 Export-Package: at.bitandart.zoubek.mervin.draw2d,
  at.bitandart.zoubek.mervin.draw2d.figures,
+ at.bitandart.zoubek.mervin.draw2d.figures.cluster,
  at.bitandart.zoubek.mervin.draw2d.figures.workbench
 Require-Bundle: org.eclipse.gmf.runtime.diagram.ui
 Bundle-ActivationPolicy: lazy
