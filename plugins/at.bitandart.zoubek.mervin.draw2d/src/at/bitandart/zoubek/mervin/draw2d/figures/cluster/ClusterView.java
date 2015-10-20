@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.DelegatingLayout;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.Graphics;
@@ -34,7 +35,11 @@ import org.eclipse.gmf.runtime.diagram.ui.layout.FreeFormLayoutEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScalableFreeformLayeredPane;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Display;
 
 import at.bitandart.zoubek.mervin.draw2d.MervinLayerConstants;
 import at.bitandart.zoubek.mervin.draw2d.figures.IComposedFigure;
@@ -127,7 +132,9 @@ public class ClusterView extends ScalableFreeformLayeredPane implements ICompose
 	 * Initializes the figure itself. Intended to be overridden by subclasses.
 	 */
 	protected void initializeFigure() {
-		// intentionally left empty
+		Color color = new Color(Display.getDefault(), new RGB(225, 225, 225));
+		setBackgroundColor(color);
+		setOpaque(true);
 	}
 
 	/**
@@ -176,10 +183,20 @@ public class ClusterView extends ScalableFreeformLayeredPane implements ICompose
 	 *         been already registered before this operation.
 	 */
 	public boolean registerCluster(Cluster cluster) {
+
 		if (!clusters.contains(cluster)) {
+
+			ClusterView oldClusterView = cluster.getClusterView();
+			if (oldClusterView != null) {
+				oldClusterView.unregisterCluster(cluster);
+			}
+
+			cluster.setClusterView(this);
+
 			boolean result = clusters.add(cluster);
 			repaint();
 			return result;
+
 		}
 		return false;
 	}
@@ -195,6 +212,7 @@ public class ClusterView extends ScalableFreeformLayeredPane implements ICompose
 	 */
 	public boolean unregisterCluster(Cluster cluster) {
 		boolean result = clusters.remove(cluster);
+		cluster.setClusterView(null);
 		repaint();
 		return result;
 	}
@@ -269,7 +287,6 @@ public class ClusterView extends ScalableFreeformLayeredPane implements ICompose
 			List<IFigure> affectedChildren = getAffectedChildren(cluster);
 			Vector translationOffset = cluster.getTranslationOffset();
 			Rectangle[] clipping = cluster.getClippingArea();
-			boolean clippingRelative = false;
 
 			/*
 			 * translate the children to the local coordinate system of the
@@ -278,19 +295,21 @@ public class ClusterView extends ScalableFreeformLayeredPane implements ICompose
 			graphics.translate((float) translationOffset.x, (float) translationOffset.y);
 			graphics.pushState();
 
-			for (IFigure child : affectedChildren) {
+			graphics.setBackgroundColor(ColorConstants.white);
+			graphics.setForegroundColor(ColorConstants.lightGray);
+			graphics.setLineWidthFloat(1.0f);
+			graphics.setLineStyle(SWT.LINE_CUSTOM);
+			graphics.setLineDash(new int[] { 5, 10 });
+			for (Rectangle clipRect : clipping) {
+				translateToRelative(clipRect);
+				translateFromParent(clipRect);
 
-				if (!clippingRelative) {
-					/*
-					 * make sure that clipping is done using relative
-					 * coordinates (because the graphics context has been
-					 * translated)
-					 */
-					for (Rectangle clipRect : clipping) {
-						child.translateToRelative(clipRect);
-					}
-					clippingRelative = true;
-				}
+				graphics.fillRectangle(clipRect.x + 1, clipRect.y + 1, clipRect.width - 1, clipRect.height - 1);
+				graphics.drawRectangle(clipRect);
+			}
+			graphics.restoreState();
+
+			for (IFigure child : affectedChildren) {
 
 				if (child.isVisible()) {
 
@@ -309,7 +328,7 @@ public class ClusterView extends ScalableFreeformLayeredPane implements ICompose
 
 			// restore translated state
 			graphics.popState();
-			// restore sate before translating
+			// restore state before translating
 			graphics.restoreState();
 
 		}
@@ -319,9 +338,8 @@ public class ClusterView extends ScalableFreeformLayeredPane implements ICompose
 	/**
 	 * @param cluster
 	 *            the cluster to find the affected children for.
-	 * @return the children of this figure that contain descendants that are
-	 *         part of the given cluster. This method always returns a List
-	 *         instance.
+	 * @return the children of this figure that must be drawn for the given
+	 *         cluster. This method always returns a List instance.
 	 */
 	private List<IFigure> getAffectedChildren(Cluster cluster) {
 		List<?> children = getChildren();
@@ -331,13 +349,19 @@ public class ClusterView extends ScalableFreeformLayeredPane implements ICompose
 
 			if (child instanceof IFigure) {
 				/*
-				 * a child is affected if it is a ancestor of a child in the
-				 * cluster
+				 * a child is affected if its bounds intersects with the bounds
+				 * of a figure in the cluster
 				 */
 				IFigure childFigure = (IFigure) child;
+				Rectangle childBounds = childFigure.getBounds();
+				childFigure.translateToAbsolute(childBounds);
+
 				for (IFigure clusterChild : cluster) {
 
-					if (isAncestor(childFigure, clusterChild)) {
+					Rectangle clusterChildBounds = clusterChild.getBounds().getCopy();
+					clusterChild.translateToAbsolute(clusterChildBounds);
+
+					if (clusterChildBounds.intersects(childBounds)) {
 						affectedChildren.add(childFigure);
 						break;
 					}

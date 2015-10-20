@@ -120,6 +120,7 @@ public class ClusterViewExample extends BaseExample {
 
 			Cluster cluster2 = new Cluster();
 			cluster2.add(nodeFigures.get(nodeFigures.size() - 1));
+			cluster2.add(connection.getTargetAnchor().getOwner());
 
 			// register the clusters, otherwise they are not drawn
 
@@ -276,6 +277,16 @@ public class ClusterViewExample extends BaseExample {
 	@Override
 	protected String getTitle() {
 		return "Mervin - Cluster View Example";
+	}
+
+	@Override
+	protected int getCanvasHeight() {
+		return 800;
+	}
+
+	@Override
+	protected int getCanvasWidth() {
+		return 800;
 	}
 
 	/**

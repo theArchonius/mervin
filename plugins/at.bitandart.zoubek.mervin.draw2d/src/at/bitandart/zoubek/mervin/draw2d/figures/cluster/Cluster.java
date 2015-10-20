@@ -23,8 +23,9 @@ import org.eclipse.draw2d.geometry.Vector;
 import com.google.common.collect.Lists;
 
 /**
- * A cluster inside a {@link ClusterView}. A cluster holds a set of the
- * descendants inside clustered layer of a {@link ClusterView}.
+ * A cluster inside a {@link ClusterView}. A cluster holds a set of descendants
+ * inside a clustered layer of a {@link ClusterView} and can be registered to
+ * only one cluster view at the same time.
  * 
  * @author Florian Zoubek
  *
@@ -32,6 +33,11 @@ import com.google.common.collect.Lists;
 public class Cluster extends LinkedHashSet<IFigure> {
 
 	private static final long serialVersionUID = 8083229281038816106L;
+
+	/**
+	 * the cluster view of this cluster
+	 */
+	private ClusterView clusterView;
 
 	/**
 	 * the location of this cluster
@@ -62,8 +68,8 @@ public class Cluster extends LinkedHashSet<IFigure> {
 	}
 
 	/**
-	 * @return a copy of the real rectangular boundary based on the figures of
-	 *         this cluster.
+	 * @return a copy of the real rectangular boundary in absolute coordinates
+	 *         based on the figures of this cluster.
 	 */
 	public Rectangle getRealBounds() {
 
@@ -113,6 +119,24 @@ public class Cluster extends LinkedHashSet<IFigure> {
 	 */
 	public Vector getTranslationOffset() {
 		return new Vector(new PrecisionPoint(getRealBounds().getLocation()), new PrecisionPoint(location));
+	}
+
+	/**
+	 * sets the cluster view that this cluster is registered to.
+	 * 
+	 * @param clusterView
+	 *            the cluster view to set.
+	 */
+	public void setClusterView(ClusterView clusterView) {
+		this.clusterView = clusterView;
+	}
+
+	/**
+	 * @return the cluster view that this cluster is registered to, or null if
+	 *         this cluster is not registered to any cluster view.
+	 */
+	public ClusterView getClusterView() {
+		return clusterView;
 	}
 
 }
