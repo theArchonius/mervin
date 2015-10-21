@@ -22,6 +22,7 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.GraphicsSource;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Layer;
+import org.eclipse.draw2d.ScalableFreeformLayeredPane;
 import org.eclipse.draw2d.TreeSearch;
 import org.eclipse.draw2d.UpdateListener;
 import org.eclipse.draw2d.UpdateManager;
@@ -33,8 +34,6 @@ import org.eclipse.gef.LayerConstants;
 import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemsAwareFreeFormLayer;
 import org.eclipse.gmf.runtime.diagram.ui.layout.FreeFormLayoutEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScalableFreeformLayeredPane;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
@@ -88,8 +87,7 @@ public class ClusterView extends ScalableFreeformLayeredPane implements ICompose
 	 */
 	private IClusterLayoutManager clusterLayoutManager;
 
-	public ClusterView(IMapMode mm) {
-		super(mm);
+	public ClusterView() {
 		initialized = false;
 	}
 

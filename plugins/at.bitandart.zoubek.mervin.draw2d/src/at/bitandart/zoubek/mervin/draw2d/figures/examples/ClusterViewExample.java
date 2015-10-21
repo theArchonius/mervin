@@ -36,9 +36,7 @@ import org.eclipse.draw2d.ShortestPathConnectionRouter;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.gmf.runtime.diagram.ui.util.MeasurementUnitHelper;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
-import org.eclipse.gmf.runtime.notation.MeasurementUnit;
 
 import at.bitandart.zoubek.mervin.draw2d.figures.cluster.Cluster;
 import at.bitandart.zoubek.mervin.draw2d.figures.cluster.ClusterView;
@@ -55,11 +53,11 @@ public class ClusterViewExample extends BaseExample {
 	/**
 	 * the seed used to generate nodes
 	 */
-	private static final long SEED_NODES = 216858325495L;
+	protected static final long SEED_NODES = 216858325495L;
 	/**
 	 * the seed used to generate connections
 	 */
-	private static final long SEED_CONNECTIONS = 193624725253L;
+	protected static final long SEED_CONNECTIONS = 193624725253L;
 
 	public static void main(String[] args) {
 		new ClusterViewExample().run();
@@ -72,7 +70,7 @@ public class ClusterViewExample extends BaseExample {
 		FreeformViewport freeformViewport = new FreeformViewport();
 
 		// create the cluster view itself, it already contains a set of layers
-		ClusterView clusterView = new ClusterView(MeasurementUnitHelper.getMapMode(MeasurementUnit.PIXEL_LITERAL));
+		ClusterView clusterView = new ClusterView();
 
 		/*
 		 * set the desired layout manager for the clusters, if no layout manager
@@ -91,14 +89,8 @@ public class ClusterViewExample extends BaseExample {
 	@Override
 	protected void addChildFigures(IFigure parentFigure) {
 
-		// find the cluser view figure
-		ClusterView clusterView = null;
-		if (parentFigure instanceof Viewport) {
-			IFigure contents = ((Viewport) parentFigure).getContents();
-			if (contents instanceof ClusterView) {
-				clusterView = (ClusterView) contents;
-			}
-		}
+		// find the cluster view figure
+		ClusterView clusterView = getClusterView(parentFigure);
 
 		if (clusterView != null) {
 
@@ -130,6 +122,23 @@ public class ClusterViewExample extends BaseExample {
 	}
 
 	/**
+	 * extracts the main {@link ClusterView} figure for the given figure
+	 * 
+	 * @param figure
+	 * @return the {@link ClusterView} for the given figure
+	 */
+	protected ClusterView getClusterView(IFigure figure) {
+		ClusterView clusterView = null;
+		if (figure instanceof Viewport) {
+			IFigure contents = ((Viewport) figure).getContents();
+			if (contents instanceof ClusterView) {
+				clusterView = (ClusterView) contents;
+			}
+		}
+		return clusterView;
+	}
+
+	/**
 	 * creates a number of node figures with random attributes based on
 	 * {@link #SEED_NODES}.
 	 * 
@@ -137,7 +146,7 @@ public class ClusterViewExample extends BaseExample {
 	 *            the layer to add the created figure to.
 	 * @return the created node figures
 	 */
-	private List<IFigure> createNodes(Layer contentLayer) {
+	protected List<IFigure> createNodes(Layer contentLayer) {
 		List<IFigure> nodeFigures = new ArrayList<IFigure>();
 
 		// use a pseudorandom number generator with a reproducible seed
@@ -189,7 +198,7 @@ public class ClusterViewExample extends BaseExample {
 	 * @param nodes
 	 * @return
 	 */
-	private List<Connection> createConnections(Layer connectionLayer, Layer contentLayer, List<IFigure> nodes) {
+	protected List<Connection> createConnections(Layer connectionLayer, Layer contentLayer, List<IFigure> nodes) {
 		List<Connection> connectionFigures = new ArrayList<Connection>();
 
 		// use a pseudorandom number generator with a reproducible seed

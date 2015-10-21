@@ -118,7 +118,12 @@ public class Cluster extends LinkedHashSet<IFigure> {
 	 *         cluster.
 	 */
 	public Vector getTranslationOffset() {
-		return new Vector(new PrecisionPoint(getRealBounds().getLocation()), new PrecisionPoint(location));
+
+		PrecisionPoint clusterLocation = new PrecisionPoint(location);
+		if (clusterView != null) {
+			clusterView.translateToAbsolute(clusterLocation);
+		}
+		return new Vector(new PrecisionPoint(getRealBounds().getLocation()), clusterLocation);
 	}
 
 	/**
