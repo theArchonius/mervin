@@ -185,7 +185,7 @@ public class ConnectionChangeOutline extends Shape {
 				if (perpLeft != 0) {
 
 					/*
-					 * find the intersection point of the right outline lines of
+					 * find the intersection point of the left outline lines of
 					 * the current and the previous segment and use it as right
 					 * point
 					 */

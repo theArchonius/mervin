@@ -19,4 +19,6 @@ package at.bitandart.zoubek.mervin.draw2d;
 public interface MervinLayerConstants {
 
 	public static final String DIFF_HIGHLIGHT_LAYER = "at.bitandart.zoubek.mervin.diagram.diff.highlight.layer";
+	public static final String DIFF_INDICATOR_LAYER = "at.bitandart.zoubek.mervin.diagram.diff.indicator.layer";
+
 }
