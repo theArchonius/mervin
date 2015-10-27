@@ -36,6 +36,7 @@ import at.bitandart.zoubek.mervin.draw2d.figures.DefaultChangeTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.IChangeTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.IOffScreenIndicator;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenChangeIndicator;
+import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenChangeIndicatorMerger;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenIndicatorLayout;
 
 /**
@@ -108,50 +109,53 @@ public class OffScreenChangeIndicatorExample extends BaseExample {
 
 		if (contentLayer != null && indicatorLayer != null) {
 
+			OffScreenChangeIndicatorMerger merger = new OffScreenChangeIndicatorMerger(indicatorLayer, styleAdvisor);
+			indicatorLayer.addLayoutListener(merger);
+
 			// left
 
 			IFigure leftFigure = createFigureFor(ChangeType.ADDITION, contentScrollPane, contentLayer, indicatorLayer,
-					styleAdvisor);
+					styleAdvisor, merger);
 			contentLayer.setConstraint(leftFigure, new Rectangle(0 - getCanvasWidth(), getCanvasHeight() / 2, 150, 50));
 
 			IFigure leftFigure2 = createFigureFor(ChangeType.ADDITION, contentScrollPane, contentLayer, indicatorLayer,
-					styleAdvisor);
+					styleAdvisor, merger);
 			contentLayer.setConstraint(leftFigure2,
 					new Rectangle(0 - getCanvasWidth() + 150, getCanvasHeight() / 2, 150, 50));
 
 			// right
 
 			IFigure rightFigure = createFigureFor(ChangeType.DELETION, contentScrollPane, contentLayer, indicatorLayer,
-					styleAdvisor);
+					styleAdvisor, merger);
 			contentLayer.setConstraint(rightFigure,
 					new Rectangle(getCanvasWidth() * 2 - 150, (getCanvasHeight()) / 2, 150, 50));
 
 			IFigure rightFigure2 = createFigureFor(ChangeType.ADDITION, contentScrollPane, contentLayer, indicatorLayer,
-					styleAdvisor);
+					styleAdvisor, merger);
 			contentLayer.setConstraint(rightFigure2,
 					new Rectangle(getCanvasWidth() * 2 - 150 * 2, (getCanvasHeight()) / 2, 150, 50));
 
 			IFigure rightFigure3 = createFigureFor(ChangeType.MODIFICATION, contentScrollPane, contentLayer,
-					indicatorLayer, styleAdvisor);
+					indicatorLayer, styleAdvisor, merger);
 			contentLayer.setConstraint(rightFigure3,
 					new Rectangle(getCanvasWidth() * 2 - 150 * 3, (getCanvasHeight()) / 2, 150, 50));
 
 			IFigure rightFigure4 = createFigureFor(ChangeType.LAYOUT, contentScrollPane, contentLayer, indicatorLayer,
-					styleAdvisor);
+					styleAdvisor, merger);
 			contentLayer.setConstraint(rightFigure4,
 					new Rectangle(getCanvasWidth() * 2 - 150 * 4, (getCanvasHeight()) / 2, 150, 50));
 
 			// top
 
 			IFigure topFigure = createFigureFor(ChangeType.MODIFICATION, contentScrollPane, contentLayer,
-					indicatorLayer, styleAdvisor);
+					indicatorLayer, styleAdvisor, merger);
 			contentLayer.setConstraint(topFigure,
 					new Rectangle((getCanvasWidth() - 100) / 2, 0 - getCanvasHeight(), 150, 50));
 
 			// bottom
 
 			IFigure bottomFigure = createFigureFor(ChangeType.LAYOUT, contentScrollPane, contentLayer, indicatorLayer,
-					styleAdvisor);
+					styleAdvisor, merger);
 			contentLayer.setConstraint(bottomFigure,
 					new Rectangle((getCanvasWidth() - 100) / 2, getCanvasHeight() * 2 - 50, 150, 50));
 
@@ -173,10 +177,12 @@ public class OffScreenChangeIndicatorExample extends BaseExample {
 	 *            the indicator layer to add the indicator to.
 	 * @param styleAdvisor
 	 *            the {@link IChangeTypeStyleAdvisor} to use.
+	 * @param merger
+	 *            the indicator merger instance to use.
 	 * @return the created figure.
 	 */
 	private IFigure createFigureFor(ChangeType changeType, ScrollPane contentScrollPane, Layer contentLayer,
-			Layer indicatorLayer, IChangeTypeStyleAdvisor styleAdvisor) {
+			Layer indicatorLayer, IChangeTypeStyleAdvisor styleAdvisor, OffScreenChangeIndicatorMerger merger) {
 
 		Label figure = new Label(changeType.name());
 		figure.setTextAlignment(PositionConstants.CENTER);
@@ -187,6 +193,7 @@ public class OffScreenChangeIndicatorExample extends BaseExample {
 		indicator.addLinkedFigure(figure);
 		indicator.setContainerFigure(contentScrollPane.getViewport());
 		indicator.setChangeType(changeType);
+		merger.registerIndicator(indicator);
 		indicatorLayer.add(indicator);
 
 		return figure;

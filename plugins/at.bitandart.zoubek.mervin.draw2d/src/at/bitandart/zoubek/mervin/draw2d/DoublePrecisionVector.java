@@ -139,6 +139,37 @@ public class DoublePrecisionVector extends Vector {
 	}
 
 	/**
+	 * rotates the vector in clockwise (screen coordinates) order around the
+	 * origin with the given angle.
+	 * 
+	 * @param angle
+	 *            the angle in radians.
+	 * @return this for convenience.
+	 */
+	public DoublePrecisionVector rotate(double angle) {
+
+		double x = this.x;
+		double y = this.y;
+
+		double cosA = Math.cos(angle);
+		double sinA = Math.sin(angle);
+
+		this.x = x * cosA - y * sinA;
+		this.y = x * sinA + y * cosA;
+
+		return this;
+	}
+
+	/**
+	 * @param angle
+	 * @return a copy of this vector rotated by the given angle.
+	 * @see DoublePrecisionVector#rotate(double)
+	 */
+	public DoublePrecisionVector getRotated(double angle) {
+		return new DoublePrecisionVector(this).rotate(angle);
+	}
+
+	/**
 	 * adds the given vector to this vector.
 	 * 
 	 * @param summand

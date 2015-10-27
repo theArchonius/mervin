@@ -19,7 +19,8 @@ import org.eclipse.draw2d.geometry.Rectangle;
  * Base interface for all {@link IFigure}s that serve as a indicator for a
  * linked {@link IFigure} if it is moved outside the bounds of its container.
  * The container must be an ancestor of the linked figure, but does not need to
- * be the parent of the linked figure.
+ * be the parent of the linked figure. If this figure is not used any more, the
+ * creator of this figure should call {@link #cleanUp()}.
  * 
  * @author Florian Zoubek
  *
@@ -71,5 +72,20 @@ public interface IOffScreenIndicator extends IFigure {
 	 * @return the union of all linked figure bounds.
 	 */
 	public Rectangle getLinkedFiguresBounds();
+
+	/**
+	 * determines if parts of the linked figures are visible in the current
+	 * container figure or not.
+	 * 
+	 * @return true if at least a part of one of the linked figures is visible
+	 *         in the current container figure, false otherwise.
+	 */
+	public boolean areLinkedFiguresVisible();
+
+	/**
+	 * cleans up this figure and detaches all linked figures and containers.
+	 * Should be called when this figure is not used any more.
+	 */
+	public void cleanUp();
 
 }
