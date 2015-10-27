@@ -10,6 +10,7 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.draw2d.figures;
 
+import org.eclipse.gef.Disposable;
 import org.eclipse.swt.graphics.Color;
 
 /**
@@ -19,7 +20,7 @@ import org.eclipse.swt.graphics.Color;
  * @author Florian Zoubek
  *
  */
-public interface IChangeTypeStyleAdvisor {
+public interface IChangeTypeStyleAdvisor extends Disposable {
 
 	public Color getForegroundColorForChangeType(ChangeType changeType);
 
