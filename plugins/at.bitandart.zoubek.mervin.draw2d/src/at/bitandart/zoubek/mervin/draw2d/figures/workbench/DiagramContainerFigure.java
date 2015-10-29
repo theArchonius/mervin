@@ -13,6 +13,7 @@ package at.bitandart.zoubek.mervin.draw2d.figures.workbench;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.DelegatingLayout;
 import org.eclipse.draw2d.FreeformLayer;
+import org.eclipse.draw2d.FreeformLayeredPane;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Layer;
 import org.eclipse.draw2d.LayeredPane;
@@ -23,11 +24,13 @@ import org.eclipse.gef.LayerConstants;
 import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemsAwareFreeFormLayer;
 import org.eclipse.gmf.runtime.diagram.ui.layout.FreeFormLayoutEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
-import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScalableFreeformLayeredPane;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.tooling.runtime.linklf.LinkLFShapeCompartmentEditPart;
 
 import at.bitandart.zoubek.mervin.draw2d.MervinLayerConstants;
+import at.bitandart.zoubek.mervin.draw2d.figures.IChangeTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenChangeIndicatorMerger;
+import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenIndicatorLayout;
 
 /**
  * An {@link IDiffWorkbenchContainer} implementation that shows the contents of
@@ -43,14 +46,20 @@ public class DiagramContainerFigure extends LinkLFShapeCompartmentEditPart.Shape
 
 	IDiffWorkbenchWindowTitleFigure windowTitleFigure;
 
-	public DiagramContainerFigure(String compartmentTitle, IMapMode mm) {
+	private IChangeTypeStyleAdvisor styleAdvisor;
+
+	private OffScreenChangeIndicatorMerger offScreenChangeIndicatorMerger;
+
+	public DiagramContainerFigure(String compartmentTitle, IChangeTypeStyleAdvisor styleAdvisor, IMapMode mm) {
 		super(compartmentTitle, mm);
 		remove(getTextPane());
 		ScrollPane scrollPane = getScrollPane();
 		scrollPane.setLayoutManager(new ScrollPaneLayout());
 
+		this.styleAdvisor = styleAdvisor;
+
 		// TODO find some better way than using an internal GMF class
-		ScalableFreeformLayeredPane layeredPane = new ScalableFreeformLayeredPane(mm);
+		FreeformLayeredPane layeredPane = new FreeformLayeredPane();
 		IFigure primaryLayer = new BorderItemsAwareFreeFormLayer();
 		primaryLayer.setLayoutManager(new FreeFormLayoutEx());
 		layeredPane.add(primaryLayer, LayerConstants.PRIMARY_LAYER);
@@ -60,9 +69,23 @@ public class DiagramContainerFigure extends LinkLFShapeCompartmentEditPart.Shape
 		FreeformLayer overlayLayer = new FreeformLayer();
 		overlayLayer.setLayoutManager(new DelegatingLayout());
 		layeredPane.add(overlayLayer, MervinLayerConstants.DIFF_HIGHLIGHT_LAYER);
+
+		FreeformLayer indicatorLayer = new FreeformLayer();
+		indicatorLayer.setLayoutManager(new OffScreenIndicatorLayout());
+		offScreenChangeIndicatorMerger = new OffScreenChangeIndicatorMerger(indicatorLayer, styleAdvisor);
+		indicatorLayer.addLayoutListener(offScreenChangeIndicatorMerger);
+		layeredPane.add(indicatorLayer, MervinLayerConstants.DIFF_INDICATOR_LAYER);
 		scrollPane.setContents(layeredPane);
 
 		setBorder(new LineBorder(ColorConstants.lightGray, 2));
+	}
+
+	public OffScreenChangeIndicatorMerger getOffScreenChangeIndicatorMerger() {
+		return offScreenChangeIndicatorMerger;
+	}
+
+	public IChangeTypeStyleAdvisor getStyleAdvisor() {
+		return styleAdvisor;
 	}
 
 	@Override

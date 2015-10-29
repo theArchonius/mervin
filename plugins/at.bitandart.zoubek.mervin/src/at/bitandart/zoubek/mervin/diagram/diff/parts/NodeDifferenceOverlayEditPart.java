@@ -19,6 +19,8 @@ import org.eclipse.gmf.runtime.notation.View;
 import at.bitandart.zoubek.mervin.draw2d.figures.ChangeOverlayNodeFigure;
 import at.bitandart.zoubek.mervin.draw2d.figures.ChangeOverlayNodeFigure.DimensionPropertyChangeType;
 import at.bitandart.zoubek.mervin.draw2d.figures.ChangeType;
+import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.IOffScreenIndicator;
+import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenChangeIndicator;
 import at.bitandart.zoubek.mervin.model.modelreview.Difference;
 import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
 import at.bitandart.zoubek.mervin.model.modelreview.DimensionChange;
@@ -46,6 +48,7 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 
 		DifferenceOverlay differenceOverlay = getDifferenceOverlay();
 		ChangeOverlayNodeFigure changeOverlayNodeFigure = getChangeOverlayNodeFigure();
+		OffScreenChangeIndicator offScreenChangeIndicator = getOffScreenChangeIndicator();
 
 		if (differenceOverlay != null && changeOverlayNodeFigure != null) {
 
@@ -58,14 +61,23 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 					switch (((StateDifference) difference).getType()) {
 					case ADDED:
 						changeOverlayNodeFigure.setChangeType(ChangeType.ADDITION);
+						if (offScreenChangeIndicator != null) {
+							offScreenChangeIndicator.setChangeType(ChangeType.ADDITION);
+						}
 						noStateDifference = false;
 						break;
 					case DELETED:
 						changeOverlayNodeFigure.setChangeType(ChangeType.DELETION);
+						if (offScreenChangeIndicator != null) {
+							offScreenChangeIndicator.setChangeType(ChangeType.DELETION);
+						}
 						noStateDifference = false;
 						break;
 					case MODIFIED:
 						changeOverlayNodeFigure.setChangeType(ChangeType.MODIFICATION);
+						if (offScreenChangeIndicator != null) {
+							offScreenChangeIndicator.setChangeType(ChangeType.MODIFICATION);
+						}
 						noStateDifference = false;
 						break;
 					default:
@@ -90,6 +102,9 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 			}
 			if (noStateDifference) {
 				changeOverlayNodeFigure.setChangeType(ChangeType.LAYOUT);
+				if (offScreenChangeIndicator != null) {
+					offScreenChangeIndicator.setChangeType(ChangeType.LAYOUT);
+				}
 			}
 		}
 
@@ -124,13 +139,26 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 	 */
 	@Override
 	protected NodeFigure createNodeFigure() {
-		return new ChangeOverlayNodeFigure(styleAdvisor, ChangeType.ADDITION);
+		return new ChangeOverlayNodeFigure(getStyleAdvisor(), ChangeType.ADDITION);
+	}
+
+	@Override
+	protected IOffScreenIndicator createOffScreenIndicator() {
+		return new OffScreenChangeIndicator(getStyleAdvisor());
 	}
 
 	protected ChangeOverlayNodeFigure getChangeOverlayNodeFigure() {
 		IFigure figure = getFigure();
 		if (figure instanceof ChangeOverlayNodeFigure) {
 			return (ChangeOverlayNodeFigure) figure;
+		}
+		return null;
+	}
+
+	protected OffScreenChangeIndicator getOffScreenChangeIndicator() {
+		IOffScreenIndicator offScreenIndicator = getOffScreenIndicator();
+		if (offScreenIndicator instanceof OffScreenChangeIndicator) {
+			return (OffScreenChangeIndicator) offScreenIndicator;
 		}
 		return null;
 	}

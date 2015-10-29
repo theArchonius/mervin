@@ -21,6 +21,8 @@ import javax.inject.Inject;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -433,9 +435,12 @@ public class DiagramDiffDebugView extends ModelReviewEditorTrackingView {
 
 			if (realElement != null) {
 				realElementClass = realElement.getClass().getCanonicalName();
-				shortenedToString = realElement.toString();
-				if (shortenedToString.length() > 100) {
-					shortenedToString = shortenedToString.substring(0, 99) + "...";
+				shortenedToString = createStringRepresentation((ObjectWithParent) element);
+				if (shortenedToString == null) {
+					shortenedToString = realElement.toString();
+					if (shortenedToString.length() > 100) {
+						shortenedToString = shortenedToString.substring(0, 99) + "...";
+					}
 				}
 			}
 
@@ -446,6 +451,24 @@ public class DiagramDiffDebugView extends ModelReviewEditorTrackingView {
 				cell.setText("\"" + shortenedToString + "\" (" + realElementClass + ")");
 			}
 
+		}
+
+		private String createStringRepresentation(ObjectWithParent element) {
+
+			if (element.getParent() instanceof ObjectWithParent
+					&& ((ObjectWithParent) element.getParent()).getObject() instanceof IFigure) {
+				IFigure figure = (IFigure) ((ObjectWithParent) element.getParent()).getObject();
+				if (element.getObject() instanceof Rectangle) {
+					Rectangle rectangle = (Rectangle) element.getObject();
+					Point location = rectangle.getLocation();
+					figure.translateToAbsolute(location);
+
+					return rectangle.x + " / " + rectangle.y + " (" + location.x + " / " + location.y + ") w: "
+							+ rectangle.width + " h: " + rectangle.height;
+				}
+			}
+
+			return null;
 		}
 	}
 
