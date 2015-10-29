@@ -29,6 +29,8 @@ import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.gmf.tooling.runtime.linklf.LinkLFShapeCompartmentEditPart;
 
 import at.bitandart.zoubek.mervin.draw2d.MervinLayerConstants;
+import at.bitandart.zoubek.mervin.draw2d.figures.DefaultChangeTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.IChangeTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.DiagramContainerFigure;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbench;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbench.DisplayMode;
@@ -45,13 +47,16 @@ public class DiagramEditPart extends LinkLFShapeCompartmentEditPart {
 
 	IWorkbenchListener workbenchListener;
 
+	private IChangeTypeStyleAdvisor styleAdvisor;
+
 	public DiagramEditPart(View model) {
 		super(model);
+		styleAdvisor = new DefaultChangeTypeStyleAdvisor();
 	}
 
 	@Override
 	public IFigure createFigure() {
-		DiagramContainerFigure figure = new DiagramContainerFigure(getCompartmentName(), getMapMode());
+		DiagramContainerFigure figure = new DiagramContainerFigure(getCompartmentName(), styleAdvisor, getMapMode());
 		figure.getContentPane().setLayoutManager(getLayoutManager());
 		figure.getContentPane().addLayoutListener(LayoutAnimator.getDefault());
 		return figure;
@@ -75,6 +80,12 @@ public class DiagramEditPart extends LinkLFShapeCompartmentEditPart {
 			}
 		}
 		refreshBounds();
+	}
+
+	@Override
+	public void deactivate() {
+		super.deactivate();
+		styleAdvisor.dispose();
 	}
 
 	@Override
