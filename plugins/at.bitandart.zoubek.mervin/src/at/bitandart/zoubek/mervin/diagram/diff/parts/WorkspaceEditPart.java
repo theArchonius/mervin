@@ -28,7 +28,13 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.LocalResourceManager;
+import org.eclipse.swt.graphics.Image;
 
+import at.bitandart.zoubek.mervin.draw2d.MervinResourceRegistry;
+import at.bitandart.zoubek.mervin.draw2d.RegistryResourceManager;
+import at.bitandart.zoubek.mervin.draw2d.StandaloneMervinResourceRegistry;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.DiffWorkbench;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbench;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
@@ -42,9 +48,13 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
  */
 public class WorkspaceEditPart extends ShapeNodeEditPart implements IPrimaryEditPart {
 
+	private RegistryResourceManager registryResourceManager;
+
 	public WorkspaceEditPart(View model) {
 		super(model);
 
+		registryResourceManager = new RegistryResourceManager(new StandaloneMervinResourceRegistry(),
+				new LocalResourceManager(JFaceResources.getResources()));
 	}
 
 	@Override
@@ -98,7 +108,15 @@ public class WorkspaceEditPart extends ShapeNodeEditPart implements IPrimaryEdit
 
 	@Override
 	protected NodeFigure createNodeFigure() {
-		DiffWorkbench figure = new DiffWorkbench(getMapMode());
+		Image workbenchMaximizeImage = registryResourceManager
+				.getImage(MervinResourceRegistry.IMAGE_WORKBENCH_MAXIMIZE);
+		Image workbenchMinimizeImage = registryResourceManager
+				.getImage(MervinResourceRegistry.IMAGE_WORKBENCH_MINIMIZE);
+		Image workbenchWindowModeImage = registryResourceManager
+				.getImage(MervinResourceRegistry.IMAGE_WORKBENCH_WINDOW_MODE);
+		Image workbenchTabModeImage = registryResourceManager.getImage(MervinResourceRegistry.IMAGE_WORKBENCH_TAB_MODE);
+		DiffWorkbench figure = new DiffWorkbench(getMapMode(), workbenchWindowModeImage, workbenchTabModeImage,
+				workbenchMaximizeImage, workbenchMinimizeImage);
 		return figure;
 	}
 }

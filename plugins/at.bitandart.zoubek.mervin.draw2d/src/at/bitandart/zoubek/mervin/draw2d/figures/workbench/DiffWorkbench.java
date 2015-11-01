@@ -10,8 +10,6 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.draw2d.figures.workbench;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -20,10 +18,12 @@ import java.util.Set;
 
 import org.eclipse.draw2d.ActionEvent;
 import org.eclipse.draw2d.ActionListener;
+import org.eclipse.draw2d.BorderLayout;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.LayoutManager;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ScrollPane;
 import org.eclipse.draw2d.ScrollPaneLayout;
@@ -35,10 +35,8 @@ import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.tooling.runtime.linklf.LinkLFShapeCompartmentEditPart;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Display;
 
 import at.bitandart.zoubek.mervin.draw2d.figures.ComposedClickable;
-import at.bitandart.zoubek.mervin.draw2d.figures.WorkbenchContentLayout;
 
 /**
  * Default implementation of {@link IDiffWorkbench}.
@@ -91,12 +89,12 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 	private Image btnImageTabMode;
 
 	/**
-	 * the image icon for button which send containers to the tray
+	 * the image icon for buttons which send containers to the tray
 	 */
 	private Image btnImageToTray;
 
 	/**
-	 * the image icon for button which send containers to the content area
+	 * the image icon for buttons which send containers to the content area
 	 */
 	private Image btnImageToContent;
 
@@ -105,8 +103,9 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 	 * 
 	 * @param mapmode
 	 */
-	public DiffWorkbench(IMapMode mapmode) {
-		this(DisplayMode.TAB, mapmode);
+	public DiffWorkbench(IMapMode mapmode, Image btnImageWindowMode, Image btnImageTabMode, Image btnImageToContent,
+			Image btnImageToTray) {
+		this(DisplayMode.TAB, mapmode, btnImageWindowMode, btnImageTabMode, btnImageToContent, btnImageToTray);
 	}
 
 	/**
@@ -114,47 +113,40 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 	 * 
 	 * @param displayMode
 	 * @param mapmode
+	 * @param btnImageWindowMode
+	 *            the image icon for the display mode switch button to
+	 *            {@link DisplayMode#WINDOW}
+	 * @param btnImageTabMode
+	 *            the image icon for the display mode switch button to
+	 *            {@link DisplayMode#TAB}
+	 * @param btnImageToContent
+	 *            the image icon for buttons which send containers to the
+	 *            content area
+	 * @param btnImageToTray
+	 *            the image icon for buttons which send containers to the tray
 	 */
-	public DiffWorkbench(DisplayMode displayMode, IMapMode mapmode) {
+	public DiffWorkbench(DisplayMode displayMode, IMapMode mapmode, Image btnImageWindowMode, Image btnImageTabMode,
+			Image btnImageToContent, Image btnImageToTray) {
 		super("", mapmode);
 		remove(getTextPane());
 		remove(getScrollPane());
 		this.displayMode = displayMode;
 		trayFigureListener = new TrayFigureListener(this);
 
-		btnImageWindowMode = loadImage(
-				"platform:/plugin/at.bitandart.zoubek.mervin/icons/16/workbench_window_mode.png");
-		btnImageTabMode = loadImage("platform:/plugin/at.bitandart.zoubek.mervin/icons/16/workbench_tab_mode.png");
-		btnImageToTray = loadImage("platform:/plugin/at.bitandart.zoubek.mervin/icons/16/workbench_to_tray.png");
-		btnImageToContent = loadImage("platform:/plugin/at.bitandart.zoubek.mervin/icons/16/workbench_to_content.png");
-	}
+		this.btnImageWindowMode = btnImageWindowMode;
+		this.btnImageTabMode = btnImageTabMode;
+		this.btnImageToContent = btnImageToContent;
+		this.btnImageToTray = btnImageToTray;
 
-	/**
-	 * loads an {@link Image} from the given url.
-	 * 
-	 * @param url
-	 *            the url of the image
-	 * @return the image or null if the image could not be loaded.
-	 */
-	private Image loadImage(String url) {
-		try {
-			return new Image(Display.getDefault(), new URL(url).openStream());
-		} catch (IOException e) {
-			// TODO replace with log message
-			System.err.println("Could not load required button image (TabMode)");
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	/**
 	 * creates and initializes all child figures.
 	 */
 	private void initializeChildFigures() {
-		ConstrainedToolbarLayout constrainedToolbarLayout = new ConstrainedToolbarLayout();
-		setLayoutManager(constrainedToolbarLayout);
+		setLayoutManager(new BorderLayout());
 		trayArea = createTrayArea();
-		add(trayArea);
+		add(trayArea, BorderLayout.TOP);
 
 		contentArea = getContentPane();
 		contentLayout = new WorkbenchContentLayout();
@@ -163,7 +155,7 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 
 		ScrollPane scrollPane = getScrollPane();
 		scrollPane.setLayoutManager(new ScrollPaneLayout());
-		add(scrollPane);
+		add(scrollPane, BorderLayout.CENTER);
 		childrenInitialized = true;
 	}
 
@@ -765,8 +757,13 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 			}
 			notifyPreTopContainerChanged(this, oldTopContainer, container);
 
+			LayoutManager parentLayoutManager = parent.getLayoutManager();
+			Object constraint = null;
+			if (parentLayoutManager != null) {
+				constraint = parentLayoutManager.getConstraint(container);
+			}
 			parent.remove(container);
-			parent.add(container, 0);
+			parent.add(container, constraint, 0);
 
 			notifyPostTopContainerChanged(this, oldTopContainer, container);
 		}

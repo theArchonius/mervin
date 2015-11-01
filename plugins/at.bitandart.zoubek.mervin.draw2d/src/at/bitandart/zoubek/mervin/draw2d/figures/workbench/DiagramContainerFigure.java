@@ -78,6 +78,7 @@ public class DiagramContainerFigure extends LinkLFShapeCompartmentEditPart.Shape
 		scrollPane.setContents(layeredPane);
 
 		setBorder(new LineBorder(ColorConstants.lightGray, 2));
+		setOpaque(true);
 	}
 
 	public OffScreenChangeIndicatorMerger getOffScreenChangeIndicatorMerger() {

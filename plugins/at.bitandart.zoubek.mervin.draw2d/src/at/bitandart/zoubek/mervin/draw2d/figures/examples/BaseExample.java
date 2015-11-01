@@ -14,12 +14,20 @@ import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LayoutAnimator;
 import org.eclipse.draw2d.Panel;
+import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.XYLayout;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.LocalResourceManager;
+import org.eclipse.jface.resource.ResourceManager;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.RowData;
-import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+
+import at.bitandart.zoubek.mervin.draw2d.IResourceRegistry;
+import at.bitandart.zoubek.mervin.draw2d.RegistryResourceManager;
+import at.bitandart.zoubek.mervin.draw2d.StandaloneMervinResourceRegistry;
 
 /**
  * Base class for all mervin draw2d examples. Provides a simple {@link Shell}
@@ -41,6 +49,21 @@ public class BaseExample {
 	private Display d;
 
 	/**
+	 * the resource registry for this example.
+	 */
+	private IResourceRegistry resourceRegistry;
+
+	/**
+	 * the resource registry for this example.
+	 */
+	private ResourceManager resourceManager;
+
+	/**
+	 * the actual manager used to manage the resources for this example class.
+	 */
+	private RegistryResourceManager registryResourceManager;
+
+	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
@@ -52,17 +75,22 @@ public class BaseExample {
 	 */
 	public void run() {
 		d = new Display();
+
+		resourceManager = new LocalResourceManager(JFaceResources.getResources());
+		resourceRegistry = new StandaloneMervinResourceRegistry();
+
+		registryResourceManager = new RegistryResourceManager(resourceRegistry, resourceManager);
+
 		Shell shell = new Shell(d);
-		RowLayout shellLayout = new RowLayout(SWT.VERTICAL);
-		shellLayout.center = true;
+		GridLayout shellLayout = new GridLayout();
 		shell.setLayout(shellLayout);
 
 		// Canvas for draw2d figures
 
 		FigureCanvas canvas = new FigureCanvas(shell);
-		RowData canvasLayoutData = new RowData();
-		canvasLayoutData.width = getCanvasWidth();
-		canvasLayoutData.height = getCanvasWidth();
+		GridData canvasLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		canvasLayoutData.minimumHeight = getCanvasHeight();
+		canvasLayoutData.minimumWidth = getCanvasWidth();
 		canvas.setLayoutData(canvasLayoutData);
 
 		// Draw 2d figures
@@ -71,7 +99,11 @@ public class BaseExample {
 
 		addChildFigures(rootFigure);
 
-		canvas.setContents(rootFigure);
+		if (rootFigure instanceof Viewport) {
+			canvas.setViewport((Viewport) rootFigure);
+		} else {
+			canvas.setContents(rootFigure);
+		}
 
 		// setup shell
 
@@ -135,15 +167,22 @@ public class BaseExample {
 	}
 
 	/**
-	 * called once before the example is shut down. Does nothing by default,
-	 * subclasses may override.
+	 * called once before the example is shut down. Disposes the resource
+	 * manager by default, subclasses may override.
 	 */
 	protected void cleanUp() {
-		// intentionally left empty
+		resourceManager.dispose();
 	}
 
 	public IFigure getRootFigure() {
 		return rootFigure;
 	}
 
+	/**
+	 * @return the registry resource manager that handles the shared resource
+	 *         for this example
+	 */
+	public RegistryResourceManager getRegistryResourceManager() {
+		return registryResourceManager;
+	}
 }
