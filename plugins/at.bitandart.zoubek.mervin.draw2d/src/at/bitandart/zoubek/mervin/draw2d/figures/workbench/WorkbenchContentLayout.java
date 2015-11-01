@@ -8,19 +8,19 @@
  * Contributors:
  *    Florian Zoubek - initial API and implementation
  *******************************************************************************/
-package at.bitandart.zoubek.mervin.draw2d.figures;
+package at.bitandart.zoubek.mervin.draw2d.figures.workbench;
 
 import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LayoutManager;
+import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Insets;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.diagram.ui.layout.FreeFormLayoutEx;
 
-import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbench;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbench.DisplayMode;
 
 /**
@@ -68,28 +68,34 @@ public class WorkbenchContentLayout extends FreeFormLayoutEx {
 	 */
 	private Dimension calculatePreferredTabSize(IFigure container, int wHint, int hHint) {
 
-		Insets insets = container.getInsets();
-		if (wHint > -1) {
-			wHint = Math.max(0, wHint - insets.getWidth());
-		}
-		if (hHint > -1) {
-			hHint = Math.max(0, hHint - insets.getHeight());
+		Viewport viewport = findParentViewport(container);
+		Dimension preferredSize = new Dimension(0, 0);
+
+		if (viewport != null) {
+			preferredSize.setSize(viewport.getBounds().getSize());
 		}
 
-		Dimension d = new Dimension();
-		List<?> children = container.getChildren();
-		if (!children.isEmpty()) {
-			Object child = children.get(0);
-			if (child instanceof IFigure) {
-				d = ((IFigure) child).getPreferredSize(wHint, hHint);
+		return preferredSize;
+
+	}
+
+	/**
+	 * finds the nearest parent viewport of the figure.
+	 * 
+	 * @param figure
+	 *            the figure to start the search.
+	 * @return the nearest parent viewport instance or null if no viewport could
+	 *         be found.
+	 */
+	private Viewport findParentViewport(IFigure figure) {
+		IFigure parent = figure.getParent();
+		while (parent != null) {
+			if (parent instanceof Viewport) {
+				return (Viewport) parent;
 			}
+			parent = parent.getParent();
 		}
-
-		d.expand(insets.getWidth(), insets.getHeight());
-		d.union(getBorderPreferredSize(container));
-
-		return d;
-
+		return null;
 	}
 
 	/**
@@ -110,27 +116,41 @@ public class WorkbenchContentLayout extends FreeFormLayoutEx {
 	 * @param container
 	 */
 	protected void doTabLayout(IFigure container) {
-		List<?> children = container.getChildren();
-		boolean firstChild = true;
-		Iterator<?> childIt = children.iterator();
-		while (childIt.hasNext()) {
-			Object child = childIt.next();
-			if (child instanceof IFigure) {
-				IFigure childFigure = (IFigure) child;
-				if (firstChild) {
-					// only the first child is shown
-					childFigure.setBounds(container.getClientArea());
-					firstChild = false;
-				} else {
-					/*
-					 * all other children are hidden by setting their width and
-					 * height to 0
-					 */
-					// TODO find a better way to hide the other children
-					Rectangle bounds = childFigure.getBounds().getCopy();
-					bounds.setWidth(0);
-					bounds.setHeight(0);
-					childFigure.setBounds(bounds);
+
+		Viewport viewport = findParentViewport(container);
+		Dimension preferredSize = new Dimension(0, 0);
+
+		Point location = viewport.getLocation();
+		viewport.translateToAbsolute(location);
+		if (viewport != null) {
+			preferredSize.setSize(viewport.getBounds().getSize());
+
+			List<?> children = container.getChildren();
+			boolean firstChild = true;
+			Iterator<?> childIt = children.iterator();
+			while (childIt.hasNext()) {
+				Object child = childIt.next();
+				if (child instanceof IFigure) {
+					IFigure childFigure = (IFigure) child;
+					if (firstChild) {
+						// only the first child is shown
+
+						childFigure.translateToRelative(location);
+						childFigure.setBounds(Rectangle.SINGLETON.setLocation(location).setSize(preferredSize));
+
+						// childFigure.setBounds(container.getClientArea());
+						firstChild = false;
+					} else {
+						/*
+						 * all other children are hidden by setting their width
+						 * and height to 0
+						 */
+						// TODO find a better way to hide the other children
+						Rectangle bounds = childFigure.getBounds().getCopy();
+						bounds.setWidth(0);
+						bounds.setHeight(0);
+						childFigure.setBounds(bounds);
+					}
 				}
 			}
 		}

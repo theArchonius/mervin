@@ -15,6 +15,7 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LayoutManager;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 
 /**
@@ -31,12 +32,16 @@ public class ViewportFillingLayout extends AbstractLayout {
 		Viewport viewport = findParentViewport(container);
 		Dimension preferredSize = new Dimension(0, 0);
 
+		Point location = viewport.getLocation();
+		viewport.translateToAbsolute(location);
+
 		if (viewport != null) {
 			preferredSize.setSize(viewport.getBounds().getSize());
 			for (Object child : container.getChildren()) {
 				if (child instanceof IFigure) {
 					IFigure childFigure = (IFigure) child;
-					childFigure.setBounds(Rectangle.SINGLETON.setLocation(0, 0).setSize(preferredSize));
+					childFigure.translateToRelative(location);
+					childFigure.setBounds(Rectangle.SINGLETON.setLocation(location).setSize(preferredSize));
 					break;
 				}
 			}

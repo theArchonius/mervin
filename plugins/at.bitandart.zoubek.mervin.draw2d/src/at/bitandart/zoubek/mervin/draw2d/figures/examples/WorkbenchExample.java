@@ -10,13 +10,17 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.draw2d.figures.examples;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Layer;
 import org.eclipse.draw2d.LayoutAnimator;
 import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.diagram.ui.layout.FreeFormLayoutEx;
+import org.eclipse.swt.graphics.Image;
 
+import at.bitandart.zoubek.mervin.draw2d.MervinResourceRegistry;
+import at.bitandart.zoubek.mervin.draw2d.RegistryResourceManager;
 import at.bitandart.zoubek.mervin.draw2d.ViewportFillingLayout;
 import at.bitandart.zoubek.mervin.draw2d.figures.DefaultChangeTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.DiagramContainerFigure;
@@ -37,49 +41,78 @@ public class WorkbenchExample extends GMFExample {
 	@Override
 	protected void addChildFigures(IFigure parentFigure) {
 
+		RegistryResourceManager registryResourceManager = getRegistryResourceManager();
+
+		Image workbenchMaximizeImage = registryResourceManager
+				.getImage(MervinResourceRegistry.IMAGE_WORKBENCH_MAXIMIZE);
+		Image workbenchMinimizeImage = registryResourceManager
+				.getImage(MervinResourceRegistry.IMAGE_WORKBENCH_MINIMIZE);
+		Image workbenchWindowModeImage = registryResourceManager
+				.getImage(MervinResourceRegistry.IMAGE_WORKBENCH_WINDOW_MODE);
+		Image workbenchTabModeImage = registryResourceManager.getImage(MervinResourceRegistry.IMAGE_WORKBENCH_TAB_MODE);
+
 		Layer primaryLayer = getPrimaryLayer();
 		// the workbench should fill up the main viewport
 		primaryLayer.setLayoutManager(new ViewportFillingLayout());
 
 		// create the workbench
-		DiffWorkbench diffWorkbench = new DiffWorkbench(getMapMode());
-		primaryLayer.add(diffWorkbench);
+		DiffWorkbench diffWorkbench = new DiffWorkbench(getMapMode(), workbenchWindowModeImage, workbenchTabModeImage,
+				workbenchMaximizeImage, workbenchMinimizeImage);
+		primaryLayer.add(diffWorkbench, new Rectangle(0, 0, getCanvasWidth(), getCanvasHeight()));
 
 		// add first workbench child
-		diffWorkbench.getContentArea().add(createFirstWorkbenchChild());
+		IFigure firstChild = createFirstWorkbenchChild();
+		diffWorkbench.getContentArea().add(firstChild, new Rectangle(10, 20, 200, 100));
 
 		// add second workbench child
-		diffWorkbench.getContentArea().add(createSecondWorkbenchChild());
+		IFigure secondChild = createSecondWorkbenchChild();
+		diffWorkbench.getContentArea().add(secondChild, new Rectangle(400, 40, 300, 150));
 
 	}
 
 	private IFigure createFirstWorkbenchChild() {
-		IFigure figure = createFirstWorkbenchChild();
+		DiagramContainerFigure figure = createWorkbenchChild("First Window");
+		IFigure contentPane = figure.getContentPane();
 
 		RectangleFigure rectangleFigure = new RectangleFigure();
-		figure.add(rectangleFigure, new Rectangle(-getCanvasWidth(), -getCanvasHeight(), 100, 50));
-		figure.add(rectangleFigure, new Rectangle(getCanvasWidth() * 2, -getCanvasHeight(), 100, 50));
-		figure.add(rectangleFigure, new Rectangle(-getCanvasWidth(), getCanvasHeight() * 2, 100, 50));
-		figure.add(rectangleFigure, new Rectangle(getCanvasWidth() * 2, getCanvasHeight() * 2, 100, 50));
+		contentPane.add(rectangleFigure, new Rectangle(-getCanvasWidth(), -getCanvasHeight(), 100, 50));
+
+		rectangleFigure = new RectangleFigure();
+		contentPane.add(rectangleFigure, new Rectangle(getCanvasWidth() * 2, -getCanvasHeight(), 100, 50));
+
+		rectangleFigure = new RectangleFigure();
+		contentPane.add(rectangleFigure, new Rectangle(-getCanvasWidth(), getCanvasHeight() * 2, 100, 50));
+
+		rectangleFigure = new RectangleFigure();
+		contentPane.add(rectangleFigure, new Rectangle(getCanvasWidth() * 2, getCanvasHeight() * 2, 100, 50));
 
 		return figure;
 	}
 
 	private IFigure createSecondWorkbenchChild() {
-		IFigure figure = createFirstWorkbenchChild();
+		DiagramContainerFigure figure = createWorkbenchChild("Second Window");
+		IFigure contentPane = figure.getContentPane();
 
 		RectangleFigure rectangleFigure = new RectangleFigure();
-		figure.add(rectangleFigure, new Rectangle((int) (getCanvasWidth() / 2.0), -getCanvasHeight(), 100, 50));
-		figure.add(rectangleFigure, new Rectangle(-getCanvasWidth(), (int) (getCanvasHeight() / 2.0), 100, 50));
-		figure.add(rectangleFigure, new Rectangle((int) (getCanvasWidth() / 2.0), getCanvasHeight() * 2, 100, 50));
-		figure.add(rectangleFigure, new Rectangle(getCanvasWidth() * 2, (int) (getCanvasHeight() / 2.0), 100, 50));
+		contentPane.add(rectangleFigure, new Rectangle((int) (getCanvasWidth() / 2.0), -getCanvasHeight(), 100, 50));
+
+		rectangleFigure = new RectangleFigure();
+		contentPane.add(rectangleFigure, new Rectangle(-getCanvasWidth(), (int) (getCanvasHeight() / 2.0), 100, 50));
+
+		rectangleFigure = new RectangleFigure();
+		contentPane.add(rectangleFigure, new Rectangle((int) (getCanvasWidth() / 2.0), getCanvasHeight() * 2, 100, 50));
+
+		rectangleFigure = new RectangleFigure();
+		contentPane.add(rectangleFigure, new Rectangle(getCanvasWidth() * 2, (int) (getCanvasHeight() / 2.0), 100, 50));
 
 		return figure;
 	}
 
-	private IFigure createWorkbenchChild() {
-		DiagramContainerFigure figure = new DiagramContainerFigure("", new DefaultChangeTypeStyleAdvisor(),
+	private DiagramContainerFigure createWorkbenchChild(String title) {
+		DiagramContainerFigure figure = new DiagramContainerFigure(title, new DefaultChangeTypeStyleAdvisor(),
 				getMapMode());
+		figure.setBackgroundColor(ColorConstants.white);
+		figure.setOpaque(true);
 		figure.getContentPane().setLayoutManager(new FreeFormLayoutEx());
 		figure.getContentPane().addLayoutListener(LayoutAnimator.getDefault());
 		return figure;
