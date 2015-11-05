@@ -32,6 +32,8 @@ import org.eclipse.gmf.runtime.notation.MeasurementUnit;
 @SuppressWarnings("restriction")
 public class GMFExample extends BaseExample {
 
+	private FreeformViewport mainViewport;
+
 	private ScalableFreeformLayeredPane mainPane;
 
 	public GMFExample() {
@@ -41,8 +43,7 @@ public class GMFExample extends BaseExample {
 	@Override
 	protected IFigure createRootFigure() {
 
-		// setup root figures like in GMF/GEF
-		FreeformViewport mainViewport = new FreeformViewport();
+		mainViewport = createFreeformViewport();
 
 		mainPane = new ScalableFreeformLayeredPane(MeasurementUnitHelper.getMapMode(MeasurementUnit.PIXEL_LITERAL));
 		mainViewport.setContents(mainPane);
@@ -57,6 +58,20 @@ public class GMFExample extends BaseExample {
 
 		return mainViewport;
 
+	}
+
+	/**
+	 * @return the {@link FreeformViewport} to use as main viewport
+	 */
+	protected FreeformViewport createFreeformViewport() {
+		return new FreeformViewport();
+	}
+
+	/**
+	 * @return the main viewport.
+	 */
+	public FreeformViewport getMainViewport() {
+		return mainViewport;
 	}
 
 	/**
