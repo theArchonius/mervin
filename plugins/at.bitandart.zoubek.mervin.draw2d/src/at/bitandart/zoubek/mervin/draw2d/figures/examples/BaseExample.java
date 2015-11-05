@@ -64,6 +64,11 @@ public class BaseExample {
 	private RegistryResourceManager registryResourceManager;
 
 	/**
+	 * the canvas used to draw the draw2d figures.
+	 */
+	private FigureCanvas canvas;
+
+	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
@@ -87,7 +92,7 @@ public class BaseExample {
 
 		// Canvas for draw2d figures
 
-		FigureCanvas canvas = new FigureCanvas(shell);
+		canvas = new FigureCanvas(shell);
 		GridData canvasLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		canvasLayoutData.minimumHeight = getCanvasHeight();
 		canvasLayoutData.minimumWidth = getCanvasWidth();
@@ -128,8 +133,9 @@ public class BaseExample {
 		container.setBackgroundColor(d.getSystemColor(SWT.COLOR_WHITE));
 		XYLayout containerLayout = new XYLayout();
 
-		// Assign layout listener for animation because we need to record the
-		// layout state changes
+		/*
+		 * Assign layout listener for animation
+		 */
 		container.addLayoutListener(LayoutAnimator.getDefault());
 		container.setLayoutManager(containerLayout);
 		return container;
@@ -174,8 +180,18 @@ public class BaseExample {
 		resourceManager.dispose();
 	}
 
+	/**
+	 * @return the root figure of this example.
+	 */
 	public IFigure getRootFigure() {
 		return rootFigure;
+	}
+
+	/**
+	 * @return the canvas used to draw the draw2d figures.
+	 */
+	public FigureCanvas getCanvas() {
+		return canvas;
 	}
 
 	/**
