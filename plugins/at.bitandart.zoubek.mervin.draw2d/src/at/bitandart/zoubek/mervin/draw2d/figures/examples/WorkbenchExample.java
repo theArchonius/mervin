@@ -12,6 +12,7 @@ package at.bitandart.zoubek.mervin.draw2d.figures.examples;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.Layer;
 import org.eclipse.draw2d.LayoutAnimator;
 import org.eclipse.draw2d.RectangleFigure;
@@ -62,16 +63,19 @@ public class WorkbenchExample extends GMFExample {
 
 		// add first workbench child
 		IFigure firstChild = createFirstWorkbenchChild();
-		diffWorkbench.getContentArea().add(firstChild, new Rectangle(10, 20, 200, 100));
+		diffWorkbench.getContentArea().add(firstChild, new Rectangle(-10, 20, 200, 100));
 
 		// add second workbench child
 		IFigure secondChild = createSecondWorkbenchChild();
-		diffWorkbench.getContentArea().add(secondChild, new Rectangle(400, 40, 300, 150));
+		diffWorkbench.getContentArea().add(secondChild, new Rectangle(400, -40, 300, 150));
 
 	}
 
 	private IFigure createFirstWorkbenchChild() {
 		DiagramContainerFigure figure = createWorkbenchChild("First Window");
+		// the first child also has a toolbar with some child figures
+		figure.getToolbarArea().add(new Label("Toolbar item 1"));
+		figure.getToolbarArea().add(new Label("Toolbar item 2"));
 		IFigure contentPane = figure.getContentPane();
 
 		RectangleFigure rectangleFigure = new RectangleFigure();

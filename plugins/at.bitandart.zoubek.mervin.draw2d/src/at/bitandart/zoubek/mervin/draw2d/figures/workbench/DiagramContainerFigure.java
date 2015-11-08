@@ -12,17 +12,20 @@ package at.bitandart.zoubek.mervin.draw2d.figures.workbench;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.DelegatingLayout;
+import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.FreeformLayeredPane;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Layer;
 import org.eclipse.draw2d.LayeredPane;
 import org.eclipse.draw2d.LineBorder;
+import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ScrollPane;
 import org.eclipse.draw2d.ScrollPaneLayout;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemsAwareFreeFormLayer;
 import org.eclipse.gmf.runtime.diagram.ui.layout.FreeFormLayoutEx;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.tooling.runtime.linklf.LinkLFShapeCompartmentEditPart;
@@ -42,19 +45,48 @@ import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenIndicatorLay
 public class DiagramContainerFigure extends LinkLFShapeCompartmentEditPart.ShapeCompartmentFigureEx
 		implements IDiffWorkbenchContainer {
 
-	IDiffWorkbenchTrayFigure trayFigure;
+	private IDiffWorkbenchTrayFigure trayFigure;
 
-	IDiffWorkbenchWindowTitleFigure windowTitleFigure;
+	private IDiffWorkbenchWindowTitleFigure windowTitleFigure;
 
 	private IChangeTypeStyleAdvisor styleAdvisor;
 
 	private OffScreenChangeIndicatorMerger offScreenChangeIndicatorMerger;
 
+	private IFigure toolbarFigure;
+
 	public DiagramContainerFigure(String compartmentTitle, IChangeTypeStyleAdvisor styleAdvisor, IMapMode mm) {
 		super(compartmentTitle, mm);
 		remove(getTextPane());
+
 		ScrollPane scrollPane = getScrollPane();
 		scrollPane.setLayoutManager(new ScrollPaneLayout());
+
+		toolbarFigure = new Figure() {
+			@Override
+			public void add(IFigure figure, Object constraint, int index) {
+				super.add(figure, constraint, index);
+				if (getBorder() == null) {
+					setBorder(new MarginBorder(3));
+				}
+			}
+
+			@Override
+			public void remove(IFigure figure) {
+				super.remove(figure);
+				if (getChildren().isEmpty()) {
+					setBorder(null);
+				}
+			}
+		};
+		toolbarFigure.setBackgroundColor(ColorConstants.lightGray);
+		toolbarFigure.setOpaque(true);
+		ConstrainedToolbarLayout constrainedToolbarLayout = new ConstrainedToolbarLayout(true);
+		constrainedToolbarLayout.setSpacing(10);
+		constrainedToolbarLayout.setStretchMajorAxis(false);
+		constrainedToolbarLayout.setStretchMinorAxis(false);
+		toolbarFigure.setLayoutManager(constrainedToolbarLayout);
+		add(toolbarFigure, 0);
 
 		this.styleAdvisor = styleAdvisor;
 
@@ -81,6 +113,11 @@ public class DiagramContainerFigure extends LinkLFShapeCompartmentEditPart.Shape
 		setOpaque(true);
 	}
 
+	@Override
+	public Figure getTextPane() {
+		return super.getTextPane();
+	}
+
 	public OffScreenChangeIndicatorMerger getOffScreenChangeIndicatorMerger() {
 		return offScreenChangeIndicatorMerger;
 	}
@@ -102,8 +139,7 @@ public class DiagramContainerFigure extends LinkLFShapeCompartmentEditPart.Shape
 
 	@Override
 	public IFigure getToolbarArea() {
-		// TODO implement toolbar area
-		return null;
+		return toolbarFigure;
 	}
 
 	@Override
