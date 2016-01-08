@@ -94,8 +94,8 @@ public class BaseExample {
 
 		canvas = new FigureCanvas(shell);
 		GridData canvasLayoutData = new GridData(SWT.FILL, SWT.FILL, true, true);
-		canvasLayoutData.minimumHeight = getCanvasHeight();
-		canvasLayoutData.minimumWidth = getCanvasWidth();
+		canvasLayoutData.heightHint = getCanvasHeight();
+		canvasLayoutData.widthHint = getCanvasWidth();
 		canvas.setLayoutData(canvasLayoutData);
 
 		// Draw 2d figures
@@ -115,6 +115,9 @@ public class BaseExample {
 		shell.setText(getTitle());
 		shell.pack();
 		shell.open();
+		rootFigure.invalidate();
+		rootFigure.invalidateTree();
+		rootFigure.revalidate();
 		while (!shell.isDisposed())
 			while (!d.readAndDispatch())
 				d.sleep();
