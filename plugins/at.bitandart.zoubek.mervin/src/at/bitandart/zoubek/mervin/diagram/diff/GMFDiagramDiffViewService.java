@@ -374,6 +374,18 @@ public class GMFDiagramDiffViewService {
 			return CommandResult.newOKCommandResult();
 		}
 
+		/**
+		 * creates an overlay for the given view and its child views if
+		 * specified. If the view has been added or deleted, all child views
+		 * will be ignored regardless of the value of the
+		 * {@code includeChildren} parameter.
+		 * 
+		 * @param view
+		 *            the view to create the overlay for.
+		 * @param includeChildren
+		 *            true if overlays should be created also for child views,
+		 *            if the view has not been added or deleted.
+		 */
 		private void createOverlayForView(View view, boolean includeChildren) {
 
 			View originalView = (View) inverseCopyMap.get(view);
@@ -448,6 +460,7 @@ public class GMFDiagramDiffViewService {
 					&& !layoutConstraintDifferences.isEmpty());
 			boolean hasBendpointsDifferences = (bendpointDifferences != null && !bendpointDifferences.isEmpty());
 			boolean hasViewElementDifferences = (viewElementDifferences != null && !viewElementDifferences.isEmpty());
+			boolean ignoreChildren = false;
 
 			if (hasViewReferenceDifferences || hasLayoutConstraintDifferences || hasBendpointsDifferences
 					|| hasViewElementDifferences) {
@@ -483,8 +496,17 @@ public class GMFDiagramDiffViewService {
 
 					StateDifference stateDifference = reviewFactory.createStateDifference();
 					stateDifference.getRawDiffs().add(viewReferenceChange);
-					stateDifference.setType(toStateDifferenceType(viewReferenceChange.getKind()));
+					StateDifferenceType stateDifferenceType = toStateDifferenceType(viewReferenceChange.getKind());
+					stateDifference.setType(stateDifferenceType);
 					differenceOverlay.getDifferences().add(stateDifference);
+					/*
+					 * all child views must have the same difference type or are
+					 * unchanged if the type is an addition or deletion - this
+					 * done to avoid distracting multiple overlays for a
+					 * addition or deletion of a view containing nested views
+					 */
+					ignoreChildren = stateDifferenceType == StateDifferenceType.ADDED
+							|| stateDifferenceType == StateDifferenceType.DELETED;
 
 				}
 
@@ -500,7 +522,7 @@ public class GMFDiagramDiffViewService {
 
 			}
 
-			if (includeChildren) {
+			if (includeChildren && !ignoreChildren) {
 				for (Object child : view.getChildren()) {
 					if (child instanceof View) {
 						View childView = (View) child;
