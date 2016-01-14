@@ -21,10 +21,14 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
-import org.eclipse.ui.forms.widgets.FormText;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
@@ -51,6 +55,9 @@ public class CommentList extends Composite {
 	// SWT controls
 	private Composite columnHeaderComposite;
 	private Map<CommentColumn, Section> columnHeaders = new HashMap<>();
+
+	// Listeners
+	private List<CommentLinkListener> commentLinkListeners = new ArrayList<CommentList.CommentLinkListener>();
 
 	public CommentList(Composite parent, int style, FormToolkit toolkit) {
 		super(parent, style);
@@ -355,20 +362,69 @@ public class CommentList extends Composite {
 					commentComposite.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 
 					// create the author label
-					Label authorLabel = toolkit.createLabel(commentComposite, comment.getAuthor(), SWT.WRAP);
+					Label authorLabel = toolkit.createLabel(commentComposite, comment.getAuthor());
 					authorLabel.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 
 					// create the creation time label
 					Label creationTimeLabel = toolkit.createLabel(commentComposite,
-							dateFormat.format(comment.getCreationTime().getTime()), SWT.WRAP);
+							dateFormat.format(comment.getCreationTime().getTime()));
 					creationTimeLabel.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 
-					// create a FormText for the body
-					FormText commentBodyLabel = toolkit.createFormText(commentComposite, false);
-					commentBodyLabel.setText(comment.getBody(), false, true);
+					// create a StyledText for the body
+					final StyledText commentBodyText = new StyledText(commentComposite, SWT.WRAP | SWT.READ_ONLY);
+					toolkit.adapt(commentBodyText);
+					commentBodyText.setText(comment.getBody());
 					TableWrapData tableWrapData = new TableWrapData();
 					tableWrapData.colspan = 2;
-					commentBodyLabel.setLayoutData(tableWrapData);
+					commentBodyText.setLayoutData(tableWrapData);
+
+					commentBodyText.addListener(SWT.MouseDown, new Listener() {
+						@Override
+						public void handleEvent(Event event) {
+							try {
+								int offset = commentBodyText.getOffsetAtLocation(new Point(event.x, event.y));
+								StyleRange style = commentBodyText.getStyleRangeAtOffset(offset);
+								if (style != null && style instanceof LinkStyleRange) {
+									handleCommentLinkClicked(((LinkStyleRange) style).getCommentLink());
+								}
+							} catch (IllegalArgumentException e) {
+								// no character under event.x, event.y
+							}
+						}
+
+					});
+
+					commentBodyText.addListener(SWT.MouseMove, new Listener() {
+
+						private CommentLink currentCommentLink;
+
+						@Override
+						public void handleEvent(Event event) {
+							int offset = commentBodyText.getOffsetAtLocation(new Point(event.x, event.y));
+							StyleRange style = commentBodyText.getStyleRangeAtOffset(offset);
+							if (style != null && style instanceof LinkStyleRange) {
+								CommentLink commentLink = ((LinkStyleRange) style).getCommentLink();
+								if (currentCommentLink != commentLink) {
+									if (currentCommentLink != null) {
+										handleCommentLinkExit(currentCommentLink);
+									}
+									handleCommentLinkEnter(commentLink);
+									currentCommentLink = commentLink;
+								}
+							} else {
+								if (currentCommentLink != null) {
+									handleCommentLinkExit(currentCommentLink);
+									currentCommentLink = null;
+								}
+							}
+						}
+
+					});
+
+					// add links
+					for (CommentLink link : internalComment.getCommentLinks()) {
+						commentBodyText.setStyleRange(new LinkStyleRange(link));
+					}
 
 					layout();
 
@@ -377,6 +433,92 @@ public class CommentList extends Composite {
 
 		}
 
+	}
+
+	/**
+	 * handles a click on a comment link and calls the corresponding listeners.
+	 * 
+	 * @param commentLink
+	 *            the comment link that has been clicked
+	 */
+	private void handleCommentLinkClicked(CommentLink commentLink) {
+		for (CommentLinkListener listener : commentLinkListeners) {
+			listener.commentLinkClicked(commentLink);
+		}
+	}
+
+	/**
+	 * handles a mouse enter event on a comment link and calls the corresponding
+	 * listeners.
+	 * 
+	 * @param commentLink
+	 *            the comment link that has been clicked
+	 */
+	private void handleCommentLinkEnter(CommentLink commentLink) {
+		for (CommentLinkListener listener : commentLinkListeners) {
+			listener.commentLinkEnter(commentLink);
+		}
+	}
+
+	/**
+	 * handles a mouse exit event on a comment link and calls the corresponding
+	 * listeners.
+	 * 
+	 * @param commentLink
+	 *            the comment link that has been clicked
+	 */
+	private void handleCommentLinkExit(CommentLink commentLink) {
+		for (CommentLinkListener listener : commentLinkListeners) {
+			listener.commentLinkExit(commentLink);
+		}
+	}
+
+	/**
+	 * adds the given comment link listener to this widget.
+	 * 
+	 * @param listener
+	 */
+	public void addCommentLinkListener(CommentLinkListener listener) {
+		commentLinkListeners.add(listener);
+	}
+
+	/**
+	 * removes the given comment link listener from this widget
+	 * 
+	 * @param listener
+	 */
+	public void removeCommentLinkListener(CommentLinkListener listener) {
+		commentLinkListeners.remove(listener);
+	}
+
+	/**
+	 * The base listener interface for comment link events.
+	 * 
+	 * @author Florian Zoubek
+	 *
+	 */
+	public static interface CommentLinkListener {
+
+		/**
+		 * called when the comment link has been clicked.
+		 * 
+		 * @param commentLink
+		 */
+		public void commentLinkClicked(CommentLink commentLink);
+
+		/**
+		 * called when the mouse enters the comment links bounds.
+		 * 
+		 * @param commentLink
+		 */
+		public void commentLinkEnter(CommentLink commentLink);
+
+		/**
+		 * called when the mouse leaves the comment links bounds.
+		 * 
+		 * @param commentLink
+		 */
+		public void commentLinkExit(CommentLink commentLink);
 	}
 
 	/**
@@ -422,6 +564,23 @@ public class CommentList extends Composite {
 			removeCommentColumn(commentColumn);
 		}
 
+	}
+
+	private class LinkStyleRange extends StyleRange {
+
+		private CommentLink commentLink;
+
+		public LinkStyleRange(CommentLink commentLink) {
+			this.commentLink = commentLink;
+			this.underline = true;
+			this.fontStyle = SWT.BOLD;
+			this.start = commentLink.getStartIndex();
+			this.length = commentLink.getLength();
+		}
+
+		public CommentLink getCommentLink() {
+			return commentLink;
+		}
 	}
 
 	private class InternalCommentGroup implements CommentGroup {
@@ -569,6 +728,11 @@ public class CommentList extends Composite {
 		@Override
 		public Alignment getAlignment() {
 			return realComment.getAlignment();
+		}
+
+		@Override
+		public List<CommentLink> getCommentLinks() {
+			return realComment.getCommentLinks();
 		}
 
 		public Composite getComposite() {

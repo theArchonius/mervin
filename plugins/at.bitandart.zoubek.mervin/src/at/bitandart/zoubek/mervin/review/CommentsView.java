@@ -11,6 +11,7 @@
 package at.bitandart.zoubek.mervin.review;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,7 +20,6 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.TableWrapData;
@@ -30,6 +30,9 @@ import at.bitandart.zoubek.mervin.swt.comments.Comment;
 import at.bitandart.zoubek.mervin.swt.comments.Comment.Alignment;
 import at.bitandart.zoubek.mervin.swt.comments.CommentColumn;
 import at.bitandart.zoubek.mervin.swt.comments.CommentGroup;
+import at.bitandart.zoubek.mervin.swt.comments.CommentLink;
+import at.bitandart.zoubek.mervin.swt.comments.CommentList;
+import at.bitandart.zoubek.mervin.swt.comments.CommentList.CommentLinkListener;
 import at.bitandart.zoubek.mervin.swt.comments.CommentListViewer;
 import at.bitandart.zoubek.mervin.swt.comments.CommentProvider;
 
@@ -62,8 +65,28 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 
 		commentListViewer = new CommentListViewer(mainPanel, toolkit);
 		commentListViewer.setCommentProvider(new MervinCommentProvider());
-		Control control = commentListViewer.getControl();
+		CommentList control = commentListViewer.getCommentListControl();
 		control.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+		control.addCommentLinkListener(new CommentLinkListener() {
+
+			@Override
+			public void commentLinkClicked(CommentLink commentLink) {
+				// TODO replace with correct click behaviour
+				System.out.println("comment link click handler not yet implemented");
+			}
+
+			@Override
+			public void commentLinkEnter(CommentLink commentLink) {
+				// TODO replace with correct click behaviour
+				System.out.println("comment link enter handler not yet implemented");
+			}
+
+			@Override
+			public void commentLinkExit(CommentLink commentLink) {
+				// TODO replace with correct click behaviour
+				System.out.println("comment link exit handler not yet implemented");
+			}
+		});
 		viewInitialized = true;
 		updateValues();
 
@@ -110,24 +133,26 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 
 			List<Comment> comments = new LinkedList<Comment>();
 			// TODO read from model and remove test values below
+
+			String prefix = group.getGroupTitle() + " - " + commentColumn.getTitle() + " -\n";
+
+			List<CommentLink> links = new LinkedList<CommentLink>();
+			links.add(new MervinCommentLink(prefix.length(), 5));// Lorem
+			links.add(new MervinCommentLink(prefix.length() + 22, 4));// amet
+
 			comments.add(new MervinComment("Someone", new GregorianCalendar(2015, 3, 2, 3, 46),
-					group.getGroupTitle() + " - " + commentColumn.getTitle() + " - "
-							+ "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-					Alignment.LEFT));
+					prefix + "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+					Alignment.LEFT, links));
 			comments.add(new MervinComment("Someone other", new GregorianCalendar(2001, 12, 7, 3, 13),
-					group.getGroupTitle() + " - " + commentColumn.getTitle() + " - "
-							+ "At vero eos et accusam et justo duo dolores et ea rebum.",
-					Alignment.RIGHT));
+					prefix + "At vero eos et accusam et justo duo dolores et ea rebum.", Alignment.RIGHT, null));
 			comments.add(new MervinComment("Someone", new GregorianCalendar(2015, 6, 2, 5, 46),
-					group.getGroupTitle() + " - " + commentColumn.getTitle() + " - "
-							+ "Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.",
-					Alignment.LEFT));
+					prefix + "Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.",
+					Alignment.LEFT, null));
+			comments.add(new MervinComment("Someone other", new GregorianCalendar(2015, 11, 2, 8, 16), prefix + "...",
+					Alignment.RIGHT, null));
 			comments.add(new MervinComment("Someone other", new GregorianCalendar(2015, 11, 2, 8, 16),
-					group.getGroupTitle() + " - " + commentColumn.getTitle() + " - " + "...", Alignment.RIGHT));
-			comments.add(new MervinComment("Someone other", new GregorianCalendar(2015, 11, 2, 8, 16),
-					group.getGroupTitle() + " - " + commentColumn.getTitle() + " - "
-							+ "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.",
-					Alignment.RIGHT));
+					prefix + "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.",
+					Alignment.RIGHT, null));
 
 			return comments;
 		}
@@ -157,6 +182,7 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 		private Calendar creationTime;
 		private String body;
 		private Alignment alignment;
+		private List<CommentLink> commentLinks;
 
 		/**
 		 * @param author
@@ -164,12 +190,18 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 		 * @param body
 		 * @param alignment
 		 */
-		public MervinComment(String author, Calendar creationTime, String body, Alignment alignment) {
+		public MervinComment(String author, Calendar creationTime, String body, Alignment alignment,
+				List<CommentLink> commentLinks) {
 			super();
 			this.author = author;
 			this.creationTime = creationTime;
 			this.body = body;
 			this.alignment = alignment;
+			if (commentLinks == null) {
+				this.commentLinks = Collections.emptyList();
+			} else {
+				this.commentLinks = commentLinks;
+			}
 		}
 
 		@Override
@@ -192,6 +224,11 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 			return alignment;
 		}
 
+		@Override
+		public List<CommentLink> getCommentLinks() {
+			return commentLinks;
+		}
+
 	}
 
 	private class MervinCommentColumn implements CommentColumn {
@@ -206,6 +243,30 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 		@Override
 		public String getTitle() {
 			return title;
+		}
+
+	}
+
+	private class MervinCommentLink implements CommentLink {
+
+		private int startIndex;
+
+		private int length;
+
+		public MervinCommentLink(int startIndex, int length) {
+			super();
+			this.startIndex = startIndex;
+			this.length = length;
+		}
+
+		@Override
+		public int getStartIndex() {
+			return startIndex;
+		}
+
+		@Override
+		public int getLength() {
+			return length;
 		}
 
 	}

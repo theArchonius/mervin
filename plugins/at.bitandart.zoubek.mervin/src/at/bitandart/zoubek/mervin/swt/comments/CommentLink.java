@@ -10,44 +10,24 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.swt.comments;
 
-import java.util.Calendar;
-import java.util.List;
-
 /**
- * Represents a comment that is shown in a {@link CommentListViewer}.
+ * Describes a link (substring) within a text starting at a specific index and
+ * with a given length.
  * 
  * @author Florian Zoubek
  *
  */
-public interface Comment {
-
-	public enum Alignment {
-		LEFT, RIGHT
-	}
+public interface CommentLink {
 
 	/**
-	 * @return the name of the author.
+	 * @return the index of the first character index within the containing
+	 *         text.
 	 */
-	public String getAuthor();
+	public int getStartIndex();
 
 	/**
-	 * @return the creation time
+	 * @return the length of the substring that represents this link.
 	 */
-	public Calendar getCreationTime();
-
-	/**
-	 * @return the comment text.
-	 */
-	public String getBody();
-
-	/**
-	 * @return the alignment of the comment.
-	 */
-	public Alignment getAlignment();
-
-	/**
-	 * @return a list of comment links describing links in the comment body.
-	 */
-	public List<CommentLink> getCommentLinks();
+	public int getLength();
 
 }
