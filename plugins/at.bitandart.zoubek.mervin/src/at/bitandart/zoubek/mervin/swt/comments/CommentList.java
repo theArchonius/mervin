@@ -24,6 +24,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
@@ -400,22 +401,26 @@ public class CommentList extends Composite {
 
 						@Override
 						public void handleEvent(Event event) {
-							int offset = commentBodyText.getOffsetAtLocation(new Point(event.x, event.y));
-							StyleRange style = commentBodyText.getStyleRangeAtOffset(offset);
-							if (style != null && style instanceof LinkStyleRange) {
-								CommentLink commentLink = ((LinkStyleRange) style).getCommentLink();
-								if (currentCommentLink != commentLink) {
+							try {
+								int offset = commentBodyText.getOffsetAtLocation(new Point(event.x, event.y));
+								StyleRange style = commentBodyText.getStyleRangeAtOffset(offset);
+								if (style != null && style instanceof LinkStyleRange) {
+									CommentLink commentLink = ((LinkStyleRange) style).getCommentLink();
+									if (currentCommentLink != commentLink) {
+										if (currentCommentLink != null) {
+											handleCommentLinkExit(currentCommentLink);
+										}
+										handleCommentLinkEnter(commentLink);
+										currentCommentLink = commentLink;
+									}
+								} else {
 									if (currentCommentLink != null) {
 										handleCommentLinkExit(currentCommentLink);
+										currentCommentLink = null;
 									}
-									handleCommentLinkEnter(commentLink);
-									currentCommentLink = commentLink;
 								}
-							} else {
-								if (currentCommentLink != null) {
-									handleCommentLinkExit(currentCommentLink);
-									currentCommentLink = null;
-								}
+							} catch (IllegalArgumentException e) {
+								// no character under event.x, event.y
 							}
 						}
 
