@@ -24,7 +24,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
@@ -569,23 +568,6 @@ public class CommentList extends Composite {
 			removeCommentColumn(commentColumn);
 		}
 
-	}
-
-	private class LinkStyleRange extends StyleRange {
-
-		private CommentLink commentLink;
-
-		public LinkStyleRange(CommentLink commentLink) {
-			this.commentLink = commentLink;
-			this.underline = true;
-			this.fontStyle = SWT.BOLD;
-			this.start = commentLink.getStartIndex();
-			this.length = commentLink.getLength();
-		}
-
-		public CommentLink getCommentLink() {
-			return commentLink;
-		}
 	}
 
 	private class InternalCommentGroup implements CommentGroup {

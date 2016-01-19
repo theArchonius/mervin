@@ -31,6 +31,7 @@ import at.bitandart.zoubek.mervin.swt.comments.Comment.Alignment;
 import at.bitandart.zoubek.mervin.swt.comments.CommentColumn;
 import at.bitandart.zoubek.mervin.swt.comments.CommentGroup;
 import at.bitandart.zoubek.mervin.swt.comments.CommentLink;
+import at.bitandart.zoubek.mervin.swt.comments.CommentLinkTarget;
 import at.bitandart.zoubek.mervin.swt.comments.CommentList;
 import at.bitandart.zoubek.mervin.swt.comments.CommentList.CommentLinkListener;
 import at.bitandart.zoubek.mervin.swt.comments.CommentListViewer;
@@ -267,6 +268,12 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 		@Override
 		public int getLength() {
 			return length;
+		}
+
+		@Override
+		public CommentLinkTarget getCommentLinkTarget() {
+			// TODO Auto-generated method stub
+			return null;
 		}
 
 	}

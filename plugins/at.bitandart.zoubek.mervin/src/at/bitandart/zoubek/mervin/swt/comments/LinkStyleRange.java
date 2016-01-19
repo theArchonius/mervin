@@ -10,29 +10,28 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.swt.comments;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyleRange;
+
 /**
- * Describes a link (substring) within a text starting at a specific index and
- * with a given length.
+ * A {@link StyleRange} based on a {@link CommentLink}.
  * 
  * @author Florian Zoubek
  *
  */
-public interface CommentLink {
+class LinkStyleRange extends StyleRange {
 
-	/**
-	 * @return the index of the first character index within the containing
-	 *         text.
-	 */
-	public int getStartIndex();
+	private CommentLink commentLink;
 
-	/**
-	 * @return the length of the substring that represents this link.
-	 */
-	public int getLength();
+	public LinkStyleRange(CommentLink commentLink) {
+		this.commentLink = commentLink;
+		this.underline = true;
+		this.fontStyle = SWT.BOLD;
+		this.start = commentLink.getStartIndex();
+		this.length = commentLink.getLength();
+	}
 
-	/**
-	 * @return the target of this link.
-	 */
-	public CommentLinkTarget getCommentLinkTarget();
-
+	public CommentLink getCommentLink() {
+		return commentLink;
+	}
 }

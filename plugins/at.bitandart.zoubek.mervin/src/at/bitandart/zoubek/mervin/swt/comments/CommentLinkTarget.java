@@ -11,28 +11,15 @@
 package at.bitandart.zoubek.mervin.swt.comments;
 
 /**
- * Describes a link (substring) within a text starting at a specific index and
- * with a given length.
+ * Represents the target of a {@link CommentLink}.
  * 
  * @author Florian Zoubek
  *
  */
-public interface CommentLink {
+public interface CommentLinkTarget {
 
 	/**
-	 * @return the index of the first character index within the containing
-	 *         text.
+	 * @return the default link text for this target
 	 */
-	public int getStartIndex();
-
-	/**
-	 * @return the length of the substring that represents this link.
-	 */
-	public int getLength();
-
-	/**
-	 * @return the target of this link.
-	 */
-	public CommentLinkTarget getCommentLinkTarget();
-
+	public String getDefaultText();
 }
