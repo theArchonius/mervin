@@ -30,8 +30,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import at.bitandart.zoubek.mervin.swt.comments.CommentEditor;
 import at.bitandart.zoubek.mervin.swt.comments.CommentEditor.CommentEditorListener;
-import at.bitandart.zoubek.mervin.swt.comments.CommentLink;
-import at.bitandart.zoubek.mervin.swt.comments.CommentLinkTarget;
+import at.bitandart.zoubek.mervin.swt.comments.data.CommentLink;
+import at.bitandart.zoubek.mervin.swt.comments.data.CommentLinkTarget;
 
 /**
  * Example that demonstrates the usage of the {@link CommentEditor} control.

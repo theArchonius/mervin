@@ -8,10 +8,12 @@
  * Contributors:
  *    Florian Zoubek - initial API and implementation
  *******************************************************************************/
-package at.bitandart.zoubek.mervin.swt.comments;
+package at.bitandart.zoubek.mervin.swt.comments.data;
 
 import java.util.Calendar;
 import java.util.List;
+
+import at.bitandart.zoubek.mervin.swt.comments.CommentListViewer;
 
 /**
  * Represents a comment that is shown in a {@link CommentListViewer}.

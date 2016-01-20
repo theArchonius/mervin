@@ -8,7 +8,9 @@
  * Contributors:
  *    Florian Zoubek - initial API and implementation
  *******************************************************************************/
-package at.bitandart.zoubek.mervin.swt.comments;
+package at.bitandart.zoubek.mervin.swt.comments.data;
+
+import at.bitandart.zoubek.mervin.swt.comments.CommentListViewer;
 
 /**
  * Represents a comment group that is shown in a {@link CommentListViewer}.

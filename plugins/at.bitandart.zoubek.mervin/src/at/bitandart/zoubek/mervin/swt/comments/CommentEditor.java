@@ -30,6 +30,9 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
+import at.bitandart.zoubek.mervin.swt.comments.data.CommentLink;
+import at.bitandart.zoubek.mervin.swt.comments.data.CommentLinkTarget;
+
 /**
  * A control that allows editing a comment. A comment contains text where parts
  * of this text link to some target. This control uses internally various

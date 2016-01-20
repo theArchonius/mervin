@@ -20,6 +20,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
+import at.bitandart.zoubek.mervin.swt.comments.data.Comment;
+import at.bitandart.zoubek.mervin.swt.comments.data.CommentColumn;
+import at.bitandart.zoubek.mervin.swt.comments.data.CommentGroup;
+import at.bitandart.zoubek.mervin.swt.comments.data.CommentProvider;
+
 /**
  * A {@link Viewer} that manages the content of a {@link CommentList} widget.
  * 

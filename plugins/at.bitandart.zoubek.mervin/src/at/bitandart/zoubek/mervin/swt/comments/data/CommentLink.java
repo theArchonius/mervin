@@ -8,7 +8,7 @@
  * Contributors:
  *    Florian Zoubek - initial API and implementation
  *******************************************************************************/
-package at.bitandart.zoubek.mervin.swt.comments;
+package at.bitandart.zoubek.mervin.swt.comments.data;
 
 /**
  * Describes a link (substring) within a text starting at a specific index and

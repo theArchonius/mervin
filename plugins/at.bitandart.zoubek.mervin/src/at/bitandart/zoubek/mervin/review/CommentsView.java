@@ -26,16 +26,16 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
-import at.bitandart.zoubek.mervin.swt.comments.Comment;
-import at.bitandart.zoubek.mervin.swt.comments.Comment.Alignment;
-import at.bitandart.zoubek.mervin.swt.comments.CommentColumn;
-import at.bitandart.zoubek.mervin.swt.comments.CommentGroup;
-import at.bitandart.zoubek.mervin.swt.comments.CommentLink;
-import at.bitandart.zoubek.mervin.swt.comments.CommentLinkTarget;
 import at.bitandart.zoubek.mervin.swt.comments.CommentList;
 import at.bitandart.zoubek.mervin.swt.comments.CommentList.CommentLinkListener;
+import at.bitandart.zoubek.mervin.swt.comments.data.Comment;
+import at.bitandart.zoubek.mervin.swt.comments.data.CommentColumn;
+import at.bitandart.zoubek.mervin.swt.comments.data.CommentGroup;
+import at.bitandart.zoubek.mervin.swt.comments.data.CommentLink;
+import at.bitandart.zoubek.mervin.swt.comments.data.CommentLinkTarget;
+import at.bitandart.zoubek.mervin.swt.comments.data.CommentProvider;
+import at.bitandart.zoubek.mervin.swt.comments.data.Comment.Alignment;
 import at.bitandart.zoubek.mervin.swt.comments.CommentListViewer;
-import at.bitandart.zoubek.mervin.swt.comments.CommentProvider;
 
 public class CommentsView extends ModelReviewEditorTrackingView {
 

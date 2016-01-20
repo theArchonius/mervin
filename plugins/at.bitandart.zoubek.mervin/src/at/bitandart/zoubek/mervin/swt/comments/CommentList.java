@@ -34,7 +34,11 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
-import at.bitandart.zoubek.mervin.swt.comments.Comment.Alignment;
+import at.bitandart.zoubek.mervin.swt.comments.data.Comment;
+import at.bitandart.zoubek.mervin.swt.comments.data.CommentColumn;
+import at.bitandart.zoubek.mervin.swt.comments.data.CommentGroup;
+import at.bitandart.zoubek.mervin.swt.comments.data.CommentLink;
+import at.bitandart.zoubek.mervin.swt.comments.data.Comment.Alignment;
 
 /**
  * A SWT Control that shows a list of grouped comments in columns.

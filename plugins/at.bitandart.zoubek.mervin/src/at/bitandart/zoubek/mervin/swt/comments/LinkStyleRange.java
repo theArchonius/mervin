@@ -13,6 +13,8 @@ package at.bitandart.zoubek.mervin.swt.comments;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 
+import at.bitandart.zoubek.mervin.swt.comments.data.CommentLink;
+
 /**
  * A {@link StyleRange} based on a {@link CommentLink}.
  * 

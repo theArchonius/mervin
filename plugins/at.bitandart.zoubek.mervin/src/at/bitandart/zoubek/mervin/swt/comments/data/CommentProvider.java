@@ -8,9 +8,11 @@
  * Contributors:
  *    Florian Zoubek - initial API and implementation
  *******************************************************************************/
-package at.bitandart.zoubek.mervin.swt.comments;
+package at.bitandart.zoubek.mervin.swt.comments.data;
 
 import java.util.List;
+
+import at.bitandart.zoubek.mervin.swt.comments.CommentListViewer;
 
 /**
  * Base interface for classes that provide comments and comment groups for

@@ -8,19 +8,18 @@
  * Contributors:
  *    Florian Zoubek - initial API and implementation
  *******************************************************************************/
-package at.bitandart.zoubek.mervin.swt.comments;
+package at.bitandart.zoubek.mervin.swt.comments.data;
 
 /**
- * Represents a column in a {@link CommentList}.
+ * Represents the target of a {@link CommentLink}.
  * 
  * @author Florian Zoubek
  *
  */
-public interface CommentColumn {
+public interface CommentLinkTarget {
 
 	/**
-	 * @return the title of this column
+	 * @return the default link text for this target
 	 */
-	public String getTitle();
-
+	public String getDefaultText();
 }
