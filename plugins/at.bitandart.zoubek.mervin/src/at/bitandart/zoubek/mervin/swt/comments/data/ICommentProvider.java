@@ -21,7 +21,7 @@ import at.bitandart.zoubek.mervin.swt.comments.CommentListViewer;
  * @author Florian Zoubek
  *
  */
-public interface CommentProvider {
+public interface ICommentProvider {
 
 	/**
 	 * returns the list of top-level comment groups
@@ -29,7 +29,7 @@ public interface CommentProvider {
 	 * @return an ordered list of comment groups containing the actual comments.
 	 *         Comments must always reside in a group and a column.
 	 */
-	public List<CommentGroup> getCommentGroups(Object input);
+	public List<ICommentGroup> getCommentGroups(Object input);
 
 	/**
 	 * returns the list of comment columns
@@ -37,7 +37,7 @@ public interface CommentProvider {
 	 * @return an ordered list of comment columns containing the actual
 	 *         comments. Comments must always reside in a group and a column.
 	 */
-	public List<CommentColumn> getCommentColumns(Object input);
+	public List<ICommentColumn> getCommentColumns(Object input);
 
 	/**
 	 * returns the comments for a given group.
@@ -48,6 +48,6 @@ public interface CommentProvider {
 	 *            the column to retrieve the comments for.
 	 * @return the comments of the group in the given column
 	 */
-	public List<Comment> getComments(CommentGroup group, CommentColumn column);
+	public List<IComment> getComments(ICommentGroup group, ICommentColumn column);
 
 }

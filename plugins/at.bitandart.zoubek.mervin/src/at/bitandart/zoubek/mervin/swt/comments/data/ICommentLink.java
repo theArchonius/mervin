@@ -11,40 +11,28 @@
 package at.bitandart.zoubek.mervin.swt.comments.data;
 
 /**
- * A simple {@link ICommentColumn} implementation which stores the values in
- * fields and that provides additional assignment based setters without any
- * further logic.
+ * Describes a link (substring) within a text starting at a specific index and
+ * with a given length.
  * 
  * @author Florian Zoubek
  *
  */
-public class CommentColumn implements ICommentColumn {
-
-	private String title;
+public interface ICommentLink {
 
 	/**
-	 * @see ICommentColumn#getTitle()
+	 * @return the index of the first character index within the containing
+	 *         text.
 	 */
-	public CommentColumn(String title) {
-		this.title = title;
-	}
+	public int getStartIndex();
 
 	/**
-	 * @see ICommentColumn#getTitle()
+	 * @return the length of the substring that represents this link.
 	 */
-	public void setTitle(String title) {
-		this.title = title;
-	}
+	public int getLength();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * at.bitandart.zoubek.mervin.swt.comments.data.ICommentColumn#getTitle()
+	/**
+	 * @return the target of this link.
 	 */
-	@Override
-	public String getTitle() {
-		return title;
-	}
+	public ICommentLinkTarget getCommentLinkTarget();
 
 }

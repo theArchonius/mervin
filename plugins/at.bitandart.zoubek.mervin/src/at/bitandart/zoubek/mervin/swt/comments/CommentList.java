@@ -34,11 +34,11 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
-import at.bitandart.zoubek.mervin.swt.comments.data.Comment;
-import at.bitandart.zoubek.mervin.swt.comments.data.CommentColumn;
-import at.bitandart.zoubek.mervin.swt.comments.data.CommentGroup;
-import at.bitandart.zoubek.mervin.swt.comments.data.CommentLink;
-import at.bitandart.zoubek.mervin.swt.comments.data.Comment.Alignment;
+import at.bitandart.zoubek.mervin.swt.comments.data.IComment;
+import at.bitandart.zoubek.mervin.swt.comments.data.ICommentColumn;
+import at.bitandart.zoubek.mervin.swt.comments.data.ICommentGroup;
+import at.bitandart.zoubek.mervin.swt.comments.data.ICommentLink;
+import at.bitandart.zoubek.mervin.swt.comments.data.IComment.Alignment;
 
 /**
  * A SWT Control that shows a list of grouped comments in columns.
@@ -49,8 +49,8 @@ import at.bitandart.zoubek.mervin.swt.comments.data.Comment.Alignment;
 public class CommentList extends Composite {
 
 	// Data
-	private List<CommentColumn> baseColumns = new ArrayList<CommentColumn>(2);
-	private LinkedHashMap<CommentGroup, InternalCommentGroup> groups = new LinkedHashMap<CommentGroup, CommentList.InternalCommentGroup>();
+	private List<ICommentColumn> baseColumns = new ArrayList<ICommentColumn>(2);
+	private LinkedHashMap<ICommentGroup, InternalCommentGroup> groups = new LinkedHashMap<ICommentGroup, CommentList.InternalCommentGroup>();
 
 	// Utilities
 	private FormToolkit toolkit;
@@ -58,7 +58,7 @@ public class CommentList extends Composite {
 
 	// SWT controls
 	private Composite columnHeaderComposite;
-	private Map<CommentColumn, Section> columnHeaders = new HashMap<>();
+	private Map<ICommentColumn, Section> columnHeaders = new HashMap<>();
 
 	// Listeners
 	private List<CommentLinkListener> commentLinkListeners = new ArrayList<CommentList.CommentLinkListener>();
@@ -88,7 +88,7 @@ public class CommentList extends Composite {
 	 * 
 	 * @param commentColumn
 	 */
-	public void addCommentColumn(CommentColumn commentColumn) {
+	public void addCommentColumn(ICommentColumn commentColumn) {
 
 		if (!baseColumns.contains(commentColumn)) {
 			baseColumns.add(commentColumn);
@@ -159,7 +159,7 @@ public class CommentList extends Composite {
 	 * 
 	 * @param commentColumn
 	 */
-	public void removeCommentColumn(CommentColumn commentColumn) {
+	public void removeCommentColumn(ICommentColumn commentColumn) {
 
 		if (!baseColumns.contains(commentColumn)) {
 			baseColumns.remove(commentColumn);
@@ -225,7 +225,7 @@ public class CommentList extends Composite {
 	 * 
 	 * @param commentGroup
 	 */
-	public void addCommentGroup(CommentGroup commentGroup) {
+	public void addCommentGroup(ICommentGroup commentGroup) {
 
 		if (!groups.containsKey(commentGroup)) {
 
@@ -249,7 +249,7 @@ public class CommentList extends Composite {
 
 			// create internal columns for the group
 
-			for (CommentColumn column : baseColumns) {
+			for (ICommentColumn column : baseColumns) {
 
 				InternalCommentColumn internalCommentColumn = new InternalCommentColumn(column);
 				createColumnControls(sectionClient, internalCommentColumn);
@@ -292,7 +292,7 @@ public class CommentList extends Composite {
 	 * @param commentGroup
 	 *            the comment group to remove
 	 */
-	public void removeGroup(CommentGroup commentGroup) {
+	public void removeGroup(ICommentGroup commentGroup) {
 
 		InternalCommentGroup internalCommentGroup = groups.get(commentGroup);
 		if (internalCommentGroup != null) {
@@ -306,7 +306,7 @@ public class CommentList extends Composite {
 	 * @return an unmodifiable set containing all comment groups shown in this
 	 *         widget.
 	 */
-	public Set<CommentGroup> getCommentGroups() {
+	public Set<ICommentGroup> getCommentGroups() {
 
 		return Collections.unmodifiableSet(groups.keySet());
 
@@ -324,7 +324,7 @@ public class CommentList extends Composite {
 	 * @param comment
 	 *            the comment to add.
 	 */
-	public void addComment(CommentGroup commentGroup, CommentColumn column, Comment comment) {
+	public void addComment(ICommentGroup commentGroup, ICommentColumn column, IComment comment) {
 
 		// find the corresponding internal group
 		InternalCommentGroup internalCommentGroup = groups.get(commentGroup);
@@ -400,7 +400,7 @@ public class CommentList extends Composite {
 
 					commentBodyText.addListener(SWT.MouseMove, new Listener() {
 
-						private CommentLink currentCommentLink;
+						private ICommentLink currentCommentLink;
 
 						@Override
 						public void handleEvent(Event event) {
@@ -408,7 +408,7 @@ public class CommentList extends Composite {
 								int offset = commentBodyText.getOffsetAtLocation(new Point(event.x, event.y));
 								StyleRange style = commentBodyText.getStyleRangeAtOffset(offset);
 								if (style != null && style instanceof LinkStyleRange) {
-									CommentLink commentLink = ((LinkStyleRange) style).getCommentLink();
+									ICommentLink commentLink = ((LinkStyleRange) style).getCommentLink();
 									if (currentCommentLink != commentLink) {
 										if (currentCommentLink != null) {
 											handleCommentLinkExit(currentCommentLink);
@@ -430,7 +430,7 @@ public class CommentList extends Composite {
 					});
 
 					// add links
-					for (CommentLink link : internalComment.getCommentLinks()) {
+					for (ICommentLink link : internalComment.getCommentLinks()) {
 						commentBodyText.setStyleRange(new LinkStyleRange(link));
 					}
 
@@ -449,7 +449,7 @@ public class CommentList extends Composite {
 	 * @param commentLink
 	 *            the comment link that has been clicked
 	 */
-	private void handleCommentLinkClicked(CommentLink commentLink) {
+	private void handleCommentLinkClicked(ICommentLink commentLink) {
 		for (CommentLinkListener listener : commentLinkListeners) {
 			listener.commentLinkClicked(commentLink);
 		}
@@ -462,7 +462,7 @@ public class CommentList extends Composite {
 	 * @param commentLink
 	 *            the comment link that has been clicked
 	 */
-	private void handleCommentLinkEnter(CommentLink commentLink) {
+	private void handleCommentLinkEnter(ICommentLink commentLink) {
 		for (CommentLinkListener listener : commentLinkListeners) {
 			listener.commentLinkEnter(commentLink);
 		}
@@ -475,7 +475,7 @@ public class CommentList extends Composite {
 	 * @param commentLink
 	 *            the comment link that has been clicked
 	 */
-	private void handleCommentLinkExit(CommentLink commentLink) {
+	private void handleCommentLinkExit(ICommentLink commentLink) {
 		for (CommentLinkListener listener : commentLinkListeners) {
 			listener.commentLinkExit(commentLink);
 		}
@@ -512,21 +512,21 @@ public class CommentList extends Composite {
 		 * 
 		 * @param commentLink
 		 */
-		public void commentLinkClicked(CommentLink commentLink);
+		public void commentLinkClicked(ICommentLink commentLink);
 
 		/**
 		 * called when the mouse enters the comment links bounds.
 		 * 
 		 * @param commentLink
 		 */
-		public void commentLinkEnter(CommentLink commentLink);
+		public void commentLinkEnter(ICommentLink commentLink);
 
 		/**
 		 * called when the mouse leaves the comment links bounds.
 		 * 
 		 * @param commentLink
 		 */
-		public void commentLinkExit(CommentLink commentLink);
+		public void commentLinkExit(ICommentLink commentLink);
 	}
 
 	/**
@@ -541,7 +541,7 @@ public class CommentList extends Composite {
 	 * @param comment
 	 *            the comment to remove.
 	 */
-	public void removeComment(CommentGroup commentGroup, CommentColumn column, Comment comment) {
+	public void removeComment(ICommentGroup commentGroup, ICommentColumn column, IComment comment) {
 
 		InternalCommentGroup internalCommentGroup = groups.get(commentGroup);
 		if (internalCommentGroup != null) {
@@ -564,19 +564,19 @@ public class CommentList extends Composite {
 	 */
 	public void clearData() {
 
-		for (CommentGroup commentGroup : groups.keySet()) {
+		for (ICommentGroup commentGroup : groups.keySet()) {
 			removeGroup(commentGroup);
 		}
 
-		for (CommentColumn commentColumn : baseColumns) {
+		for (ICommentColumn commentColumn : baseColumns) {
 			removeCommentColumn(commentColumn);
 		}
 
 	}
 
-	private class InternalCommentGroup implements CommentGroup {
+	private class InternalCommentGroup implements ICommentGroup {
 
-		private CommentGroup realCommentGroup;
+		private ICommentGroup realCommentGroup;
 
 		private Composite composite;
 
@@ -591,7 +591,7 @@ public class CommentList extends Composite {
 		/**
 		 * @param realCommentGroup
 		 */
-		public InternalCommentGroup(CommentGroup realCommentGroup) {
+		public InternalCommentGroup(ICommentGroup realCommentGroup) {
 			super();
 			this.realCommentGroup = realCommentGroup;
 		}
@@ -617,7 +617,7 @@ public class CommentList extends Composite {
 			this.section = section;
 		}
 
-		public CommentGroup getRealCommentGroup() {
+		public ICommentGroup getRealCommentGroup() {
 			return realCommentGroup;
 		}
 
@@ -629,11 +629,11 @@ public class CommentList extends Composite {
 			columns.remove(internalCommentColumn);
 		}
 
-		public boolean isInternalCommentGroupFor(CommentGroup commentGroup) {
+		public boolean isInternalCommentGroupFor(ICommentGroup commentGroup) {
 			return commentGroup == realCommentGroup;
 		}
 
-		public InternalCommentColumn getInternalColumnFor(CommentColumn commentColumn) {
+		public InternalCommentColumn getInternalColumnFor(ICommentColumn commentColumn) {
 
 			for (InternalCommentColumn column : columns) {
 				if (column.isInternalCommentColumnFor(commentColumn)) {
@@ -645,15 +645,15 @@ public class CommentList extends Composite {
 		}
 	}
 
-	private class InternalCommentColumn implements CommentColumn {
+	private class InternalCommentColumn implements ICommentColumn {
 
-		private CommentColumn realCommentColumn;
+		private ICommentColumn realCommentColumn;
 
 		private Composite composite;
 
-		private LinkedHashMap<Comment, InternalComment> comments = new LinkedHashMap<Comment, InternalComment>();
+		private LinkedHashMap<IComment, InternalComment> comments = new LinkedHashMap<IComment, InternalComment>();
 
-		public InternalCommentColumn(CommentColumn realCommentColumn) {
+		public InternalCommentColumn(ICommentColumn realCommentColumn) {
 			this.realCommentColumn = realCommentColumn;
 		}
 
@@ -670,15 +670,15 @@ public class CommentList extends Composite {
 			this.composite = groupComposite;
 		}
 
-		public CommentColumn getRealCommentColumn() {
+		public ICommentColumn getRealCommentColumn() {
 			return realCommentColumn;
 		}
 
-		public boolean isInternalCommentColumnFor(CommentColumn commentColumn) {
+		public boolean isInternalCommentColumnFor(ICommentColumn commentColumn) {
 			return commentColumn == realCommentColumn;
 		}
 
-		public InternalComment getInternalCommentFor(Comment comment) {
+		public InternalComment getInternalCommentFor(IComment comment) {
 			return comments.get(comment);
 		}
 
@@ -691,13 +691,13 @@ public class CommentList extends Composite {
 		}
 	}
 
-	private class InternalComment implements Comment {
+	private class InternalComment implements IComment {
 
-		private Comment realComment;
+		private IComment realComment;
 
 		private Composite composite;
 
-		public InternalComment(Comment realComment) {
+		public InternalComment(IComment realComment) {
 			this.realComment = realComment;
 		}
 
@@ -722,7 +722,7 @@ public class CommentList extends Composite {
 		}
 
 		@Override
-		public List<CommentLink> getCommentLinks() {
+		public List<ICommentLink> getCommentLinks() {
 			return realComment.getCommentLinks();
 		}
 
@@ -734,11 +734,11 @@ public class CommentList extends Composite {
 			this.composite = groupComposite;
 		}
 
-		public Comment getRealComment() {
+		public IComment getRealComment() {
 			return realComment;
 		}
 
-		public boolean isInternalCommentFor(Comment comment) {
+		public boolean isInternalCommentFor(IComment comment) {
 			return comment == realComment;
 		}
 	}

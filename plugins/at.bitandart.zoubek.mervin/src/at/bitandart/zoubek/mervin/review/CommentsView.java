@@ -28,13 +28,13 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.swt.comments.CommentList;
 import at.bitandart.zoubek.mervin.swt.comments.CommentList.CommentLinkListener;
-import at.bitandart.zoubek.mervin.swt.comments.data.Comment;
-import at.bitandart.zoubek.mervin.swt.comments.data.CommentColumn;
-import at.bitandart.zoubek.mervin.swt.comments.data.CommentGroup;
-import at.bitandart.zoubek.mervin.swt.comments.data.CommentLink;
-import at.bitandart.zoubek.mervin.swt.comments.data.CommentLinkTarget;
-import at.bitandart.zoubek.mervin.swt.comments.data.CommentProvider;
-import at.bitandart.zoubek.mervin.swt.comments.data.Comment.Alignment;
+import at.bitandart.zoubek.mervin.swt.comments.data.IComment;
+import at.bitandart.zoubek.mervin.swt.comments.data.ICommentColumn;
+import at.bitandart.zoubek.mervin.swt.comments.data.ICommentGroup;
+import at.bitandart.zoubek.mervin.swt.comments.data.ICommentLink;
+import at.bitandart.zoubek.mervin.swt.comments.data.ICommentLinkTarget;
+import at.bitandart.zoubek.mervin.swt.comments.data.ICommentProvider;
+import at.bitandart.zoubek.mervin.swt.comments.data.IComment.Alignment;
 import at.bitandart.zoubek.mervin.swt.comments.CommentListViewer;
 
 public class CommentsView extends ModelReviewEditorTrackingView {
@@ -71,19 +71,19 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 		control.addCommentLinkListener(new CommentLinkListener() {
 
 			@Override
-			public void commentLinkClicked(CommentLink commentLink) {
+			public void commentLinkClicked(ICommentLink commentLink) {
 				// TODO replace with correct click behaviour
 				System.out.println("comment link click handler not yet implemented");
 			}
 
 			@Override
-			public void commentLinkEnter(CommentLink commentLink) {
+			public void commentLinkEnter(ICommentLink commentLink) {
 				// TODO replace with correct click behaviour
 				System.out.println("comment link enter handler not yet implemented");
 			}
 
 			@Override
-			public void commentLinkExit(CommentLink commentLink) {
+			public void commentLinkExit(ICommentLink commentLink) {
 				// TODO replace with correct click behaviour
 				System.out.println("comment link exit handler not yet implemented");
 			}
@@ -105,21 +105,21 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 		commentListViewer.refresh();
 	}
 
-	private class MervinCommentProvider implements CommentProvider {
+	private class MervinCommentProvider implements ICommentProvider {
 
 		@Override
-		public List<CommentColumn> getCommentColumns(Object input) {
+		public List<ICommentColumn> getCommentColumns(Object input) {
 
-			List<CommentColumn> commentColumn = new LinkedList<CommentColumn>();
+			List<ICommentColumn> commentColumn = new LinkedList<ICommentColumn>();
 			commentColumn.add(new MervinCommentColumn("PatchSet 1"));
 			commentColumn.add(new MervinCommentColumn("PatchSet 2"));
 			return commentColumn;
 		}
 
 		@Override
-		public List<CommentGroup> getCommentGroups(Object input) {
+		public List<ICommentGroup> getCommentGroups(Object input) {
 
-			List<CommentGroup> commentGroups = new LinkedList<CommentGroup>();
+			List<ICommentGroup> commentGroups = new LinkedList<ICommentGroup>();
 			// TODO read from model and remove test values below
 			commentGroups.add(new MervinCommentGroup("Review comments"));
 			commentGroups.add(new MervinCommentGroup("Group 1"));
@@ -130,14 +130,14 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 		}
 
 		@Override
-		public List<Comment> getComments(CommentGroup group, CommentColumn commentColumn) {
+		public List<IComment> getComments(ICommentGroup group, ICommentColumn commentColumn) {
 
-			List<Comment> comments = new LinkedList<Comment>();
+			List<IComment> comments = new LinkedList<IComment>();
 			// TODO read from model and remove test values below
 
 			String prefix = group.getGroupTitle() + " - " + commentColumn.getTitle() + " -\n";
 
-			List<CommentLink> links = new LinkedList<CommentLink>();
+			List<ICommentLink> links = new LinkedList<ICommentLink>();
 			links.add(new MervinCommentLink(prefix.length(), 5));// Lorem
 			links.add(new MervinCommentLink(prefix.length() + 22, 4));// amet
 
@@ -160,7 +160,7 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 
 	}
 
-	private class MervinCommentGroup implements CommentGroup {
+	private class MervinCommentGroup implements ICommentGroup {
 
 		private String name;
 
@@ -175,7 +175,7 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 
 	}
 
-	private class MervinComment implements Comment {
+	private class MervinComment implements IComment {
 
 		// TODO replace with reference to comment of the mervin model
 
@@ -183,7 +183,7 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 		private Calendar creationTime;
 		private String body;
 		private Alignment alignment;
-		private List<CommentLink> commentLinks;
+		private List<ICommentLink> commentLinks;
 
 		/**
 		 * @param author
@@ -192,7 +192,7 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 		 * @param alignment
 		 */
 		public MervinComment(String author, Calendar creationTime, String body, Alignment alignment,
-				List<CommentLink> commentLinks) {
+				List<ICommentLink> commentLinks) {
 			super();
 			this.author = author;
 			this.creationTime = creationTime;
@@ -226,13 +226,13 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 		}
 
 		@Override
-		public List<CommentLink> getCommentLinks() {
+		public List<ICommentLink> getCommentLinks() {
 			return commentLinks;
 		}
 
 	}
 
-	private class MervinCommentColumn implements CommentColumn {
+	private class MervinCommentColumn implements ICommentColumn {
 
 		private String title;
 
@@ -248,7 +248,7 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 
 	}
 
-	private class MervinCommentLink implements CommentLink {
+	private class MervinCommentLink implements ICommentLink {
 
 		private int startIndex;
 
@@ -271,7 +271,7 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 		}
 
 		@Override
-		public CommentLinkTarget getCommentLinkTarget() {
+		public ICommentLinkTarget getCommentLinkTarget() {
 			// TODO Auto-generated method stub
 			return null;
 		}

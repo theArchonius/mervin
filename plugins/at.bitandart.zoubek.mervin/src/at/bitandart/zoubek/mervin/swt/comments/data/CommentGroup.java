@@ -10,19 +10,43 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.swt.comments.data;
 
-import at.bitandart.zoubek.mervin.swt.comments.CommentListViewer;
-
 /**
- * Represents a comment group that is shown in a {@link CommentListViewer}.
+ * A simple {@link ICommentGroup} implementation which stores the values in
+ * fields and that provides additional assignment based setters without any
+ * further logic.
  * 
  * @author Florian Zoubek
  *
  */
-public interface CommentGroup {
+public class CommentGroup implements ICommentGroup {
+
+	private String title;
 
 	/**
-	 * @return the name of the group.
+	 * 
+	 * @see ICommentGroup#getGroupTitle()
 	 */
-	public String getGroupTitle();
+	public CommentGroup(String title) {
+		this.title = title;
+	}
+
+	/**
+	 * @see ICommentGroup#getGroupTitle()
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * at.bitandart.zoubek.mervin.swt.comments.data.ICommentGroup#getGroupTitle(
+	 * )
+	 */
+	@Override
+	public String getGroupTitle() {
+		return title;
+	}
 
 }

@@ -30,8 +30,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
-import at.bitandart.zoubek.mervin.swt.comments.data.CommentLink;
-import at.bitandart.zoubek.mervin.swt.comments.data.CommentLinkTarget;
+import at.bitandart.zoubek.mervin.swt.comments.data.ICommentLink;
+import at.bitandart.zoubek.mervin.swt.comments.data.ICommentLinkTarget;
 
 /**
  * A control that allows editing a comment. A comment contains text where parts
@@ -42,7 +42,7 @@ import at.bitandart.zoubek.mervin.swt.comments.data.CommentLinkTarget;
  * {@link ExpandableComposite}.
  * 
  * To allow creation of links for a specified range, a link target must be
- * specified using {@link #setCurrentLinkTarget(CommentLinkTarget)}. If the
+ * specified using {@link #setCurrentLinkTarget(ICommentLinkTarget)}. If the
  * length of the selection range is smaller than 1, the default text of the link
  * target will inserted as link text.
  * 
@@ -54,7 +54,7 @@ public class CommentEditor extends Composite {
 	/**
 	 * the current link target that should be applied if a new link is created.
 	 */
-	private CommentLinkTarget currentLinkTarget;
+	private ICommentLinkTarget currentLinkTarget;
 
 	// Listeners
 
@@ -244,7 +244,7 @@ public class CommentEditor extends Composite {
 	 * 
 	 * @param currentLinkTarget
 	 */
-	public void setCurrentLinkTarget(CommentLinkTarget currentLinkTarget) {
+	public void setCurrentLinkTarget(ICommentLinkTarget currentLinkTarget) {
 
 		this.currentLinkTarget = currentLinkTarget;
 		refreshAddLinkButton();
@@ -253,7 +253,7 @@ public class CommentEditor extends Composite {
 
 	/**
 	 * sets the raw text of the currently edited comment and removes all current
-	 * {@link CommentLink}s from this control.
+	 * {@link ICommentLink}s from this control.
 	 * 
 	 * @param text
 	 *            the raw text to set.
@@ -278,21 +278,21 @@ public class CommentEditor extends Composite {
 	 * @param commentLink
 	 *            the comment link to add.
 	 */
-	public void addCommentLink(CommentLink commentLink) {
+	public void addCommentLink(ICommentLink commentLink) {
 		commentInput.setStyleRange(new LinkStyleRange(commentLink));
 	}
 
 	/**
 	 * @return a list of the current comment links stored in this control.
 	 */
-	public List<CommentLink> getCommentLinks() {
+	public List<ICommentLink> getCommentLinks() {
 
 		StyleRange[] styleRanges = commentInput.getStyleRanges();
-		List<CommentLink> commentLinks = new ArrayList<CommentLink>(styleRanges.length);
+		List<ICommentLink> commentLinks = new ArrayList<ICommentLink>(styleRanges.length);
 
 		for (StyleRange styleRange : styleRanges) {
 			if (styleRange instanceof LinkStyleRange) {
-				CommentLink commentLink = ((LinkStyleRange) styleRange).getCommentLink();
+				ICommentLink commentLink = ((LinkStyleRange) styleRange).getCommentLink();
 				commentLinks.add(commentLink);
 			}
 		}
@@ -341,19 +341,19 @@ public class CommentEditor extends Composite {
 	}
 
 	/**
-	 * A simple {@link CommentLink} implementation used to create new
+	 * A simple {@link ICommentLink} implementation used to create new
 	 * CommentLinks in this editor.
 	 * 
 	 * @author Florian Zoubek
 	 *
 	 */
-	private class InternalCommentLink implements CommentLink {
+	private class InternalCommentLink implements ICommentLink {
 
 		private int startIndex;
 		private int length;
-		private CommentLinkTarget commentLinkTarget;
+		private ICommentLinkTarget commentLinkTarget;
 
-		public InternalCommentLink(int startIndex, int length, CommentLinkTarget commentLinkTarget) {
+		public InternalCommentLink(int startIndex, int length, ICommentLinkTarget commentLinkTarget) {
 			this.startIndex = startIndex;
 			this.length = length;
 			this.commentLinkTarget = commentLinkTarget;
@@ -370,7 +370,7 @@ public class CommentEditor extends Composite {
 		}
 
 		@Override
-		public CommentLinkTarget getCommentLinkTarget() {
+		public ICommentLinkTarget getCommentLinkTarget() {
 			return commentLinkTarget;
 		}
 

@@ -13,19 +13,19 @@ package at.bitandart.zoubek.mervin.swt.comments;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 
-import at.bitandart.zoubek.mervin.swt.comments.data.CommentLink;
+import at.bitandart.zoubek.mervin.swt.comments.data.ICommentLink;
 
 /**
- * A {@link StyleRange} based on a {@link CommentLink}.
+ * A {@link StyleRange} based on a {@link ICommentLink}.
  * 
  * @author Florian Zoubek
  *
  */
 class LinkStyleRange extends StyleRange {
 
-	private CommentLink commentLink;
+	private ICommentLink commentLink;
 
-	public LinkStyleRange(CommentLink commentLink) {
+	public LinkStyleRange(ICommentLink commentLink) {
 		this.commentLink = commentLink;
 		this.underline = true;
 		this.fontStyle = SWT.BOLD;
@@ -33,7 +33,7 @@ class LinkStyleRange extends StyleRange {
 		this.length = commentLink.getLength();
 	}
 
-	public CommentLink getCommentLink() {
+	public ICommentLink getCommentLink() {
 		return commentLink;
 	}
 }

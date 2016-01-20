@@ -20,10 +20,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
-import at.bitandart.zoubek.mervin.swt.comments.data.Comment;
-import at.bitandart.zoubek.mervin.swt.comments.data.CommentColumn;
-import at.bitandart.zoubek.mervin.swt.comments.data.CommentGroup;
-import at.bitandart.zoubek.mervin.swt.comments.data.CommentProvider;
+import at.bitandart.zoubek.mervin.swt.comments.data.IComment;
+import at.bitandart.zoubek.mervin.swt.comments.data.ICommentColumn;
+import at.bitandart.zoubek.mervin.swt.comments.data.ICommentGroup;
+import at.bitandart.zoubek.mervin.swt.comments.data.ICommentProvider;
 
 /**
  * A {@link Viewer} that manages the content of a {@link CommentList} widget.
@@ -34,7 +34,7 @@ import at.bitandart.zoubek.mervin.swt.comments.data.CommentProvider;
 public class CommentListViewer extends Viewer {
 
 	private CommentList commentListControl;
-	private CommentProvider commentProvider;
+	private ICommentProvider commentProvider;
 
 	private Object input;
 
@@ -65,19 +65,19 @@ public class CommentListViewer extends Viewer {
 
 			commentListControl.clearData();
 
-			List<CommentColumn> commentColumns = commentProvider.getCommentColumns(input);
+			List<ICommentColumn> commentColumns = commentProvider.getCommentColumns(input);
 
-			for (CommentColumn commentColumn : commentColumns) {
+			for (ICommentColumn commentColumn : commentColumns) {
 				commentListControl.addCommentColumn(commentColumn);
 			}
 
-			List<CommentGroup> commentGroups = commentProvider.getCommentGroups(input);
-			for (CommentGroup commentGroup : commentGroups) {
+			List<ICommentGroup> commentGroups = commentProvider.getCommentGroups(input);
+			for (ICommentGroup commentGroup : commentGroups) {
 
 				commentListControl.addCommentGroup(commentGroup);
-				for (CommentColumn commentColumn : commentColumns) {
-					List<Comment> comments = commentProvider.getComments(commentGroup, commentColumn);
-					for (Comment comment : comments) {
+				for (ICommentColumn commentColumn : commentColumns) {
+					List<IComment> comments = commentProvider.getComments(commentGroup, commentColumn);
+					for (IComment comment : comments) {
 						commentListControl.addComment(commentGroup, commentColumn, comment);
 					}
 				}
@@ -109,7 +109,7 @@ public class CommentListViewer extends Viewer {
 	 * @param commentProvider
 	 *            the provider to use.
 	 */
-	public void setCommentProvider(CommentProvider commentProvider) {
+	public void setCommentProvider(ICommentProvider commentProvider) {
 		this.commentProvider = commentProvider;
 	}
 

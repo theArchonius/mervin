@@ -11,28 +11,83 @@
 package at.bitandart.zoubek.mervin.swt.comments.data;
 
 /**
- * Describes a link (substring) within a text starting at a specific index and
- * with a given length.
+ * A simple {@link ICommentLink} implementation which stores the values in
+ * fields and that provides additional assignment based setters without any
+ * further logic.
  * 
  * @author Florian Zoubek
  *
  */
-public interface CommentLink {
+public class CommentLink implements ICommentLink {
+
+	private int startIndex;
+	private int length;
+	private ICommentLinkTarget commentLinkTarget;
 
 	/**
-	 * @return the index of the first character index within the containing
-	 *         text.
+	 * @see ICommentLink#getStartIndex()
+	 * @see ICommentLink#getLength()
+	 * @see ICommentLink#getCommentLinkTarget()
 	 */
-	public int getStartIndex();
+	public CommentLink(int startIndex, int length, ICommentLinkTarget commentLinkTarget) {
+		super();
+		this.startIndex = startIndex;
+		this.length = length;
+		this.commentLinkTarget = commentLinkTarget;
+	}
 
 	/**
-	 * @return the length of the substring that represents this link.
+	 * @see ICommentLink#getStartIndex()
 	 */
-	public int getLength();
+	public void setStartIndex(int startIndex) {
+		this.startIndex = startIndex;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * at.bitandart.zoubek.mervin.swt.comments.data.ICommentLink#getStartIndex()
+	 */
+	@Override
+	public int getStartIndex() {
+		return startIndex;
+	}
 
 	/**
-	 * @return the target of this link.
+	 * @see ICommentLink#getLength()
 	 */
-	public CommentLinkTarget getCommentLinkTarget();
+	public void setLength(int length) {
+		this.length = length;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * at.bitandart.zoubek.mervin.swt.comments.data.ICommentLink#getLength()
+	 */
+	@Override
+	public int getLength() {
+		return length;
+	}
+
+	/**
+	 * @see ICommentLink#getCommentLinkTarget()
+	 */
+	public void setCommentLinkTarget(ICommentLinkTarget commentLinkTarget) {
+		this.commentLinkTarget = commentLinkTarget;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see at.bitandart.zoubek.mervin.swt.comments.data.ICommentLink#
+	 * getCommentLinkTarget()
+	 */
+	@Override
+	public ICommentLinkTarget getCommentLinkTarget() {
+		return commentLinkTarget;
+	}
 
 }

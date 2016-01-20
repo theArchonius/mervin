@@ -11,15 +11,41 @@
 package at.bitandart.zoubek.mervin.swt.comments.data;
 
 /**
- * Represents the target of a {@link CommentLink}.
+ * A simple {@link ICommentLinkTarget} implementation which stores the values in
+ * fields and that provides additional assignment based setters without any
+ * further logic.
  * 
  * @author Florian Zoubek
  *
  */
-public interface CommentLinkTarget {
+public class CommentLinkTarget implements ICommentLinkTarget {
+
+	private String defaultText;
 
 	/**
-	 * @return the default link text for this target
+	 * @see ICommentLinkTarget#getDefaultText()
 	 */
-	public String getDefaultText();
+	public CommentLinkTarget(String defaultText) {
+		super();
+		this.defaultText = defaultText;
+	}
+
+	/**
+	 * @see ICommentLinkTarget#getDefaultText()
+	 */
+	public void setDefaultText(String defaultText) {
+		this.defaultText = defaultText;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see at.bitandart.zoubek.mervin.swt.comments.data.ICommentLinkTarget#
+	 * getDefaultText()
+	 */
+	@Override
+	public String getDefaultText() {
+		return defaultText;
+	}
+
 }

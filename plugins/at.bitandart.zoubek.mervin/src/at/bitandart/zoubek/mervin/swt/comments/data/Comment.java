@@ -13,43 +13,123 @@ package at.bitandart.zoubek.mervin.swt.comments.data;
 import java.util.Calendar;
 import java.util.List;
 
-import at.bitandart.zoubek.mervin.swt.comments.CommentListViewer;
-
 /**
- * Represents a comment that is shown in a {@link CommentListViewer}.
+ * A simple {@link IComment} implementation which stores the values in fields
+ * and that provides additional assignment based setters without any further
+ * logic.
  * 
  * @author Florian Zoubek
  *
  */
-public interface Comment {
+public class Comment implements IComment {
 
-	public enum Alignment {
-		LEFT, RIGHT
+	private String author;
+	private Calendar creationTime;
+	private String body;
+	private Alignment alignment;
+	private List<ICommentLink> commentLinks;
+
+	/**
+	 * @see IComment#getAuthor()
+	 * @see IComment#getCreationTime()
+	 * @see IComment#getBody()
+	 * @see IComment#getAlignment()
+	 * @see IComment#getCommentLinks()
+	 */
+	public Comment(String author, Calendar creationTime, String body, Alignment alignment,
+			List<ICommentLink> commentLinks) {
+		this.author = author;
+		this.creationTime = creationTime;
+		this.body = body;
+		this.alignment = alignment;
+		this.commentLinks = commentLinks;
 	}
 
 	/**
-	 * @return the name of the author.
+	 * @see IComment#getAuthor()
 	 */
-	public String getAuthor();
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see at.bitandart.zoubek.mervin.swt.comments.data.IComment#getAuthor()
+	 */
+	@Override
+	public String getAuthor() {
+		return author;
+	}
 
 	/**
-	 * @return the creation time
+	 * @see IComment#getCreationTime()
 	 */
-	public Calendar getCreationTime();
+	public void setCreationTime(Calendar creationTime) {
+		this.creationTime = creationTime;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * at.bitandart.zoubek.mervin.swt.comments.data.IComment#getCreationTime()
+	 */
+	@Override
+	public Calendar getCreationTime() {
+		return creationTime;
+	}
 
 	/**
-	 * @return the comment text.
+	 * @see IComment#getBody()
 	 */
-	public String getBody();
+	public void setBody(String body) {
+		this.body = body;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see at.bitandart.zoubek.mervin.swt.comments.data.IComment#getBody()
+	 */
+	@Override
+	public String getBody() {
+		return body;
+	}
 
 	/**
-	 * @return the alignment of the comment.
+	 * @see IComment#getAlignment()
 	 */
-	public Alignment getAlignment();
+	public void setAlignment(Alignment alignment) {
+		this.alignment = alignment;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see at.bitandart.zoubek.mervin.swt.comments.data.IComment#getAlignment()
+	 */
+	@Override
+	public Alignment getAlignment() {
+		return alignment;
+	}
 
 	/**
-	 * @return a list of comment links describing links in the comment body.
+	 * @see IComment#getCommentLinks()
 	 */
-	public List<CommentLink> getCommentLinks();
+	public void setCommentLinks(List<ICommentLink> commentLinks) {
+		this.commentLinks = commentLinks;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * at.bitandart.zoubek.mervin.swt.comments.data.IComment#getCommentLinks()
+	 */
+	@Override
+	public List<ICommentLink> getCommentLinks() {
+		return commentLinks;
+	}
 
 }

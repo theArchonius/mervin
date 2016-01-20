@@ -30,8 +30,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import at.bitandart.zoubek.mervin.swt.comments.CommentEditor;
 import at.bitandart.zoubek.mervin.swt.comments.CommentEditor.CommentEditorListener;
-import at.bitandart.zoubek.mervin.swt.comments.data.CommentLink;
-import at.bitandart.zoubek.mervin.swt.comments.data.CommentLinkTarget;
+import at.bitandart.zoubek.mervin.swt.comments.data.ICommentLink;
+import at.bitandart.zoubek.mervin.swt.comments.data.ICommentLinkTarget;
 
 /**
  * Example that demonstrates the usage of the {@link CommentEditor} control.
@@ -93,9 +93,9 @@ public class CommentEditorExample {
 			public void doSave(CommentEditor commentEditor) {
 
 				// retrieve links
-				java.util.List<CommentLink> commentLinks = commentEditor.getCommentLinks();
+				java.util.List<ICommentLink> commentLinks = commentEditor.getCommentLinks();
 				StringBuilder sb = new StringBuilder();
-				for (CommentLink commentLink : commentLinks) {
+				for (ICommentLink commentLink : commentLinks) {
 					sb.append(commentLink.toString());
 					sb.append("\n");
 				}
@@ -170,12 +170,12 @@ public class CommentEditorExample {
 /**
  * Example implementation of a link target. The current selected link target
  * must be set using the
- * {@link CommentEditor#setCurrentLinkTarget(CommentLinkTarget)}.
+ * {@link CommentEditor#setCurrentLinkTarget(ICommentLinkTarget)}.
  * 
  * @author Florian Zoubek
  *
  */
-class ExampleLinkTarget implements CommentLinkTarget {
+class ExampleLinkTarget implements ICommentLinkTarget {
 
 	private String[] items;
 
@@ -204,18 +204,18 @@ class ExampleLinkTarget implements CommentLinkTarget {
 
 /**
  * Example implementation of a comment target used to demonstrate
- * {@link CommentEditor#addCommentLink(CommentLink)}.
+ * {@link CommentEditor#addCommentLink(ICommentLink)}.
  * 
  * @author Florian Zoubek
  *
  */
-class ExampleCommentLink implements CommentLink {
+class ExampleCommentLink implements ICommentLink {
 
 	private int startIndex;
 	private int length;
-	private CommentLinkTarget commentLinkTarget;
+	private ICommentLinkTarget commentLinkTarget;
 
-	public ExampleCommentLink(int startIndex, int length, CommentLinkTarget commentLinkTarget) {
+	public ExampleCommentLink(int startIndex, int length, ICommentLinkTarget commentLinkTarget) {
 		this.startIndex = startIndex;
 		this.length = length;
 		this.commentLinkTarget = commentLinkTarget;
@@ -232,7 +232,7 @@ class ExampleCommentLink implements CommentLink {
 	}
 
 	@Override
-	public CommentLinkTarget getCommentLinkTarget() {
+	public ICommentLinkTarget getCommentLinkTarget() {
 		return commentLinkTarget;
 	}
 
