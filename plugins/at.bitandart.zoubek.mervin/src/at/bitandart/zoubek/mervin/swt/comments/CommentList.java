@@ -20,25 +20,31 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.forms.widgets.TableWrapData;
-import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 import at.bitandart.zoubek.mervin.swt.comments.data.IComment;
+import at.bitandart.zoubek.mervin.swt.comments.data.IComment.Alignment;
 import at.bitandart.zoubek.mervin.swt.comments.data.ICommentColumn;
 import at.bitandart.zoubek.mervin.swt.comments.data.ICommentGroup;
 import at.bitandart.zoubek.mervin.swt.comments.data.ICommentLink;
-import at.bitandart.zoubek.mervin.swt.comments.data.IComment.Alignment;
 
 /**
  * A SWT Control that shows a list of grouped comments in columns.
@@ -58,28 +64,41 @@ public class CommentList extends Composite {
 
 	// SWT controls
 	private Composite columnHeaderComposite;
-	private Map<ICommentColumn, Section> columnHeaders = new HashMap<>();
+	private Map<ICommentColumn, Control> columnHeaders = new HashMap<>();
 
 	// Listeners
 	private List<CommentLinkListener> commentLinkListeners = new ArrayList<CommentList.CommentLinkListener>();
+
+	private Font titleFont;
+	private Color titleForeground;
+	private Color titleBackground;
 
 	public CommentList(Composite parent, int style, FormToolkit toolkit) {
 		super(parent, style);
 		this.toolkit = toolkit;
 		toolkit.adapt(this);
 
-		setLayout(new TableWrapLayout());
+		setLayout(new GridLayout());
 
 		// create the composite that contains the column headers
 		columnHeaderComposite = toolkit.createComposite(this);
-		columnHeaderComposite.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-		TableWrapLayout headerLayout = new TableWrapLayout();
-		headerLayout.makeColumnsEqualWidth = true;
-		headerLayout.numColumns = baseColumns.size();
-		headerLayout.leftMargin = 0;
-		headerLayout.rightMargin = 0;
-		columnHeaderComposite.setLayout(headerLayout);
+		columnHeaderComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		columnHeaderComposite.setLayout(new GridLayout());
 
+		titleFont = FontDescriptor.createFrom(getFont()).setStyle(SWT.BOLD).increaseHeight(1)
+				.createFont(Display.getDefault());
+
+		addDisposeListener(new DisposeListener() {
+
+			@Override
+			public void widgetDisposed(DisposeEvent e) {
+				titleFont.dispose();
+			}
+		});
+
+		// the title colors are system colors, so do not dispose them later
+		titleForeground = getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND);
+		titleBackground = getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND);
 	}
 
 	/**
@@ -94,24 +113,17 @@ public class CommentList extends Composite {
 			baseColumns.add(commentColumn);
 
 			// create the section for the column header
-			Section columnSection = toolkit.createSection(columnHeaderComposite, Section.TITLE_BAR);
-			columnSection.setText(commentColumn.getTitle());
-			columnSection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-			columnHeaders.put(commentColumn, columnSection);
+			Label mainColumnLabel = toolkit.createLabel(columnHeaderComposite, commentColumn.getTitle(), SWT.CENTER);
+			mainColumnLabel.setBackground(titleBackground);
+			mainColumnLabel.setForeground(titleForeground);
+			mainColumnLabel.setFont(titleFont);
+			mainColumnLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
+			columnHeaders.put(commentColumn, mainColumnLabel);
 			// update the column header layout
-			Layout headerLayout = columnHeaderComposite.getLayout();
-			if (headerLayout instanceof TableWrapLayout) {
-				/*
-				 * replace the table layout as the internal caches do not
-				 * support changing the number of columns during runtime
-				 */
-				TableWrapLayout headerTableLayout = new TableWrapLayout();
-				headerTableLayout.rightMargin = 0;
-				headerTableLayout.leftMargin = 0;
-				headerTableLayout.numColumns = ((TableWrapLayout) headerLayout).numColumns + 1;
-				columnHeaderComposite.setLayout(headerTableLayout);
-			}
+			GridLayout gridLayout = new GridLayout(baseColumns.size(), true);
+			gridLayout.marginWidth = 0;
+			columnHeaderComposite.setLayout(gridLayout);
 			columnHeaderComposite.layout();
 
 			/*
@@ -131,20 +143,8 @@ public class CommentList extends Composite {
 					commentGroup.addColumn(internalCommentColumn);
 
 					// update the layout of the group composite
-					Layout groupLayout = groupComposite.getLayout();
-					if (groupLayout instanceof TableWrapLayout) {
 
-						/*
-						 * replace the table layout as the internal caches do
-						 * not support changing the number of columns during
-						 * runtime
-						 */
-						TableWrapLayout groupTableLayout = new TableWrapLayout();
-						groupTableLayout.rightMargin = 0;
-						groupTableLayout.leftMargin = 0;
-						groupTableLayout.numColumns = ((TableWrapLayout) groupLayout).numColumns + 1;
-						groupComposite.setLayout(groupTableLayout);
-					}
+					groupComposite.setLayout(new GridLayout(baseColumns.size(), true));
 					groupComposite.layout();
 
 				}
@@ -165,17 +165,8 @@ public class CommentList extends Composite {
 			baseColumns.remove(commentColumn);
 
 			// update the column header layout
-			Layout headerLayout = columnHeaderComposite.getLayout();
-			if (headerLayout instanceof TableWrapLayout) {
-				/*
-				 * replace the table layout as the internal caches do not
-				 * support changing the number of columns during runtime
-				 */
-				TableWrapLayout headerTableLayout = new TableWrapLayout();
-				headerTableLayout.rightMargin = 0;
-				headerTableLayout.leftMargin = 0;
-				headerTableLayout.numColumns = ((TableWrapLayout) headerLayout).numColumns - 1;
-				columnHeaderComposite.setLayout(headerTableLayout);
+			if (!baseColumns.isEmpty()) {
+				columnHeaderComposite.setLayout(new GridLayout(baseColumns.size(), true));
 			}
 			columnHeaderComposite.layout();
 			columnHeaders.get(commentColumn).dispose();
@@ -192,23 +183,20 @@ public class CommentList extends Composite {
 
 					// remove the internal column and dispose its composite
 					group.removeColumn(internalCommentColumn);
-					internalCommentColumn.getComposite().dispose();
+					Control[] children = group.getComposite().getChildren();
+					// find the separator and dispose it
+					Composite columnComposite = internalCommentColumn.getComposite();
+					for (int i = 0; i < children.length; i++) {
+						if (children[i] == columnComposite && i > 0) {
+							children[i - 1].dispose();
+						}
+					}
+					// dispose the column composite
+					columnComposite.dispose();
 
 					// update the layout of the group composite
 					Composite groupComposite = group.getComposite();
-					Layout groupLayout = groupComposite.getLayout();
-					if (groupLayout instanceof TableWrapLayout) {
-						/*
-						 * replace the table layout as the internal caches do
-						 * not support changing the number of columns during
-						 * runtime
-						 */
-						TableWrapLayout groupTableLayout = new TableWrapLayout();
-						groupTableLayout.rightMargin = 0;
-						groupTableLayout.leftMargin = 0;
-						groupTableLayout.numColumns = ((TableWrapLayout) groupLayout).numColumns - 1;
-						groupComposite.setLayout(groupTableLayout);
-					}
+					groupComposite.setLayout(new GridLayout(baseColumns.size(), true));
 					groupComposite.layout();
 
 				}
@@ -231,29 +219,30 @@ public class CommentList extends Composite {
 
 			// create internal group and section
 			InternalCommentGroup internalCommentGroup = new InternalCommentGroup(commentGroup);
-			Section groupSection = toolkit.createSection(this, Section.TITLE_BAR | Section.TWISTIE | Section.EXPANDED);
-			groupSection.setText(internalCommentGroup.getGroupTitle());
-			groupSection.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-			internalCommentGroup.setSection(groupSection);
+
+			// create the group title
+			Label groupTitle = toolkit.createLabel(this, internalCommentGroup.getGroupTitle(), SWT.CENTER);
+			groupTitle.setBackground(titleBackground);
+			groupTitle.setForeground(titleForeground);
+			groupTitle.setFont(titleFont);
+			groupTitle.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+			internalCommentGroup.setGroupTitleControl(groupTitle);
 
 			// create the group composite
-			Composite sectionClient = toolkit.createComposite(groupSection);
-			TableWrapLayout clientLayout = new TableWrapLayout();
-			clientLayout.makeColumnsEqualWidth = true;
-			clientLayout.numColumns = baseColumns.size();
-			clientLayout.leftMargin = 0;
-			clientLayout.rightMargin = 0;
-			sectionClient.setLayout(clientLayout);
-			groupSection.setClient(sectionClient);
-			internalCommentGroup.setComposite(sectionClient);
+			Composite groupComposite = toolkit.createComposite(this);
+			groupComposite.setLayout(createColumnLayout());
+			groupComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+
+			internalCommentGroup.setComposite(groupComposite);
 
 			// create internal columns for the group
 
 			for (ICommentColumn column : baseColumns) {
 
 				InternalCommentColumn internalCommentColumn = new InternalCommentColumn(column);
-				createColumnControls(sectionClient, internalCommentColumn);
+				createColumnControls(groupComposite, internalCommentColumn);
 				internalCommentGroup.addColumn(internalCommentColumn);
+
 			}
 
 			groups.put(commentGroup, internalCommentGroup);
@@ -265,6 +254,17 @@ public class CommentList extends Composite {
 	}
 
 	/**
+	 * @return the layout that should be used for the group composite that
+	 *         contains the comment columns.
+	 */
+	private Layout createColumnLayout() {
+		GridLayout gridLayout = new GridLayout(baseColumns.size() * 2 - 1, false);
+		gridLayout.marginWidth = 0;
+		gridLayout.horizontalSpacing = 2;
+		return gridLayout;
+	}
+
+	/**
 	 * creates the controls for the given {@link InternalCommentColumn} in the
 	 * given {@link Composite}.
 	 * 
@@ -273,14 +273,17 @@ public class CommentList extends Composite {
 	 */
 	private void createColumnControls(Composite groupComposite, InternalCommentColumn internalCommentColumn) {
 
+		if (groupComposite.getChildren().length > 0) {
+			Label label = toolkit.createLabel(groupComposite, "", SWT.SEPARATOR | SWT.VERTICAL);
+			label.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
+		}
+
 		Composite columnComposite = toolkit.createComposite(groupComposite);
-		columnComposite.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-		TableWrapLayout columnLayout = new TableWrapLayout();
-		columnLayout.leftMargin = 0;
-		columnLayout.rightMargin = 0;
-		columnLayout.topMargin = 0;
-		columnLayout.bottomMargin = 0;
-		columnComposite.setLayout(columnLayout);
+
+		columnComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		GridLayout gridLayout = new GridLayout(3, false);
+		gridLayout.marginWidth = 0;
+		columnComposite.setLayout(gridLayout);
 		internalCommentColumn.setComposite(columnComposite);
 
 	}
@@ -296,7 +299,8 @@ public class CommentList extends Composite {
 
 		InternalCommentGroup internalCommentGroup = groups.get(commentGroup);
 		if (internalCommentGroup != null) {
-			internalCommentGroup.getSection().dispose();
+			internalCommentGroup.getComposite().dispose();
+			internalCommentGroup.getGroupTitleControl().dispose();
 			groups.remove(commentGroup);
 		}
 
@@ -343,44 +347,47 @@ public class CommentList extends Composite {
 					internalCommentColumn.addComment(internalComment);
 
 					Composite columnComposite = internalCommentColumn.getComposite();
-					Composite alignmentComposite = toolkit.createComposite(columnComposite);
-					alignmentComposite.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-					TableWrapLayout alignmentLayout = new TableWrapLayout();
-					alignmentLayout.bottomMargin = 0;
-					alignmentLayout.topMargin = 0;
-					if (internalComment.getAlignment() == Alignment.LEFT) {
-						alignmentLayout.rightMargin = 30;
-					} else {
-						alignmentLayout.leftMargin = 30;
+
+					int metaDataAlignment = SWT.LEFT;
+
+					if (internalComment.getAlignment() != Alignment.LEFT) {
+						// add a filler composite
+						addCommentFillerComposite(internalComment, columnComposite);
+						metaDataAlignment = SWT.RIGHT;
 					}
-					alignmentComposite.setLayout(alignmentLayout);
 
 					// add the comment composite
-					Composite commentComposite = toolkit.createComposite(alignmentComposite, SWT.BORDER);
+					Composite commentComposite = toolkit.createComposite(columnComposite, SWT.BORDER);
 					internalComment.setComposite(commentComposite);
 
 					// set the layout for the comment elements
-					TableWrapLayout commentLayout = new TableWrapLayout();
-					commentLayout.numColumns = 2;
-					commentComposite.setLayout(commentLayout);
-					commentComposite.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+					commentComposite.setLayout(new GridLayout(1, false));
+					commentComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+
+					if (internalComment.getAlignment() == Alignment.LEFT) {
+						// add a filler composite
+						addCommentFillerComposite(internalComment, columnComposite);
+					}
 
 					// create the author label
 					Label authorLabel = toolkit.createLabel(commentComposite, comment.getAuthor());
-					authorLabel.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+					authorLabel.setLayoutData(new GridData(metaDataAlignment, SWT.CENTER, true, false));
+					authorLabel.setForeground(titleBackground);
+					authorLabel.setBackground(titleForeground);
 
 					// create the creation time label
 					Label creationTimeLabel = toolkit.createLabel(commentComposite,
 							dateFormat.format(comment.getCreationTime().getTime()));
-					creationTimeLabel.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+					creationTimeLabel.setLayoutData(new GridData(metaDataAlignment, SWT.CENTER, true, false));
+					creationTimeLabel.setForeground(titleBackground);
+					creationTimeLabel.setBackground(titleForeground);
 
 					// create a StyledText for the body
-					final StyledText commentBodyText = new StyledText(commentComposite, SWT.WRAP | SWT.READ_ONLY);
+					final StyledText commentBodyText = new StyledText(commentComposite,
+							SWT.WRAP | SWT.READ_ONLY | metaDataAlignment | SWT.MULTI);
 					toolkit.adapt(commentBodyText);
 					commentBodyText.setText(comment.getBody());
-					TableWrapData tableWrapData = new TableWrapData();
-					tableWrapData.colspan = 2;
-					commentBodyText.setLayoutData(tableWrapData);
+					commentBodyText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
 					commentBodyText.addListener(SWT.MouseDown, new Listener() {
 						@Override
@@ -428,19 +435,35 @@ public class CommentList extends Composite {
 						}
 
 					});
+					commentBodyText.redraw();
 
 					// add links
 					for (ICommentLink link : internalComment.getCommentLinks()) {
 						commentBodyText.setStyleRange(new LinkStyleRange(link));
 					}
-
-					layout();
+					layout(true, true);
 
 				}
 			}
 
 		}
 
+	}
+
+	/**
+	 * adds a filler composite used to create a blank space of at least 5 pixels
+	 * for a given internal comment.
+	 * 
+	 * @param internalComment
+	 * @param columnComposite
+	 */
+	private void addCommentFillerComposite(InternalComment internalComment, Composite columnComposite) {
+		Composite filler = toolkit.createComposite(columnComposite, SWT.NONE);
+		GridData fillerData = new GridData(SWT.FILL, SWT.FILL, false, false);
+		fillerData.minimumWidth = 5;
+		fillerData.widthHint = 20;
+		filler.setLayoutData(fillerData);
+		internalComment.setCommentFiller(filler);
 	}
 
 	/**
@@ -580,7 +603,7 @@ public class CommentList extends Composite {
 
 		private Composite composite;
 
-		private Section section;
+		private Control groupTitleControl;
 
 		/*
 		 * there are usually only a small number (usually 2) of columns, so use
@@ -609,12 +632,12 @@ public class CommentList extends Composite {
 			this.composite = groupComposite;
 		}
 
-		public Section getSection() {
-			return section;
+		public Control getGroupTitleControl() {
+			return groupTitleControl;
 		}
 
-		public void setSection(Section section) {
-			this.section = section;
+		public void setGroupTitleControl(Control groupTitleControl) {
+			this.groupTitleControl = groupTitleControl;
 		}
 
 		public ICommentGroup getRealCommentGroup() {
@@ -697,6 +720,8 @@ public class CommentList extends Composite {
 
 		private Composite composite;
 
+		private Composite commentFiller;
+
 		public InternalComment(IComment realComment) {
 			this.realComment = realComment;
 		}
@@ -732,6 +757,14 @@ public class CommentList extends Composite {
 
 		public void setComposite(Composite groupComposite) {
 			this.composite = groupComposite;
+		}
+
+		public Composite getCommentFiller() {
+			return commentFiller;
+		}
+
+		public void setCommentFiller(Composite commentFiller) {
+			this.commentFiller = commentFiller;
 		}
 
 		public IComment getRealComment() {
