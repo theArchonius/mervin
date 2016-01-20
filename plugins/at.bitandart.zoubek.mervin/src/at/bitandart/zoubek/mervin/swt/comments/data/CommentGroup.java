@@ -49,4 +49,14 @@ public class CommentGroup implements ICommentGroup {
 		return title;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "CommentGroup [title=" + title + "]";
+	}
+
 }

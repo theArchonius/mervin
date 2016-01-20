@@ -90,4 +90,15 @@ public class CommentLink implements ICommentLink {
 		return commentLinkTarget;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "CommentLink [startIndex=" + startIndex + ", length=" + length + ", commentLinkTarget="
+				+ commentLinkTarget + "]";
+	}
+
 }

@@ -132,4 +132,15 @@ public class Comment implements IComment {
 		return commentLinks;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Comment [author=" + author + ", creationTime=" + creationTime + ", body=" + body + ", alignment="
+				+ alignment + ", commentLinks=" + commentLinks + "]";
+	}
+
 }

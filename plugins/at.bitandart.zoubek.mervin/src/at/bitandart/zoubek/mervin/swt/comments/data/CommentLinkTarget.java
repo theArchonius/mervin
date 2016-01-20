@@ -48,4 +48,14 @@ public class CommentLinkTarget implements ICommentLinkTarget {
 		return defaultText;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "CommentLinkTarget [defaultText=" + defaultText + "]";
+	}
+
 }
