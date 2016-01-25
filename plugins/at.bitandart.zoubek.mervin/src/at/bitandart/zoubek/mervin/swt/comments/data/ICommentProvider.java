@@ -48,6 +48,6 @@ public interface ICommentProvider {
 	 *            the column to retrieve the comments for.
 	 * @return the comments of the group in the given column
 	 */
-	public List<IComment> getComments(ICommentGroup group, ICommentColumn column);
+	public List<IComment> getComments(Object input, ICommentGroup group, ICommentColumn column);
 
 }

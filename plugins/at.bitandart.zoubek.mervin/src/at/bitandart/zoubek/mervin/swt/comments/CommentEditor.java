@@ -30,6 +30,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
+import at.bitandart.zoubek.mervin.swt.comments.data.CommentLink;
 import at.bitandart.zoubek.mervin.swt.comments.data.ICommentLink;
 import at.bitandart.zoubek.mervin.swt.comments.data.ICommentLinkTarget;
 
@@ -89,7 +90,8 @@ public class CommentEditor extends Composite {
 				 * editor control must called as it may provide more space for
 				 * the whole editor control.
 				 */
-				CommentEditor.this.getParent().layout();
+				getShell().layout(true, true);
+
 			}
 		});
 
@@ -222,7 +224,9 @@ public class CommentEditor extends Composite {
 	 * refreshes the "add link" button.
 	 */
 	private void refreshAddLinkButton() {
-		addLinkButton.setEnabled(currentLinkTarget != null);
+		if (!isDisposed()) {
+			addLinkButton.setEnabled(currentLinkTarget != null);
+		}
 	}
 
 	/**
@@ -287,12 +291,19 @@ public class CommentEditor extends Composite {
 	 */
 	public List<ICommentLink> getCommentLinks() {
 
+		/*
+		 * FIXME: the link data stored in the style range is not valid, use
+		 * LineStyleListener instead
+		 */
+
 		StyleRange[] styleRanges = commentInput.getStyleRanges();
 		List<ICommentLink> commentLinks = new ArrayList<ICommentLink>(styleRanges.length);
 
 		for (StyleRange styleRange : styleRanges) {
 			if (styleRange instanceof LinkStyleRange) {
 				ICommentLink commentLink = ((LinkStyleRange) styleRange).getCommentLink();
+				commentLink.setStartIndex(styleRange.start);
+				commentLink.setLength(styleRange.length);
 				commentLinks.add(commentLink);
 			}
 		}
@@ -347,42 +358,10 @@ public class CommentEditor extends Composite {
 	 * @author Florian Zoubek
 	 *
 	 */
-	private class InternalCommentLink implements ICommentLink {
-
-		private int startIndex;
-		private int length;
-		private ICommentLinkTarget commentLinkTarget;
+	private class InternalCommentLink extends CommentLink {
 
 		public InternalCommentLink(int startIndex, int length, ICommentLinkTarget commentLinkTarget) {
-			this.startIndex = startIndex;
-			this.length = length;
-			this.commentLinkTarget = commentLinkTarget;
-		}
-
-		@Override
-		public int getStartIndex() {
-			return startIndex;
-		}
-
-		@Override
-		public int getLength() {
-			return length;
-		}
-
-		@Override
-		public ICommentLinkTarget getCommentLinkTarget() {
-			return commentLinkTarget;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.lang.Object#toString()
-		 */
-		@Override
-		public String toString() {
-			return "InternalCommentLink [startIndex=" + startIndex + ", length=" + length + ", commentLinkTarget="
-					+ commentLinkTarget + "]";
+			super(startIndex, length, commentLinkTarget);
 		}
 
 	}

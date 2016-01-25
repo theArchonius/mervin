@@ -20,10 +20,25 @@ package at.bitandart.zoubek.mervin.swt.comments.data;
 public interface ICommentLink {
 
 	/**
+	 * 
+	 * @param startIndex
+	 *            the index of the first character index within the containing
+	 *            text.
+	 */
+	public void setStartIndex(int startIndex);
+
+	/**
 	 * @return the index of the first character index within the containing
 	 *         text.
 	 */
 	public int getStartIndex();
+
+	/**
+	 * 
+	 * @param length
+	 *            the length of the substring that represents this link.
+	 */
+	public void setLength(int length);
 
 	/**
 	 * @return the length of the substring that represents this link.

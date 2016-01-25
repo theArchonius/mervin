@@ -28,14 +28,14 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.swt.comments.CommentList;
 import at.bitandart.zoubek.mervin.swt.comments.CommentList.CommentLinkListener;
+import at.bitandart.zoubek.mervin.swt.comments.CommentListViewer;
+import at.bitandart.zoubek.mervin.swt.comments.data.CommentLink;
 import at.bitandart.zoubek.mervin.swt.comments.data.IComment;
+import at.bitandart.zoubek.mervin.swt.comments.data.IComment.Alignment;
 import at.bitandart.zoubek.mervin.swt.comments.data.ICommentColumn;
 import at.bitandart.zoubek.mervin.swt.comments.data.ICommentGroup;
 import at.bitandart.zoubek.mervin.swt.comments.data.ICommentLink;
-import at.bitandart.zoubek.mervin.swt.comments.data.ICommentLinkTarget;
 import at.bitandart.zoubek.mervin.swt.comments.data.ICommentProvider;
-import at.bitandart.zoubek.mervin.swt.comments.data.IComment.Alignment;
-import at.bitandart.zoubek.mervin.swt.comments.CommentListViewer;
 
 public class CommentsView extends ModelReviewEditorTrackingView {
 
@@ -130,7 +130,7 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 		}
 
 		@Override
-		public List<IComment> getComments(ICommentGroup group, ICommentColumn commentColumn) {
+		public List<IComment> getComments(Object input, ICommentGroup group, ICommentColumn commentColumn) {
 
 			List<IComment> comments = new LinkedList<IComment>();
 			// TODO read from model and remove test values below
@@ -248,32 +248,10 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 
 	}
 
-	private class MervinCommentLink implements ICommentLink {
-
-		private int startIndex;
-
-		private int length;
+	private class MervinCommentLink extends CommentLink {
 
 		public MervinCommentLink(int startIndex, int length) {
-			super();
-			this.startIndex = startIndex;
-			this.length = length;
-		}
-
-		@Override
-		public int getStartIndex() {
-			return startIndex;
-		}
-
-		@Override
-		public int getLength() {
-			return length;
-		}
-
-		@Override
-		public ICommentLinkTarget getCommentLinkTarget() {
-			// TODO Auto-generated method stub
-			return null;
+			super(startIndex, length, null);
 		}
 
 	}

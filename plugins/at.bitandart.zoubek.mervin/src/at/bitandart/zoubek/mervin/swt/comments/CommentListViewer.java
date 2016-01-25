@@ -76,7 +76,7 @@ public class CommentListViewer extends Viewer {
 
 				commentListControl.addCommentGroup(commentGroup);
 				for (ICommentColumn commentColumn : commentColumns) {
-					List<IComment> comments = commentProvider.getComments(commentGroup, commentColumn);
+					List<IComment> comments = commentProvider.getComments(input, commentGroup, commentColumn);
 					for (IComment comment : comments) {
 						commentListControl.addComment(commentGroup, commentColumn, comment);
 					}

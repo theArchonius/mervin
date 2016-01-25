@@ -36,9 +36,6 @@ public class CommentLink implements ICommentLink {
 		this.commentLinkTarget = commentLinkTarget;
 	}
 
-	/**
-	 * @see ICommentLink#getStartIndex()
-	 */
 	public void setStartIndex(int startIndex) {
 		this.startIndex = startIndex;
 	}
@@ -54,9 +51,6 @@ public class CommentLink implements ICommentLink {
 		return startIndex;
 	}
 
-	/**
-	 * @see ICommentLink#getLength()
-	 */
 	public void setLength(int length) {
 		this.length = length;
 	}

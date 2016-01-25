@@ -30,6 +30,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import at.bitandart.zoubek.mervin.swt.comments.CommentEditor;
 import at.bitandart.zoubek.mervin.swt.comments.CommentEditor.CommentEditorListener;
+import at.bitandart.zoubek.mervin.swt.comments.data.CommentLink;
 import at.bitandart.zoubek.mervin.swt.comments.data.ICommentLink;
 import at.bitandart.zoubek.mervin.swt.comments.data.ICommentLinkTarget;
 
@@ -84,7 +85,7 @@ public class CommentEditorExample {
 		String text = "This is an example ";
 		String linkText = "link";
 		editor.setText(text + linkText);
-		editor.addCommentLink(new ExampleCommentLink(text.length(), linkText.length(),
+		editor.addCommentLink(new CommentLink(text.length(), linkText.length(),
 				new ExampleLinkTarget(new String[] { "predefined item" })));
 
 		editor.addCommentEditorListener(new CommentEditorListener() {
@@ -156,7 +157,7 @@ public class CommentEditorExample {
 				// Intentionally left empty
 			}
 		});
-
+		body.layout();
 		shell.open();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
@@ -198,42 +199,6 @@ class ExampleLinkTarget implements ICommentLinkTarget {
 	@Override
 	public String toString() {
 		return getDefaultText();
-	}
-
-}
-
-/**
- * Example implementation of a comment target used to demonstrate
- * {@link CommentEditor#addCommentLink(ICommentLink)}.
- * 
- * @author Florian Zoubek
- *
- */
-class ExampleCommentLink implements ICommentLink {
-
-	private int startIndex;
-	private int length;
-	private ICommentLinkTarget commentLinkTarget;
-
-	public ExampleCommentLink(int startIndex, int length, ICommentLinkTarget commentLinkTarget) {
-		this.startIndex = startIndex;
-		this.length = length;
-		this.commentLinkTarget = commentLinkTarget;
-	}
-
-	@Override
-	public int getStartIndex() {
-		return startIndex;
-	}
-
-	@Override
-	public int getLength() {
-		return length;
-	}
-
-	@Override
-	public ICommentLinkTarget getCommentLinkTarget() {
-		return commentLinkTarget;
 	}
 
 }
