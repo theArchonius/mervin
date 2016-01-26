@@ -11,11 +11,19 @@
 package at.bitandart.zoubek.mervin.swt.comments;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CaretEvent;
+import org.eclipse.swt.custom.CaretListener;
 import org.eclipse.swt.custom.ExtendedModifyEvent;
 import org.eclipse.swt.custom.ExtendedModifyListener;
+import org.eclipse.swt.custom.LineStyleEvent;
+import org.eclipse.swt.custom.LineStyleListener;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionEvent;
@@ -57,6 +65,11 @@ public class CommentEditor extends Composite {
 	 */
 	private ICommentLinkTarget currentLinkTarget;
 
+	/**
+	 * the current links shown in this editor
+	 */
+	private List<ICommentLink> commentLinks = new LinkedList<>();
+
 	// Listeners
 
 	private List<CommentEditorListener> commentEditorListeners = new ArrayList<CommentEditor.CommentEditorListener>();
@@ -84,6 +97,22 @@ public class CommentEditor extends Composite {
 
 			@Override
 			public void modifyText(ExtendedModifyEvent event) {
+
+				/*
+				 * update the comment links based on the input
+				 */
+				int offset = event.length - event.replacedText.length();
+				for (ICommentLink link : commentLinks) {
+					int linkStart = link.getStartIndex();
+					int linkLength = link.getLength();
+					if (linkStart > event.start) {
+						link.setStartIndex(linkStart + offset);
+					} else if (doRangesOverlap(event.start, event.length, linkStart, linkLength)) {
+						link.setLength(linkLength + offset);
+					}
+				}
+				commentInput.redraw();
+
 				/*
 				 * make sure the comment input grows and shrinks based on its
 				 * current content. The layout method of the parent of the
@@ -92,6 +121,100 @@ public class CommentEditor extends Composite {
 				 */
 				getShell().layout(true, true);
 
+			}
+		});
+
+		/*
+		 * add a line style listener to highlight the links
+		 */
+		commentInput.addLineStyleListener(new LineStyleListener() {
+
+			@Override
+			public void lineGetStyle(LineStyleEvent event) {
+
+				int lineStart = event.lineOffset;
+				int lineEnd = lineStart + event.lineText.length();
+				List<StyleRange> styles = new ArrayList<>(commentLinks.size());
+				for (ICommentLink link : commentLinks) {
+					int start = link.getStartIndex();
+					int end = start + link.getLength();
+					if (start >= lineStart && end <= lineEnd) {
+						styles.add(createLinkStyleRange(start, end));
+					}
+				}
+				event.styles = styles.toArray(new StyleRange[styles.size()]);
+
+			}
+
+			/**
+			 * creates a StyleRange representing a link in the text.
+			 * 
+			 * @param start
+			 *            the start index of the link.
+			 * @param end
+			 *            the end index of the link.
+			 * @return a StyleRange for the given range.
+			 */
+			private StyleRange createLinkStyleRange(int start, int end) {
+
+				StyleRange styleRange = new StyleRange();
+				styleRange.start = start;
+				styleRange.length = end - start;
+				styleRange.fontStyle = SWT.BOLD;
+				styleRange.underline = true;
+
+				return styleRange;
+			}
+		});
+
+		/*
+		 * add a caret listener to enable the remove link button based on the
+		 * current caret position. Note that this listener only uses the caret
+		 * offset, selections are handled by the selection listener as
+		 * getSelectionRange() seems to be updated only after the caret listener
+		 * is called.
+		 */
+		commentInput.addCaretListener(new CaretListener() {
+
+			@Override
+			public void caretMoved(CaretEvent event) {
+
+				boolean enableRemoveButton = false;
+				for (ICommentLink link : commentLinks) {
+					if (doRangesOverlap(event.caretOffset, 0, link.getStartIndex(), link.getLength())) {
+						enableRemoveButton = true;
+						break;
+					}
+				}
+				removeLinkButton.setEnabled(enableRemoveButton);
+			}
+		});
+
+		/*
+		 * add a caret listener to enable the remove link button based on the
+		 * current selection range.
+		 */
+		commentInput.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (!removeLinkButton.isEnabled()) {
+					Point selectionRange = commentInput.getSelectionRange();
+					int offset = selectionRange.x;
+					int length = selectionRange.y;
+
+					for (ICommentLink link : commentLinks) {
+						if (doRangesOverlap(offset, length, link.getStartIndex(), link.getLength())) {
+							removeLinkButton.setEnabled(true);
+							break;
+						}
+					}
+				}
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// Intentionally left empty
 			}
 		});
 
@@ -119,7 +242,7 @@ public class CommentEditor extends Composite {
 
 					}
 					InternalCommentLink commentLink = new InternalCommentLink(offset, length, currentLinkTarget);
-					commentInput.setStyleRange(new LinkStyleRange(commentLink));
+					addCommentLink(commentLink);
 
 				}
 
@@ -133,28 +256,25 @@ public class CommentEditor extends Composite {
 
 		removeLinkButton = toolkit.createButton(buttonPanel, "remove Link", SWT.PUSH);
 		removeLinkButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+		removeLinkButton.setEnabled(false);
 		removeLinkButton.addSelectionListener(new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 
-				if (currentLinkTarget != null) {
+				Point selectionRange = commentInput.getSelectionRange();
+				int offset = selectionRange.x;
+				int length = selectionRange.y;
 
-					Point selectionRange = commentInput.getSelectionRange();
-					int offset = selectionRange.x;
-					int length = selectionRange.y;
+				ListIterator<ICommentLink> linkIterator = commentLinks.listIterator();
 
-					StyleRange[] oldStyleRanges = commentInput.getStyleRanges();
-					List<StyleRange> newStyleRanges = new ArrayList<StyleRange>(oldStyleRanges.length);
-
-					for (StyleRange styleRange : oldStyleRanges) {
-						if (!doRangesOverlap(offset, length, styleRange.start, styleRange.length)) {
-							newStyleRanges.add(styleRange);
-						}
+				while (linkIterator.hasNext()) {
+					ICommentLink link = linkIterator.next();
+					if (doRangesOverlap(offset, length, link.getStartIndex(), link.getLength())) {
+						linkIterator.remove();
 					}
-					commentInput.setStyleRanges(newStyleRanges.toArray(new StyleRange[newStyleRanges.size()]));
-
 				}
+				commentInput.redraw();
 
 			}
 
@@ -273,7 +393,6 @@ public class CommentEditor extends Composite {
 	public String getText() {
 
 		return commentInput.getText();
-
 	}
 
 	/**
@@ -283,32 +402,29 @@ public class CommentEditor extends Composite {
 	 *            the comment link to add.
 	 */
 	public void addCommentLink(ICommentLink commentLink) {
-		commentInput.setStyleRange(new LinkStyleRange(commentLink));
+
+		commentLinks.add(commentLink);
+		/*
+		 * sort the comment links by their start index
+		 */
+		Collections.sort(commentLinks, new Comparator<ICommentLink>() {
+
+			@Override
+			public int compare(ICommentLink link1, ICommentLink link2) {
+				return link1.getStartIndex() - link2.getStartIndex();
+			}
+		});
+		commentInput.redraw();
+
 	}
 
 	/**
-	 * @return a list of the current comment links stored in this control.
+	 * @return an unmodifiable list of the current comment links stored in this
+	 *         control.
 	 */
 	public List<ICommentLink> getCommentLinks() {
 
-		/*
-		 * FIXME: the link data stored in the style range is not valid, use
-		 * LineStyleListener instead
-		 */
-
-		StyleRange[] styleRanges = commentInput.getStyleRanges();
-		List<ICommentLink> commentLinks = new ArrayList<ICommentLink>(styleRanges.length);
-
-		for (StyleRange styleRange : styleRanges) {
-			if (styleRange instanceof LinkStyleRange) {
-				ICommentLink commentLink = ((LinkStyleRange) styleRange).getCommentLink();
-				commentLink.setStartIndex(styleRange.start);
-				commentLink.setLength(styleRange.length);
-				commentLinks.add(commentLink);
-			}
-		}
-		return commentLinks;
-
+		return Collections.unmodifiableList(commentLinks);
 	}
 
 	/**
