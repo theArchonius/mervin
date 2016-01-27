@@ -13,7 +13,6 @@ package at.bitandart.zoubek.mervin.swt.comments;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -22,8 +21,6 @@ import org.eclipse.swt.custom.CaretEvent;
 import org.eclipse.swt.custom.CaretListener;
 import org.eclipse.swt.custom.ExtendedModifyEvent;
 import org.eclipse.swt.custom.ExtendedModifyListener;
-import org.eclipse.swt.custom.LineStyleEvent;
-import org.eclipse.swt.custom.LineStyleListener;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionEvent;
@@ -65,14 +62,11 @@ public class CommentEditor extends Composite {
 	 */
 	private ICommentLinkTarget currentLinkTarget;
 
-	/**
-	 * the current links shown in this editor
-	 */
-	private List<ICommentLink> commentLinks = new LinkedList<>();
-
 	// Listeners
 
 	private List<CommentEditorListener> commentEditorListeners = new ArrayList<CommentEditor.CommentEditorListener>();
+
+	private CommentLineStyleListener commentLineStyleListener;
 
 	// SWT Controls
 
@@ -102,7 +96,7 @@ public class CommentEditor extends Composite {
 				 * update the comment links based on the input
 				 */
 				int offset = event.length - event.replacedText.length();
-				for (ICommentLink link : commentLinks) {
+				for (ICommentLink link : commentLineStyleListener.getCommentLinks()) {
 					int linkStart = link.getStartIndex();
 					int linkLength = link.getLength();
 					if (linkStart > event.start) {
@@ -124,48 +118,8 @@ public class CommentEditor extends Composite {
 			}
 		});
 
-		/*
-		 * add a line style listener to highlight the links
-		 */
-		commentInput.addLineStyleListener(new LineStyleListener() {
-
-			@Override
-			public void lineGetStyle(LineStyleEvent event) {
-
-				int lineStart = event.lineOffset;
-				int lineEnd = lineStart + event.lineText.length();
-				List<StyleRange> styles = new ArrayList<>(commentLinks.size());
-				for (ICommentLink link : commentLinks) {
-					int start = link.getStartIndex();
-					int end = start + link.getLength();
-					if (start >= lineStart && end <= lineEnd) {
-						styles.add(createLinkStyleRange(start, end));
-					}
-				}
-				event.styles = styles.toArray(new StyleRange[styles.size()]);
-
-			}
-
-			/**
-			 * creates a StyleRange representing a link in the text.
-			 * 
-			 * @param start
-			 *            the start index of the link.
-			 * @param end
-			 *            the end index of the link.
-			 * @return a StyleRange for the given range.
-			 */
-			private StyleRange createLinkStyleRange(int start, int end) {
-
-				StyleRange styleRange = new StyleRange();
-				styleRange.start = start;
-				styleRange.length = end - start;
-				styleRange.fontStyle = SWT.BOLD;
-				styleRange.underline = true;
-
-				return styleRange;
-			}
-		});
+		commentLineStyleListener = new CommentLineStyleListener();
+		commentInput.addLineStyleListener(commentLineStyleListener);
 
 		/*
 		 * add a caret listener to enable the remove link button based on the
@@ -180,7 +134,7 @@ public class CommentEditor extends Composite {
 			public void caretMoved(CaretEvent event) {
 
 				boolean enableRemoveButton = false;
-				for (ICommentLink link : commentLinks) {
+				for (ICommentLink link : commentLineStyleListener.getCommentLinks()) {
 					if (doRangesOverlap(event.caretOffset, 0, link.getStartIndex(), link.getLength())) {
 						enableRemoveButton = true;
 						break;
@@ -203,7 +157,7 @@ public class CommentEditor extends Composite {
 					int offset = selectionRange.x;
 					int length = selectionRange.y;
 
-					for (ICommentLink link : commentLinks) {
+					for (ICommentLink link : commentLineStyleListener.getCommentLinks()) {
 						if (doRangesOverlap(offset, length, link.getStartIndex(), link.getLength())) {
 							removeLinkButton.setEnabled(true);
 							break;
@@ -266,7 +220,7 @@ public class CommentEditor extends Composite {
 				int offset = selectionRange.x;
 				int length = selectionRange.y;
 
-				ListIterator<ICommentLink> linkIterator = commentLinks.listIterator();
+				ListIterator<ICommentLink> linkIterator = commentLineStyleListener.getCommentLinks().listIterator();
 
 				while (linkIterator.hasNext()) {
 					ICommentLink link = linkIterator.next();
@@ -403,6 +357,8 @@ public class CommentEditor extends Composite {
 	 */
 	public void addCommentLink(ICommentLink commentLink) {
 
+		List<ICommentLink> commentLinks = commentLineStyleListener.getCommentLinks();
+
 		commentLinks.add(commentLink);
 		/*
 		 * sort the comment links by their start index
@@ -424,7 +380,7 @@ public class CommentEditor extends Composite {
 	 */
 	public List<ICommentLink> getCommentLinks() {
 
-		return Collections.unmodifiableList(commentLinks);
+		return Collections.unmodifiableList(commentLineStyleListener.getCommentLinks());
 	}
 
 	/**
