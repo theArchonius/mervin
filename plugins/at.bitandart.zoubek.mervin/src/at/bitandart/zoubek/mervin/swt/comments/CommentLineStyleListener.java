@@ -23,7 +23,8 @@ import at.bitandart.zoubek.mervin.swt.comments.data.ICommentLink;
 
 /**
  * A {@link LineStyleListener} that creates the line style ranges based on a
- * list of {@link ICommentLink}s.
+ * list of {@link ICommentLink}s. <b>This class assumes that the comment links
+ * in the list do not overlap</b>.
  * 
  * @author Florian Zoubek
  *
@@ -74,10 +75,38 @@ final class CommentLineStyleListener implements LineStyleListener {
 	}
 
 	/**
+	 * finds the comment link at the given index.
+	 * 
+	 * @param index
+	 *            the index to search the comment link for.
+	 * @return the comment link that overlaps the given index, or null if no
+	 *         comment link could be found.
+	 */
+	public ICommentLink getCommentLinkAtLocation(int index) {
+
+		for (ICommentLink commentLink : commentLinks) {
+			if (RangeUtil.isInRange(index, commentLink.getStartIndex(), commentLink.getStartIndex())) {
+				return commentLink;
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * @return the list of comment links that is used by this
 	 *         {@link LineStyleListener}.
 	 */
 	public List<ICommentLink> getCommentLinks() {
 		return commentLinks;
+	}
+
+	/**
+	 * sets the comment link list to use.
+	 * 
+	 * @param commentLinks
+	 *            the comment link list to set.
+	 */
+	public void setCommentLinks(List<ICommentLink> commentLinks) {
+		this.commentLinks = commentLinks;
 	}
 }

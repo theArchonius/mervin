@@ -101,7 +101,7 @@ public class CommentEditor extends Composite {
 					int linkLength = link.getLength();
 					if (linkStart > event.start) {
 						link.setStartIndex(linkStart + offset);
-					} else if (doRangesOverlap(event.start, event.length, linkStart, linkLength)) {
+					} else if (RangeUtil.doRangesOverlap(event.start, event.length, linkStart, linkLength)) {
 						link.setLength(linkLength + offset);
 					}
 				}
@@ -135,7 +135,7 @@ public class CommentEditor extends Composite {
 
 				boolean enableRemoveButton = false;
 				for (ICommentLink link : commentLineStyleListener.getCommentLinks()) {
-					if (doRangesOverlap(event.caretOffset, 0, link.getStartIndex(), link.getLength())) {
+					if (RangeUtil.doRangesOverlap(event.caretOffset, 0, link.getStartIndex(), link.getLength())) {
 						enableRemoveButton = true;
 						break;
 					}
@@ -158,7 +158,7 @@ public class CommentEditor extends Composite {
 					int length = selectionRange.y;
 
 					for (ICommentLink link : commentLineStyleListener.getCommentLinks()) {
-						if (doRangesOverlap(offset, length, link.getStartIndex(), link.getLength())) {
+						if (RangeUtil.doRangesOverlap(offset, length, link.getStartIndex(), link.getLength())) {
 							removeLinkButton.setEnabled(true);
 							break;
 						}
@@ -224,7 +224,7 @@ public class CommentEditor extends Composite {
 
 				while (linkIterator.hasNext()) {
 					ICommentLink link = linkIterator.next();
-					if (doRangesOverlap(offset, length, link.getStartIndex(), link.getLength())) {
+					if (RangeUtil.doRangesOverlap(offset, length, link.getStartIndex(), link.getLength())) {
 						linkIterator.remove();
 					}
 				}
@@ -255,25 +255,6 @@ public class CommentEditor extends Composite {
 
 		refreshAddLinkButton();
 
-	}
-
-	/**
-	 * checks if two ranges overlap.
-	 * 
-	 * @param firstRangeStart
-	 *            the start index of the first range.
-	 * @param firstRangeLength
-	 *            the length of the first range (must be positive).
-	 * @param secondRangeStart
-	 *            the start index of the second range.
-	 * @param secondRangeLength
-	 *            the length of the second range (must be positive).
-	 * @return true if the two ranges overlap, false otherwise
-	 */
-	private static boolean doRangesOverlap(int firstRangeStart, int firstRangeLength, int secondRangeStart,
-			int secondRangeLength) {
-		return (firstRangeStart < secondRangeStart && secondRangeStart < firstRangeStart + firstRangeLength)
-				|| (secondRangeStart < firstRangeStart && (secondRangeStart + secondRangeLength > firstRangeStart));
 	}
 
 	/**

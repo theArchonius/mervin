@@ -488,6 +488,9 @@ public class CommentList extends Composite {
 					final StyledText commentBodyText = new StyledText(commentComposite,
 							SWT.WRAP | SWT.READ_ONLY | metaDataAlignment | SWT.MULTI);
 					toolkit.adapt(commentBodyText);
+					final CommentLineStyleListener commentLineStyleListener = new CommentLineStyleListener();
+					commentBodyText.addLineStyleListener(commentLineStyleListener);
+					commentLineStyleListener.setCommentLinks(internalComment.getCommentLinks());
 					commentBodyText.setText(comment.getBody());
 					commentBodyText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
@@ -515,9 +518,8 @@ public class CommentList extends Composite {
 						public void handleEvent(Event event) {
 							try {
 								int offset = commentBodyText.getOffsetAtLocation(new Point(event.x, event.y));
-								StyleRange style = commentBodyText.getStyleRangeAtOffset(offset);
-								if (style != null && style instanceof LinkStyleRange) {
-									ICommentLink commentLink = ((LinkStyleRange) style).getCommentLink();
+								ICommentLink commentLink = commentLineStyleListener.getCommentLinkAtLocation(offset);
+								if (commentLink != null) {
 									if (currentCommentLink != commentLink) {
 										if (currentCommentLink != null) {
 											notifyCommentLinkExit(currentCommentLink);
@@ -533,15 +535,14 @@ public class CommentList extends Composite {
 								}
 							} catch (IllegalArgumentException e) {
 								// no character under event.x, event.y
+								if (currentCommentLink != null) {
+									notifyCommentLinkExit(currentCommentLink);
+									currentCommentLink = null;
+								}
 							}
 						}
 
 					});
-
-					// add links
-					for (ICommentLink link : internalComment.getCommentLinks()) {
-						commentBodyText.setStyleRange(new LinkStyleRange(link));
-					}
 
 					// add reply button
 
