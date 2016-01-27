@@ -85,7 +85,7 @@ final class CommentLineStyleListener implements LineStyleListener {
 	public ICommentLink getCommentLinkAtLocation(int index) {
 
 		for (ICommentLink commentLink : commentLinks) {
-			if (RangeUtil.isInRange(index, commentLink.getStartIndex(), commentLink.getStartIndex())) {
+			if (RangeUtil.isInRange(index, commentLink.getStartIndex(), commentLink.getLength())) {
 				return commentLink;
 			}
 		}

@@ -28,6 +28,9 @@ import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseMoveListener;
+import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
@@ -509,40 +512,10 @@ public class CommentList extends Composite {
 						}
 
 					});
-
-					commentBodyText.addListener(SWT.MouseMove, new Listener() {
-
-						private ICommentLink currentCommentLink;
-
-						@Override
-						public void handleEvent(Event event) {
-							try {
-								int offset = commentBodyText.getOffsetAtLocation(new Point(event.x, event.y));
-								ICommentLink commentLink = commentLineStyleListener.getCommentLinkAtLocation(offset);
-								if (commentLink != null) {
-									if (currentCommentLink != commentLink) {
-										if (currentCommentLink != null) {
-											notifyCommentLinkExit(currentCommentLink);
-										}
-										notifyCommentLinkEnter(commentLink);
-										currentCommentLink = commentLink;
-									}
-								} else {
-									if (currentCommentLink != null) {
-										notifyCommentLinkExit(currentCommentLink);
-										currentCommentLink = null;
-									}
-								}
-							} catch (IllegalArgumentException e) {
-								// no character under event.x, event.y
-								if (currentCommentLink != null) {
-									notifyCommentLinkExit(currentCommentLink);
-									currentCommentLink = null;
-								}
-							}
-						}
-
-					});
+					CommentBodyMouseListener commentBodyMouseListener = new CommentBodyMouseListener(
+							commentLineStyleListener, commentBodyText);
+					commentBodyText.addMouseTrackListener(commentBodyMouseListener);
+					commentBodyText.addMouseMoveListener(commentBodyMouseListener);
 
 					// add reply button
 
@@ -671,6 +644,83 @@ public class CommentList extends Composite {
 	 */
 	public void removeCommentLinkListener(CommentLinkListener listener) {
 		commentLinkListeners.remove(listener);
+	}
+
+	/**
+	 * A {@link MouseTrackListener} and {@link MouseMoveListener} that generates
+	 * the mouse movement events for comment links of a given comment body.
+	 * 
+	 * @author Florian Zoubek
+	 *
+	 */
+	private final class CommentBodyMouseListener implements MouseTrackListener, MouseMoveListener {
+		private final CommentLineStyleListener commentLineStyleListener;
+		private final StyledText commentBodyText;
+		private ICommentLink currentCommentLink;
+
+		/**
+		 * @param commentLineStyleListener
+		 *            the {@link CommentLineStyleListener} associated with the
+		 *            given comment body text widget.
+		 * @param commentBodyText
+		 *            the comment body text widget to listen for.
+		 */
+		private CommentBodyMouseListener(CommentLineStyleListener commentLineStyleListener,
+				StyledText commentBodyText) {
+			this.commentLineStyleListener = commentLineStyleListener;
+			this.commentBodyText = commentBodyText;
+		}
+
+		@Override
+		public void mouseHover(MouseEvent event) {
+			// intentionally left empty
+		}
+
+		@Override
+		public void mouseExit(MouseEvent event) {
+			if (currentCommentLink != null) {
+				notifyCommentLinkExit(currentCommentLink);
+				currentCommentLink = null;
+			}
+		}
+
+		@Override
+		public void mouseEnter(MouseEvent event) {
+			handleMouseMove(event);
+		}
+
+		@Override
+		public void mouseMove(MouseEvent event) {
+			handleMouseMove(event);
+		}
+
+		private void handleMouseMove(MouseEvent event) {
+			try {
+				int offset = commentBodyText.getOffsetAtLocation(new Point(event.x, event.y));
+				ICommentLink commentLink = commentLineStyleListener.getCommentLinkAtLocation(offset);
+				if (commentLink != null) {
+					if (currentCommentLink != commentLink) {
+						if (currentCommentLink != null) {
+							notifyCommentLinkExit(currentCommentLink);
+						}
+						notifyCommentLinkEnter(commentLink);
+						currentCommentLink = commentLink;
+					}
+				} else {
+					if (currentCommentLink != null) {
+						notifyCommentLinkExit(currentCommentLink);
+						currentCommentLink = null;
+					}
+				}
+			} catch (IllegalArgumentException e) {
+				// no character under event.x, event.y
+				if (currentCommentLink != null) {
+					notifyCommentLinkExit(currentCommentLink);
+					currentCommentLink = null;
+				}
+			}
+		}
+
 	}
 
 	/**
