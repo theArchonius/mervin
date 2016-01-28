@@ -78,8 +78,11 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="newModelResource" eType="#//ModelResource"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="oldModelResource" eType="#//ModelResource"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Comment" abstract="true">
+  <eClassifiers xsi:type="ecore:EClass" name="Comment">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="commentLinks" upperBound="-1"
+        eType="#//CommentLink" containment="true" eOpposite="#//CommentLink/comment"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ModelResource">
     <eStructuralFeatures xsi:type="ecore:EReference" name="objects" upperBound="-1"
@@ -136,4 +139,13 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="Vector" instanceClassName="org.eclipse.draw2d.geometry.Vector"/>
   <eClassifiers xsi:type="ecore:EClass" name="BendpointsDifference" eSuperTypes="#//LayoutDifference"/>
+  <eClassifiers xsi:type="ecore:EClass" name="CommentLink">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="comment" eType="#//Comment"
+        eOpposite="#//Comment/commentLinks"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="start" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="0"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="length" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+        defaultValueLiteral="0"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="target" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
+  </eClassifiers>
 </ecore:EPackage>

@@ -167,6 +167,11 @@ public class ModelReviewAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
+		public Adapter caseCommentLink(CommentLink object) {
+			return createCommentLinkAdapter();
+		}
+
+		@Override
 		public Adapter defaultCase(EObject object) {
 			return createEObjectAdapter();
 		}
@@ -470,6 +475,22 @@ public class ModelReviewAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createBendpointsDifferenceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.CommentLink
+	 * <em>Comment Link</em>}'. <!-- begin-user-doc --> This default
+	 * implementation returns null so that we can easily ignore cases; it's
+	 * useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.CommentLink
+	 * @generated
+	 */
+	public Adapter createCommentLinkAdapter() {
 		return null;
 	}
 

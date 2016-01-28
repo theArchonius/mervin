@@ -78,6 +78,8 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements ModelReviewF
 			return createDiagramPatch();
 		case ModelReviewPackage.MODEL_PATCH:
 			return createModelPatch();
+		case ModelReviewPackage.COMMENT:
+			return createComment();
 		case ModelReviewPackage.MODEL_RESOURCE:
 			return createModelResource();
 		case ModelReviewPackage.DIAGRAM_RESOURCE:
@@ -94,6 +96,8 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements ModelReviewF
 			return createStateDifference();
 		case ModelReviewPackage.BENDPOINTS_DIFFERENCE:
 			return createBendpointsDifference();
+		case ModelReviewPackage.COMMENT_LINK:
+			return createCommentLink();
 		default:
 			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -196,6 +200,16 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements ModelReviewF
 	 * 
 	 * @generated
 	 */
+	public Comment createComment() {
+		CommentImpl comment = new CommentImpl();
+		return comment;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	public ModelResource createModelResource() {
 		ModelResourceImpl modelResource = new ModelResourceImpl();
 		return modelResource;
@@ -269,6 +283,16 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements ModelReviewF
 	public BendpointsDifference createBendpointsDifference() {
 		BendpointsDifferenceImpl bendpointsDifference = new BendpointsDifferenceImpl();
 		return bendpointsDifference;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public CommentLink createCommentLink() {
+		CommentLinkImpl commentLink = new CommentLinkImpl();
+		return commentLink;
 	}
 
 	/**

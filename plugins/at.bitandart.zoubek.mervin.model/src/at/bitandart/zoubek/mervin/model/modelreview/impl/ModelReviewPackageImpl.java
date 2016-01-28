@@ -14,6 +14,7 @@ package at.bitandart.zoubek.mervin.model.modelreview.impl;
 
 import at.bitandart.zoubek.mervin.model.modelreview.BendpointsDifference;
 import at.bitandart.zoubek.mervin.model.modelreview.Comment;
+import at.bitandart.zoubek.mervin.model.modelreview.CommentLink;
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch;
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramResource;
 import at.bitandart.zoubek.mervin.model.modelreview.Difference;
@@ -181,6 +182,13 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * @generated
 	 */
 	private EClass bendpointsDifferenceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass commentLinkEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -636,6 +644,24 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
+	public EAttribute getComment_Text() {
+		return (EAttribute) commentEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EReference getComment_CommentLinks() {
+		return (EReference) commentEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	public EClass getModelResource() {
 		return modelResourceEClass;
 	}
@@ -834,6 +860,51 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
+	public EClass getCommentLink() {
+		return commentLinkEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EReference getCommentLink_Comment() {
+		return (EReference) commentLinkEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getCommentLink_Start() {
+		return (EAttribute) commentLinkEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getCommentLink_Length() {
+		return (EAttribute) commentLinkEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getCommentLink_Target() {
+		return (EAttribute) commentLinkEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	public EEnum getPatchChangeType() {
 		return patchChangeTypeEEnum;
 	}
@@ -938,6 +1009,8 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 
 		commentEClass = createEClass(COMMENT);
 		createEAttribute(commentEClass, COMMENT__ID);
+		createEAttribute(commentEClass, COMMENT__TEXT);
+		createEReference(commentEClass, COMMENT__COMMENT_LINKS);
 
 		modelResourceEClass = createEClass(MODEL_RESOURCE);
 		createEReference(modelResourceEClass, MODEL_RESOURCE__OBJECTS);
@@ -972,6 +1045,12 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		createEAttribute(stateDifferenceEClass, STATE_DIFFERENCE__TYPE);
 
 		bendpointsDifferenceEClass = createEClass(BENDPOINTS_DIFFERENCE);
+
+		commentLinkEClass = createEClass(COMMENT_LINK);
+		createEReference(commentLinkEClass, COMMENT_LINK__COMMENT);
+		createEAttribute(commentLinkEClass, COMMENT_LINK__START);
+		createEAttribute(commentLinkEClass, COMMENT_LINK__LENGTH);
+		createEAttribute(commentLinkEClass, COMMENT_LINK__TARGET);
 
 		// Create enums
 		patchChangeTypeEEnum = createEEnum(PATCH_CHANGE_TYPE);
@@ -1142,9 +1221,14 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 				ModelPatch.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(commentEClass, Comment.class, "Comment", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(commentEClass, Comment.class, "Comment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getComment_Id(), ecorePackage.getEString(), "id", null, 0, 1, Comment.class, !IS_TRANSIENT,
 				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getComment_Text(), ecorePackage.getEString(), "text", null, 0, 1, Comment.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getComment_CommentLinks(), this.getCommentLink(), this.getCommentLink_Comment(), "commentLinks",
+				null, 0, -1, Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
+				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(modelResourceEClass, ModelResource.class, "ModelResource", !IS_ABSTRACT, !IS_INTERFACE,
 				IS_GENERATED_INSTANCE_CLASS);
@@ -1211,6 +1295,18 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 
 		initEClass(bendpointsDifferenceEClass, BendpointsDifference.class, "BendpointsDifference", !IS_ABSTRACT,
 				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(commentLinkEClass, CommentLink.class, "CommentLink", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getCommentLink_Comment(), this.getComment(), this.getComment_CommentLinks(), "comment", null, 0,
+				1, CommentLink.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getCommentLink_Start(), ecorePackage.getEInt(), "start", "0", 0, 1, CommentLink.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getCommentLink_Length(), ecorePackage.getEInt(), "length", "0", 0, 1, CommentLink.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getCommentLink_Target(), ecorePackage.getEJavaObject(), "target", null, 0, 1, CommentLink.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(patchChangeTypeEEnum, PatchChangeType.class, "PatchChangeType");

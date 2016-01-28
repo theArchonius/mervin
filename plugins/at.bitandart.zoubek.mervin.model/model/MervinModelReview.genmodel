@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="******************************************************************************&#xA; Copyright (c) 2015 Florian Zoubek.&#xA; All rights reserved. This program and the accompanying materials&#xA; are made available under the terms of the Eclipse Public License v1.0&#xA; which accompanies this distribution, and is available at&#xA; http://www.eclipse.org/legal/epl-v10.html&#xA; &#xA; Contributors:&#xA;    Florian Zoubek - initial API and implementation&#xA;******************************************************************************"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" copyrightText="******************************************************************************&#xA; Copyright (c) 2015, 2016 Florian Zoubek.&#xA; All rights reserved. This program and the accompanying materials&#xA; are made available under the terms of the Eclipse Public License v1.0&#xA; which accompanies this distribution, and is available at&#xA; http://www.eclipse.org/legal/epl-v10.html&#xA; &#xA; Contributors:&#xA;    Florian Zoubek - initial API and implementation&#xA;******************************************************************************"
     modelDirectory="/at.bitandart.zoubek.mervin.model/src" modelPluginID="at.bitandart.zoubek.mervin.model"
     modelName="MervinModelReview" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
     codeFormatting="true" commentFormatting="true" importerID="org.eclipse.emf.importer.ecore"
@@ -73,6 +73,8 @@
     </genClasses>
     <genClasses image="false" ecoreClass="MervinModelReview.ecore#//Comment">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//Comment/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//Comment/text"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//Comment/commentLinks"/>
     </genClasses>
     <genClasses ecoreClass="MervinModelReview.ecore#//ModelResource">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//ModelResource/objects"/>
@@ -103,5 +105,11 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//StateDifference/type"/>
     </genClasses>
     <genClasses ecoreClass="MervinModelReview.ecore#//BendpointsDifference"/>
+    <genClasses ecoreClass="MervinModelReview.ecore#//CommentLink">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference MervinModelReview.ecore#//CommentLink/comment"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//CommentLink/start"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//CommentLink/length"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//CommentLink/target"/>
+    </genClasses>
   </genPackages>
 </genmodel:GenModel>

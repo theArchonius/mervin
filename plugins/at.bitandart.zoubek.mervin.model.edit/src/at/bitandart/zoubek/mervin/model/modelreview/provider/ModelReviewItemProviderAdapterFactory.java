@@ -212,6 +212,31 @@ public class ModelReviewItemProviderAdapterFactory extends ModelReviewAdapterFac
 
 	/**
 	 * This keeps track of the one adapter used for all
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment} instances.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected CommentItemProvider commentItemProvider;
+
+	/**
+	 * This creates an adapter for a
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment}. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createCommentAdapter() {
+		if (commentItemProvider == null) {
+			commentItemProvider = new CommentItemProvider(this);
+		}
+
+		return commentItemProvider;
+	}
+
+	/**
+	 * This keeps track of the one adapter used for all
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelResource}
 	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -411,6 +436,31 @@ public class ModelReviewItemProviderAdapterFactory extends ModelReviewAdapterFac
 	}
 
 	/**
+	 * This keeps track of the one adapter used for all
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.CommentLink}
+	 * instances. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected CommentLinkItemProvider commentLinkItemProvider;
+
+	/**
+	 * This creates an adapter for a
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.CommentLink}. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Adapter createCommentLinkAdapter() {
+		if (commentLinkItemProvider == null) {
+			commentLinkItemProvider = new CommentLinkItemProvider(this);
+		}
+
+		return commentLinkItemProvider;
+	}
+
+	/**
 	 * This returns the root adapter factory that contains this factory. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -518,6 +568,8 @@ public class ModelReviewItemProviderAdapterFactory extends ModelReviewAdapterFac
 			diagramPatchItemProvider.dispose();
 		if (modelPatchItemProvider != null)
 			modelPatchItemProvider.dispose();
+		if (commentItemProvider != null)
+			commentItemProvider.dispose();
 		if (modelResourceItemProvider != null)
 			modelResourceItemProvider.dispose();
 		if (diagramResourceItemProvider != null)
@@ -534,6 +586,8 @@ public class ModelReviewItemProviderAdapterFactory extends ModelReviewAdapterFac
 			stateDifferenceItemProvider.dispose();
 		if (bendpointsDifferenceItemProvider != null)
 			bendpointsDifferenceItemProvider.dispose();
+		if (commentLinkItemProvider != null)
+			commentLinkItemProvider.dispose();
 	}
 
 }
