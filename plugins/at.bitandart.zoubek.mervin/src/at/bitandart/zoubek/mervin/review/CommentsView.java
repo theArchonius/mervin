@@ -20,11 +20,9 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.eclipse.ui.forms.widgets.TableWrapData;
-import org.eclipse.ui.forms.widgets.TableWrapLayout;
 
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.swt.comments.CommentList;
@@ -48,10 +46,6 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 	// Data
 	private boolean viewInitialized = false;
 
-	// SWT Controls
-	private ScrolledForm mainForm;
-	private Composite mainPanel;
-
 	@Inject
 	public CommentsView() {
 	}
@@ -59,16 +53,13 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 	@PostConstruct
 	public void postConstruct(Composite parent) {
 
+		parent.setLayout(new FillLayout());
+
 		FormToolkit toolkit = new FormToolkit(parent.getDisplay());
-		mainForm = toolkit.createScrolledForm(parent);
 
-		mainPanel = mainForm.getBody();
-		mainPanel.setLayout(new TableWrapLayout());
-
-		commentListViewer = new CommentListViewer(mainPanel, toolkit, SWT.NONE);
+		commentListViewer = new CommentListViewer(parent, toolkit, SWT.V_SCROLL);
 		commentListViewer.setCommentProvider(new MervinCommentProvider());
 		CommentList control = commentListViewer.getCommentListControl();
-		control.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
 		control.addCommentLinkListener(new CommentLinkListener() {
 
 			@Override
