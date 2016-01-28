@@ -80,9 +80,17 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Comment">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="author" lowerBound="1"
+        eType="#//User"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="creationTime" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"
+        defaultValueLiteral="0"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="commentLinks" upperBound="-1"
         eType="#//CommentLink" containment="true" eOpposite="#//CommentLink/comment"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="replies" upperBound="-1"
+        eType="#//Comment" eOpposite="#//Comment/repliedTo"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="repliedTo" eType="#//Comment"
+        eOpposite="#//Comment/replies"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ModelResource">
     <eStructuralFeatures xsi:type="ecore:EReference" name="objects" upperBound="-1"
@@ -147,5 +155,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="length" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
         defaultValueLiteral="0"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="target" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="User">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 </ecore:EPackage>

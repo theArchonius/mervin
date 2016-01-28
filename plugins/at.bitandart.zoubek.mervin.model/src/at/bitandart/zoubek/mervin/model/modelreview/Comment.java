@@ -26,11 +26,20 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getId
  * <em>Id</em>}</li>
+ * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getAuthor
+ * <em>Author</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getCreationTime
+ * <em>Creation Time</em>}</li>
  * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getText
  * <em>Text</em>}</li>
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getCommentLinks
  * <em>Comment Links</em>}</li>
+ * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getReplies
+ * <em>Replies</em>}</li>
+ * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getRepliedTo
+ * <em>Replied To</em>}</li>
  * </ul>
  *
  * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getComment()
@@ -66,6 +75,66 @@ public interface Comment extends EObject {
 	 * @generated
 	 */
 	void setId(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Author</b></em>' reference. <!--
+	 * begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Author</em>' reference isn't clear, there
+	 * really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Author</em>' reference.
+	 * @see #setAuthor(User)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getComment_Author()
+	 * @model required="true"
+	 * @generated
+	 */
+	User getAuthor();
+
+	/**
+	 * Sets the value of the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getAuthor
+	 * <em>Author</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Author</em>' reference.
+	 * @see #getAuthor()
+	 * @generated
+	 */
+	void setAuthor(User value);
+
+	/**
+	 * Returns the value of the '<em><b>Creation Time</b></em>' attribute. The
+	 * default value is <code>"0"</code>. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Creation Time</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Creation Time</em>' attribute.
+	 * @see #setCreationTime(long)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getComment_CreationTime()
+	 * @model default="0"
+	 * @generated
+	 */
+	long getCreationTime();
+
+	/**
+	 * Sets the value of the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getCreationTime
+	 * <em>Creation Time</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Creation Time</em>' attribute.
+	 * @see #getCreationTime()
+	 * @generated
+	 */
+	void setCreationTime(long value);
 
 	/**
 	 * Returns the value of the '<em><b>Text</b></em>' attribute. <!--
@@ -117,5 +186,59 @@ public interface Comment extends EObject {
 	 * @generated
 	 */
 	EList<CommentLink> getCommentLinks();
+
+	/**
+	 * Returns the value of the '<em><b>Replies</b></em>' reference list. The
+	 * list contents are of type
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment}. It is
+	 * bidirectional and its opposite is '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getRepliedTo
+	 * <em>Replied To</em>}'. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Replies</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Replies</em>' reference list.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getComment_Replies()
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.Comment#getRepliedTo
+	 * @model opposite="repliedTo"
+	 * @generated
+	 */
+	EList<Comment> getReplies();
+
+	/**
+	 * Returns the value of the '<em><b>Replied To</b></em>' reference. It is
+	 * bidirectional and its opposite is '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getReplies
+	 * <em>Replies</em>}'. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Replied To</em>' reference isn't clear, there
+	 * really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Replied To</em>' reference.
+	 * @see #setRepliedTo(Comment)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getComment_RepliedTo()
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.Comment#getReplies
+	 * @model opposite="replies"
+	 * @generated
+	 */
+	Comment getRepliedTo();
+
+	/**
+	 * Sets the value of the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getRepliedTo
+	 * <em>Replied To</em>}' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Replied To</em>' reference.
+	 * @see #getRepliedTo()
+	 * @generated
+	 */
+	void setRepliedTo(Comment value);
 
 } // Comment

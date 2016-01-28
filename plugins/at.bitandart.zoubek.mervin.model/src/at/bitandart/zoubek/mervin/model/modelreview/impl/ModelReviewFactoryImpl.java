@@ -98,6 +98,8 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements ModelReviewF
 			return createBendpointsDifference();
 		case ModelReviewPackage.COMMENT_LINK:
 			return createCommentLink();
+		case ModelReviewPackage.USER:
+			return createUser();
 		default:
 			throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -293,6 +295,16 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements ModelReviewF
 	public CommentLink createCommentLink() {
 		CommentLinkImpl commentLink = new CommentLinkImpl();
 		return commentLink;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public User createUser() {
+		UserImpl user = new UserImpl();
+		return user;
 	}
 
 	/**

@@ -67,7 +67,11 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 			super.getPropertyDescriptors(object);
 
 			addIdPropertyDescriptor(object);
+			addAuthorPropertyDescriptor(object);
+			addCreationTimePropertyDescriptor(object);
 			addTextPropertyDescriptor(object);
+			addRepliesPropertyDescriptor(object);
+			addRepliedToPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -88,6 +92,37 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 	}
 
 	/**
+	 * This adds a property descriptor for the Author feature. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addAuthorPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Comment_author_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_Comment_author_feature",
+								"_UI_Comment_type"),
+						ModelReviewPackage.Literals.COMMENT__AUTHOR, true, false, true, null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Creation Time feature. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addCreationTimePropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Comment_creationTime_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_Comment_creationTime_feature",
+								"_UI_Comment_type"),
+						ModelReviewPackage.Literals.COMMENT__CREATION_TIME, true, false, false,
+						ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE, null, null));
+	}
+
+	/**
 	 * This adds a property descriptor for the Text feature. <!-- begin-user-doc
 	 * --> <!-- end-user-doc -->
 	 * 
@@ -100,6 +135,36 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 						getString("_UI_PropertyDescriptor_description", "_UI_Comment_text_feature", "_UI_Comment_type"),
 						ModelReviewPackage.Literals.COMMENT__TEXT, true, false, false,
 						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Replies feature. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addRepliesPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Comment_replies_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_Comment_replies_feature",
+								"_UI_Comment_type"),
+						ModelReviewPackage.Literals.COMMENT__REPLIES, true, false, true, null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Replied To feature. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addRepliedToPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Comment_repliedTo_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_Comment_repliedTo_feature",
+								"_UI_Comment_type"),
+						ModelReviewPackage.Literals.COMMENT__REPLIED_TO, true, false, true, null, null, null));
 	}
 
 	/**
@@ -162,6 +227,7 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 
 		switch (notification.getFeatureID(Comment.class)) {
 		case ModelReviewPackage.COMMENT__ID:
+		case ModelReviewPackage.COMMENT__CREATION_TIME:
 		case ModelReviewPackage.COMMENT__TEXT:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 			return;

@@ -172,6 +172,11 @@ public class ModelReviewAdapterFactory extends AdapterFactoryImpl {
 		}
 
 		@Override
+		public Adapter caseUser(User object) {
+			return createUserAdapter();
+		}
+
+		@Override
 		public Adapter defaultCase(EObject object) {
 			return createEObjectAdapter();
 		}
@@ -491,6 +496,21 @@ public class ModelReviewAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createCommentLinkAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.User <em>User</em>}'.
+	 * <!-- begin-user-doc --> This default implementation returns null so that
+	 * we can easily ignore cases; it's useful to ignore a case when inheritance
+	 * will catch all the cases anyway. <!-- end-user-doc -->
+	 * 
+	 * @return the new adapter.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.User
+	 * @generated
+	 */
+	public Adapter createUserAdapter() {
 		return null;
 	}
 
