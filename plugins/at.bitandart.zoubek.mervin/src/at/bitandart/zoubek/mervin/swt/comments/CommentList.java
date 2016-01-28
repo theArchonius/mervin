@@ -389,6 +389,7 @@ public class CommentList extends Composite {
 		columnComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		GridLayout gridLayout = new GridLayout(3, false);
 		gridLayout.marginWidth = 5;
+		gridLayout.horizontalSpacing = 0;
 		columnComposite.setLayout(gridLayout);
 		internalCommentColumn.setComposite(columnComposite);
 
@@ -453,12 +454,12 @@ public class CommentList extends Composite {
 
 					Composite columnComposite = internalCommentColumn.getComposite();
 
-					int metaDataAlignment = SWT.LEFT;
+					int metaDataAlignment = SWT.RIGHT;
 
-					if (internalComment.getAlignment() != Alignment.LEFT) {
-						// add a filler composite
-						addCommentFillerComposite(internalComment, columnComposite);
-						metaDataAlignment = SWT.RIGHT;
+					if (internalComment.getAlignment() == Alignment.LEFT) {
+						// add the avatar
+						addCommentAvatar(internalComment, columnComposite, SWT.LEFT);
+						metaDataAlignment = SWT.LEFT;
 					}
 
 					// add the comment composite
@@ -469,9 +470,9 @@ public class CommentList extends Composite {
 					commentComposite.setLayout(new GridLayout(1, false));
 					commentComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 
-					if (internalComment.getAlignment() == Alignment.LEFT) {
-						// add a filler composite
-						addCommentFillerComposite(internalComment, columnComposite);
+					if (internalComment.getAlignment() != Alignment.LEFT) {
+						// add the avatar
+						addCommentAvatar(internalComment, columnComposite, SWT.RIGHT);
 					}
 
 					// create the author label
@@ -549,19 +550,19 @@ public class CommentList extends Composite {
 	}
 
 	/**
-	 * adds a filler composite used to create a blank space of at least 5 pixels
-	 * for a given internal comment.
+	 * adds an avatar for the given internal comment to the column composite.
 	 * 
 	 * @param internalComment
 	 * @param columnComposite
+	 * @param alignment
+	 *            either {@link SWT#LEFT}, {@link SWT#RIGHT} or {@link SWT#NONE}
 	 */
-	private void addCommentFillerComposite(InternalComment internalComment, Composite columnComposite) {
-		Composite filler = toolkit.createComposite(columnComposite, SWT.NONE);
-		GridData fillerData = new GridData(SWT.FILL, SWT.FILL, false, false);
-		fillerData.minimumWidth = 5;
-		fillerData.widthHint = 20;
-		filler.setLayoutData(fillerData);
-		internalComment.setCommentFiller(filler);
+	private void addCommentAvatar(InternalComment internalComment, Composite columnComposite, int alignment) {
+		CommentAvatar avatar = new CommentAvatar(columnComposite, alignment);
+		toolkit.adapt(avatar);
+		GridData avatarData = new GridData(SWT.FILL, SWT.FILL, false, false);
+		avatar.setLayoutData(avatarData);
+		internalComment.setCommentFiller(avatar);
 	}
 
 	private void createReplyCommentEditor(final InternalComment internalComment,
