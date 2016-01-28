@@ -15,7 +15,6 @@ import java.util.List;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -38,8 +37,8 @@ public class CommentListViewer extends Viewer {
 
 	private Object input;
 
-	public CommentListViewer(Composite parent, FormToolkit toolkit) {
-		commentListControl = new CommentList(parent, SWT.NONE, toolkit);
+	public CommentListViewer(Composite parent, FormToolkit toolkit, int style) {
+		commentListControl = new CommentList(parent, style, toolkit);
 	}
 
 	@Override

@@ -24,8 +24,11 @@ import java.util.Set;
 
 import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseEvent;
@@ -36,6 +39,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -62,7 +66,7 @@ import at.bitandart.zoubek.mervin.swt.comments.data.ICommentLinkTarget;
  * @author Florian Zoubek
  *
  */
-public class CommentList extends Composite {
+public class CommentList extends ScrolledComposite {
 
 	// Data
 	private List<ICommentColumn> baseColumns = new ArrayList<ICommentColumn>(2);
@@ -75,6 +79,8 @@ public class CommentList extends Composite {
 	private DateFormat dateFormat = DateFormat.getDateTimeInstance();
 
 	// SWT controls
+	private Composite mainBody;
+
 	private Composite columnHeaderArea;
 	private Map<ICommentColumn, Control> columnHeaders = new HashMap<>();
 	private Map<ICommentColumn, CommentEditor> columnHeaderEditors = new HashMap<>();
@@ -92,10 +98,24 @@ public class CommentList extends Composite {
 		this.toolkit = toolkit;
 		toolkit.adapt(this);
 
-		setLayout(new GridLayout());
+		/*
+		 * initialize as a scrolled composite that allows wrapping (based on SWT
+		 * Snippet 166)
+		 */
+		mainBody = toolkit.createComposite(this);
+		mainBody.setLayout(new GridLayout());
+		this.setContent(mainBody);
+		this.setExpandVertical(true);
+		this.setExpandHorizontal(true);
+		this.addControlListener(new ControlAdapter() {
+			public void controlResized(ControlEvent e) {
+				Rectangle r = getClientArea();
+				setMinSize(mainBody.computeSize(r.width, SWT.DEFAULT));
+			}
+		});
 
 		// create the composite that contains the column headers
-		columnHeaderArea = toolkit.createComposite(this);
+		columnHeaderArea = toolkit.createComposite(mainBody);
 		columnHeaderArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		columnHeaderArea.setLayout(new GridLayout());
 
@@ -332,7 +352,7 @@ public class CommentList extends Composite {
 			InternalCommentGroup internalCommentGroup = new InternalCommentGroup(commentGroup);
 
 			// create the group title
-			Label groupTitle = toolkit.createLabel(this, internalCommentGroup.getGroupTitle(), SWT.CENTER);
+			Label groupTitle = toolkit.createLabel(mainBody, internalCommentGroup.getGroupTitle(), SWT.CENTER);
 			groupTitle.setBackground(titleBackground);
 			groupTitle.setForeground(titleForeground);
 			groupTitle.setFont(titleFont);
@@ -340,7 +360,7 @@ public class CommentList extends Composite {
 			internalCommentGroup.setGroupTitleControl(groupTitle);
 
 			// create the group composite
-			Composite groupComposite = toolkit.createComposite(this);
+			Composite groupComposite = toolkit.createComposite(mainBody);
 			groupComposite.setLayout(createColumnLayout());
 			groupComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 

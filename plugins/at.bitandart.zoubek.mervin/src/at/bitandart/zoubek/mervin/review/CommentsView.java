@@ -19,6 +19,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
@@ -64,7 +65,7 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 		mainPanel = mainForm.getBody();
 		mainPanel.setLayout(new TableWrapLayout());
 
-		commentListViewer = new CommentListViewer(mainPanel, toolkit);
+		commentListViewer = new CommentListViewer(mainPanel, toolkit, SWT.NONE);
 		commentListViewer.setCommentProvider(new MervinCommentProvider());
 		CommentList control = commentListViewer.getCommentListControl();
 		control.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));

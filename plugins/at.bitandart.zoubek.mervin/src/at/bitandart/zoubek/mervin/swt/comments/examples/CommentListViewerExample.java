@@ -22,16 +22,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -75,39 +70,14 @@ public class CommentListViewerExample {
 		shell.setLayout(new GridLayout(2, false));
 		FormToolkit toolkit = new FormToolkit(display);
 
-		/*
-		 * create a scrolled composite that allows wrapping (based on SWT
-		 * Snippet 166)
-		 * 
-		 * It is *NOT* recommended to use the same technique with a
-		 * ScrolledForm, as a call of ScrolledForm#reflow() may change the
-		 * minimum size (depending on the style bits and layout manager of the
-		 * body) and break the computation of the correct wrapped layout.
-		 */
-		final ScrolledComposite scrollComposite = new ScrolledComposite(shell, SWT.V_SCROLL | SWT.H_SCROLL);
-		toolkit.adapt(scrollComposite);
-		final Composite body = toolkit.createComposite(scrollComposite);
-		body.setLayout(new GridLayout(1, false));
-
-		scrollComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 3));
-		scrollComposite.setContent(body);
-		scrollComposite.setExpandVertical(true);
-		scrollComposite.setExpandHorizontal(true);
-		scrollComposite.addControlListener(new ControlAdapter() {
-			public void controlResized(ControlEvent e) {
-				Rectangle r = scrollComposite.getClientArea();
-				scrollComposite.setMinSize(body.computeSize(r.width, SWT.DEFAULT));
-			}
-		});
-
 		// ##################################
-		// # create the comment list view
+		// # create the comment list viewer
 		// ##################################
-		final CommentListViewer commentListViewer = new CommentListViewer(body, toolkit);
+		final CommentListViewer commentListViewer = new CommentListViewer(shell, toolkit, SWT.V_SCROLL | SWT.H_SCROLL);
 		commentListViewer.setCommentProvider(new ExampleCommentProvider());
 
 		final CommentList commentListControl = commentListViewer.getCommentListControl();
-		commentListControl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 3));
+		commentListControl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 3));
 
 		// link events
 		commentListControl.addCommentLinkListener(new CommentLinkListener() {
@@ -115,35 +85,35 @@ public class CommentListViewerExample {
 			@Override
 			public void commentLinkClicked(ICommentLink commentLink) {
 
-				String text = eventOutput.getText();
-				if (!text.isEmpty()) {
+				String text = "";
+				if (!eventOutput.getText().isEmpty()) {
 					text += "\n";
 				}
 				text += "Comment link click detected on comment link:\n" + commentLink.toString() + "\n";
-				eventOutput.setText(text);
+				eventOutput.append(text);
 
 			}
 
 			@Override
 			public void commentLinkEnter(ICommentLink commentLink) {
 
-				String text = eventOutput.getText();
-				if (!text.isEmpty()) {
+				String text = "";
+				if (!eventOutput.getText().isEmpty()) {
 					text += "\n";
 				}
 				text += "Comment link enter detected on comment link:\n" + commentLink.toString() + "\n";
-				eventOutput.setText(text);
+				eventOutput.append(text);
 			}
 
 			@Override
 			public void commentLinkExit(ICommentLink commentLink) {
 
-				String text = eventOutput.getText();
-				if (!text.isEmpty()) {
+				String text = "";
+				if (!eventOutput.getText().isEmpty()) {
 					text += "\n";
 				}
 				text += "Comment link exit detected on comment link:\n" + commentLink.toString() + "\n";
-				eventOutput.setText(text);
+				eventOutput.append(text);
 
 			}
 		});
@@ -268,8 +238,6 @@ public class CommentListViewerExample {
 		eventOutput = new Text(shell, SWT.BORDER | SWT.READ_ONLY | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
 		eventOutput.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		body.layout();
-		scrollComposite.layout();
 		shell.layout();
 
 		shell.open();
