@@ -69,18 +69,21 @@ public class CommentListViewer extends Viewer {
 			for (ICommentColumn commentColumn : commentColumns) {
 				commentListControl.addCommentColumn(commentColumn);
 			}
+			if (!commentColumns.isEmpty()) {
+				List<ICommentGroup> commentGroups = commentProvider.getCommentGroups(input);
+				for (ICommentGroup commentGroup : commentGroups) {
 
-			List<ICommentGroup> commentGroups = commentProvider.getCommentGroups(input);
-			for (ICommentGroup commentGroup : commentGroups) {
-
-				commentListControl.addCommentGroup(commentGroup);
-				for (ICommentColumn commentColumn : commentColumns) {
-					List<IComment> comments = commentProvider.getComments(input, commentGroup, commentColumn);
-					for (IComment comment : comments) {
-						commentListControl.addComment(commentGroup, commentColumn, comment);
+					commentListControl.addCommentGroup(commentGroup);
+					for (ICommentColumn commentColumn : commentColumns) {
+						List<IComment> comments = commentProvider.getComments(input, commentGroup, commentColumn);
+						for (IComment comment : comments) {
+							commentListControl.addComment(commentGroup, commentColumn, comment);
+						}
 					}
 				}
 			}
+
+			commentListControl.layout(true, true);
 		}
 
 	}

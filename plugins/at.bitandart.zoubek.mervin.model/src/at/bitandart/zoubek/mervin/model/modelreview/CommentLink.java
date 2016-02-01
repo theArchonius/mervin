@@ -12,6 +12,7 @@
  */
 package at.bitandart.zoubek.mervin.model.modelreview;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -29,8 +30,9 @@ import org.eclipse.emf.ecore.EObject;
  * <em>Start</em>}</li>
  * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.CommentLink#getLength
  * <em>Length</em>}</li>
- * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.CommentLink#getTarget
- * <em>Target</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.CommentLink#getTargets
+ * <em>Targets</em>}</li>
  * </ul>
  *
  * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getCommentLink()
@@ -131,33 +133,20 @@ public interface CommentLink extends EObject {
 	void setLength(int value);
 
 	/**
-	 * Returns the value of the '<em><b>Target</b></em>' attribute. <!--
+	 * Returns the value of the '<em><b>Targets</b></em>' reference list. The
+	 * list contents are of type {@link org.eclipse.emf.ecore.EObject}. <!--
 	 * begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Target</em>' attribute isn't clear, there
-	 * really should be more of a description here...
+	 * If the meaning of the '<em>Targets</em>' reference list isn't clear,
+	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Target</em>' attribute.
-	 * @see #setTarget(Object)
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getCommentLink_Target()
+	 * @return the value of the '<em>Targets</em>' reference list.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getCommentLink_Targets()
 	 * @model
 	 * @generated
 	 */
-	Object getTarget();
-
-	/**
-	 * Sets the value of the '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.CommentLink#getTarget
-	 * <em>Target</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @param value
-	 *            the new value of the '<em>Target</em>' attribute.
-	 * @see #getTarget()
-	 * @generated
-	 */
-	void setTarget(Object value);
+	EList<EObject> getTargets();
 
 } // CommentLink

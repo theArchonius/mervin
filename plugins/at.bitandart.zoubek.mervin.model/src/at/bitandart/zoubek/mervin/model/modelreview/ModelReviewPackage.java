@@ -1308,13 +1308,13 @@ public interface ModelReviewPackage extends EPackage {
 	int COMMENT_LINK__LENGTH = 2;
 
 	/**
-	 * The feature id for the '<em><b>Target</b></em>' attribute. <!--
+	 * The feature id for the '<em><b>Targets</b></em>' reference list. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int COMMENT_LINK__TARGET = 3;
+	int COMMENT_LINK__TARGETS = 3;
 
 	/**
 	 * The number of structural features of the '<em>Comment Link</em>' class.
@@ -2295,16 +2295,16 @@ public interface ModelReviewPackage extends EPackage {
 	EAttribute getCommentLink_Length();
 
 	/**
-	 * Returns the meta object for the attribute '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.CommentLink#getTarget
-	 * <em>Target</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * Returns the meta object for the reference list '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.CommentLink#getTargets
+	 * <em>Targets</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @return the meta object for the attribute '<em>Target</em>'.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.CommentLink#getTarget()
+	 * @return the meta object for the reference list '<em>Targets</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.CommentLink#getTargets()
 	 * @see #getCommentLink()
 	 * @generated
 	 */
-	EAttribute getCommentLink_Target();
+	EReference getCommentLink_Targets();
 
 	/**
 	 * Returns the meta object for class '
@@ -3068,12 +3068,12 @@ public interface ModelReviewPackage extends EPackage {
 		EAttribute COMMENT_LINK__LENGTH = eINSTANCE.getCommentLink_Length();
 
 		/**
-		 * The meta object literal for the '<em><b>Target</b></em>' attribute
-		 * feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * The meta object literal for the '<em><b>Targets</b></em>' reference
+		 * list feature. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
 		 * @generated
 		 */
-		EAttribute COMMENT_LINK__TARGET = eINSTANCE.getCommentLink_Target();
+		EReference COMMENT_LINK__TARGETS = eINSTANCE.getCommentLink_Targets();
 
 		/**
 		 * The meta object literal for the '

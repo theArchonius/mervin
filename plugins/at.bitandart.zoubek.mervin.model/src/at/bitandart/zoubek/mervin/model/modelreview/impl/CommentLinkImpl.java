@@ -16,15 +16,19 @@ import at.bitandart.zoubek.mervin.model.modelreview.Comment;
 import at.bitandart.zoubek.mervin.model.modelreview.CommentLink;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 
+import java.util.Collection;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 /**
@@ -44,8 +48,8 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.CommentLinkImpl#getLength
  * <em>Length</em>}</li>
  * <li>
- * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.CommentLinkImpl#getTarget
- * <em>Target</em>}</li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.CommentLinkImpl#getTargets
+ * <em>Targets</em>}</li>
  * </ul>
  *
  * @generated
@@ -92,24 +96,14 @@ public class CommentLinkImpl extends MinimalEObjectImpl.Container implements Com
 	protected int length = LENGTH_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getTarget() <em>Target</em>}'
-	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * The cached value of the '{@link #getTargets() <em>Targets</em>}'
+	 * reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @see #getTarget()
+	 * @see #getTargets()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final Object TARGET_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getTarget() <em>Target</em>}' attribute.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @see #getTarget()
-	 * @generated
-	 * @ordered
-	 */
-	protected Object target = TARGET_EDEFAULT;
+	protected EList<EObject> targets;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -224,21 +218,11 @@ public class CommentLinkImpl extends MinimalEObjectImpl.Container implements Com
 	 * 
 	 * @generated
 	 */
-	public Object getTarget() {
-		return target;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public void setTarget(Object newTarget) {
-		Object oldTarget = target;
-		target = newTarget;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.COMMENT_LINK__TARGET, oldTarget,
-					target));
+	public EList<EObject> getTargets() {
+		if (targets == null) {
+			targets = new EObjectResolvingEList<EObject>(EObject.class, this, ModelReviewPackage.COMMENT_LINK__TARGETS);
+		}
+		return targets;
 	}
 
 	/**
@@ -300,8 +284,8 @@ public class CommentLinkImpl extends MinimalEObjectImpl.Container implements Com
 			return getStart();
 		case ModelReviewPackage.COMMENT_LINK__LENGTH:
 			return getLength();
-		case ModelReviewPackage.COMMENT_LINK__TARGET:
-			return getTarget();
+		case ModelReviewPackage.COMMENT_LINK__TARGETS:
+			return getTargets();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -311,6 +295,7 @@ public class CommentLinkImpl extends MinimalEObjectImpl.Container implements Com
 	 * 
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
@@ -323,8 +308,9 @@ public class CommentLinkImpl extends MinimalEObjectImpl.Container implements Com
 		case ModelReviewPackage.COMMENT_LINK__LENGTH:
 			setLength((Integer) newValue);
 			return;
-		case ModelReviewPackage.COMMENT_LINK__TARGET:
-			setTarget(newValue);
+		case ModelReviewPackage.COMMENT_LINK__TARGETS:
+			getTargets().clear();
+			getTargets().addAll((Collection<? extends EObject>) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -347,8 +333,8 @@ public class CommentLinkImpl extends MinimalEObjectImpl.Container implements Com
 		case ModelReviewPackage.COMMENT_LINK__LENGTH:
 			setLength(LENGTH_EDEFAULT);
 			return;
-		case ModelReviewPackage.COMMENT_LINK__TARGET:
-			setTarget(TARGET_EDEFAULT);
+		case ModelReviewPackage.COMMENT_LINK__TARGETS:
+			getTargets().clear();
 			return;
 		}
 		super.eUnset(featureID);
@@ -368,8 +354,8 @@ public class CommentLinkImpl extends MinimalEObjectImpl.Container implements Com
 			return start != START_EDEFAULT;
 		case ModelReviewPackage.COMMENT_LINK__LENGTH:
 			return length != LENGTH_EDEFAULT;
-		case ModelReviewPackage.COMMENT_LINK__TARGET:
-			return TARGET_EDEFAULT == null ? target != null : !TARGET_EDEFAULT.equals(target);
+		case ModelReviewPackage.COMMENT_LINK__TARGETS:
+			return targets != null && !targets.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
@@ -389,8 +375,6 @@ public class CommentLinkImpl extends MinimalEObjectImpl.Container implements Com
 		result.append(start);
 		result.append(", length: ");
 		result.append(length);
-		result.append(", target: ");
-		result.append(target);
 		result.append(')');
 		return result.toString();
 	}

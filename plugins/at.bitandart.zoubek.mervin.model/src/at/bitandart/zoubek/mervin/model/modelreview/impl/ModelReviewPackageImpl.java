@@ -940,8 +940,8 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	public EAttribute getCommentLink_Target() {
-		return (EAttribute) commentLinkEClass.getEStructuralFeatures().get(3);
+	public EReference getCommentLink_Targets() {
+		return (EReference) commentLinkEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -1116,7 +1116,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		createEReference(commentLinkEClass, COMMENT_LINK__COMMENT);
 		createEAttribute(commentLinkEClass, COMMENT_LINK__START);
 		createEAttribute(commentLinkEClass, COMMENT_LINK__LENGTH);
-		createEAttribute(commentLinkEClass, COMMENT_LINK__TARGET);
+		createEReference(commentLinkEClass, COMMENT_LINK__TARGETS);
 
 		userEClass = createEClass(USER);
 		createEAttribute(userEClass, USER__NAME);
@@ -1385,8 +1385,9 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getCommentLink_Length(), ecorePackage.getEInt(), "length", "0", 0, 1, CommentLink.class,
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getCommentLink_Target(), ecorePackage.getEJavaObject(), "target", null, 0, 1, CommentLink.class,
-				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCommentLink_Targets(), ecorePackage.getEObject(), null, "targets", null, 0, -1,
+				CommentLink.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(userEClass, User.class, "User", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getUser_Name(), ecorePackage.getEString(), "name", null, 0, 1, User.class, !IS_TRANSIENT,

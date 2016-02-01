@@ -66,7 +66,7 @@ public class CommentLinkItemProvider extends ItemProviderAdapter implements IEdi
 
 			addStartPropertyDescriptor(object);
 			addLengthPropertyDescriptor(object);
-			addTargetPropertyDescriptor(object);
+			addTargetsPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -104,19 +104,18 @@ public class CommentLinkItemProvider extends ItemProviderAdapter implements IEdi
 	}
 
 	/**
-	 * This adds a property descriptor for the Target feature. <!--
+	 * This adds a property descriptor for the Targets feature. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected void addTargetPropertyDescriptor(Object object) {
+	protected void addTargetsPropertyDescriptor(Object object) {
 		itemPropertyDescriptors
 				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(), getString("_UI_CommentLink_target_feature"),
-						getString("_UI_PropertyDescriptor_description", "_UI_CommentLink_target_feature",
+						getResourceLocator(), getString("_UI_CommentLink_targets_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_CommentLink_targets_feature",
 								"_UI_CommentLink_type"),
-						ModelReviewPackage.Literals.COMMENT_LINK__TARGET, true, false, false,
-						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+						ModelReviewPackage.Literals.COMMENT_LINK__TARGETS, true, false, true, null, null, null));
 	}
 
 	/**
@@ -157,7 +156,6 @@ public class CommentLinkItemProvider extends ItemProviderAdapter implements IEdi
 		switch (notification.getFeatureID(CommentLink.class)) {
 		case ModelReviewPackage.COMMENT_LINK__START:
 		case ModelReviewPackage.COMMENT_LINK__LENGTH:
-		case ModelReviewPackage.COMMENT_LINK__TARGET:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 			return;
 		}

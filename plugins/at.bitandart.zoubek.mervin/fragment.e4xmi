@@ -27,7 +27,7 @@
       <tags>View</tags>
       <tags>categoryTag:Mervin</tags>
     </elements>
-    <elements xsi:type="basic:PartDescriptor" xmi:id="_kGxz0P1dEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.comments" label="Review Comments" category="Mervin" closeable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.review.CommentsView">
+    <elements xsi:type="basic:PartDescriptor" xmi:id="_kGxz0P1dEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.comments" label="Review Comments" category="Mervin" closeable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.comments.CommentsView">
       <tags>View</tags>
       <tags>categoryTag:Mervin</tags>
     </elements>

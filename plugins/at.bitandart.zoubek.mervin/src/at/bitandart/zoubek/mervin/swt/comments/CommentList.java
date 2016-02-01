@@ -389,7 +389,7 @@ public class CommentList extends ScrolledComposite {
 	 *         contains the comment columns.
 	 */
 	private Layout createColumnLayout() {
-		GridLayout gridLayout = new GridLayout(2, true);
+		GridLayout gridLayout = new GridLayout(baseColumns.size(), true);
 		gridLayout.marginWidth = 0;
 		gridLayout.horizontalSpacing = 0;
 		return gridLayout;
