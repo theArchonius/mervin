@@ -72,8 +72,8 @@ import org.eclipse.gmf.runtime.notation.Diagram;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getAllOldInvolvedDiagrams
  * <em>All Old Involved Diagrams</em>}</li>
- * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getComment
- * <em>Comment</em>}</li>
+ * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getComments
+ * <em>Comments</em>}</li>
  * </ul>
  *
  * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getPatchSet()
@@ -458,24 +458,24 @@ public interface PatchSet extends EObject {
 	EList<Diagram> getAllOldInvolvedDiagrams();
 
 	/**
-	 * Returns the value of the '<em><b>Comment</b></em>' reference list. The
+	 * Returns the value of the '<em><b>Comments</b></em>' reference list. The
 	 * list contents are of type
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment}. It is
 	 * bidirectional and its opposite is '
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getPatchset
 	 * <em>Patchset</em>}'. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Comment</em>' reference list isn't clear,
+	 * If the meaning of the '<em>Comments</em>' reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * 
-	 * @return the value of the '<em>Comment</em>' reference list.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getPatchSet_Comment()
+	 * @return the value of the '<em>Comments</em>' reference list.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getPatchSet_Comments()
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.Comment#getPatchset
 	 * @model opposite="patchset"
 	 * @generated
 	 */
-	EList<Comment> getComment();
+	EList<Comment> getComments();
 
 } // PatchSet

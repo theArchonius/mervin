@@ -306,13 +306,13 @@ public interface ModelReviewPackage extends EPackage {
 	int PATCH_SET__ALL_OLD_INVOLVED_DIAGRAMS = 14;
 
 	/**
-	 * The feature id for the '<em><b>Comment</b></em>' reference list. <!--
+	 * The feature id for the '<em><b>Comments</b></em>' reference list. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int PATCH_SET__COMMENT = 15;
+	int PATCH_SET__COMMENTS = 15;
 
 	/**
 	 * The number of structural features of the '<em>Patch Set</em>' class. <!--
@@ -1750,15 +1750,15 @@ public interface ModelReviewPackage extends EPackage {
 
 	/**
 	 * Returns the meta object for the reference list '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getComment
-	 * <em>Comment</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getComments
+	 * <em>Comments</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @return the meta object for the reference list '<em>Comment</em>'.
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getComment()
+	 * @return the meta object for the reference list '<em>Comments</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getComments()
 	 * @see #getPatchSet()
 	 * @generated
 	 */
-	EReference getPatchSet_Comment();
+	EReference getPatchSet_Comments();
 
 	/**
 	 * Returns the meta object for class '
@@ -2655,12 +2655,12 @@ public interface ModelReviewPackage extends EPackage {
 		EReference PATCH_SET__ALL_OLD_INVOLVED_DIAGRAMS = eINSTANCE.getPatchSet_AllOldInvolvedDiagrams();
 
 		/**
-		 * The meta object literal for the '<em><b>Comment</b></em>' reference
+		 * The meta object literal for the '<em><b>Comments</b></em>' reference
 		 * list feature. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
 		 * @generated
 		 */
-		EReference PATCH_SET__COMMENT = eINSTANCE.getPatchSet_Comment();
+		EReference PATCH_SET__COMMENTS = eINSTANCE.getPatchSet_Comments();
 
 		/**
 		 * The meta object literal for the '

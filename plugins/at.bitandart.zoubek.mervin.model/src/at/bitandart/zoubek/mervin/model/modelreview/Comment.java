@@ -246,8 +246,8 @@ public interface Comment extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Patchset</b></em>' reference. It is
 	 * bidirectional and its opposite is '
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getComment
-	 * <em>Comment</em>}'. <!-- begin-user-doc -->
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getComments
+	 * <em>Comments</em>}'. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Patchset</em>' reference isn't clear, there
 	 * really should be more of a description here...
@@ -257,8 +257,8 @@ public interface Comment extends EObject {
 	 * @return the value of the '<em>Patchset</em>' reference.
 	 * @see #setPatchset(PatchSet)
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getComment_Patchset()
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getComment
-	 * @model opposite="comment"
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getComments
+	 * @model opposite="comments"
 	 * @generated
 	 */
 	PatchSet getPatchset();

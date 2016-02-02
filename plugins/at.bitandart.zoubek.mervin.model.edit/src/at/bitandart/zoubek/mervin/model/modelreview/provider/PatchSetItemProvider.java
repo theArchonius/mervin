@@ -78,7 +78,7 @@ public class PatchSetItemProvider extends ItemProviderAdapter implements IEditin
 			addMaxObjectChangeRefCountPropertyDescriptor(object);
 			addAllNewInvolvedDiagramsPropertyDescriptor(object);
 			addAllOldInvolvedDiagramsPropertyDescriptor(object);
-			addCommentPropertyDescriptor(object);
+			addCommentsPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -305,18 +305,18 @@ public class PatchSetItemProvider extends ItemProviderAdapter implements IEditin
 	}
 
 	/**
-	 * This adds a property descriptor for the Comment feature. <!--
+	 * This adds a property descriptor for the Comments feature. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected void addCommentPropertyDescriptor(Object object) {
+	protected void addCommentsPropertyDescriptor(Object object) {
 		itemPropertyDescriptors
 				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(), getString("_UI_PatchSet_comment_feature"),
-						getString("_UI_PropertyDescriptor_description", "_UI_PatchSet_comment_feature",
+						getResourceLocator(), getString("_UI_PatchSet_comments_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_PatchSet_comments_feature",
 								"_UI_PatchSet_type"),
-						ModelReviewPackage.Literals.PATCH_SET__COMMENT, true, false, true, null, null, null));
+						ModelReviewPackage.Literals.PATCH_SET__COMMENTS, true, false, true, null, null, null));
 	}
 
 	/**

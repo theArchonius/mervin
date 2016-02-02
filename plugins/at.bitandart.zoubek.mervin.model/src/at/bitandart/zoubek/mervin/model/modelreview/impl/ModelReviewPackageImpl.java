@@ -522,7 +522,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	public EReference getPatchSet_Comment() {
+	public EReference getPatchSet_Comments() {
 		return (EReference) patchSetEClass.getEStructuralFeatures().get(15);
 	}
 
@@ -1075,7 +1075,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		createEAttribute(patchSetEClass, PATCH_SET__MAX_OBJECT_CHANGE_REF_COUNT);
 		createEReference(patchSetEClass, PATCH_SET__ALL_NEW_INVOLVED_DIAGRAMS);
 		createEReference(patchSetEClass, PATCH_SET__ALL_OLD_INVOLVED_DIAGRAMS);
-		createEReference(patchSetEClass, PATCH_SET__COMMENT);
+		createEReference(patchSetEClass, PATCH_SET__COMMENTS);
 
 		patchEClass = createEClass(PATCH);
 		createEAttribute(patchEClass, PATCH__NEW_PATH);
@@ -1281,7 +1281,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		initEReference(getPatchSet_AllOldInvolvedDiagrams(), theNotationPackage.getDiagram(), null,
 				"allOldInvolvedDiagrams", null, 0, -1, PatchSet.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE,
 				!IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
-		initEReference(getPatchSet_Comment(), this.getComment(), this.getComment_Patchset(), "comment", null, 0, -1,
+		initEReference(getPatchSet_Comments(), this.getComment(), this.getComment_Patchset(), "comments", null, 0, -1,
 				PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -1337,7 +1337,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		initEReference(getComment_RepliedTo(), this.getComment(), this.getComment_Replies(), "repliedTo", null, 0, 1,
 				Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getComment_Patchset(), this.getPatchSet(), this.getPatchSet_Comment(), "patchset", null, 0, 1,
+		initEReference(getComment_Patchset(), this.getPatchSet(), this.getPatchSet_Comments(), "patchset", null, 0, 1,
 				Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 

@@ -455,10 +455,10 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 		if (newPatchset != patchset) {
 			NotificationChain msgs = null;
 			if (patchset != null)
-				msgs = ((InternalEObject) patchset).eInverseRemove(this, ModelReviewPackage.PATCH_SET__COMMENT,
+				msgs = ((InternalEObject) patchset).eInverseRemove(this, ModelReviewPackage.PATCH_SET__COMMENTS,
 						PatchSet.class, msgs);
 			if (newPatchset != null)
-				msgs = ((InternalEObject) newPatchset).eInverseAdd(this, ModelReviewPackage.PATCH_SET__COMMENT,
+				msgs = ((InternalEObject) newPatchset).eInverseAdd(this, ModelReviewPackage.PATCH_SET__COMMENTS,
 						PatchSet.class, msgs);
 			msgs = basicSetPatchset(newPatchset, msgs);
 			if (msgs != null)
@@ -488,7 +488,7 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 			return basicSetRepliedTo((Comment) otherEnd, msgs);
 		case ModelReviewPackage.COMMENT__PATCHSET:
 			if (patchset != null)
-				msgs = ((InternalEObject) patchset).eInverseRemove(this, ModelReviewPackage.PATCH_SET__COMMENT,
+				msgs = ((InternalEObject) patchset).eInverseRemove(this, ModelReviewPackage.PATCH_SET__COMMENTS,
 						PatchSet.class, msgs);
 			return basicSetPatchset((PatchSet) otherEnd, msgs);
 		}

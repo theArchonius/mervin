@@ -97,8 +97,8 @@ import org.eclipse.gmf.runtime.notation.Diagram;
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchSetImpl#getAllOldInvolvedDiagrams
  * <em>All Old Involved Diagrams</em>}</li>
  * <li>
- * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchSetImpl#getComment
- * <em>Comment</em>}</li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchSetImpl#getComments
+ * <em>Comments</em>}</li>
  * </ul>
  *
  * @generated
@@ -303,14 +303,14 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements PatchS
 	protected boolean maxObjectChangeRefCountESet;
 
 	/**
-	 * The cached value of the '{@link #getComment() <em>Comment</em>}'
+	 * The cached value of the '{@link #getComments() <em>Comments</em>}'
 	 * reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @see #getComment()
+	 * @see #getComments()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Comment> comment;
+	protected EList<Comment> comments;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -653,12 +653,12 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements PatchS
 	 * 
 	 * @generated
 	 */
-	public EList<Comment> getComment() {
-		if (comment == null) {
-			comment = new EObjectWithInverseResolvingEList<Comment>(Comment.class, this,
-					ModelReviewPackage.PATCH_SET__COMMENT, ModelReviewPackage.COMMENT__PATCHSET);
+	public EList<Comment> getComments() {
+		if (comments == null) {
+			comments = new EObjectWithInverseResolvingEList<Comment>(Comment.class, this,
+					ModelReviewPackage.PATCH_SET__COMMENTS, ModelReviewPackage.COMMENT__PATCHSET);
 		}
-		return comment;
+		return comments;
 	}
 
 	/**
@@ -676,8 +676,8 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements PatchS
 			return basicSetReview((ModelReview) otherEnd, msgs);
 		case ModelReviewPackage.PATCH_SET__PATCHES:
 			return ((InternalEList<InternalEObject>) (InternalEList<?>) getPatches()).basicAdd(otherEnd, msgs);
-		case ModelReviewPackage.PATCH_SET__COMMENT:
-			return ((InternalEList<InternalEObject>) (InternalEList<?>) getComment()).basicAdd(otherEnd, msgs);
+		case ModelReviewPackage.PATCH_SET__COMMENTS:
+			return ((InternalEList<InternalEObject>) (InternalEList<?>) getComments()).basicAdd(otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -694,8 +694,8 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements PatchS
 			return basicSetReview(null, msgs);
 		case ModelReviewPackage.PATCH_SET__PATCHES:
 			return ((InternalEList<?>) getPatches()).basicRemove(otherEnd, msgs);
-		case ModelReviewPackage.PATCH_SET__COMMENT:
-			return ((InternalEList<?>) getComment()).basicRemove(otherEnd, msgs);
+		case ModelReviewPackage.PATCH_SET__COMMENTS:
+			return ((InternalEList<?>) getComments()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -757,8 +757,8 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements PatchS
 			return getAllNewInvolvedDiagrams();
 		case ModelReviewPackage.PATCH_SET__ALL_OLD_INVOLVED_DIAGRAMS:
 			return getAllOldInvolvedDiagrams();
-		case ModelReviewPackage.PATCH_SET__COMMENT:
-			return getComment();
+		case ModelReviewPackage.PATCH_SET__COMMENTS:
+			return getComments();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -804,9 +804,9 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements PatchS
 		case ModelReviewPackage.PATCH_SET__DIAGRAM_COMPARISON:
 			setDiagramComparison((Comparison) newValue);
 			return;
-		case ModelReviewPackage.PATCH_SET__COMMENT:
-			getComment().clear();
-			getComment().addAll((Collection<? extends Comment>) newValue);
+		case ModelReviewPackage.PATCH_SET__COMMENTS:
+			getComments().clear();
+			getComments().addAll((Collection<? extends Comment>) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -847,8 +847,8 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements PatchS
 		case ModelReviewPackage.PATCH_SET__DIAGRAM_COMPARISON:
 			setDiagramComparison((Comparison) null);
 			return;
-		case ModelReviewPackage.PATCH_SET__COMMENT:
-			getComment().clear();
+		case ModelReviewPackage.PATCH_SET__COMMENTS:
+			getComments().clear();
 			return;
 		}
 		super.eUnset(featureID);
@@ -892,8 +892,8 @@ public class PatchSetImpl extends MinimalEObjectImpl.Container implements PatchS
 			return !getAllNewInvolvedDiagrams().isEmpty();
 		case ModelReviewPackage.PATCH_SET__ALL_OLD_INVOLVED_DIAGRAMS:
 			return !getAllOldInvolvedDiagrams().isEmpty();
-		case ModelReviewPackage.PATCH_SET__COMMENT:
-			return comment != null && !comment.isEmpty();
+		case ModelReviewPackage.PATCH_SET__COMMENTS:
+			return comments != null && !comments.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}
