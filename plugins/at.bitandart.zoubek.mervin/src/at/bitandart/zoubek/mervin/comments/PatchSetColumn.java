@@ -24,6 +24,13 @@ public class PatchSetColumn implements ICommentColumn {
 
 	private PatchSet patchSet;
 
+	/**
+	 * creates a new {@link PatchSetColumn}.
+	 * 
+	 * @param patchSet
+	 *            the {@link PatchSet} to associate to this column or null if
+	 *            this column represents the base version.
+	 */
 	public PatchSetColumn(PatchSet patchSet) {
 		super();
 		this.patchSet = patchSet;
@@ -36,6 +43,14 @@ public class PatchSetColumn implements ICommentColumn {
 		} else {
 			return "Base";
 		}
+	}
+
+	/**
+	 * @return the associated patch set or null if the column represents the
+	 *         base version.
+	 */
+	public PatchSet getPatchSet() {
+		return patchSet;
 	}
 
 }

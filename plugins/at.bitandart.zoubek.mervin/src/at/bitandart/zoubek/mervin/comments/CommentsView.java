@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2016 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,6 +39,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.CommentLink;
 import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
+import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.model.modelreview.User;
 import at.bitandart.zoubek.mervin.review.ModelReviewEditorTrackingView;
 import at.bitandart.zoubek.mervin.swt.comments.CommentList;
@@ -129,6 +130,13 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 
 					if (answerdComment != null && answerdComment instanceof MervinComment) {
 						comment.setRepliedTo(((MervinComment) answerdComment).getRealComment());
+					}
+
+					if (commentColumn instanceof PatchSetColumn) {
+						PatchSet patchSet = ((PatchSetColumn) commentColumn).getPatchSet();
+						if (patchSet != null) {
+							comment.setPatchset(patchSet);
+						}
 					}
 
 					for (ICommentLink commentLink : commentLinks) {
