@@ -1,6 +1,6 @@
 /**
  * ******************************************************************************
- *  Copyright (c) 2015 Florian Zoubek.
+ *  Copyright (c) 2015, 2016 Florian Zoubek.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -37,8 +37,11 @@ import at.bitandart.zoubek.mervin.model.modelreview.SizeDifference;
 import at.bitandart.zoubek.mervin.model.modelreview.StateDifference;
 import at.bitandart.zoubek.mervin.model.modelreview.StateDifferenceType;
 import at.bitandart.zoubek.mervin.model.modelreview.User;
+
 import org.eclipse.draw2d.geometry.Vector;
+
 import org.eclipse.emf.compare.ComparePackage;
+
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -48,7 +51,9 @@ import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
+
 import org.eclipse.emf.ecore.impl.EPackageImpl;
+
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 
 /**
@@ -517,6 +522,15 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
+	public EReference getPatchSet_Comment() {
+		return (EReference) patchSetEClass.getEStructuralFeatures().get(15);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	public EClass getPatch() {
 		return patchEClass;
 	}
@@ -699,6 +713,15 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 */
 	public EReference getComment_RepliedTo() {
 		return (EReference) commentEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EReference getComment_Patchset() {
+		return (EReference) commentEClass.getEStructuralFeatures().get(7);
 	}
 
 	/**
@@ -1052,6 +1075,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		createEAttribute(patchSetEClass, PATCH_SET__MAX_OBJECT_CHANGE_REF_COUNT);
 		createEReference(patchSetEClass, PATCH_SET__ALL_NEW_INVOLVED_DIAGRAMS);
 		createEReference(patchSetEClass, PATCH_SET__ALL_OLD_INVOLVED_DIAGRAMS);
+		createEReference(patchSetEClass, PATCH_SET__COMMENT);
 
 		patchEClass = createEClass(PATCH);
 		createEAttribute(patchEClass, PATCH__NEW_PATH);
@@ -1077,6 +1101,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		createEReference(commentEClass, COMMENT__COMMENT_LINKS);
 		createEReference(commentEClass, COMMENT__REPLIES);
 		createEReference(commentEClass, COMMENT__REPLIED_TO);
+		createEReference(commentEClass, COMMENT__PATCHSET);
 
 		modelResourceEClass = createEClass(MODEL_RESOURCE);
 		createEReference(modelResourceEClass, MODEL_RESOURCE__OBJECTS);
@@ -1256,6 +1281,9 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		initEReference(getPatchSet_AllOldInvolvedDiagrams(), theNotationPackage.getDiagram(), null,
 				"allOldInvolvedDiagrams", null, 0, -1, PatchSet.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE,
 				!IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEReference(getPatchSet_Comment(), this.getComment(), this.getComment_Patchset(), "comment", null, 0, -1,
+				PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(patchEClass, Patch.class, "Patch", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getPatch_NewPath(), ecorePackage.getEString(), "newPath", null, 0, 1, Patch.class, !IS_TRANSIENT,
@@ -1307,6 +1335,9 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 				Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getComment_RepliedTo(), this.getComment(), this.getComment_Replies(), "repliedTo", null, 0, 1,
+				Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getComment_Patchset(), this.getPatchSet(), this.getPatchSet_Comment(), "patchset", null, 0, 1,
 				Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 

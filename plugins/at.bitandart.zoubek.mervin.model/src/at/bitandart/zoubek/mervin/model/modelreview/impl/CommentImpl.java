@@ -16,6 +16,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.Comment;
 import at.bitandart.zoubek.mervin.model.modelreview.CommentLink;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 
+import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.model.modelreview.User;
 import java.util.Collection;
 
@@ -62,6 +63,9 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.CommentImpl#getRepliedTo
  * <em>Replied To</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.CommentImpl#getPatchset
+ * <em>Patchset</em>}</li>
  * </ul>
  *
  * @generated
@@ -168,6 +172,16 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 	 * @ordered
 	 */
 	protected Comment repliedTo;
+
+	/**
+	 * The cached value of the '{@link #getPatchset() <em>Patchset</em>}'
+	 * reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getPatchset()
+	 * @generated
+	 * @ordered
+	 */
+	protected PatchSet patchset;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -391,6 +405,74 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 	 * 
 	 * @generated
 	 */
+	public PatchSet getPatchset() {
+		if (patchset != null && patchset.eIsProxy()) {
+			InternalEObject oldPatchset = (InternalEObject) patchset;
+			patchset = (PatchSet) eResolveProxy(oldPatchset);
+			if (patchset != oldPatchset) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, ModelReviewPackage.COMMENT__PATCHSET,
+							oldPatchset, patchset));
+			}
+		}
+		return patchset;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public PatchSet basicGetPatchset() {
+		return patchset;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public NotificationChain basicSetPatchset(PatchSet newPatchset, NotificationChain msgs) {
+		PatchSet oldPatchset = patchset;
+		patchset = newPatchset;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET,
+					ModelReviewPackage.COMMENT__PATCHSET, oldPatchset, newPatchset);
+			if (msgs == null)
+				msgs = notification;
+			else
+				msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setPatchset(PatchSet newPatchset) {
+		if (newPatchset != patchset) {
+			NotificationChain msgs = null;
+			if (patchset != null)
+				msgs = ((InternalEObject) patchset).eInverseRemove(this, ModelReviewPackage.PATCH_SET__COMMENT,
+						PatchSet.class, msgs);
+			if (newPatchset != null)
+				msgs = ((InternalEObject) newPatchset).eInverseAdd(this, ModelReviewPackage.PATCH_SET__COMMENT,
+						PatchSet.class, msgs);
+			msgs = basicSetPatchset(newPatchset, msgs);
+			if (msgs != null)
+				msgs.dispatch();
+		} else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.COMMENT__PATCHSET, newPatchset,
+					newPatchset));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
@@ -404,6 +486,11 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 				msgs = ((InternalEObject) repliedTo).eInverseRemove(this, ModelReviewPackage.COMMENT__REPLIES,
 						Comment.class, msgs);
 			return basicSetRepliedTo((Comment) otherEnd, msgs);
+		case ModelReviewPackage.COMMENT__PATCHSET:
+			if (patchset != null)
+				msgs = ((InternalEObject) patchset).eInverseRemove(this, ModelReviewPackage.PATCH_SET__COMMENT,
+						PatchSet.class, msgs);
+			return basicSetPatchset((PatchSet) otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -422,6 +509,8 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 			return ((InternalEList<?>) getReplies()).basicRemove(otherEnd, msgs);
 		case ModelReviewPackage.COMMENT__REPLIED_TO:
 			return basicSetRepliedTo(null, msgs);
+		case ModelReviewPackage.COMMENT__PATCHSET:
+			return basicSetPatchset(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -452,6 +541,10 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 			if (resolve)
 				return getRepliedTo();
 			return basicGetRepliedTo();
+		case ModelReviewPackage.COMMENT__PATCHSET:
+			if (resolve)
+				return getPatchset();
+			return basicGetPatchset();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -488,6 +581,9 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 		case ModelReviewPackage.COMMENT__REPLIED_TO:
 			setRepliedTo((Comment) newValue);
 			return;
+		case ModelReviewPackage.COMMENT__PATCHSET:
+			setPatchset((PatchSet) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -521,6 +617,9 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 		case ModelReviewPackage.COMMENT__REPLIED_TO:
 			setRepliedTo((Comment) null);
 			return;
+		case ModelReviewPackage.COMMENT__PATCHSET:
+			setPatchset((PatchSet) null);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -547,6 +646,8 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 			return replies != null && !replies.isEmpty();
 		case ModelReviewPackage.COMMENT__REPLIED_TO:
 			return repliedTo != null;
+		case ModelReviewPackage.COMMENT__PATCHSET:
+			return patchset != null;
 		}
 		return super.eIsSet(featureID);
 	}

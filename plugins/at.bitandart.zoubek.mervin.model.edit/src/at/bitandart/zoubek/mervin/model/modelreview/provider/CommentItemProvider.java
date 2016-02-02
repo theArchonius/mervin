@@ -1,6 +1,6 @@
 /**
  * ******************************************************************************
- *  Copyright (c) 2015 Florian Zoubek.
+ *  Copyright (c) 2015, 2016 Florian Zoubek.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
+
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
@@ -72,6 +73,7 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 			addTextPropertyDescriptor(object);
 			addRepliesPropertyDescriptor(object);
 			addRepliedToPropertyDescriptor(object);
+			addPatchsetPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -165,6 +167,21 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 						getString("_UI_PropertyDescriptor_description", "_UI_Comment_repliedTo_feature",
 								"_UI_Comment_type"),
 						ModelReviewPackage.Literals.COMMENT__REPLIED_TO, true, false, true, null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Patchset feature. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addPatchsetPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Comment_patchset_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_Comment_patchset_feature",
+								"_UI_Comment_type"),
+						ModelReviewPackage.Literals.COMMENT__PATCHSET, true, false, true, null, null, null));
 	}
 
 	/**

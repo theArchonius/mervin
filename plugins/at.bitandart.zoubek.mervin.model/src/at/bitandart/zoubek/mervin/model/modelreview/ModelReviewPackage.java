@@ -1,6 +1,6 @@
 /**
  * ******************************************************************************
- *  Copyright (c) 2015 Florian Zoubek.
+ *  Copyright (c) 2015, 2016 Florian Zoubek.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -306,13 +306,22 @@ public interface ModelReviewPackage extends EPackage {
 	int PATCH_SET__ALL_OLD_INVOLVED_DIAGRAMS = 14;
 
 	/**
+	 * The feature id for the '<em><b>Comment</b></em>' reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int PATCH_SET__COMMENT = 15;
+
+	/**
 	 * The number of structural features of the '<em>Patch Set</em>' class. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int PATCH_SET_FEATURE_COUNT = 15;
+	int PATCH_SET_FEATURE_COUNT = 16;
 
 	/**
 	 * The number of operations of the '<em>Patch Set</em>' class. <!--
@@ -685,13 +694,22 @@ public interface ModelReviewPackage extends EPackage {
 	int COMMENT__REPLIED_TO = 6;
 
 	/**
+	 * The feature id for the '<em><b>Patchset</b></em>' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int COMMENT__PATCHSET = 7;
+
+	/**
 	 * The number of structural features of the '<em>Comment</em>' class. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int COMMENT_FEATURE_COUNT = 7;
+	int COMMENT_FEATURE_COUNT = 8;
 
 	/**
 	 * The number of operations of the '<em>Comment</em>' class. <!--
@@ -1731,6 +1749,18 @@ public interface ModelReviewPackage extends EPackage {
 	EReference getPatchSet_AllOldInvolvedDiagrams();
 
 	/**
+	 * Returns the meta object for the reference list '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getComment
+	 * <em>Comment</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference list '<em>Comment</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getComment()
+	 * @see #getPatchSet()
+	 * @generated
+	 */
+	EReference getPatchSet_Comment();
+
+	/**
 	 * Returns the meta object for class '
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Patch <em>Patch</em>}
 	 * '. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1984,6 +2014,18 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getComment_RepliedTo();
+
+	/**
+	 * Returns the meta object for the reference '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getPatchset
+	 * <em>Patchset</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference '<em>Patchset</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.Comment#getPatchset()
+	 * @see #getComment()
+	 * @generated
+	 */
+	EReference getComment_Patchset();
 
 	/**
 	 * Returns the meta object for class '
@@ -2613,6 +2655,14 @@ public interface ModelReviewPackage extends EPackage {
 		EReference PATCH_SET__ALL_OLD_INVOLVED_DIAGRAMS = eINSTANCE.getPatchSet_AllOldInvolvedDiagrams();
 
 		/**
+		 * The meta object literal for the '<em><b>Comment</b></em>' reference
+		 * list feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference PATCH_SET__COMMENT = eINSTANCE.getPatchSet_Comment();
+
+		/**
 		 * The meta object literal for the '
 		 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchImpl
 		 * <em>Patch</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -2796,6 +2846,14 @@ public interface ModelReviewPackage extends EPackage {
 		 * @generated
 		 */
 		EReference COMMENT__REPLIED_TO = eINSTANCE.getComment_RepliedTo();
+
+		/**
+		 * The meta object literal for the '<em><b>Patchset</b></em>' reference
+		 * feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference COMMENT__PATCHSET = eINSTANCE.getComment_Patchset();
 
 		/**
 		 * The meta object literal for the '

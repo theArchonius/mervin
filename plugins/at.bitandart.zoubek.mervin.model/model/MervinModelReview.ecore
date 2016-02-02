@@ -59,6 +59,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="allOldInvolvedDiagrams"
         upperBound="-1" eType="ecore:EClass ../../org.eclipse.gmf.runtime.notation/model/notation.ecore#//Diagram"
         changeable="false" volatile="true" transient="true" derived="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="comment" upperBound="-1"
+        eType="#//Comment" eOpposite="#//Comment/patchset"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Patch">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="newPath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -91,6 +93,8 @@
         eType="#//Comment" eOpposite="#//Comment/repliedTo"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="repliedTo" eType="#//Comment"
         eOpposite="#//Comment/replies"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="patchset" eType="#//PatchSet"
+        eOpposite="#//PatchSet/comment"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ModelResource">
     <eStructuralFeatures xsi:type="ecore:EReference" name="objects" upperBound="-1"

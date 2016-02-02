@@ -40,6 +40,8 @@ import org.eclipse.emf.ecore.EObject;
  * <em>Replies</em>}</li>
  * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getRepliedTo
  * <em>Replied To</em>}</li>
+ * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getPatchset
+ * <em>Patchset</em>}</li>
  * </ul>
  *
  * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getComment()
@@ -240,5 +242,38 @@ public interface Comment extends EObject {
 	 * @generated
 	 */
 	void setRepliedTo(Comment value);
+
+	/**
+	 * Returns the value of the '<em><b>Patchset</b></em>' reference. It is
+	 * bidirectional and its opposite is '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getComment
+	 * <em>Comment</em>}'. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Patchset</em>' reference isn't clear, there
+	 * really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Patchset</em>' reference.
+	 * @see #setPatchset(PatchSet)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getComment_Patchset()
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getComment
+	 * @model opposite="comment"
+	 * @generated
+	 */
+	PatchSet getPatchset();
+
+	/**
+	 * Sets the value of the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getPatchset
+	 * <em>Patchset</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Patchset</em>' reference.
+	 * @see #getPatchset()
+	 * @generated
+	 */
+	void setPatchset(PatchSet value);
 
 } // Comment
