@@ -10,13 +10,25 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.comments;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.inject.Named;
 
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.ui.di.Focus;
+import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EContentAdapter;
+import org.eclipse.gef.EditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
+import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -24,6 +36,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import at.bitandart.zoubek.mervin.model.modelreview.Comment;
 import at.bitandart.zoubek.mervin.model.modelreview.CommentLink;
+import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
 import at.bitandart.zoubek.mervin.model.modelreview.User;
@@ -143,6 +156,104 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 		viewInitialized = true;
 		updateValues();
 
+	}
+
+	@Inject
+	public void setSelection(@Named(IServiceConstants.ACTIVE_SELECTION) @Optional IStructuredSelection selection) {
+
+		if (viewInitialized && selection != null) {
+
+			List<EObject> targets = extractLinkTargets(selection);
+			CommentList commentListControl = commentListViewer.getCommentListControl();
+			if (!targets.isEmpty()) {
+				commentListControl.setCurrentLinkTarget(new MervinCommentLinkTarget(targets));
+			}
+
+		}
+
+	}
+
+	/**
+	 * extracts all EObject link targets from the given selection.
+	 * 
+	 * @param selection
+	 *            the selection containing the link targets.
+	 * @return a list of EObject link targets, does not return null.
+	 */
+	private List<EObject> extractLinkTargets(IStructuredSelection selection) {
+
+		List<EObject> targets = new ArrayList<EObject>(selection.size());
+
+		Iterator<?> iterator = selection.iterator();
+		while (iterator.hasNext()) {
+
+			Object element = iterator.next();
+			if (element instanceof EObject) {
+
+				targets.add((EObject) element);
+
+			} else if (element instanceof GraphicalEditPart) {
+
+				// GMF edit part -> use semantic model
+				EObject semanticElement = ((GraphicalEditPart) element).resolveSemanticElement();
+				targets.add(extractFromTemporaryContainer(semanticElement));
+
+			} else if (element instanceof ConnectionEditPart) {
+
+				// GMF edit part -> use semantic model
+				EObject semanticElement = ((ConnectionEditPart) element).resolveSemanticElement();
+				targets.add(extractFromTemporaryContainer(semanticElement));
+
+			} else if (element instanceof EditPart) {
+
+				// GEF edit part -> use model if it is an EObject
+				Object model = ((EditPart) element).getModel();
+				if (model instanceof EObject) {
+					targets.add((EObject) model);
+				}
+
+			}
+
+		}
+
+		return targets;
+	}
+
+	/**
+	 * extracts the underlying {@link EObject} from any given temporary
+	 * container like {@link DifferenceOverlay}. If the given object is not a
+	 * temporary container the object is returned again.
+	 * 
+	 * @param object
+	 *            the object that may be an temporary container.
+	 * @return the underlying {@link EObject}, never returns null.
+	 */
+	private EObject extractFromTemporaryContainer(EObject object) {
+
+		if (object instanceof DifferenceOverlay) {
+
+			View linkedView = ((DifferenceOverlay) object).getLinkedView();
+			EObject semanticElement = linkedView.getElement();
+
+			if (semanticElement != null) {
+				return semanticElement;
+			} else {
+				return linkedView;
+			}
+
+		}
+
+		/*
+		 * object is not contained in a temporary container, so return it again.
+		 */
+		return object;
+	}
+
+	@Focus
+	public void onFocus() {
+		if (commentListViewer != null) {
+			commentListViewer.getControl().setFocus();
+		}
 	}
 
 	@Override

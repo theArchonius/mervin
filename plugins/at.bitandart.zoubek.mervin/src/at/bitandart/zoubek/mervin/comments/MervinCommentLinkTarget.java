@@ -10,7 +10,8 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.comments;
 
-import org.eclipse.emf.common.util.EList;
+import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
 
 import at.bitandart.zoubek.mervin.swt.comments.data.ICommentLinkTarget;
@@ -24,9 +25,9 @@ import at.bitandart.zoubek.mervin.swt.comments.data.ICommentLinkTarget;
  */
 public class MervinCommentLinkTarget implements ICommentLinkTarget {
 
-	private EList<EObject> targets;
+	private List<EObject> targets;
 
-	public MervinCommentLinkTarget(EList<EObject> targets) {
+	public MervinCommentLinkTarget(List<EObject> targets) {
 		this.targets = targets;
 	}
 
@@ -35,7 +36,7 @@ public class MervinCommentLinkTarget implements ICommentLinkTarget {
 		return targets.toString();
 	}
 
-	public EList<EObject> getTargets() {
+	public List<EObject> getTargets() {
 		return targets;
 	}
 
