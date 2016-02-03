@@ -47,14 +47,15 @@ public class MervinServicesAddon {
 				.make(ChangeSimilarityHistoryService.class, context);
 		context.set(ISimilarityHistoryService.class, changeSimilarityHistoryService);
 
-		MervinCommentProvider mervinCommentProvider = ContextInjectionFactory.make(MervinCommentProvider.class,
-				context);
-		context.set(ICommentProvider.class, mervinCommentProvider);
-
 		// add default user to the context
 		User defaultUser = defaultModelReviewFactory.createUser();
 		defaultUser.setName("Mervin Default User");
 		context.set(User.class, defaultUser);
+
+		MervinCommentProvider mervinCommentProvider = ContextInjectionFactory.make(MervinCommentProvider.class,
+				context);
+		context.set(ICommentProvider.class, mervinCommentProvider);
+
 	}
 
 }
