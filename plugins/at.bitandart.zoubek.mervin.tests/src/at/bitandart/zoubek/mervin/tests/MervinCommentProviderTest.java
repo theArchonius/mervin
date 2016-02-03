@@ -550,8 +550,8 @@ public class MervinCommentProviderTest {
 				new HashSet<EObject>(Arrays.asList(new EObject[] { target4, target5 })));
 		createCommentLink(rightPSG2Comments.get(2),
 				new HashSet<EObject>(Arrays.asList(new EObject[] { target5, target6 })));
-		createCommentLink(rightPSG2Comments.get(2), new HashSet<EObject>(Arrays.asList(new EObject[] { target6 })));
-		createCommentLink(rightPSG2Comments.get(2), new HashSet<EObject>(Arrays.asList(new EObject[] { target5 })));
+		createCommentLink(rightPSG2Comments.get(3), new HashSet<EObject>(Arrays.asList(new EObject[] { target6 })));
+		createCommentLink(rightPSG2Comments.get(4), new HashSet<EObject>(Arrays.asList(new EObject[] { target5 })));
 
 		List<Set<EObject>> expectedTargetSets = new ArrayList<Set<EObject>>();
 		expectedTargetSets.add(group1Targets);
