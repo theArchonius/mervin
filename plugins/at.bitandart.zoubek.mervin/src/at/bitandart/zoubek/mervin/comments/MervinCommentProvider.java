@@ -11,10 +11,15 @@
 package at.bitandart.zoubek.mervin.comments;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+
+import org.eclipse.emf.ecore.EObject;
 
 import at.bitandart.zoubek.mervin.model.modelreview.Comment;
+import at.bitandart.zoubek.mervin.model.modelreview.CommentLink;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.swt.comments.data.IComment;
@@ -43,6 +48,16 @@ public class MervinCommentProvider implements ICommentProvider {
 			ModelReview review = (ModelReview) input;
 			// TODO remove default group and load it from the model
 			groups.add(new MervinCommentGroup());
+
+			for (Comment comment : review.getComments()) {
+
+				Set<EObject> targets = new HashSet<>();
+				for (CommentLink link : comment.getCommentLinks()) {
+					targets.addAll(link.getTargets());
+				}
+
+			}
+
 		}
 		return groups;
 	}
@@ -92,8 +107,11 @@ public class MervinCommentProvider implements ICommentProvider {
 		if (input instanceof ModelReview) {
 			ModelReview review = (ModelReview) input;
 			// TODO respect the column and the group
-			for (Comment realComment : review.getComments()) {
-				comments.add(new MervinComment(realComment, Alignment.LEFT));
+			if (column instanceof PatchSetColumn) {
+				PatchSet patchSet = ((PatchSetColumn) column).getPatchSet();
+				for (Comment realComment : patchSet.getComments()) {
+					comments.add(new MervinComment(realComment, Alignment.LEFT));
+				}
 			}
 		}
 		return comments;

@@ -5,4 +5,5 @@ Bundle-SymbolicName: at.bitandart.zoubek.mervin.tests
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.junit,
- at.bitandart.zoubek.mervin
+ at.bitandart.zoubek.mervin,
+ at.bitandart.zoubek.mervin.model
