@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2016 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,6 +54,8 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
+
+import com.google.common.base.Predicate;
 
 import at.bitandart.zoubek.mervin.IReviewDescriptor;
 import at.bitandart.zoubek.mervin.IReviewRepositoryService;
@@ -324,6 +326,13 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 		EMFCompare comparator = EMFCompare.builder().build();
 
 		DefaultComparisonScope scope = new DefaultComparisonScope(oldResourceSet, newResourceSet, null);
+		scope.setResourceSetContentFilter(new Predicate<Resource>() {
+
+			@Override
+			public boolean apply(Resource resource) {
+				return !resource.getURI().fileExtension().equals("notation");
+			}
+		});
 		Comparison comparison = comparator.compare(scope);
 		return comparison;
 	}
@@ -350,13 +359,19 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 			newResourceSet = newInvolvedDiagrams.get(0).getObjects().get(0).eResource().getResourceSet();
 		}
 
-		// TODO filter to include only notation model resources
 		EcoreUtil.resolveAll(oldResourceSet);
 		EcoreUtil.resolveAll(newResourceSet);
 
 		EMFCompare comparator = EMFCompare.builder().build();
 
 		DefaultComparisonScope scope = new DefaultComparisonScope(oldResourceSet, newResourceSet, null);
+		scope.setResourceSetContentFilter(new Predicate<Resource>() {
+
+			@Override
+			public boolean apply(Resource resource) {
+				return resource.getURI().fileExtension().equals("notation");
+			}
+		});
 		Comparison comparison = comparator.compare(scope);
 		return comparison;
 	}
@@ -388,12 +403,13 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 		URI repoURI = git.getRepository().getDirectory().toURI();
 		String authority = repoURI.getAuthority();
 		String path = repoURI.getPath();
-		String repoPath = (authority != null ? authority : "") + "/" + (path != null ? path : "");
+		String repoPath = (authority != null ? authority + "/" : "") + (path != null ? path : "");
+		if (repoPath.endsWith("/")) {
+			repoPath = repoPath.substring(0, repoPath.length() - 1);
+		}
 
-		ResourceSet newModelResourceSet = createGitAwareResourceSet(commitHash, repoPath);
+		ResourceSet newResourceSet = createGitAwareResourceSet(commitHash, repoPath);
 		ResourceSet oldModelResourceSet = createGitAwareResourceSet(parentCommitHash, repoPath);
-		ResourceSet newDiagramResourceSet = createGitAwareResourceSet(commitHash, repoPath);
-		ResourceSet oldDiagramResourceSet = createGitAwareResourceSet(parentCommitHash, repoPath);
 
 		for (Patch patch : patchSet.getPatches()) {
 			if (patch instanceof ModelPatch || patch instanceof DiagramPatch) {
@@ -407,12 +423,7 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 
 				if (patch.getChangeType() != PatchChangeType.DELETE) {
 					// if the patch has been deleted no new resource exists
-					Resource newResource = null;
-					if (patch instanceof ModelPatch) {
-						newResource = newModelResourceSet.getResource(newUri, true);
-					} else {
-						newResource = newDiagramResourceSet.getResource(newUri, true);
-					}
+					Resource newResource = newResourceSet.getResource(newUri, true);
 					try {
 						applyResourceContent(newResource, patch, false);
 					} catch (IOException e) {
@@ -423,12 +434,7 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 
 				if (patch.getChangeType() != PatchChangeType.ADD) {
 					// if the patch has been added no old resource exists
-					Resource oldResource = null;
-					if (patch instanceof ModelPatch) {
-						oldResource = oldModelResourceSet.getResource(oldUri, true);
-					} else {
-						oldResource = oldDiagramResourceSet.getResource(oldUri, true);
-					}
+					Resource oldResource = oldModelResourceSet.getResource(oldUri, true);
 					try {
 						applyResourceContent(oldResource, patch, true);
 					} catch (IOException e) {
