@@ -1,6 +1,6 @@
 /**
  * ******************************************************************************
- *  Copyright (c) 2015 Florian Zoubek.
+ *  Copyright (c) 2015, 2016 Florian Zoubek.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -31,6 +31,9 @@ import org.eclipse.gmf.runtime.notation.View;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay#getDifferences
  * <em>Differences</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay#isCommented
+ * <em>Commented</em>}</li>
  * </ul>
  *
  * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getDifferenceOverlay()
@@ -86,5 +89,35 @@ public interface DifferenceOverlay extends EObject {
 	 * @generated
 	 */
 	EList<Difference> getDifferences();
+
+	/**
+	 * Returns the value of the '<em><b>Commented</b></em>' attribute. <!--
+	 * begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Commented</em>' attribute isn't clear, there
+	 * really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Commented</em>' attribute.
+	 * @see #setCommented(boolean)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getDifferenceOverlay_Commented()
+	 * @model
+	 * @generated
+	 */
+	boolean isCommented();
+
+	/**
+	 * Sets the value of the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay#isCommented
+	 * <em>Commented</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Commented</em>' attribute.
+	 * @see #isCommented()
+	 * @generated
+	 */
+	void setCommented(boolean value);
 
 } // DifferenceOverlay

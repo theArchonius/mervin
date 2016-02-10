@@ -92,6 +92,7 @@
     <genClasses ecoreClass="MervinModelReview.ecore#//DifferenceOverlay">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//DifferenceOverlay/linkedView"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//DifferenceOverlay/differences"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//DifferenceOverlay/commented"/>
     </genClasses>
     <genClasses ecoreClass="MervinModelReview.ecore#//NodeDifferenceOverlay"/>
     <genClasses ecoreClass="MervinModelReview.ecore#//EdgeDifferenceOverlay"/>

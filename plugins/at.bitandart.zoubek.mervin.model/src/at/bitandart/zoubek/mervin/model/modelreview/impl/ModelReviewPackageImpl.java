@@ -801,6 +801,15 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
+	public EAttribute getDifferenceOverlay_Commented() {
+		return (EAttribute) differenceOverlayEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	public EClass getNodeDifferenceOverlay() {
 		return nodeDifferenceOverlayEClass;
 	}
@@ -1113,6 +1122,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		differenceOverlayEClass = createEClass(DIFFERENCE_OVERLAY);
 		createEReference(differenceOverlayEClass, DIFFERENCE_OVERLAY__LINKED_VIEW);
 		createEReference(differenceOverlayEClass, DIFFERENCE_OVERLAY__DIFFERENCES);
+		createEAttribute(differenceOverlayEClass, DIFFERENCE_OVERLAY__COMMENTED);
 
 		nodeDifferenceOverlayEClass = createEClass(NODE_DIFFERENCE_OVERLAY);
 
@@ -1364,6 +1374,9 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		initEReference(getDifferenceOverlay_Differences(), this.getDifference(), null, "differences", null, 0, -1,
 				DifferenceOverlay.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDifferenceOverlay_Commented(), ecorePackage.getEBoolean(), "commented", null, 0, 1,
+				DifferenceOverlay.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 
 		initEClass(nodeDifferenceOverlayEClass, NodeDifferenceOverlay.class, "NodeDifferenceOverlay", !IS_ABSTRACT,
 				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

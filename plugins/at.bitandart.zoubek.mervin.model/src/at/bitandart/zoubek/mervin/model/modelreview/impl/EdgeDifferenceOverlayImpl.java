@@ -1,6 +1,6 @@
 /**
  * ******************************************************************************
- *  Copyright (c) 2015 Florian Zoubek.
+ *  Copyright (c) 2015, 2016 Florian Zoubek.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -47,6 +47,9 @@ import org.eclipse.gmf.runtime.notation.View;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.EdgeDifferenceOverlayImpl#getDifferences
  * <em>Differences</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.EdgeDifferenceOverlayImpl#isCommented
+ * <em>Commented</em>}</li>
  * </ul>
  *
  * @generated
@@ -71,6 +74,26 @@ public class EdgeDifferenceOverlayImpl extends MinimalEObjectImpl.Container impl
 	 * @ordered
 	 */
 	protected EList<Difference> differences;
+
+	/**
+	 * The default value of the '{@link #isCommented() <em>Commented</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #isCommented()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean COMMENTED_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isCommented() <em>Commented</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #isCommented()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean commented = COMMENTED_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -149,6 +172,28 @@ public class EdgeDifferenceOverlayImpl extends MinimalEObjectImpl.Container impl
 	 * 
 	 * @generated
 	 */
+	public boolean isCommented() {
+		return commented;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setCommented(boolean newCommented) {
+		boolean oldCommented = commented;
+		commented = newCommented;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.EDGE_DIFFERENCE_OVERLAY__COMMENTED,
+					oldCommented, commented));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -172,6 +217,8 @@ public class EdgeDifferenceOverlayImpl extends MinimalEObjectImpl.Container impl
 			return basicGetLinkedView();
 		case ModelReviewPackage.EDGE_DIFFERENCE_OVERLAY__DIFFERENCES:
 			return getDifferences();
+		case ModelReviewPackage.EDGE_DIFFERENCE_OVERLAY__COMMENTED:
+			return isCommented();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -192,6 +239,9 @@ public class EdgeDifferenceOverlayImpl extends MinimalEObjectImpl.Container impl
 			getDifferences().clear();
 			getDifferences().addAll((Collection<? extends Difference>) newValue);
 			return;
+		case ModelReviewPackage.EDGE_DIFFERENCE_OVERLAY__COMMENTED:
+			setCommented((Boolean) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -210,6 +260,9 @@ public class EdgeDifferenceOverlayImpl extends MinimalEObjectImpl.Container impl
 		case ModelReviewPackage.EDGE_DIFFERENCE_OVERLAY__DIFFERENCES:
 			getDifferences().clear();
 			return;
+		case ModelReviewPackage.EDGE_DIFFERENCE_OVERLAY__COMMENTED:
+			setCommented(COMMENTED_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -226,8 +279,27 @@ public class EdgeDifferenceOverlayImpl extends MinimalEObjectImpl.Container impl
 			return linkedView != null;
 		case ModelReviewPackage.EDGE_DIFFERENCE_OVERLAY__DIFFERENCES:
 			return differences != null && !differences.isEmpty();
+		case ModelReviewPackage.EDGE_DIFFERENCE_OVERLAY__COMMENTED:
+			return commented != COMMENTED_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy())
+			return super.toString();
+
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (commented: ");
+		result.append(commented);
+		result.append(')');
+		return result.toString();
 	}
 
 } // EdgeDifferenceOverlayImpl

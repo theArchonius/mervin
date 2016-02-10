@@ -219,6 +219,10 @@
           <children xmi:type="notation:Node" xmi:id="_ffewA3AFEeWmisQa3jlsLw" type="2003" element="_fcXKkHAFEeWmisQa3jlsLw">
             <children xmi:type="notation:Node" xmi:id="_fff-IHAFEeWmisQa3jlsLw" type="5007"/>
             <children xmi:type="notation:Node" xmi:id="_ffglMHAFEeWmisQa3jlsLw" type="7004">
+              <children xmi:type="notation:Node" xmi:id="_FdhR0NAfEeWbIbRxEqaoPA" type="3010" element="_FcA18NAfEeWbIbRxEqaoPA">
+                <styles xmi:type="notation:FontStyle" xmi:id="_FdhR0dAfEeWbIbRxEqaoPA" fontColor="2697711" fontName="Ubuntu" fontHeight="8"/>
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_FdhR0tAfEeWbIbRxEqaoPA"/>
+              </children>
               <styles xmi:type="notation:SortingStyle" xmi:id="_ffglMXAFEeWmisQa3jlsLw"/>
               <styles xmi:type="notation:FilteringStyle" xmi:id="_ffglMnAFEeWmisQa3jlsLw"/>
             </children>
@@ -1121,7 +1125,7 @@
             </children>
             <styles xmi:type="notation:ConnectorStyle" xmi:id="_w_BmkcmKEeWtMudQ4dnzDQ" routing="Rectilinear"/>
             <styles xmi:type="notation:FontStyle" xmi:id="_w_BmksmKEeWtMudQ4dnzDQ" fontColor="7490599" fontName="Ubuntu" fontHeight="8"/>
-            <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_w_Bmk8mKEeWtMudQ4dnzDQ" points="[-59, 13, 124, -320]$[-194, 13, -11, -320]$[-194, 284, -11, -49]"/>
+            <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_w_Bmk8mKEeWtMudQ4dnzDQ" points="[-92, 13, 124, -320]$[-232, 13, -16, -320]$[-232, 284, -16, -49]"/>
             <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_w_I7UMmKEeWtMudQ4dnzDQ" id="(0.5,0.5)"/>
             <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_w_I7UcmKEeWtMudQ4dnzDQ" id="(0.5,1.1395348837209303)"/>
           </edges>
@@ -1528,11 +1532,19 @@
         <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
         <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
         <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
-        <ownedStyle xmi:type="diagram:FlatContainerStyle" xmi:id="_fcXxoHAFEeWmisQa3jlsLw" iconPath="/org.eclipse.emf.ecoretools.design/icons/full/obj16/EClass_interface.gif" borderColor="125,125,125" backgroundStyle="Liquid" foregroundColor="228,228,228">
+        <ownedStyle xmi:type="diagram:FlatContainerStyle" xmi:id="_Ir8VoNAfEeWbIbRxEqaoPA" iconPath="/org.eclipse.emf.ecoretools.design/icons/full/obj16/EClass_interface.gif" borderColor="125,125,125" backgroundStyle="Liquid" foregroundColor="228,228,228">
           <labelFormat>italic</labelFormat>
           <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@conditionnalStyles.0/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']"/>
+        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_FcA18NAfEeWbIbRxEqaoPA" name="commented : EBoolean = false" tooltipText="">
+          <target xmi:type="ecore:EAttribute" href="MervinModelReview.ecore#//DifferenceOverlay/commented"/>
+          <semanticElements xmi:type="ecore:EAttribute" href="MervinModelReview.ecore#//DifferenceOverlay/commented"/>
+          <ownedStyle xmi:type="diagram:BundledImage" xmi:id="_IsM0UNAfEeWbIbRxEqaoPA" labelAlignment="LEFT">
+            <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']/@style"/>
+          </ownedStyle>
+          <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']"/>
+        </ownedElements>
       </ownedDiagramElements>
       <ownedDiagramElements xmi:type="diagram:DNodeList" xmi:id="_fcY_wHAFEeWmisQa3jlsLw" name="NodeDifferenceOverlay" tooltipText="" outgoingEdges="_fec1QHAFEeWmisQa3jlsLw" width="12" height="10">
         <target xmi:type="ecore:EClass" href="MervinModelReview.ecore#//NodeDifferenceOverlay"/>
@@ -2734,6 +2746,7 @@
         <ownedStyle xmi:type="diagram:EdgeStyle" xmi:id="_qz02cMp4EeWQ9_zgqPyPzQ" description="_WeGLQMXJEeWKMYDlBLqtlw" routingStyle="manhattan" strokeColor="0,0,0">
           <centerLabelStyle xmi:type="diagram:CenterLabelStyle" xmi:id="_qz02ccp4EeWQ9_zgqPyPzQ" showIcon="false">
             <customFeatures>labelSize</customFeatures>
+            <labelFormat>bold</labelFormat>
           </centerLabelStyle>
           <endLabelStyle xmi:type="diagram:EndLabelStyle" xmi:id="_qz02csp4EeWQ9_zgqPyPzQ" showIcon="false" labelColor="39,76,114">
             <customFeatures>labelSize</customFeatures>

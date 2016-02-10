@@ -116,6 +116,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="linkedView" eType="ecore:EClass ../../org.eclipse.gmf.runtime.notation/model/notation.ecore#//View"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="differences" upperBound="-1"
         eType="#//Difference" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="commented" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NodeDifferenceOverlay" eSuperTypes="#//DifferenceOverlay"/>
   <eClassifiers xsi:type="ecore:EClass" name="EdgeDifferenceOverlay" eSuperTypes="#//DifferenceOverlay"/>

@@ -857,13 +857,22 @@ public interface ModelReviewPackage extends EPackage {
 	int DIFFERENCE_OVERLAY__DIFFERENCES = 1;
 
 	/**
+	 * The feature id for the '<em><b>Commented</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int DIFFERENCE_OVERLAY__COMMENTED = 2;
+
+	/**
 	 * The number of structural features of the '<em>Difference Overlay</em>'
 	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int DIFFERENCE_OVERLAY_FEATURE_COUNT = 2;
+	int DIFFERENCE_OVERLAY_FEATURE_COUNT = 3;
 
 	/**
 	 * The number of operations of the '<em>Difference Overlay</em>' class. <!--
@@ -904,6 +913,15 @@ public interface ModelReviewPackage extends EPackage {
 	 * @ordered
 	 */
 	int NODE_DIFFERENCE_OVERLAY__DIFFERENCES = DIFFERENCE_OVERLAY__DIFFERENCES;
+
+	/**
+	 * The feature id for the '<em><b>Commented</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_DIFFERENCE_OVERLAY__COMMENTED = DIFFERENCE_OVERLAY__COMMENTED;
 
 	/**
 	 * The number of structural features of the '
@@ -954,6 +972,15 @@ public interface ModelReviewPackage extends EPackage {
 	 * @ordered
 	 */
 	int EDGE_DIFFERENCE_OVERLAY__DIFFERENCES = DIFFERENCE_OVERLAY__DIFFERENCES;
+
+	/**
+	 * The feature id for the '<em><b>Commented</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int EDGE_DIFFERENCE_OVERLAY__COMMENTED = DIFFERENCE_OVERLAY__COMMENTED;
 
 	/**
 	 * The number of structural features of the '
@@ -2124,6 +2151,18 @@ public interface ModelReviewPackage extends EPackage {
 	EReference getDifferenceOverlay_Differences();
 
 	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay#isCommented
+	 * <em>Commented</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Commented</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay#isCommented()
+	 * @see #getDifferenceOverlay()
+	 * @generated
+	 */
+	EAttribute getDifferenceOverlay_Commented();
+
+	/**
 	 * Returns the meta object for class '
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.NodeDifferenceOverlay
 	 * <em>Node Difference Overlay</em>}'. <!-- begin-user-doc --> <!--
@@ -2933,6 +2972,14 @@ public interface ModelReviewPackage extends EPackage {
 		 * @generated
 		 */
 		EReference DIFFERENCE_OVERLAY__DIFFERENCES = eINSTANCE.getDifferenceOverlay_Differences();
+
+		/**
+		 * The meta object literal for the '<em><b>Commented</b></em>' attribute
+		 * feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute DIFFERENCE_OVERLAY__COMMENTED = eINSTANCE.getDifferenceOverlay_Commented();
 
 		/**
 		 * The meta object literal for the '
