@@ -44,6 +44,9 @@ public class MervinCommentProvider implements ICommentProvider {
 	@Inject
 	private User currentMervinUser;
 
+	@Inject
+	private ICommonTargetResolver commonTargetResolver;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -105,19 +108,23 @@ public class MervinCommentProvider implements ICommentProvider {
 		for (Comment comment : review.getComments()) {
 
 			Set<EObject> targets = new HashSet<>();
-			collectTargets(comment, targets, true, true);
+			collectCommonTargets(comment, targets, true, true);
 
 			boolean newGroup = true;
 
 			if (targets.isEmpty()) {
+
 				if (defaultGroup == null) {
 					defaultGroup = createGroup(Collections.<EObject> emptySet(), Long.MAX_VALUE, oldestComments,
 							groups);
 				}
 				addToGroup(defaultGroup, targets, comment.getCreationTime(), oldestComments);
 				newGroup = false;
+
 			} else {
+
 				for (MervinCommentGroup group : groups) {
+
 					Set<EObject> groupTargets = group.getTargets();
 					for (EObject target : targets) {
 						if (groupTargets.contains(target)) {
@@ -126,7 +133,9 @@ public class MervinCommentProvider implements ICommentProvider {
 							break;
 						}
 					}
+
 				}
+
 			}
 
 			if (newGroup) {
@@ -188,8 +197,9 @@ public class MervinCommentProvider implements ICommentProvider {
 	}
 
 	/**
-	 * collects all targets of the comment, its replies, and its answered
-	 * comments if specified. The targets will be added to the given set.
+	 * collects all common targets (implicit targets that are used for grouping)
+	 * of the comment, its replies, and its answered comments if specified. The
+	 * targets will be added to the given set.
 	 * 
 	 * @param comment
 	 *            the comment used to start the collect task.
@@ -205,19 +215,29 @@ public class MervinCommentProvider implements ICommentProvider {
 	 *            comment. This also applies to all found replies until a reply
 	 *            does not have any replies itself.
 	 */
-	private void collectTargets(Comment comment, Set<EObject> targets, boolean includeAnswered,
+	private void collectCommonTargets(Comment comment, Set<EObject> targets, boolean includeAnswered,
 			boolean includeReplies) {
 
 		for (CommentLink link : comment.getCommentLinks()) {
-			targets.addAll(link.getTargets());
+
+			PatchSet commentPatchSet = comment.getPatchset();
+			/*
+			 * Many different link targets may implicitly represent the same
+			 * target which is used to group the given comment. Therefore use
+			 * the common target resolver to obtain the implicit common targets.
+			 */
+			Set<EObject> commonTargets = commonTargetResolver.findCommonTargets(link.getTargets(), commentPatchSet);
+			targets.addAll(commonTargets);
+
 		}
+
 		Comment answeredComment = comment.getRepliedTo();
 		if (includeAnswered && answeredComment != null) {
-			collectTargets(answeredComment, targets, includeAnswered, false);
+			collectCommonTargets(answeredComment, targets, includeAnswered, false);
 		}
 		if (includeReplies) {
 			for (Comment reply : comment.getReplies()) {
-				collectTargets(reply, targets, false, includeReplies);
+				collectCommonTargets(reply, targets, false, includeReplies);
 			}
 		}
 
@@ -332,7 +352,7 @@ public class MervinCommentProvider implements ICommentProvider {
 
 			for (Comment realComment : patchSetComments) {
 				Set<EObject> commentTargets = new HashSet<>();
-				collectTargets(realComment, commentTargets, true, true);
+				collectCommonTargets(realComment, commentTargets, true, true);
 
 				if (targets.isEmpty() && commentTargets.isEmpty()) {
 					addComment(comments, realComment);

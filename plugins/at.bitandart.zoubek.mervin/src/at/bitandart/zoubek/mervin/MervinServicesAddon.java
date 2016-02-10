@@ -15,7 +15,9 @@ import javax.annotation.PostConstruct;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 
+import at.bitandart.zoubek.mervin.comments.ICommonTargetResolver;
 import at.bitandart.zoubek.mervin.comments.MervinCommentProvider;
+import at.bitandart.zoubek.mervin.comments.MervinCommonTargetResolver;
 import at.bitandart.zoubek.mervin.gerrit.GerritReviewRepositoryService;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
 import at.bitandart.zoubek.mervin.model.modelreview.User;
@@ -51,6 +53,10 @@ public class MervinServicesAddon {
 		User defaultUser = defaultModelReviewFactory.createUser();
 		defaultUser.setName("Mervin Default User");
 		context.set(User.class, defaultUser);
+
+		ICommonTargetResolver commonTargetResolver = ContextInjectionFactory.make(MervinCommonTargetResolver.class,
+				context);
+		context.set(ICommonTargetResolver.class, commonTargetResolver);
 
 		MervinCommentProvider mervinCommentProvider = ContextInjectionFactory.make(MervinCommentProvider.class,
 				context);

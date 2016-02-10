@@ -6,4 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.junit,
  at.bitandart.zoubek.mervin,
- at.bitandart.zoubek.mervin.model
+ at.bitandart.zoubek.mervin.model,
+ org.eclipse.e4.core.di;bundle-version="1.5.0",
+ org.eclipse.e4.core.contexts,
+ org.mockito;bundle-version="1.9.5"

@@ -15,17 +15,22 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import org.eclipse.e4.core.contexts.ContextInjectionFactory;
+import org.eclipse.e4.core.contexts.EclipseContextFactory;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.junit.Before;
 import org.junit.Test;
 
+import at.bitandart.zoubek.mervin.comments.ICommonTargetResolver;
 import at.bitandart.zoubek.mervin.comments.MervinComment;
 import at.bitandart.zoubek.mervin.comments.MervinCommentGroup;
 import at.bitandart.zoubek.mervin.comments.MervinCommentProvider;
@@ -35,6 +40,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.CommentLink;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
+import at.bitandart.zoubek.mervin.model.modelreview.User;
 import at.bitandart.zoubek.mervin.swt.comments.data.IComment;
 import at.bitandart.zoubek.mervin.swt.comments.data.ICommentColumn;
 import at.bitandart.zoubek.mervin.swt.comments.data.ICommentGroup;
@@ -64,10 +70,30 @@ public class MervinCommentProviderTest {
 	 */
 	private int commentCounter = 0;
 
+	/**
+	 * the current user used by the provider
+	 */
+	private User testUser;
+
 	@Before
 	public void init() {
+
 		reviewFactory = ModelReviewFactory.eINSTANCE;
-		commentProvider = new MervinCommentProvider();
+		IEclipseContext context = EclipseContextFactory.create();
+
+		testUser = reviewFactory.createUser();
+		context.set(User.class, testUser);
+
+		ICommonTargetResolver commonTargetResolver = new ICommonTargetResolver() {
+
+			@Override
+			public Set<EObject> findCommonTargets(Collection<EObject> targets, PatchSet patchSet) {
+				return new HashSet<EObject>(targets);
+			}
+		};
+		context.set(ICommonTargetResolver.class, commonTargetResolver);
+
+		commentProvider = ContextInjectionFactory.make(MervinCommentProvider.class, context);
 		commentCounter = 0;
 	}
 
