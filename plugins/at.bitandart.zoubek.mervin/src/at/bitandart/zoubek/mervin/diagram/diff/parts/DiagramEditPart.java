@@ -103,6 +103,21 @@ public class DiagramEditPart extends LinkLFShapeCompartmentEditPart {
 
 	}
 
+	@Override
+	protected void removeChildVisual(EditPart childEditPart) {
+
+		IFigure figure = getFigure();
+		if (childEditPart instanceof IOverlayEditPart && childEditPart instanceof GraphicalEditPart
+				&& figure instanceof DiagramContainerFigure) {
+			DiagramContainerFigure containerFigure = (DiagramContainerFigure) figure;
+			Layer layer = containerFigure.getLayer(MervinLayerConstants.DIFF_HIGHLIGHT_LAYER);
+			layer.remove(((GraphicalEditPart) childEditPart).getFigure());
+		} else {
+			super.removeChildVisual(childEditPart);
+		}
+
+	}
+
 	private int toOverlayIndex(int index, DiagramContainerFigure figure) {
 
 		Layer layer = figure.getLayer(LayerConstants.PRIMARY_LAYER);
