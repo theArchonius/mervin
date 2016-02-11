@@ -1,6 +1,6 @@
 /**
  * ******************************************************************************
- *  Copyright (c) 2015 Florian Zoubek.
+ *  Copyright (c) 2015, 2016 Florian Zoubek.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ package at.bitandart.zoubek.mervin.model.modelreview.impl;
 
 import at.bitandart.zoubek.mervin.model.modelreview.BendpointsDifference;
 import at.bitandart.zoubek.mervin.model.modelreview.Comment;
+import at.bitandart.zoubek.mervin.model.modelreview.CommentLink;
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch;
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramResource;
 import at.bitandart.zoubek.mervin.model.modelreview.Difference;
@@ -35,8 +36,12 @@ import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.model.modelreview.SizeDifference;
 import at.bitandart.zoubek.mervin.model.modelreview.StateDifference;
 import at.bitandart.zoubek.mervin.model.modelreview.StateDifferenceType;
+import at.bitandart.zoubek.mervin.model.modelreview.User;
+
 import org.eclipse.draw2d.geometry.Vector;
+
 import org.eclipse.emf.compare.ComparePackage;
+
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -46,7 +51,9 @@ import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
+
 import org.eclipse.emf.ecore.impl.EPackageImpl;
+
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 
 /**
@@ -181,6 +188,20 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * @generated
 	 */
 	private EClass bendpointsDifferenceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass commentLinkEClass = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EClass userEClass = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -501,6 +522,15 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
+	public EReference getPatchSet_Comments() {
+		return (EReference) patchSetEClass.getEStructuralFeatures().get(15);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	public EClass getPatch() {
 		return patchEClass;
 	}
@@ -636,6 +666,69 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
+	public EReference getComment_Author() {
+		return (EReference) commentEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getComment_CreationTime() {
+		return (EAttribute) commentEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getComment_Text() {
+		return (EAttribute) commentEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EReference getComment_CommentLinks() {
+		return (EReference) commentEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EReference getComment_Replies() {
+		return (EReference) commentEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EReference getComment_RepliedTo() {
+		return (EReference) commentEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EReference getComment_Patchset() {
+		return (EReference) commentEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	public EClass getModelResource() {
 		return modelResourceEClass;
 	}
@@ -701,6 +794,15 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 */
 	public EReference getDifferenceOverlay_Differences() {
 		return (EReference) differenceOverlayEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getDifferenceOverlay_Commented() {
+		return (EAttribute) differenceOverlayEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -834,6 +936,69 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
+	public EClass getCommentLink() {
+		return commentLinkEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EReference getCommentLink_Comment() {
+		return (EReference) commentLinkEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getCommentLink_Start() {
+		return (EAttribute) commentLinkEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getCommentLink_Length() {
+		return (EAttribute) commentLinkEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EReference getCommentLink_Targets() {
+		return (EReference) commentLinkEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EClass getUser() {
+		return userEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getUser_Name() {
+		return (EAttribute) userEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	public EEnum getPatchChangeType() {
 		return patchChangeTypeEEnum;
 	}
@@ -919,6 +1084,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		createEAttribute(patchSetEClass, PATCH_SET__MAX_OBJECT_CHANGE_REF_COUNT);
 		createEReference(patchSetEClass, PATCH_SET__ALL_NEW_INVOLVED_DIAGRAMS);
 		createEReference(patchSetEClass, PATCH_SET__ALL_OLD_INVOLVED_DIAGRAMS);
+		createEReference(patchSetEClass, PATCH_SET__COMMENTS);
 
 		patchEClass = createEClass(PATCH);
 		createEAttribute(patchEClass, PATCH__NEW_PATH);
@@ -938,6 +1104,13 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 
 		commentEClass = createEClass(COMMENT);
 		createEAttribute(commentEClass, COMMENT__ID);
+		createEReference(commentEClass, COMMENT__AUTHOR);
+		createEAttribute(commentEClass, COMMENT__CREATION_TIME);
+		createEAttribute(commentEClass, COMMENT__TEXT);
+		createEReference(commentEClass, COMMENT__COMMENT_LINKS);
+		createEReference(commentEClass, COMMENT__REPLIES);
+		createEReference(commentEClass, COMMENT__REPLIED_TO);
+		createEReference(commentEClass, COMMENT__PATCHSET);
 
 		modelResourceEClass = createEClass(MODEL_RESOURCE);
 		createEReference(modelResourceEClass, MODEL_RESOURCE__OBJECTS);
@@ -949,6 +1122,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		differenceOverlayEClass = createEClass(DIFFERENCE_OVERLAY);
 		createEReference(differenceOverlayEClass, DIFFERENCE_OVERLAY__LINKED_VIEW);
 		createEReference(differenceOverlayEClass, DIFFERENCE_OVERLAY__DIFFERENCES);
+		createEAttribute(differenceOverlayEClass, DIFFERENCE_OVERLAY__COMMENTED);
 
 		nodeDifferenceOverlayEClass = createEClass(NODE_DIFFERENCE_OVERLAY);
 
@@ -972,6 +1146,15 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		createEAttribute(stateDifferenceEClass, STATE_DIFFERENCE__TYPE);
 
 		bendpointsDifferenceEClass = createEClass(BENDPOINTS_DIFFERENCE);
+
+		commentLinkEClass = createEClass(COMMENT_LINK);
+		createEReference(commentLinkEClass, COMMENT_LINK__COMMENT);
+		createEAttribute(commentLinkEClass, COMMENT_LINK__START);
+		createEAttribute(commentLinkEClass, COMMENT_LINK__LENGTH);
+		createEReference(commentLinkEClass, COMMENT_LINK__TARGETS);
+
+		userEClass = createEClass(USER);
+		createEAttribute(userEClass, USER__NAME);
 
 		// Create enums
 		patchChangeTypeEEnum = createEEnum(PATCH_CHANGE_TYPE);
@@ -1108,6 +1291,9 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		initEReference(getPatchSet_AllOldInvolvedDiagrams(), theNotationPackage.getDiagram(), null,
 				"allOldInvolvedDiagrams", null, 0, -1, PatchSet.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE,
 				!IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+		initEReference(getPatchSet_Comments(), this.getComment(), this.getComment_Patchset(), "comments", null, 0, -1,
+				PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(patchEClass, Patch.class, "Patch", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getPatch_NewPath(), ecorePackage.getEString(), "newPath", null, 0, 1, Patch.class, !IS_TRANSIENT,
@@ -1142,9 +1328,28 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 				ModelPatch.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(commentEClass, Comment.class, "Comment", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(commentEClass, Comment.class, "Comment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getComment_Id(), ecorePackage.getEString(), "id", null, 0, 1, Comment.class, !IS_TRANSIENT,
 				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getComment_Author(), this.getUser(), null, "author", null, 1, 1, Comment.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED,
+				IS_ORDERED);
+		initEAttribute(getComment_CreationTime(), ecorePackage.getELong(), "creationTime", "0", 0, 1, Comment.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getComment_Text(), ecorePackage.getEString(), "text", null, 0, 1, Comment.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getComment_CommentLinks(), this.getCommentLink(), this.getCommentLink_Comment(), "commentLinks",
+				null, 0, -1, Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
+				!IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getComment_Replies(), this.getComment(), this.getComment_RepliedTo(), "replies", null, 0, -1,
+				Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getComment_RepliedTo(), this.getComment(), this.getComment_Replies(), "repliedTo", null, 0, 1,
+				Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getComment_Patchset(), this.getPatchSet(), this.getPatchSet_Comments(), "patchset", null, 0, 1,
+				Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(modelResourceEClass, ModelResource.class, "ModelResource", !IS_ABSTRACT, !IS_INTERFACE,
 				IS_GENERATED_INSTANCE_CLASS);
@@ -1169,6 +1374,9 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		initEReference(getDifferenceOverlay_Differences(), this.getDifference(), null, "differences", null, 0, -1,
 				DifferenceOverlay.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDifferenceOverlay_Commented(), ecorePackage.getEBoolean(), "commented", null, 0, 1,
+				DifferenceOverlay.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 
 		initEClass(nodeDifferenceOverlayEClass, NodeDifferenceOverlay.class, "NodeDifferenceOverlay", !IS_ABSTRACT,
 				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1211,6 +1419,23 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 
 		initEClass(bendpointsDifferenceEClass, BendpointsDifference.class, "BendpointsDifference", !IS_ABSTRACT,
 				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(commentLinkEClass, CommentLink.class, "CommentLink", !IS_ABSTRACT, !IS_INTERFACE,
+				IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getCommentLink_Comment(), this.getComment(), this.getComment_CommentLinks(), "comment", null, 0,
+				1, CommentLink.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getCommentLink_Start(), ecorePackage.getEInt(), "start", "0", 0, 1, CommentLink.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getCommentLink_Length(), ecorePackage.getEInt(), "length", "0", 0, 1, CommentLink.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCommentLink_Targets(), ecorePackage.getEObject(), null, "targets", null, 0, -1,
+				CommentLink.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(userEClass, User.class, "User", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getUser_Name(), ecorePackage.getEString(), "name", null, 0, 1, User.class, !IS_TRANSIENT,
+				!IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(patchChangeTypeEEnum, PatchChangeType.class, "PatchChangeType");

@@ -1,6 +1,6 @@
 /**
  * ******************************************************************************
- *  Copyright (c) 2015 Florian Zoubek.
+ *  Copyright (c) 2015, 2016 Florian Zoubek.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -13,10 +13,13 @@
 package at.bitandart.zoubek.mervin.model.modelreview;
 
 import java.util.Map;
+
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.compare.Comparison;
+
 import org.eclipse.emf.ecore.EObject;
+
 import org.eclipse.gmf.runtime.notation.Diagram;
 
 /**
@@ -69,6 +72,8 @@ import org.eclipse.gmf.runtime.notation.Diagram;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getAllOldInvolvedDiagrams
  * <em>All Old Involved Diagrams</em>}</li>
+ * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getComments
+ * <em>Comments</em>}</li>
  * </ul>
  *
  * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getPatchSet()
@@ -141,8 +146,10 @@ public interface PatchSet extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Patches</b></em>' reference list. The
 	 * list contents are of type
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Patch}. <!--
-	 * begin-user-doc -->
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Patch}. It is
+	 * bidirectional and its opposite is '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Patch#getPatchSet
+	 * <em>Patch Set</em>}'. <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Patches</em>' reference list isn't clear,
 	 * there really should be more of a description here...
@@ -151,7 +158,8 @@ public interface PatchSet extends EObject {
 	 * 
 	 * @return the value of the '<em>Patches</em>' reference list.
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getPatchSet_Patches()
-	 * @model
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.Patch#getPatchSet
+	 * @model opposite="patchSet"
 	 * @generated
 	 */
 	EList<Patch> getPatches();
@@ -159,7 +167,7 @@ public interface PatchSet extends EObject {
 	/**
 	 * Returns the value of the '<em><b>New Involved Models</b></em>' reference
 	 * list. The list contents are of type
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelInstance}. <!--
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelResource}. <!--
 	 * begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>New Involved Models</em>' reference list isn't
@@ -195,7 +203,7 @@ public interface PatchSet extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Old Involved Models</b></em>' reference
 	 * list. The list contents are of type
-	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelInstance}. <!--
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelResource}. <!--
 	 * begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Old Involved Models</em>' reference list isn't
@@ -448,5 +456,26 @@ public interface PatchSet extends EObject {
 	 * @generated
 	 */
 	EList<Diagram> getAllOldInvolvedDiagrams();
+
+	/**
+	 * Returns the value of the '<em><b>Comments</b></em>' reference list. The
+	 * list contents are of type
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment}. It is
+	 * bidirectional and its opposite is '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getPatchset
+	 * <em>Patchset</em>}'. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Comments</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Comments</em>' reference list.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getPatchSet_Comments()
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.Comment#getPatchset
+	 * @model opposite="patchset"
+	 * @generated
+	 */
+	EList<Comment> getComments();
 
 } // PatchSet

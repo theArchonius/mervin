@@ -76,6 +76,15 @@ public interface ModelReviewFactory extends EFactory {
 	ModelPatch createModelPatch();
 
 	/**
+	 * Returns a new object of class '<em>Comment</em>'. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>Comment</em>'.
+	 * @generated
+	 */
+	Comment createComment();
+
+	/**
 	 * Returns a new object of class '<em>Model Resource</em>'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -146,6 +155,24 @@ public interface ModelReviewFactory extends EFactory {
 	 * @generated
 	 */
 	BendpointsDifference createBendpointsDifference();
+
+	/**
+	 * Returns a new object of class '<em>Comment Link</em>'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>Comment Link</em>'.
+	 * @generated
+	 */
+	CommentLink createCommentLink();
+
+	/**
+	 * Returns a new object of class '<em>User</em>'. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return a new object of class '<em>User</em>'.
+	 * @generated
+	 */
+	User createUser();
 
 	/**
 	 * Returns the package supported by this factory. <!-- begin-user-doc -->

@@ -1,6 +1,6 @@
 /**
  * ******************************************************************************
- *  Copyright (c) 2015 Florian Zoubek.
+ *  Copyright (c) 2015, 2016 Florian Zoubek.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -12,27 +12,28 @@
  */
 package at.bitandart.zoubek.mervin.model.modelreview.tests;
 
-import at.bitandart.zoubek.mervin.model.modelreview.Comment;
-
+import at.bitandart.zoubek.mervin.model.modelreview.CommentLink;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
+
 import junit.framework.TestCase;
+
 import junit.textui.TestRunner;
 
 /**
  * <!-- begin-user-doc --> A test case for the model object '
- * <em><b>Comment</b></em>'. <!-- end-user-doc -->
+ * <em><b>Comment Link</b></em>'. <!-- end-user-doc -->
  * 
  * @generated
  */
-public class CommentTest extends TestCase {
+public class CommentLinkTest extends TestCase {
 
 	/**
-	 * The fixture for this Comment test case. <!-- begin-user-doc --> <!--
+	 * The fixture for this Comment Link test case. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected Comment fixture = null;
+	protected CommentLink fixture = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -40,36 +41,36 @@ public class CommentTest extends TestCase {
 	 * @generated
 	 */
 	public static void main(String[] args) {
-		TestRunner.run(CommentTest.class);
+		TestRunner.run(CommentLinkTest.class);
 	}
 
 	/**
-	 * Constructs a new Comment test case with the given name. <!--
+	 * Constructs a new Comment Link test case with the given name. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	public CommentTest(String name) {
+	public CommentLinkTest(String name) {
 		super(name);
 	}
 
 	/**
-	 * Sets the fixture for this Comment test case. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected void setFixture(Comment fixture) {
-		this.fixture = fixture;
-	}
-
-	/**
-	 * Returns the fixture for this Comment test case. <!-- begin-user-doc -->
+	 * Sets the fixture for this Comment Link test case. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	protected Comment getFixture() {
+	protected void setFixture(CommentLink fixture) {
+		this.fixture = fixture;
+	}
+
+	/**
+	 * Returns the fixture for this Comment Link test case. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected CommentLink getFixture() {
 		return fixture;
 	}
 
@@ -81,7 +82,7 @@ public class CommentTest extends TestCase {
 	 */
 	@Override
 	protected void setUp() throws Exception {
-		setFixture(ModelReviewFactory.eINSTANCE.createComment());
+		setFixture(ModelReviewFactory.eINSTANCE.createCommentLink());
 	}
 
 	/**
@@ -95,4 +96,4 @@ public class CommentTest extends TestCase {
 		setFixture(null);
 	}
 
-} // CommentTest
+} // CommentLinkTest

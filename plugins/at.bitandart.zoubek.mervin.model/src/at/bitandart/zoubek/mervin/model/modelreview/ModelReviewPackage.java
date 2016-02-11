@@ -1,6 +1,6 @@
 /**
  * ******************************************************************************
- *  Copyright (c) 2015 Florian Zoubek.
+ *  Copyright (c) 2015, 2016 Florian Zoubek.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -306,13 +306,22 @@ public interface ModelReviewPackage extends EPackage {
 	int PATCH_SET__ALL_OLD_INVOLVED_DIAGRAMS = 14;
 
 	/**
+	 * The feature id for the '<em><b>Comments</b></em>' reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int PATCH_SET__COMMENTS = 15;
+
+	/**
 	 * The number of structural features of the '<em>Patch Set</em>' class. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int PATCH_SET_FEATURE_COUNT = 15;
+	int PATCH_SET_FEATURE_COUNT = 16;
 
 	/**
 	 * The number of operations of the '<em>Patch Set</em>' class. <!--
@@ -631,13 +640,76 @@ public interface ModelReviewPackage extends EPackage {
 	int COMMENT__ID = 0;
 
 	/**
+	 * The feature id for the '<em><b>Author</b></em>' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int COMMENT__AUTHOR = 1;
+
+	/**
+	 * The feature id for the '<em><b>Creation Time</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int COMMENT__CREATION_TIME = 2;
+
+	/**
+	 * The feature id for the '<em><b>Text</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int COMMENT__TEXT = 3;
+
+	/**
+	 * The feature id for the '<em><b>Comment Links</b></em>' containment
+	 * reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int COMMENT__COMMENT_LINKS = 4;
+
+	/**
+	 * The feature id for the '<em><b>Replies</b></em>' reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int COMMENT__REPLIES = 5;
+
+	/**
+	 * The feature id for the '<em><b>Replied To</b></em>' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int COMMENT__REPLIED_TO = 6;
+
+	/**
+	 * The feature id for the '<em><b>Patchset</b></em>' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int COMMENT__PATCHSET = 7;
+
+	/**
 	 * The number of structural features of the '<em>Comment</em>' class. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int COMMENT_FEATURE_COUNT = 1;
+	int COMMENT_FEATURE_COUNT = 8;
 
 	/**
 	 * The number of operations of the '<em>Comment</em>' class. <!--
@@ -785,13 +857,22 @@ public interface ModelReviewPackage extends EPackage {
 	int DIFFERENCE_OVERLAY__DIFFERENCES = 1;
 
 	/**
+	 * The feature id for the '<em><b>Commented</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int DIFFERENCE_OVERLAY__COMMENTED = 2;
+
+	/**
 	 * The number of structural features of the '<em>Difference Overlay</em>'
 	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int DIFFERENCE_OVERLAY_FEATURE_COUNT = 2;
+	int DIFFERENCE_OVERLAY_FEATURE_COUNT = 3;
 
 	/**
 	 * The number of operations of the '<em>Difference Overlay</em>' class. <!--
@@ -832,6 +913,15 @@ public interface ModelReviewPackage extends EPackage {
 	 * @ordered
 	 */
 	int NODE_DIFFERENCE_OVERLAY__DIFFERENCES = DIFFERENCE_OVERLAY__DIFFERENCES;
+
+	/**
+	 * The feature id for the '<em><b>Commented</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_DIFFERENCE_OVERLAY__COMMENTED = DIFFERENCE_OVERLAY__COMMENTED;
 
 	/**
 	 * The number of structural features of the '
@@ -882,6 +972,15 @@ public interface ModelReviewPackage extends EPackage {
 	 * @ordered
 	 */
 	int EDGE_DIFFERENCE_OVERLAY__DIFFERENCES = DIFFERENCE_OVERLAY__DIFFERENCES;
+
+	/**
+	 * The feature id for the '<em><b>Commented</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int EDGE_DIFFERENCE_OVERLAY__COMMENTED = DIFFERENCE_OVERLAY__COMMENTED;
 
 	/**
 	 * The number of structural features of the '
@@ -1216,6 +1315,110 @@ public interface ModelReviewPackage extends EPackage {
 
 	/**
 	 * The meta object id for the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.CommentLinkImpl
+	 * <em>Comment Link</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.CommentLinkImpl
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getCommentLink()
+	 * @generated
+	 */
+	int COMMENT_LINK = 18;
+
+	/**
+	 * The feature id for the '<em><b>Comment</b></em>' container reference.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int COMMENT_LINK__COMMENT = 0;
+
+	/**
+	 * The feature id for the '<em><b>Start</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int COMMENT_LINK__START = 1;
+
+	/**
+	 * The feature id for the '<em><b>Length</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int COMMENT_LINK__LENGTH = 2;
+
+	/**
+	 * The feature id for the '<em><b>Targets</b></em>' reference list. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int COMMENT_LINK__TARGETS = 3;
+
+	/**
+	 * The number of structural features of the '<em>Comment Link</em>' class.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int COMMENT_LINK_FEATURE_COUNT = 4;
+
+	/**
+	 * The number of operations of the '<em>Comment Link</em>' class. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int COMMENT_LINK_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.UserImpl
+	 * <em>User</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.UserImpl
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getUser()
+	 * @generated
+	 */
+	int USER = 19;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int USER__NAME = 0;
+
+	/**
+	 * The number of structural features of the '<em>User</em>' class. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int USER_FEATURE_COUNT = 1;
+
+	/**
+	 * The number of operations of the '<em>User</em>' class. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int USER_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchChangeType
 	 * <em>Patch Change Type</em>}' enum. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -1224,7 +1427,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getPatchChangeType()
 	 * @generated
 	 */
-	int PATCH_CHANGE_TYPE = 18;
+	int PATCH_CHANGE_TYPE = 20;
 
 	/**
 	 * The meta object id for the '
@@ -1236,7 +1439,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getStateDifferenceType()
 	 * @generated
 	 */
-	int STATE_DIFFERENCE_TYPE = 19;
+	int STATE_DIFFERENCE_TYPE = 21;
 
 	/**
 	 * The meta object id for the '
@@ -1248,7 +1451,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDimensionChange()
 	 * @generated
 	 */
-	int DIMENSION_CHANGE = 20;
+	int DIMENSION_CHANGE = 22;
 
 	/**
 	 * The meta object id for the '<em>Vector</em>' data type. <!--
@@ -1258,7 +1461,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getVector()
 	 * @generated
 	 */
-	int VECTOR = 21;
+	int VECTOR = 23;
 
 	/**
 	 * Returns the meta object for class '
@@ -1573,6 +1776,18 @@ public interface ModelReviewPackage extends EPackage {
 	EReference getPatchSet_AllOldInvolvedDiagrams();
 
 	/**
+	 * Returns the meta object for the reference list '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getComments
+	 * <em>Comments</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference list '<em>Comments</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.PatchSet#getComments()
+	 * @see #getPatchSet()
+	 * @generated
+	 */
+	EReference getPatchSet_Comments();
+
+	/**
 	 * Returns the meta object for class '
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Patch <em>Patch</em>}
 	 * '. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1755,6 +1970,91 @@ public interface ModelReviewPackage extends EPackage {
 	EAttribute getComment_Id();
 
 	/**
+	 * Returns the meta object for the reference '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getAuthor
+	 * <em>Author</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference '<em>Author</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.Comment#getAuthor()
+	 * @see #getComment()
+	 * @generated
+	 */
+	EReference getComment_Author();
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getCreationTime
+	 * <em>Creation Time</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Creation Time</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.Comment#getCreationTime()
+	 * @see #getComment()
+	 * @generated
+	 */
+	EAttribute getComment_CreationTime();
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getText
+	 * <em>Text</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Text</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.Comment#getText()
+	 * @see #getComment()
+	 * @generated
+	 */
+	EAttribute getComment_Text();
+
+	/**
+	 * Returns the meta object for the containment reference list '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getCommentLinks
+	 * <em>Comment Links</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the containment reference list '
+	 *         <em>Comment Links</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.Comment#getCommentLinks()
+	 * @see #getComment()
+	 * @generated
+	 */
+	EReference getComment_CommentLinks();
+
+	/**
+	 * Returns the meta object for the reference list '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getReplies
+	 * <em>Replies</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference list '<em>Replies</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.Comment#getReplies()
+	 * @see #getComment()
+	 * @generated
+	 */
+	EReference getComment_Replies();
+
+	/**
+	 * Returns the meta object for the reference '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getRepliedTo
+	 * <em>Replied To</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference '<em>Replied To</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.Comment#getRepliedTo()
+	 * @see #getComment()
+	 * @generated
+	 */
+	EReference getComment_RepliedTo();
+
+	/**
+	 * Returns the meta object for the reference '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getPatchset
+	 * <em>Patchset</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference '<em>Patchset</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.Comment#getPatchset()
+	 * @see #getComment()
+	 * @generated
+	 */
+	EReference getComment_Patchset();
+
+	/**
 	 * Returns the meta object for class '
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelResource
 	 * <em>Model Resource</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1849,6 +2149,18 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getDifferenceOverlay_Differences();
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay#isCommented
+	 * <em>Commented</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Commented</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay#isCommented()
+	 * @see #getDifferenceOverlay()
+	 * @generated
+	 */
+	EAttribute getDifferenceOverlay_Commented();
 
 	/**
 	 * Returns the meta object for class '
@@ -2015,6 +2327,88 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getBendpointsDifference();
+
+	/**
+	 * Returns the meta object for class '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.CommentLink
+	 * <em>Comment Link</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>Comment Link</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.CommentLink
+	 * @generated
+	 */
+	EClass getCommentLink();
+
+	/**
+	 * Returns the meta object for the container reference '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.CommentLink#getComment
+	 * <em>Comment</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the container reference '<em>Comment</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.CommentLink#getComment()
+	 * @see #getCommentLink()
+	 * @generated
+	 */
+	EReference getCommentLink_Comment();
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.CommentLink#getStart
+	 * <em>Start</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Start</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.CommentLink#getStart()
+	 * @see #getCommentLink()
+	 * @generated
+	 */
+	EAttribute getCommentLink_Start();
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.CommentLink#getLength
+	 * <em>Length</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Length</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.CommentLink#getLength()
+	 * @see #getCommentLink()
+	 * @generated
+	 */
+	EAttribute getCommentLink_Length();
+
+	/**
+	 * Returns the meta object for the reference list '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.CommentLink#getTargets
+	 * <em>Targets</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference list '<em>Targets</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.CommentLink#getTargets()
+	 * @see #getCommentLink()
+	 * @generated
+	 */
+	EReference getCommentLink_Targets();
+
+	/**
+	 * Returns the meta object for class '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.User <em>User</em>}'.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for class '<em>User</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.User
+	 * @generated
+	 */
+	EClass getUser();
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.User#getName
+	 * <em>Name</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.User#getName()
+	 * @see #getUser()
+	 * @generated
+	 */
+	EAttribute getUser_Name();
 
 	/**
 	 * Returns the meta object for enum '
@@ -2300,6 +2694,14 @@ public interface ModelReviewPackage extends EPackage {
 		EReference PATCH_SET__ALL_OLD_INVOLVED_DIAGRAMS = eINSTANCE.getPatchSet_AllOldInvolvedDiagrams();
 
 		/**
+		 * The meta object literal for the '<em><b>Comments</b></em>' reference
+		 * list feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference PATCH_SET__COMMENTS = eINSTANCE.getPatchSet_Comments();
+
+		/**
 		 * The meta object literal for the '
 		 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.PatchImpl
 		 * <em>Patch</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -2436,6 +2838,63 @@ public interface ModelReviewPackage extends EPackage {
 		EAttribute COMMENT__ID = eINSTANCE.getComment_Id();
 
 		/**
+		 * The meta object literal for the '<em><b>Author</b></em>' reference
+		 * feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference COMMENT__AUTHOR = eINSTANCE.getComment_Author();
+
+		/**
+		 * The meta object literal for the '<em><b>Creation Time</b></em>'
+		 * attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute COMMENT__CREATION_TIME = eINSTANCE.getComment_CreationTime();
+
+		/**
+		 * The meta object literal for the '<em><b>Text</b></em>' attribute
+		 * feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute COMMENT__TEXT = eINSTANCE.getComment_Text();
+
+		/**
+		 * The meta object literal for the '<em><b>Comment Links</b></em>'
+		 * containment reference list feature. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference COMMENT__COMMENT_LINKS = eINSTANCE.getComment_CommentLinks();
+
+		/**
+		 * The meta object literal for the '<em><b>Replies</b></em>' reference
+		 * list feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference COMMENT__REPLIES = eINSTANCE.getComment_Replies();
+
+		/**
+		 * The meta object literal for the '<em><b>Replied To</b></em>'
+		 * reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference COMMENT__REPLIED_TO = eINSTANCE.getComment_RepliedTo();
+
+		/**
+		 * The meta object literal for the '<em><b>Patchset</b></em>' reference
+		 * feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference COMMENT__PATCHSET = eINSTANCE.getComment_Patchset();
+
+		/**
 		 * The meta object literal for the '
 		 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelResourceImpl
 		 * <em>Model Resource</em>}' class. <!-- begin-user-doc --> <!--
@@ -2513,6 +2972,14 @@ public interface ModelReviewPackage extends EPackage {
 		 * @generated
 		 */
 		EReference DIFFERENCE_OVERLAY__DIFFERENCES = eINSTANCE.getDifferenceOverlay_Differences();
+
+		/**
+		 * The meta object literal for the '<em><b>Commented</b></em>' attribute
+		 * feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute DIFFERENCE_OVERLAY__COMMENTED = eINSTANCE.getDifferenceOverlay_Commented();
 
 		/**
 		 * The meta object literal for the '
@@ -2667,6 +3134,70 @@ public interface ModelReviewPackage extends EPackage {
 		 * @generated
 		 */
 		EClass BENDPOINTS_DIFFERENCE = eINSTANCE.getBendpointsDifference();
+
+		/**
+		 * The meta object literal for the '
+		 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.CommentLinkImpl
+		 * <em>Comment Link</em>}' class. <!-- begin-user-doc --> <!--
+		 * end-user-doc -->
+		 * 
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
+		 *      CommentLinkImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getCommentLink()
+		 * @generated
+		 */
+		EClass COMMENT_LINK = eINSTANCE.getCommentLink();
+
+		/**
+		 * The meta object literal for the '<em><b>Comment</b></em>' container
+		 * reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference COMMENT_LINK__COMMENT = eINSTANCE.getCommentLink_Comment();
+
+		/**
+		 * The meta object literal for the '<em><b>Start</b></em>' attribute
+		 * feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute COMMENT_LINK__START = eINSTANCE.getCommentLink_Start();
+
+		/**
+		 * The meta object literal for the '<em><b>Length</b></em>' attribute
+		 * feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute COMMENT_LINK__LENGTH = eINSTANCE.getCommentLink_Length();
+
+		/**
+		 * The meta object literal for the '<em><b>Targets</b></em>' reference
+		 * list feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference COMMENT_LINK__TARGETS = eINSTANCE.getCommentLink_Targets();
+
+		/**
+		 * The meta object literal for the '
+		 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.UserImpl
+		 * <em>User</em>}' class. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.UserImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getUser()
+		 * @generated
+		 */
+		EClass USER = eINSTANCE.getUser();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute
+		 * feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute USER__NAME = eINSTANCE.getUser_Name();
 
 		/**
 		 * The meta object literal for the '

@@ -38,6 +38,9 @@ import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
 import org.eclipse.gmf.runtime.emf.commands.core.command.EditingDomainUndoContext;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.papyrus.infra.gmfdiag.css.helper.CSSHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -141,6 +144,17 @@ public class DiagramDiffView implements IAdaptable {
 			});
 			viewer.setRootEditPart(EditPartService.getInstance().createRootEditPart(diagram));
 			viewer.setContents(diagram);
+
+			viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+				@Override
+				public void selectionChanged(SelectionChangedEvent event) {
+					IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+					selectionService.setSelection(selection);
+				}
+
+			});
+
 		} else {
 			Label infoLabel = new Label(mainPanel, SWT.CENTER);
 			infoLabel.setText("Could not restore review - close this view and try reloading the review");

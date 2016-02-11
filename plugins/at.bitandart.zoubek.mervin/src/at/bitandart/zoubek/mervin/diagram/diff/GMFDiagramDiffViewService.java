@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2016 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,8 +12,10 @@ package at.bitandart.zoubek.mervin.diagram.diff;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -64,6 +66,8 @@ import com.google.common.collect.HashBiMap;
 import at.bitandart.zoubek.mervin.diagram.diff.gmf.ModelReviewElementTypes;
 import at.bitandart.zoubek.mervin.draw2d.DoublePrecisionVector;
 import at.bitandart.zoubek.mervin.model.modelreview.BendpointsDifference;
+import at.bitandart.zoubek.mervin.model.modelreview.Comment;
+import at.bitandart.zoubek.mervin.model.modelreview.CommentLink;
 import at.bitandart.zoubek.mervin.model.modelreview.Difference;
 import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
 import at.bitandart.zoubek.mervin.model.modelreview.DimensionChange;
@@ -250,7 +254,7 @@ public class GMFDiagramDiffViewService {
 
 				compositeCommand.add(new AddOverlayNodesCommand(transactionalEditingDomain,
 						modelReview.getSelectedDiagramComparison(), copyMap, childView, childrenCopy, preferencesHint,
-						reviewFactory));
+						reviewFactory, modelReview));
 
 				executeCommand(compositeCommand.reduce(), editDomain);
 			}
@@ -346,10 +350,12 @@ public class GMFDiagramDiffViewService {
 		private PreferencesHint preferencesHint;
 		private ModelReviewFactory reviewFactory;
 		private Collection<Object> overlayedViews;
+		private ModelReview modelReview;
+		private Set<EObject> cachedLinkTargets;
 
 		public AddOverlayNodesCommand(TransactionalEditingDomain domain, Comparison diagramComparison,
 				BiMap<EObject, EObject> copyMap, View container, Collection<Object> overlayedViews,
-				PreferencesHint preferencesHint, ModelReviewFactory reviewFactory) {
+				PreferencesHint preferencesHint, ModelReviewFactory reviewFactory, ModelReview modelReview) {
 			super(domain, "", null);
 			this.diagramComparison = diagramComparison;
 			this.container = container;
@@ -357,11 +363,14 @@ public class GMFDiagramDiffViewService {
 			this.preferencesHint = preferencesHint;
 			this.reviewFactory = reviewFactory;
 			this.overlayedViews = overlayedViews;
+			this.modelReview = modelReview;
 		}
 
 		@Override
 		protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
 				throws ExecutionException {
+
+			cachedLinkTargets = collectLinkTargets();
 
 			for (Object child : overlayedViews) {
 
@@ -451,8 +460,12 @@ public class GMFDiagramDiffViewService {
 			if (bendpointsMatch != null) {
 				bendpointDifferences = bendpointsMatch.getDifferences();
 			}
+			boolean hasComments = false;
+			boolean hasChildComments = false;
 			if (viewElementMatch != null) {
 				viewElementDifferences = viewElementMatch.getDifferences();
+				hasComments = containsTargetsOfCommentLinks(viewElementMatch);
+				hasChildComments = containSubmatchesTargetsOfCommentLinks(viewElementMatch);
 			}
 
 			boolean hasViewReferenceDifferences = viewReferenceChange != null;
@@ -463,7 +476,7 @@ public class GMFDiagramDiffViewService {
 			boolean ignoreChildren = false;
 
 			if (hasViewReferenceDifferences || hasLayoutConstraintDifferences || hasBendpointsDifferences
-					|| hasViewElementDifferences) {
+					|| hasViewElementDifferences || hasComments || hasChildComments) {
 
 				// create an overlay depending on the view type
 				DifferenceOverlay differenceOverlay = null;
@@ -510,6 +523,12 @@ public class GMFDiagramDiffViewService {
 
 				}
 
+				differenceOverlay.setCommented(hasComments);
+
+				if (!hasComments && ignoreChildren && hasChildComments) {
+					differenceOverlay.setCommented(hasChildComments);
+				}
+
 				if (!differenceOverlay.getDifferences().isEmpty()) {
 
 					/*
@@ -530,6 +549,58 @@ public class GMFDiagramDiffViewService {
 					}
 				}
 			}
+		}
+
+		/**
+		 * determines if the left or the right version of the given match have
+		 * been set as link target in one of the comments of the review.
+		 * 
+		 * @param match
+		 *            the match containing the EObjects to check.
+		 * @return true if the left or the right EObject of the given match have
+		 *         been set as link target, false otherwise.
+		 */
+		private boolean containsTargetsOfCommentLinks(Match match) {
+
+			return cachedLinkTargets.contains(match.getLeft()) || cachedLinkTargets.contains(match.getRight());
+		}
+
+		/**
+		 * determines if the submatches contain an {@link EObject} that is a
+		 * target of a comment link.
+		 * 
+		 * @param match
+		 *            the match containing the submatches to check
+		 * @return true if any of the submatches contain an {@link EObject} that
+		 *         is a target of a comment link.
+		 */
+		private boolean containSubmatchesTargetsOfCommentLinks(Match match) {
+
+			for (Match submatch : match.getAllSubmatches()) {
+				if (containsTargetsOfCommentLinks(submatch)) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		/**
+		 * collects all link targets of all comments in the current review and
+		 * returns them as set.
+		 * 
+		 * @return the set of all link targets of all comments of the current
+		 *         review.
+		 */
+		private Set<EObject> collectLinkTargets() {
+			Set<EObject> targets = new HashSet<EObject>();
+			// cache targets in set for faster lookup
+			for (Comment comment : modelReview.getComments()) {
+				for (CommentLink link : comment.getCommentLinks()) {
+					targets.addAll(link.getTargets());
+				}
+			}
+			return targets;
 		}
 
 		/**
@@ -832,11 +903,13 @@ public class GMFDiagramDiffViewService {
 
 			int featureID = notification.getFeatureID(PatchSet.class);
 			if (featureID == ModelReviewPackage.MODEL_REVIEW__LEFT_PATCH_SET
-					|| featureID == ModelReviewPackage.MODEL_REVIEW__RIGHT_PATCH_SET) {
+					|| featureID == ModelReviewPackage.MODEL_REVIEW__RIGHT_PATCH_SET
+					|| featureID == ModelReviewPackage.MODEL_REVIEW__COMMENTS) {
 
 				updateDiagramNodes(diagram, modelReview, editDomain, transactionalEditingDomain, preferencesHint);
 
 			}
+
 		}
 
 		public Diagram getDiagram() {

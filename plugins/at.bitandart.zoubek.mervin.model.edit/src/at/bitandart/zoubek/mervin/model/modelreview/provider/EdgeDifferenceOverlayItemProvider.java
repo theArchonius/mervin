@@ -1,6 +1,6 @@
 /**
  * ******************************************************************************
- *  Copyright (c) 2015 Florian Zoubek.
+ *  Copyright (c) 2015, 2016 Florian Zoubek.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -33,6 +33,7 @@ import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
+import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 
@@ -67,6 +68,7 @@ public class EdgeDifferenceOverlayItemProvider extends ItemProviderAdapter imple
 			super.getPropertyDescriptors(object);
 
 			addLinkedViewPropertyDescriptor(object);
+			addCommentedPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -84,6 +86,22 @@ public class EdgeDifferenceOverlayItemProvider extends ItemProviderAdapter imple
 						getString("_UI_PropertyDescriptor_description", "_UI_DifferenceOverlay_linkedView_feature",
 								"_UI_DifferenceOverlay_type"),
 				ModelReviewPackage.Literals.DIFFERENCE_OVERLAY__LINKED_VIEW, true, false, true, null, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Commented feature. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addCommentedPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_DifferenceOverlay_commented_feature"),
+				getString("_UI_PropertyDescriptor_description", "_UI_DifferenceOverlay_commented_feature",
+						"_UI_DifferenceOverlay_type"),
+				ModelReviewPackage.Literals.DIFFERENCE_OVERLAY__COMMENTED, true, false, false,
+				ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -138,7 +156,8 @@ public class EdgeDifferenceOverlayItemProvider extends ItemProviderAdapter imple
 	 */
 	@Override
 	public String getText(Object object) {
-		return getString("_UI_EdgeDifferenceOverlay_type");
+		EdgeDifferenceOverlay edgeDifferenceOverlay = (EdgeDifferenceOverlay) object;
+		return getString("_UI_EdgeDifferenceOverlay_type") + " " + edgeDifferenceOverlay.isCommented();
 	}
 
 	/**
@@ -154,6 +173,9 @@ public class EdgeDifferenceOverlayItemProvider extends ItemProviderAdapter imple
 		updateChildren(notification);
 
 		switch (notification.getFeatureID(EdgeDifferenceOverlay.class)) {
+		case ModelReviewPackage.EDGE_DIFFERENCE_OVERLAY__COMMENTED:
+			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
+			return;
 		case ModelReviewPackage.EDGE_DIFFERENCE_OVERLAY__DIFFERENCES:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
 			return;
