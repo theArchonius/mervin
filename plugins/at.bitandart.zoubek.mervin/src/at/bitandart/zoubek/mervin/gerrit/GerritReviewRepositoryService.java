@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.emf.common.util.ECollections;
@@ -193,12 +194,14 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 	}
 
 	@Override
-	public ModelReview loadReview(URI uri, String id)
+	public ModelReview loadReview(URI uri, String id, IProgressMonitor monitor)
 			throws InvalidReviewRepositoryException, InvalidReviewException, RepositoryIOException {
 		/*
 		 * Fetch all refs to the patch sets for the particular change and create
 		 * the model instance from it
 		 */
+
+		monitor.beginTask("Connecting to repository", IProgressMonitor.UNKNOWN);
 
 		try {
 			Git git = Git.open(new File(uri));
@@ -210,6 +213,7 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 			// Refspec of a patchset:
 			// +refs/changes/id%100/<cid>/<psId>:refs/changes/id%100/<cid>/<psId>
 
+			monitor.beginTask("Fetching change ref", IProgressMonitor.UNKNOWN);
 			git.fetch()
 					.setRefSpecs(new RefSpec(MessageFormat.format(
 							"+refs/changes/{0,number,00}/{1}/*:refs/changes/{0,number,00}/{1}/*", iId % 100, iId)))
@@ -225,6 +229,8 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 			Map<String, Ref> allRefs = repository.getAllRefs();
 			Pattern changeRefPattern = Pattern.compile(CHANGE_REF_PATTERN);
 
+			monitor.beginTask("Loading Patch Sets", allRefs.size());
+
 			for (Entry<String, Ref> refEntry : allRefs.entrySet()) {
 				Matcher matcher = changeRefPattern.matcher(refEntry.getValue().getName());
 				if (matcher.matches() && matcher.group(CHANGE_REF_PATTERN_GROUP_CHANGE_PK).equals(id)) {
@@ -232,6 +238,8 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 					PatchSet patchSet = modelReviewFactory.createPatchSet();
 					patchSets.add(patchSet);
 					patchSet.setId(matcher.group(CHANGE_REF_PATTERN_GROUP_PATCH_SET_ID));
+
+					monitor.subTask("Loading Patch Set #" + patchSet.getId());
 
 					// load patched files
 					loadPatches(patchSet, refEntry.getValue(), git);
@@ -245,7 +253,11 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 					// compare the involved diagrams
 					patchSet.setDiagramComparison(compareDiagrams(patchSet));
 				}
+				monitor.worked(1);
 			}
+
+			monitor.beginTask("Sorting Patch Sets", IProgressMonitor.UNKNOWN);
+
 			/*
 			 * sort by their identifiers, numeric identifiers before string
 			 * identifiers (gerrit currently has only numeric patch set
@@ -286,6 +298,8 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 					return psId1.compareTo(psId2);
 				}
 			});
+
+			monitor.done();
 
 			return modelReview;
 
