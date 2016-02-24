@@ -1,6 +1,6 @@
 /**
  * ******************************************************************************
- *  Copyright (c) 2015 Florian Zoubek.
+ *  Copyright (c) 2015, 2016 Florian Zoubek.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -191,28 +191,26 @@ public interface ModelReview extends EObject {
 	 * <!-- end-user-doc -->
 	 * 
 	 * @return the value of the '<em>Selected Model Comparison</em>' reference.
-	 * @see #isSetSelectedModelComparison()
+	 * @see #setSelectedModelComparison(Comparison)
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelReview_SelectedModelComparison()
-	 * @model unsettable="true" transient="true" changeable="false"
-	 *        derived="true"
+	 * @model transient="true"
 	 * @generated
 	 */
 	Comparison getSelectedModelComparison();
 
 	/**
-	 * Returns whether the value of the '
+	 * Sets the value of the '
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getSelectedModelComparison
-	 * <em>Selected Model Comparison</em>}' reference is set. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * <em>Selected Model Comparison</em>}' reference. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
-	 * @return whether the value of the '<em>Selected Model Comparison</em>'
-	 *         reference is set.
-	 * @see #unsetSelectedModelComparison()
+	 * @param value
+	 *            the new value of the '<em>Selected Model Comparison</em>'
+	 *            reference.
 	 * @see #getSelectedModelComparison()
-	 * @see #setSelectedModelComparison(Comparison)
 	 * @generated
 	 */
-	boolean isSetSelectedModelComparison();
+	void setSelectedModelComparison(Comparison value);
 
 	/**
 	 * Returns the value of the '<em><b>Selected Diagram Comparison</b></em>'
@@ -225,27 +223,25 @@ public interface ModelReview extends EObject {
 	 * 
 	 * @return the value of the '<em>Selected Diagram Comparison</em>'
 	 *         reference.
-	 * @see #isSetSelectedDiagramComparison()
+	 * @see #setSelectedDiagramComparison(Comparison)
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelReview_SelectedDiagramComparison()
-	 * @model unsettable="true" transient="true" changeable="false"
-	 *        derived="true"
+	 * @model transient="true"
 	 * @generated
 	 */
 	Comparison getSelectedDiagramComparison();
 
 	/**
-	 * Returns whether the value of the '
+	 * Sets the value of the '
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getSelectedDiagramComparison
-	 * <em>Selected Diagram Comparison</em>}' reference is set. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * <em>Selected Diagram Comparison</em>}' reference. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * 
-	 * @return whether the value of the '<em>Selected Diagram Comparison</em>'
-	 *         reference is set.
-	 * @see #unsetSelectedDiagramComparison()
+	 * @param value
+	 *            the new value of the '<em>Selected Diagram Comparison</em>'
+	 *            reference.
 	 * @see #getSelectedDiagramComparison()
-	 * @see #setSelectedDiagramComparison(Comparison)
 	 * @generated
 	 */
-	boolean isSetSelectedDiagramComparison();
+	void setSelectedDiagramComparison(Comparison value);
 
 } // ModelReview

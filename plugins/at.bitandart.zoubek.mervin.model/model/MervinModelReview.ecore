@@ -12,10 +12,10 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="rightPatchSet" eType="#//PatchSet"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="selectedModelComparison"
         eType="ecore:EClass platform:/plugin/org.eclipse.emf.compare/model/compare.ecore#//Comparison"
-        changeable="false" transient="true" unsettable="true" derived="true"/>
+        transient="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="selectedDiagramComparison"
         eType="ecore:EClass platform:/plugin/org.eclipse.emf.compare/model/compare.ecore#//Comparison"
-        changeable="false" transient="true" unsettable="true" derived="true"/>
+        transient="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PatchSet">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

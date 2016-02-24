@@ -1,6 +1,6 @@
 /**
  * ******************************************************************************
- *  Copyright (c) 2015 Florian Zoubek.
+ *  Copyright (c) 2015, 2016 Florian Zoubek.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -136,15 +136,6 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 	protected Comparison selectedModelComparison;
 
 	/**
-	 * This is true if the Selected Model Comparison reference has been set.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	protected boolean selectedModelComparisonESet;
-
-	/**
 	 * The cached value of the '{@link #getSelectedDiagramComparison()
 	 * <em>Selected Diagram Comparison</em>}' reference. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -154,15 +145,6 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 	 * @ordered
 	 */
 	protected Comparison selectedDiagramComparison;
-
-	/**
-	 * This is true if the Selected Diagram Comparison reference has been set.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 * @ordered
-	 */
-	protected boolean selectedDiagramComparisonESet;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -343,8 +325,13 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 	 * 
 	 * @generated
 	 */
-	public boolean isSetSelectedModelComparison() {
-		return selectedModelComparisonESet;
+	public void setSelectedModelComparison(Comparison newSelectedModelComparison) {
+		Comparison oldSelectedModelComparison = selectedModelComparison;
+		selectedModelComparison = newSelectedModelComparison;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					ModelReviewPackage.MODEL_REVIEW__SELECTED_MODEL_COMPARISON, oldSelectedModelComparison,
+					selectedModelComparison));
 	}
 
 	/**
@@ -380,8 +367,13 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 	 * 
 	 * @generated
 	 */
-	public boolean isSetSelectedDiagramComparison() {
-		return selectedDiagramComparisonESet;
+	public void setSelectedDiagramComparison(Comparison newSelectedDiagramComparison) {
+		Comparison oldSelectedDiagramComparison = selectedDiagramComparison;
+		selectedDiagramComparison = newSelectedDiagramComparison;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					ModelReviewPackage.MODEL_REVIEW__SELECTED_DIAGRAM_COMPARISON, oldSelectedDiagramComparison,
+					selectedDiagramComparison));
 	}
 
 	/**
@@ -473,6 +465,12 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 		case ModelReviewPackage.MODEL_REVIEW__RIGHT_PATCH_SET:
 			setRightPatchSet((PatchSet) newValue);
 			return;
+		case ModelReviewPackage.MODEL_REVIEW__SELECTED_MODEL_COMPARISON:
+			setSelectedModelComparison((Comparison) newValue);
+			return;
+		case ModelReviewPackage.MODEL_REVIEW__SELECTED_DIAGRAM_COMPARISON:
+			setSelectedDiagramComparison((Comparison) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -500,6 +498,12 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 		case ModelReviewPackage.MODEL_REVIEW__RIGHT_PATCH_SET:
 			setRightPatchSet((PatchSet) null);
 			return;
+		case ModelReviewPackage.MODEL_REVIEW__SELECTED_MODEL_COMPARISON:
+			setSelectedModelComparison((Comparison) null);
+			return;
+		case ModelReviewPackage.MODEL_REVIEW__SELECTED_DIAGRAM_COMPARISON:
+			setSelectedDiagramComparison((Comparison) null);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -523,9 +527,9 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 		case ModelReviewPackage.MODEL_REVIEW__RIGHT_PATCH_SET:
 			return rightPatchSet != null;
 		case ModelReviewPackage.MODEL_REVIEW__SELECTED_MODEL_COMPARISON:
-			return isSetSelectedModelComparison();
+			return selectedModelComparison != null;
 		case ModelReviewPackage.MODEL_REVIEW__SELECTED_DIAGRAM_COMPARISON:
-			return isSetSelectedDiagramComparison();
+			return selectedDiagramComparison != null;
 		}
 		return super.eIsSet(featureID);
 	}

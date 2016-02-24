@@ -1231,11 +1231,11 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 				ModelReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getModelReview_SelectedModelComparison(), theComparePackage.getComparison(), null,
-				"selectedModelComparison", null, 0, 1, ModelReview.class, IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE,
-				!IS_COMPOSITE, IS_RESOLVE_PROXIES, IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+				"selectedModelComparison", null, 0, 1, ModelReview.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE,
+				!IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getModelReview_SelectedDiagramComparison(), theComparePackage.getComparison(), null,
-				"selectedDiagramComparison", null, 0, 1, ModelReview.class, IS_TRANSIENT, !IS_VOLATILE, !IS_CHANGEABLE,
-				!IS_COMPOSITE, IS_RESOLVE_PROXIES, IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+				"selectedDiagramComparison", null, 0, 1, ModelReview.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE,
+				!IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(patchSetEClass, PatchSet.class, "PatchSet", !IS_ABSTRACT, !IS_INTERFACE,
 				IS_GENERATED_INSTANCE_CLASS);
