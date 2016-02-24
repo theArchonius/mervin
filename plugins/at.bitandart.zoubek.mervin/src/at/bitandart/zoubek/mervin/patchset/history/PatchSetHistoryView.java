@@ -190,7 +190,13 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 		@Override
 		public void notifyChanged(Notification notification) {
 			super.notifyChanged(notification);
-			updateValues();
+			display.syncExec(new Runnable() {
+
+				@Override
+				public void run() {
+					updateValues();
+				}
+			});
 		}
 
 	}
