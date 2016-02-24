@@ -32,6 +32,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import at.bitandart.zoubek.mervin.model.modelreview.Comment;
@@ -67,6 +68,9 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 
 	@Inject
 	private User currentUser;
+
+	@Inject
+	private Display display;
 
 	// Viewers
 	private CommentListViewer commentListViewer;
@@ -292,7 +296,13 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 		@Override
 		public void notifyChanged(Notification notification) {
 			super.notifyChanged(notification);
-			updateValues();
+			display.syncExec(new Runnable() {
+
+				@Override
+				public void run() {
+					updateValues();
+				}
+			});
 		}
 
 	}

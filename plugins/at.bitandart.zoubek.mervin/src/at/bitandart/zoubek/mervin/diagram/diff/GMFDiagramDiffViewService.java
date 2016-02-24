@@ -902,8 +902,7 @@ public class GMFDiagramDiffViewService {
 			super.notifyChanged(notification);
 
 			int featureID = notification.getFeatureID(PatchSet.class);
-			if (featureID == ModelReviewPackage.MODEL_REVIEW__LEFT_PATCH_SET
-					|| featureID == ModelReviewPackage.MODEL_REVIEW__RIGHT_PATCH_SET
+			if (featureID == ModelReviewPackage.MODEL_REVIEW__SELECTED_DIAGRAM_COMPARISON
 					|| featureID == ModelReviewPackage.MODEL_REVIEW__COMMENTS) {
 
 				updateDiagramNodes(diagram, modelReview, editDomain, transactionalEditingDomain, preferencesHint);

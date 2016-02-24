@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2016 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,14 +10,18 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.review.wizards;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.MessageFormat;
 
 import javax.inject.Inject;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 
 import at.bitandart.zoubek.mervin.IReviewRepositoryService;
@@ -66,44 +70,72 @@ public class LoadReviewWizard extends Wizard {
 	@Override
 	public boolean performFinish() {
 
-		String repositoryPath = selectRepositoryPage
-				.getSelectedRepositoryPath();
-		URI uri;
-		String id = gerritChangeSelectionPage.getReviewId();
+		String repositoryPath = selectRepositoryPage.getSelectedRepositoryPath();
+		final URI uri;
+		final String id = gerritChangeSelectionPage.getReviewId();
+
 		try {
 			uri = new URI(repositoryPath);
+
 		} catch (URISyntaxException e) {
 			// this should actually never happen, but to be sure:
-			MessageDialog.openError(getShell(), "Invalid repository path",
-					"Invalid repository path");
+			MessageDialog.openError(getShell(), "Invalid repository path", "Invalid repository path");
 			return false;
+
 		}
+
 		try {
-			modelReview = repoService.loadReview(uri, id);
-		} catch (RepositoryIOException e) {
-			logger.error(
-					e,
-					MessageFormat
-							.format("An IO error occurred while loading the review with id \"{0}\" from repository at \"{0}\".",
-									id, uri));
-			MessageDialog
-					.openError(getShell(), "IO Error",
-							"An IO error occurred while loading the review. See the error log for details");
+			new ProgressMonitorDialog(getShell()).run(true, false, new IRunnableWithProgress() {
+
+				@Override
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					try {
+						modelReview = repoService.loadReview(uri, id, monitor);
+					} catch (RepositoryIOException | InvalidReviewRepositoryException | InvalidReviewException e) {
+						new InvocationTargetException(e);
+					}
+
+				}
+			});
+
+		} catch (InvocationTargetException e) {
+
+			Throwable cause = e.getCause();
+
+			if (cause instanceof RepositoryIOException) {
+				logger.error(cause,
+						MessageFormat.format(
+								"An IO error occurred while loading the review with id \"{0}\" from repository at \"{0}\".",
+								id, uri));
+				MessageDialog.openError(getShell(), "IO Error",
+						"An IO error occurred while loading the review. See the error log for details");
+
+			} else if (cause instanceof InvalidReviewRepositoryException) {
+				MessageDialog.openError(getShell(), "Invalid repository",
+						"The specified repository cannot be found or is not accessible. Make sure to select a valid accessible repository.");
+
+			} else if (cause instanceof InvalidReviewException) {
+				MessageDialog.openError(getShell(), "Invalid review.",
+						"The specified review does not exist or is not accessible. Make sure to select a valid accessible review.");
+
+			} else {
+
+				logger.error(cause, MessageFormat
+						.format("Unexpected error during loading the review with id {0} and uri {1}", id, uri));
+				MessageDialog.openError(getShell(), "Unexpected Error occured.",
+						"Unexpected Error occured, see error log for details.");
+
+			}
 			return false;
-		} catch (InvalidReviewRepositoryException e) {
-			MessageDialog
-					.openError(
-							getShell(),
-							"Invalid repository",
-							"The specified repository cannot be found or is not accessible. Make sure to select a valid accessible repository.");
+
+		} catch (InterruptedException e) {
+
+			logger.error(e, MessageFormat.format("Unexpected error during loading the review with id {0} and uri {1}",
+					id, uri));
+			MessageDialog.openError(getShell(), "Unexpected Error occured.",
+					"Unexpected Error occured, see error log for details.");
 			return false;
-		} catch (InvalidReviewException e) {
-			MessageDialog
-					.openError(
-							getShell(),
-							"Invalid review.",
-							"The specified review does not exist or is not accessible. Make sure to select a valid accessible review.");
-			return false;
+
 		}
 
 		return true;

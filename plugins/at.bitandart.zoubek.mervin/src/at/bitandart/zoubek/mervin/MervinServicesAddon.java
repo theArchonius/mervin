@@ -39,8 +39,14 @@ public class MervinServicesAddon {
 		DefaultModelReviewFactory defaultModelReviewFactory = new DefaultModelReviewFactory();
 		context.set(ModelReviewFactory.class, defaultModelReviewFactory);
 
-		// the prototype supports currently only Gerrit, so use the Gerrit
-		// service by default
+		// add diff service based on EMF Compare
+		IDiffService diffService = ContextInjectionFactory.make(EMFCompareDiffService.class, context);
+		context.set(IDiffService.class, diffService);
+
+		/*
+		 * the prototype supports currently only Gerrit, so use the Gerrit
+		 * service by default
+		 */
 		GerritReviewRepositoryService gerritReviewRepositoryService = ContextInjectionFactory
 				.make(GerritReviewRepositoryService.class, context);
 		context.set(IReviewRepositoryService.class, gerritReviewRepositoryService);
