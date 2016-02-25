@@ -1,6 +1,6 @@
 /**
  * ******************************************************************************
- *  Copyright (c) 2015 Florian Zoubek.
+ *  Copyright (c) 2015, 2016 Florian Zoubek.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -73,6 +73,10 @@ public class ModelReviewItemProvider extends ItemProviderAdapter implements IEdi
 			addRightPatchSetPropertyDescriptor(object);
 			addSelectedModelComparisonPropertyDescriptor(object);
 			addSelectedDiagramComparisonPropertyDescriptor(object);
+			addShowAdditionsPropertyDescriptor(object);
+			addShowModificationsPropertyDescriptor(object);
+			addShowDeletionsPropertyDescriptor(object);
+			addShowLayoutChangesPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -172,6 +176,70 @@ public class ModelReviewItemProvider extends ItemProviderAdapter implements IEdi
 	}
 
 	/**
+	 * This adds a property descriptor for the Show Additions feature. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addShowAdditionsPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_ModelReview_showAdditions_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_ModelReview_showAdditions_feature",
+								"_UI_ModelReview_type"),
+						ModelReviewPackage.Literals.MODEL_REVIEW__SHOW_ADDITIONS, true, false, false,
+						ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Show Modifications feature. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addShowModificationsPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_ModelReview_showModifications_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_ModelReview_showModifications_feature",
+								"_UI_ModelReview_type"),
+						ModelReviewPackage.Literals.MODEL_REVIEW__SHOW_MODIFICATIONS, true, false, false,
+						ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Show Deletions feature. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addShowDeletionsPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_ModelReview_showDeletions_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_ModelReview_showDeletions_feature",
+								"_UI_ModelReview_type"),
+						ModelReviewPackage.Literals.MODEL_REVIEW__SHOW_DELETIONS, true, false, false,
+						ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Show Layout Changes feature. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addShowLayoutChangesPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_ModelReview_showLayoutChanges_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_ModelReview_showLayoutChanges_feature",
+								"_UI_ModelReview_type"),
+						ModelReviewPackage.Literals.MODEL_REVIEW__SHOW_LAYOUT_CHANGES, true, false, false,
+						ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE, null, null));
+	}
+
+	/**
 	 * This specifies how to implement {@link #getChildren} and is used to
 	 * deduce an appropriate feature for an
 	 * {@link org.eclipse.emf.edit.command.AddCommand},
@@ -242,6 +310,10 @@ public class ModelReviewItemProvider extends ItemProviderAdapter implements IEdi
 
 		switch (notification.getFeatureID(ModelReview.class)) {
 		case ModelReviewPackage.MODEL_REVIEW__ID:
+		case ModelReviewPackage.MODEL_REVIEW__SHOW_ADDITIONS:
+		case ModelReviewPackage.MODEL_REVIEW__SHOW_MODIFICATIONS:
+		case ModelReviewPackage.MODEL_REVIEW__SHOW_DELETIONS:
+		case ModelReviewPackage.MODEL_REVIEW__SHOW_LAYOUT_CHANGES:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 			return;
 		case ModelReviewPackage.MODEL_REVIEW__PATCH_SETS:

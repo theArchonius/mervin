@@ -45,6 +45,18 @@ import org.eclipse.emf.ecore.EObject;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getSelectedDiagramComparison
  * <em>Selected Diagram Comparison</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#isShowAdditions
+ * <em>Show Additions</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#isShowModifications
+ * <em>Show Modifications</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#isShowDeletions
+ * <em>Show Deletions</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#isShowLayoutChanges
+ * <em>Show Layout Changes</em>}</li>
  * </ul>
  *
  * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelReview()
@@ -243,5 +255,125 @@ public interface ModelReview extends EObject {
 	 * @generated
 	 */
 	void setSelectedDiagramComparison(Comparison value);
+
+	/**
+	 * Returns the value of the '<em><b>Show Additions</b></em>' attribute. The
+	 * default value is <code>"true"</code>. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Show Additions</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Show Additions</em>' attribute.
+	 * @see #setShowAdditions(boolean)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelReview_ShowAdditions()
+	 * @model default="true"
+	 * @generated
+	 */
+	boolean isShowAdditions();
+
+	/**
+	 * Sets the value of the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#isShowAdditions
+	 * <em>Show Additions</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Show Additions</em>' attribute.
+	 * @see #isShowAdditions()
+	 * @generated
+	 */
+	void setShowAdditions(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Show Modifications</b></em>' attribute.
+	 * The default value is <code>"true"</code>. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Show Modifications</em>' attribute isn't
+	 * clear, there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Show Modifications</em>' attribute.
+	 * @see #setShowModifications(boolean)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelReview_ShowModifications()
+	 * @model default="true"
+	 * @generated
+	 */
+	boolean isShowModifications();
+
+	/**
+	 * Sets the value of the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#isShowModifications
+	 * <em>Show Modifications</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Show Modifications</em>' attribute.
+	 * @see #isShowModifications()
+	 * @generated
+	 */
+	void setShowModifications(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Show Deletions</b></em>' attribute. The
+	 * default value is <code>"false"</code>. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Show Deletions</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Show Deletions</em>' attribute.
+	 * @see #setShowDeletions(boolean)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelReview_ShowDeletions()
+	 * @model default="false"
+	 * @generated
+	 */
+	boolean isShowDeletions();
+
+	/**
+	 * Sets the value of the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#isShowDeletions
+	 * <em>Show Deletions</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Show Deletions</em>' attribute.
+	 * @see #isShowDeletions()
+	 * @generated
+	 */
+	void setShowDeletions(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Show Layout Changes</b></em>' attribute.
+	 * The default value is <code>"true"</code>. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Show Layout Changes</em>' attribute isn't
+	 * clear, there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Show Layout Changes</em>' attribute.
+	 * @see #setShowLayoutChanges(boolean)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelReview_ShowLayoutChanges()
+	 * @model default="true"
+	 * @generated
+	 */
+	boolean isShowLayoutChanges();
+
+	/**
+	 * Sets the value of the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#isShowLayoutChanges
+	 * <em>Show Layout Changes</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Show Layout Changes</em>' attribute.
+	 * @see #isShowLayoutChanges()
+	 * @generated
+	 */
+	void setShowLayoutChanges(boolean value);
 
 } // ModelReview

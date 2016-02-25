@@ -57,6 +57,18 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewImpl#getSelectedDiagramComparison
  * <em>Selected Diagram Comparison</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewImpl#isShowAdditions
+ * <em>Show Additions</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewImpl#isShowModifications
+ * <em>Show Modifications</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewImpl#isShowDeletions
+ * <em>Show Deletions</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewImpl#isShowLayoutChanges
+ * <em>Show Layout Changes</em>}</li>
  * </ul>
  *
  * @generated
@@ -145,6 +157,94 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 	 * @ordered
 	 */
 	protected Comparison selectedDiagramComparison;
+
+	/**
+	 * The default value of the '{@link #isShowAdditions()
+	 * <em>Show Additions</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #isShowAdditions()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean SHOW_ADDITIONS_EDEFAULT = true;
+
+	/**
+	 * The cached value of the '{@link #isShowAdditions()
+	 * <em>Show Additions</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #isShowAdditions()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean showAdditions = SHOW_ADDITIONS_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isShowModifications()
+	 * <em>Show Modifications</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #isShowModifications()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean SHOW_MODIFICATIONS_EDEFAULT = true;
+
+	/**
+	 * The cached value of the '{@link #isShowModifications()
+	 * <em>Show Modifications</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #isShowModifications()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean showModifications = SHOW_MODIFICATIONS_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isShowDeletions()
+	 * <em>Show Deletions</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #isShowDeletions()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean SHOW_DELETIONS_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isShowDeletions()
+	 * <em>Show Deletions</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #isShowDeletions()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean showDeletions = SHOW_DELETIONS_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isShowLayoutChanges()
+	 * <em>Show Layout Changes</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #isShowLayoutChanges()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean SHOW_LAYOUT_CHANGES_EDEFAULT = true;
+
+	/**
+	 * The cached value of the '{@link #isShowLayoutChanges()
+	 * <em>Show Layout Changes</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #isShowLayoutChanges()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean showLayoutChanges = SHOW_LAYOUT_CHANGES_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -381,6 +481,94 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 	 * 
 	 * @generated
 	 */
+	public boolean isShowAdditions() {
+		return showAdditions;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setShowAdditions(boolean newShowAdditions) {
+		boolean oldShowAdditions = showAdditions;
+		showAdditions = newShowAdditions;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.MODEL_REVIEW__SHOW_ADDITIONS,
+					oldShowAdditions, showAdditions));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public boolean isShowModifications() {
+		return showModifications;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setShowModifications(boolean newShowModifications) {
+		boolean oldShowModifications = showModifications;
+		showModifications = newShowModifications;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.MODEL_REVIEW__SHOW_MODIFICATIONS,
+					oldShowModifications, showModifications));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public boolean isShowDeletions() {
+		return showDeletions;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setShowDeletions(boolean newShowDeletions) {
+		boolean oldShowDeletions = showDeletions;
+		showDeletions = newShowDeletions;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.MODEL_REVIEW__SHOW_DELETIONS,
+					oldShowDeletions, showDeletions));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public boolean isShowLayoutChanges() {
+		return showLayoutChanges;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setShowLayoutChanges(boolean newShowLayoutChanges) {
+		boolean oldShowLayoutChanges = showLayoutChanges;
+		showLayoutChanges = newShowLayoutChanges;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.MODEL_REVIEW__SHOW_LAYOUT_CHANGES,
+					oldShowLayoutChanges, showLayoutChanges));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
@@ -435,6 +623,14 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 			if (resolve)
 				return getSelectedDiagramComparison();
 			return basicGetSelectedDiagramComparison();
+		case ModelReviewPackage.MODEL_REVIEW__SHOW_ADDITIONS:
+			return isShowAdditions();
+		case ModelReviewPackage.MODEL_REVIEW__SHOW_MODIFICATIONS:
+			return isShowModifications();
+		case ModelReviewPackage.MODEL_REVIEW__SHOW_DELETIONS:
+			return isShowDeletions();
+		case ModelReviewPackage.MODEL_REVIEW__SHOW_LAYOUT_CHANGES:
+			return isShowLayoutChanges();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -471,6 +667,18 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 		case ModelReviewPackage.MODEL_REVIEW__SELECTED_DIAGRAM_COMPARISON:
 			setSelectedDiagramComparison((Comparison) newValue);
 			return;
+		case ModelReviewPackage.MODEL_REVIEW__SHOW_ADDITIONS:
+			setShowAdditions((Boolean) newValue);
+			return;
+		case ModelReviewPackage.MODEL_REVIEW__SHOW_MODIFICATIONS:
+			setShowModifications((Boolean) newValue);
+			return;
+		case ModelReviewPackage.MODEL_REVIEW__SHOW_DELETIONS:
+			setShowDeletions((Boolean) newValue);
+			return;
+		case ModelReviewPackage.MODEL_REVIEW__SHOW_LAYOUT_CHANGES:
+			setShowLayoutChanges((Boolean) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -504,6 +712,18 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 		case ModelReviewPackage.MODEL_REVIEW__SELECTED_DIAGRAM_COMPARISON:
 			setSelectedDiagramComparison((Comparison) null);
 			return;
+		case ModelReviewPackage.MODEL_REVIEW__SHOW_ADDITIONS:
+			setShowAdditions(SHOW_ADDITIONS_EDEFAULT);
+			return;
+		case ModelReviewPackage.MODEL_REVIEW__SHOW_MODIFICATIONS:
+			setShowModifications(SHOW_MODIFICATIONS_EDEFAULT);
+			return;
+		case ModelReviewPackage.MODEL_REVIEW__SHOW_DELETIONS:
+			setShowDeletions(SHOW_DELETIONS_EDEFAULT);
+			return;
+		case ModelReviewPackage.MODEL_REVIEW__SHOW_LAYOUT_CHANGES:
+			setShowLayoutChanges(SHOW_LAYOUT_CHANGES_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -530,6 +750,14 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 			return selectedModelComparison != null;
 		case ModelReviewPackage.MODEL_REVIEW__SELECTED_DIAGRAM_COMPARISON:
 			return selectedDiagramComparison != null;
+		case ModelReviewPackage.MODEL_REVIEW__SHOW_ADDITIONS:
+			return showAdditions != SHOW_ADDITIONS_EDEFAULT;
+		case ModelReviewPackage.MODEL_REVIEW__SHOW_MODIFICATIONS:
+			return showModifications != SHOW_MODIFICATIONS_EDEFAULT;
+		case ModelReviewPackage.MODEL_REVIEW__SHOW_DELETIONS:
+			return showDeletions != SHOW_DELETIONS_EDEFAULT;
+		case ModelReviewPackage.MODEL_REVIEW__SHOW_LAYOUT_CHANGES:
+			return showLayoutChanges != SHOW_LAYOUT_CHANGES_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -547,6 +775,14 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (id: ");
 		result.append(id);
+		result.append(", showAdditions: ");
+		result.append(showAdditions);
+		result.append(", showModifications: ");
+		result.append(showModifications);
+		result.append(", showDeletions: ");
+		result.append(showDeletions);
+		result.append(", showLayoutChanges: ");
+		result.append(showLayoutChanges);
 		result.append(')');
 		return result.toString();
 	}
