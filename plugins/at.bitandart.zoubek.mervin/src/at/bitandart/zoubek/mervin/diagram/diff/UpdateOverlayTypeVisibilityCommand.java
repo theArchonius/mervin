@@ -33,23 +33,31 @@ import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
 final class UpdateOverlayTypeVisibilityCommand extends AbstractTransactionalCommand {
 
 	private Diagram diagram;
-	private IOverlayTypeDescriptor overlayDescriptor;
-	private boolean visibility;
-	private boolean updateOverlayedElement;
+	private IOverlayVisibilityState overlayVisibilityState;
 
+	/**
+	 * 
+	 * @param domain
+	 *            the EMF editing domain to act upon.
+	 * @param diagram
+	 *            the diagram containing the overlays.
+	 * @param overlayVisibilityState
+	 *            an {@link IOverlayVisibilityState} describing the visibility
+	 *            of the overlay types to set.
+	 */
 	public UpdateOverlayTypeVisibilityCommand(TransactionalEditingDomain domain, Diagram diagram,
-			IOverlayTypeDescriptor overlayDescriptor, boolean visibility, boolean updateOverlayedElement) {
+			IOverlayVisibilityState overlayVisibilityState) {
 		super(domain, "", null);
 		this.diagram = diagram;
-		this.overlayDescriptor = overlayDescriptor;
-		this.visibility = visibility;
-		this.updateOverlayedElement = updateOverlayedElement;
+		this.overlayVisibilityState = overlayVisibilityState;
 	}
 
 	@Override
 	protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 
-		overlayDescriptor.storeTypeVisibility(diagram, visibility);
+		for (IOverlayTypeDescriptor overlayDescriptor : overlayVisibilityState.getAllOverlayTypeDescriptors()) {
+			overlayDescriptor.storeTypeVisibility(diagram, overlayVisibilityState.getVisibility(overlayDescriptor));
+		}
 		for (Object child : diagram.getChildren()) {
 			if (child instanceof View) {
 				updateVisibility((View) child);
@@ -63,7 +71,27 @@ final class UpdateOverlayTypeVisibilityCommand extends AbstractTransactionalComm
 		EObject element = view.getElement();
 		if (element instanceof DifferenceOverlay) {
 			DifferenceOverlay overlay = ((DifferenceOverlay) element);
-			if (overlayDescriptor.isType(overlay)) {
+			Boolean visibility = null;
+			boolean updateOverlayedElement = false;
+
+			/*
+			 * determine visibility - an overlay is visible if it is of at least
+			 * one type that should be visible, otherwise the overlay is
+			 * invisible. The same applies to the
+			 */
+			for (IOverlayTypeDescriptor overlayDescriptor : overlayVisibilityState.getAllOverlayTypeDescriptors()) {
+				if (overlayDescriptor.isType(overlay)) {
+					if (visibility == null) {
+						visibility = overlayVisibilityState.getVisibility(overlayDescriptor);
+					} else {
+						visibility = visibility || overlayVisibilityState.getVisibility(overlayDescriptor);
+					}
+					updateOverlayedElement = updateOverlayedElement
+							|| overlayVisibilityState.shouldUpdateOverlayedElement(overlayDescriptor);
+				}
+			}
+
+			if (visibility != null) {
 				view.setVisible(visibility);
 				if (updateOverlayedElement) {
 					View linkedView = overlay.getLinkedView();

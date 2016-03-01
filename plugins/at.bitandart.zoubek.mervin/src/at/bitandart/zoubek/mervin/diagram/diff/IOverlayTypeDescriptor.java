@@ -10,9 +10,14 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.diagram.diff;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.notation.Diagram;
 
+import at.bitandart.zoubek.mervin.model.modelreview.Difference;
 import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
+import at.bitandart.zoubek.mervin.model.modelreview.LayoutDifference;
+import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
+import at.bitandart.zoubek.mervin.model.modelreview.StateDifferenceType;
 
 /**
  * Base interface for Objects that describe a specific type of overlays.
@@ -45,4 +50,48 @@ public interface IOverlayTypeDescriptor {
 	 */
 	public void storeTypeVisibility(Diagram diagram, boolean visibility);
 
+	/**
+	 * {@link IOverlayTypeDescriptor} that selects addition overlays.
+	 */
+	public static final IOverlayTypeDescriptor TYPE_DESCRIPTOR_ADDITION = new StateDifferenceOverlayTypeDescriptor(
+			StateDifferenceType.ADDED);
+
+	/**
+	 * {@link IOverlayTypeDescriptor} that selects deletion overlays.
+	 */
+	public static final IOverlayTypeDescriptor TYPE_DESCRIPTOR_DELETION = new StateDifferenceOverlayTypeDescriptor(
+			StateDifferenceType.DELETED);
+
+	/**
+	 * {@link IOverlayTypeDescriptor} that selects modification overlays.
+	 */
+	public static final IOverlayTypeDescriptor TYPE_DESCRIPTOR_MODIFICATION = new StateDifferenceOverlayTypeDescriptor(
+			StateDifferenceType.MODIFIED);
+
+	/**
+	 * {@link IOverlayTypeDescriptor} that selects layout change overlays.
+	 */
+	public static final IOverlayTypeDescriptor TYPE_DESCRIPTOR_LAYOUT = new IOverlayTypeDescriptor() {
+
+		@Override
+		public boolean isType(DifferenceOverlay overlay) {
+			for (Difference difference : overlay.getDifferences()) {
+				if (difference instanceof LayoutDifference) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		@Override
+		public void storeTypeVisibility(Diagram diagram, boolean visibility) {
+
+			EObject element = diagram.getElement();
+			if (element instanceof ModelReview) {
+				((ModelReview) element).setShowLayoutChanges(visibility);
+			}
+
+		}
+
+	};
 }

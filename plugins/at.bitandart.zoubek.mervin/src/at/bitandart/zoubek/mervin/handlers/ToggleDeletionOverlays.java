@@ -17,6 +17,8 @@ import org.eclipse.gef.EditDomain;
 import org.eclipse.gmf.runtime.notation.Diagram;
 
 import at.bitandart.zoubek.mervin.diagram.diff.GMFDiagramDiffViewService;
+import at.bitandart.zoubek.mervin.diagram.diff.IOverlayTypeDescriptor;
+import at.bitandart.zoubek.mervin.diagram.diff.ModelReviewVisibilityState;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 
 /**
@@ -31,8 +33,10 @@ public class ToggleDeletionOverlays {
 	public void execute(MHandledToolItem item, ModelReview modelReview, Diagram diagram, EditDomain editDomain,
 			TransactionalEditingDomain transactionalEditingDomain, GMFDiagramDiffViewService diagramDiffViewService) {
 
+		ModelReviewVisibilityState visibilityState = new ModelReviewVisibilityState(modelReview, true);
+		visibilityState.setVisibility(IOverlayTypeDescriptor.TYPE_DESCRIPTOR_DELETION, item.isSelected());
 		diagramDiffViewService.updateOverlayTypeVisibility(editDomain, transactionalEditingDomain, diagram,
-				GMFDiagramDiffViewService.TYPE_DESCRIPTOR_DELETION, item.isSelected(), true);
+				visibilityState);
 
 	}
 

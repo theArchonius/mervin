@@ -49,15 +49,10 @@ import org.eclipse.gmf.runtime.notation.View;
 import com.google.common.collect.HashBiMap;
 
 import at.bitandart.zoubek.mervin.diagram.diff.gmf.ModelReviewElementTypes;
-import at.bitandart.zoubek.mervin.model.modelreview.Difference;
-import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
-import at.bitandart.zoubek.mervin.model.modelreview.LayoutDifference;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
-import at.bitandart.zoubek.mervin.model.modelreview.StateDifference;
-import at.bitandart.zoubek.mervin.model.modelreview.StateDifferenceType;
 
 // TODO remove Createable annotation and move creation in addon
 /**
@@ -238,13 +233,7 @@ public class GMFDiagramDiffViewService {
 
 		CompositeCommand compositeCommand = new CompositeCommand("Restore overlay type visibility");
 		compositeCommand.add(new UpdateOverlayTypeVisibilityCommand(transactionalEditingDomain, workspaceDiagram,
-				TYPE_DESCRIPTOR_ADDITION, modelReview.isShowAdditions(), false));
-		compositeCommand.add(new UpdateOverlayTypeVisibilityCommand(transactionalEditingDomain, workspaceDiagram,
-				TYPE_DESCRIPTOR_DELETION, modelReview.isShowDeletions(), true));
-		compositeCommand.add(new UpdateOverlayTypeVisibilityCommand(transactionalEditingDomain, workspaceDiagram,
-				TYPE_DESCRIPTOR_MODIFICATION, modelReview.isShowModifications(), false));
-		compositeCommand.add(new UpdateOverlayTypeVisibilityCommand(transactionalEditingDomain, workspaceDiagram,
-				TYPE_DESCRIPTOR_LAYOUT, modelReview.isShowLayoutChanges(), false));
+				new ModelReviewVisibilityState(modelReview, true)));
 
 		executeCommand(compositeCommand, editDomain);
 	}
@@ -388,114 +377,17 @@ public class GMFDiagramDiffViewService {
 	 * @param transactionalEditingDomain
 	 *            the {@link TransactionalEditingDomain} used by commands to
 	 *            update the view model.
-	 * @param overlaySelector
-	 * @param visibility
-	 * @param updateOverlayedElement
+	 * @param diagram
+	 * @param visibilityState
 	 */
 	public void updateOverlayTypeVisibility(EditDomain editDomain,
 			TransactionalEditingDomain transactionalEditingDomain, Diagram diagram,
-			IOverlayTypeDescriptor overlaySelector, boolean visibility, boolean updateOverlayedElement) {
+			IOverlayVisibilityState visibilityState) {
 
 		CompositeCommand compositeCommand = new CompositeCommand("");
-		compositeCommand.add(new UpdateOverlayTypeVisibilityCommand(transactionalEditingDomain, diagram,
-				overlaySelector, visibility, updateOverlayedElement));
+		compositeCommand
+				.add(new UpdateOverlayTypeVisibilityCommand(transactionalEditingDomain, diagram, visibilityState));
 		executeCommand(compositeCommand, editDomain);
 
 	}
-
-	/**
-	 * An {@link IOverlayTypeDescriptor} that represents all overlays that show
-	 * a difference with the given {@link StateDifferenceType}.
-	 * 
-	 * @author Florian Zoubek
-	 *
-	 */
-	private static class StateDifferenceOverlayTypeDescriptor implements IOverlayTypeDescriptor {
-
-		private StateDifferenceType differenceType;
-
-		public StateDifferenceOverlayTypeDescriptor(StateDifferenceType differenceType) {
-			this.differenceType = differenceType;
-		}
-
-		@Override
-		public boolean isType(DifferenceOverlay overlay) {
-			for (Difference difference : overlay.getDifferences()) {
-				if (difference instanceof StateDifference
-						&& ((StateDifference) difference).getType() == differenceType) {
-					return true;
-				}
-			}
-			return false;
-		}
-
-		@Override
-		public void storeTypeVisibility(Diagram diagram, boolean visibility) {
-
-			EObject element = diagram.getElement();
-			if (element instanceof ModelReview) {
-				switch (differenceType) {
-				case ADDED:
-					((ModelReview) element).setShowAdditions(visibility);
-					break;
-				case DELETED:
-					((ModelReview) element).setShowDeletions(visibility);
-					break;
-				case MODIFIED:
-					((ModelReview) element).setShowModifications(visibility);
-					break;
-				default:
-					// do not store the visibility for unknown types
-					break;
-				}
-			}
-
-		}
-
-	}
-
-	/**
-	 * {@link IOverlayTypeDescriptor} that selects addition overlays.
-	 */
-	public static final IOverlayTypeDescriptor TYPE_DESCRIPTOR_ADDITION = new StateDifferenceOverlayTypeDescriptor(
-			StateDifferenceType.ADDED);
-
-	/**
-	 * {@link IOverlayTypeDescriptor} that selects deletion overlays.
-	 */
-	public static final IOverlayTypeDescriptor TYPE_DESCRIPTOR_DELETION = new StateDifferenceOverlayTypeDescriptor(
-			StateDifferenceType.DELETED);
-
-	/**
-	 * {@link IOverlayTypeDescriptor} that selects modification overlays.
-	 */
-	public static final IOverlayTypeDescriptor TYPE_DESCRIPTOR_MODIFICATION = new StateDifferenceOverlayTypeDescriptor(
-			StateDifferenceType.MODIFIED);
-
-	/**
-	 * {@link IOverlayTypeDescriptor} that selects layout change overlays.
-	 */
-	public static final IOverlayTypeDescriptor TYPE_DESCRIPTOR_LAYOUT = new IOverlayTypeDescriptor() {
-
-		@Override
-		public boolean isType(DifferenceOverlay overlay) {
-			for (Difference difference : overlay.getDifferences()) {
-				if (difference instanceof LayoutDifference) {
-					return true;
-				}
-			}
-			return false;
-		}
-
-		@Override
-		public void storeTypeVisibility(Diagram diagram, boolean visibility) {
-
-			EObject element = diagram.getElement();
-			if (element instanceof ModelReview) {
-				((ModelReview) element).setShowLayoutChanges(visibility);
-			}
-
-		}
-
-	};
 }
