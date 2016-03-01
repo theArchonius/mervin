@@ -30,7 +30,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
  * @author Florian Zoubek
  *
  */
-final class UpdateOverlayTypeVisibilityCommand extends AbstractTransactionalCommand {
+final class ApplyOverlayVisibilityStateCommand extends AbstractTransactionalCommand {
 
 	private Diagram diagram;
 	private IOverlayVisibilityState overlayVisibilityState;
@@ -45,7 +45,7 @@ final class UpdateOverlayTypeVisibilityCommand extends AbstractTransactionalComm
 	 *            an {@link IOverlayVisibilityState} describing the visibility
 	 *            of the overlay types to set.
 	 */
-	public UpdateOverlayTypeVisibilityCommand(TransactionalEditingDomain domain, Diagram diagram,
+	public ApplyOverlayVisibilityStateCommand(TransactionalEditingDomain domain, Diagram diagram,
 			IOverlayVisibilityState overlayVisibilityState) {
 		super(domain, "", null);
 		this.diagram = diagram;

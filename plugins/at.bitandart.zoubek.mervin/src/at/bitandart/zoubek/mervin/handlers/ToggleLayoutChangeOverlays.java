@@ -35,7 +35,7 @@ public class ToggleLayoutChangeOverlays {
 
 		ModelReviewVisibilityState visibilityState = new ModelReviewVisibilityState(modelReview, true);
 		visibilityState.setVisibility(IOverlayTypeDescriptor.TYPE_DESCRIPTOR_LAYOUT, item.isSelected());
-		diagramDiffViewService.updateOverlayTypeVisibility(editDomain, transactionalEditingDomain, diagram,
+		diagramDiffViewService.applyOverlayVisibilityState(editDomain, transactionalEditingDomain, diagram,
 				visibilityState);
 
 	}

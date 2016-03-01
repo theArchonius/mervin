@@ -232,7 +232,7 @@ public class GMFDiagramDiffViewService {
 		}
 
 		CompositeCommand compositeCommand = new CompositeCommand("Restore overlay type visibility");
-		compositeCommand.add(new UpdateOverlayTypeVisibilityCommand(transactionalEditingDomain, workspaceDiagram,
+		compositeCommand.add(new ApplyOverlayVisibilityStateCommand(transactionalEditingDomain, workspaceDiagram,
 				new ModelReviewVisibilityState(modelReview, true)));
 
 		executeCommand(compositeCommand, editDomain);
@@ -371,6 +371,9 @@ public class GMFDiagramDiffViewService {
 	}
 
 	/**
+	 * applies the given visibility state and updates the visibility of the
+	 * overlays accordingly.
+	 * 
 	 * @param editDomain
 	 *            the GEF {@link EditDomain} used to execute commands which
 	 *            affect the view model
@@ -378,15 +381,17 @@ public class GMFDiagramDiffViewService {
 	 *            the {@link TransactionalEditingDomain} used by commands to
 	 *            update the view model.
 	 * @param diagram
+	 *            the diagram to operate upon.
 	 * @param visibilityState
+	 *            the visibility state to apply.
 	 */
-	public void updateOverlayTypeVisibility(EditDomain editDomain,
+	public void applyOverlayVisibilityState(EditDomain editDomain,
 			TransactionalEditingDomain transactionalEditingDomain, Diagram diagram,
 			IOverlayVisibilityState visibilityState) {
 
 		CompositeCommand compositeCommand = new CompositeCommand("");
 		compositeCommand
-				.add(new UpdateOverlayTypeVisibilityCommand(transactionalEditingDomain, diagram, visibilityState));
+				.add(new ApplyOverlayVisibilityStateCommand(transactionalEditingDomain, diagram, visibilityState));
 		executeCommand(compositeCommand, editDomain);
 
 	}

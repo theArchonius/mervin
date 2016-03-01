@@ -35,7 +35,7 @@ public class ToggleDeletionOverlays {
 
 		ModelReviewVisibilityState visibilityState = new ModelReviewVisibilityState(modelReview, true);
 		visibilityState.setVisibility(IOverlayTypeDescriptor.TYPE_DESCRIPTOR_DELETION, item.isSelected());
-		diagramDiffViewService.updateOverlayTypeVisibility(editDomain, transactionalEditingDomain, diagram,
+		diagramDiffViewService.applyOverlayVisibilityState(editDomain, transactionalEditingDomain, diagram,
 				visibilityState);
 
 	}
