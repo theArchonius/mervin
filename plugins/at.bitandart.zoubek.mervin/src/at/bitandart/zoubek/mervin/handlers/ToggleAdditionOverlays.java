@@ -12,6 +12,12 @@ package at.bitandart.zoubek.mervin.handlers;
 
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledToolItem;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.gef.EditDomain;
+import org.eclipse.gmf.runtime.notation.Diagram;
+
+import at.bitandart.zoubek.mervin.diagram.diff.GMFDiagramDiffViewService;
+import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 
 /**
  * Handles hide/show request for addition overlays.
@@ -22,8 +28,12 @@ import org.eclipse.e4.ui.model.application.ui.menu.MHandledToolItem;
 public class ToggleAdditionOverlays {
 
 	@Execute
-	public void execute(MHandledToolItem item) {
-		// TODO
+	public void execute(MHandledToolItem item, ModelReview modelReview, Diagram diagram, EditDomain editDomain,
+			TransactionalEditingDomain transactionalEditingDomain, GMFDiagramDiffViewService diagramDiffViewService) {
+
+		diagramDiffViewService.updateOverlayTypeVisibility(editDomain, transactionalEditingDomain, diagram,
+				GMFDiagramDiffViewService.TYPE_DESCRIPTOR_ADDITION, item.isSelected(), false);
+
 	}
 
 }
