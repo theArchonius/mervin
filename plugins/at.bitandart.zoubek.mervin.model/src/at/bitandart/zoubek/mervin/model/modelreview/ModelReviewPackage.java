@@ -142,13 +142,49 @@ public interface ModelReviewPackage extends EPackage {
 	int MODEL_REVIEW__SELECTED_DIAGRAM_COMPARISON = 6;
 
 	/**
+	 * The feature id for the '<em><b>Show Additions</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_REVIEW__SHOW_ADDITIONS = 7;
+
+	/**
+	 * The feature id for the '<em><b>Show Modifications</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_REVIEW__SHOW_MODIFICATIONS = 8;
+
+	/**
+	 * The feature id for the '<em><b>Show Deletions</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_REVIEW__SHOW_DELETIONS = 9;
+
+	/**
+	 * The feature id for the '<em><b>Show Layout Changes</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_REVIEW__SHOW_LAYOUT_CHANGES = 10;
+
+	/**
 	 * The number of structural features of the '<em>Model Review</em>' class.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_REVIEW_FEATURE_COUNT = 7;
+	int MODEL_REVIEW_FEATURE_COUNT = 11;
 
 	/**
 	 * The number of operations of the '<em>Model Review</em>' class. <!--
@@ -1564,6 +1600,56 @@ public interface ModelReviewPackage extends EPackage {
 	EReference getModelReview_SelectedDiagramComparison();
 
 	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#isShowAdditions
+	 * <em>Show Additions</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Show Additions</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReview#isShowAdditions()
+	 * @see #getModelReview()
+	 * @generated
+	 */
+	EAttribute getModelReview_ShowAdditions();
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#isShowModifications
+	 * <em>Show Modifications</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @return the meta object for the attribute '<em>Show Modifications</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReview#isShowModifications()
+	 * @see #getModelReview()
+	 * @generated
+	 */
+	EAttribute getModelReview_ShowModifications();
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#isShowDeletions
+	 * <em>Show Deletions</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Show Deletions</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReview#isShowDeletions()
+	 * @see #getModelReview()
+	 * @generated
+	 */
+	EAttribute getModelReview_ShowDeletions();
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#isShowLayoutChanges
+	 * <em>Show Layout Changes</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @return the meta object for the attribute '<em>Show Layout Changes</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReview#isShowLayoutChanges()
+	 * @see #getModelReview()
+	 * @generated
+	 */
+	EAttribute getModelReview_ShowLayoutChanges();
+
+	/**
 	 * Returns the meta object for class '
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.PatchSet
 	 * <em>Patch Set</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -2553,6 +2639,38 @@ public interface ModelReviewPackage extends EPackage {
 		 * @generated
 		 */
 		EReference MODEL_REVIEW__SELECTED_DIAGRAM_COMPARISON = eINSTANCE.getModelReview_SelectedDiagramComparison();
+
+		/**
+		 * The meta object literal for the '<em><b>Show Additions</b></em>'
+		 * attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute MODEL_REVIEW__SHOW_ADDITIONS = eINSTANCE.getModelReview_ShowAdditions();
+
+		/**
+		 * The meta object literal for the '<em><b>Show Modifications</b></em>'
+		 * attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute MODEL_REVIEW__SHOW_MODIFICATIONS = eINSTANCE.getModelReview_ShowModifications();
+
+		/**
+		 * The meta object literal for the '<em><b>Show Deletions</b></em>'
+		 * attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute MODEL_REVIEW__SHOW_DELETIONS = eINSTANCE.getModelReview_ShowDeletions();
+
+		/**
+		 * The meta object literal for the '<em><b>Show Layout Changes</b></em>'
+		 * attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute MODEL_REVIEW__SHOW_LAYOUT_CHANGES = eINSTANCE.getModelReview_ShowLayoutChanges();
 
 		/**
 		 * The meta object literal for the '

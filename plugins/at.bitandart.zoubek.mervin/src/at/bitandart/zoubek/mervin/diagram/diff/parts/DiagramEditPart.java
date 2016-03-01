@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2016 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package at.bitandart.zoubek.mervin.diagram.diff.parts;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Layer;
 import org.eclipse.draw2d.LayoutAnimator;
+import org.eclipse.draw2d.LayoutManager;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -86,6 +87,27 @@ public class DiagramEditPart extends LinkLFShapeCompartmentEditPart {
 	public void deactivate() {
 		super.deactivate();
 		styleAdvisor.dispose();
+	}
+
+	@Override
+	protected void reorderChild(EditPart child, int index) {
+
+		Object constraint = null;
+		IFigure childFigure = ((GraphicalEditPart) child).getFigure();
+		if (child instanceof IOverlayEditPart) {
+			/*
+			 * Save the constraint of the overlay to re-apply it once it has
+			 * been reordered, otherwise it gets lost during reordering
+			 */
+			LayoutManager layout = childFigure.getParent().getLayoutManager();
+			if (layout != null)
+				constraint = layout.getConstraint(childFigure);
+
+		}
+		super.reorderChild(child, index);
+		if (constraint != null) {
+			setLayoutConstraint(child, childFigure, constraint);
+		}
 	}
 
 	@Override

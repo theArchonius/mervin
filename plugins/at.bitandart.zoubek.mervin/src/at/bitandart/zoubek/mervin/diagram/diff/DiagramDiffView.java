@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2016 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import javax.inject.Inject;
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
@@ -24,6 +25,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditDomain;
@@ -110,11 +112,14 @@ public class DiagramDiffView implements IAdaptable {
 	}
 
 	@PostConstruct
-	public void postConstruct(Composite parent) {
+	public void postConstruct(Composite parent, IEclipseContext context) {
 		mainPanel = new Composite(parent, SWT.NONE);
 		mainPanel.setLayout(new GridLayout());
-		// mainPanel.setLayout(new FillLayout());
-		if (getModelReview() != null) {
+
+		ModelReview modelReview = getModelReview();
+		context.set(ModelReview.class, modelReview);
+
+		if (modelReview != null) {
 
 			ResourceSet resourceSet = new ResourceSetImpl();
 			CSSHelper.installCSSSupport(resourceSet);
@@ -125,6 +130,11 @@ public class DiagramDiffView implements IAdaptable {
 			// EObjectAdapter(getModelReview()),
 			// PART_DESCRIPTOR_ID, new PreferencesHint(PART_DESCRIPTOR_ID));
 			editingDomain = TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain(resourceSet);
+			context.set(EditingDomain.class, editingDomain);
+			context.set(TransactionalEditingDomain.class, editingDomain);
+
+			EditDomain editDomain = createEditDomain();
+			context.set(EditDomain.class, editDomain);
 
 			viewer = new DiagramDiffViewer();
 			viewerControl = viewer.createControl(mainPanel);
@@ -132,7 +142,7 @@ public class DiagramDiffView implements IAdaptable {
 
 			viewer.setKeyHandler(new GraphicalViewerKeyHandler(viewer));
 			viewer.setEditPartFactory(EditPartService.getInstance());
-			viewer.setEditDomain(createEditDomain());
+			viewer.setEditDomain(editDomain);
 			viewerControl.setBackground(parent.getBackground());
 
 			final Diagram diagram = diagramDiffViewService.createAndConnectViewModel(getModelReview(),
@@ -142,6 +152,9 @@ public class DiagramDiffView implements IAdaptable {
 					resource.getContents().add(diagram);
 				}
 			});
+
+			context.set(Diagram.class, diagram);
+
 			viewer.setRootEditPart(EditPartService.getInstance().createRootEditPart(diagram));
 			viewer.setContents(diagram);
 

@@ -13,6 +13,10 @@
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_0er4kPr7EeS2q_4qNTgMUQ" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:Command" xmi:id="_dnOCgPsEEeS2q_4qNTgMUQ" elementId="at.bitandart.zoubek.mervin.command.debug.diagram.diff.case1" commandName="Open Diagram Diff Case 1"/>
     <elements xsi:type="commands:Command" xmi:id="_UTSkEAX8EeWDm7E-HymwAA" elementId="at.bitandart.zoubek.mervin.command.review.load" commandName="Load Review"/>
+    <elements xsi:type="commands:Command" xmi:id="_M7xUwNrjEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.command.diff.toggle.additions" commandName="Toggle Additions"/>
+    <elements xsi:type="commands:Command" xmi:id="_W-8C0NrjEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.command.toggle.modifications" commandName="Toggle Modifications"/>
+    <elements xsi:type="commands:Command" xmi:id="_cg4BYNrjEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.command.toggle.deletions" commandName="Toggle Deletions"/>
+    <elements xsi:type="commands:Command" xmi:id="_A3198NrlEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.command.toggle.layout.changes" commandName="Toggle Layout Changes"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_rV6KoPsFEeS2q_4qNTgMUQ" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:Handler" xmi:id="_vQOrIPsFEeS2q_4qNTgMUQ" elementId="at.bitandart.zoubek.mervin.handler.debug.diagram.diff.case1" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.debug.OpenDiagramDiffCase1Handler" command="_dnOCgPsEEeS2q_4qNTgMUQ"/>
@@ -22,6 +26,16 @@
     <elements xsi:type="basic:PartDescriptor" xmi:id="_b4kdcPsGEeS2q_4qNTgMUQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.diagram.diffviewer" label="Diagram Diff Viewer" allowMultiple="true" category="Mervin" closeable="true" dirtyable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.diagram.diff.DiagramDiffView">
       <tags>Editor</tags>
       <tags>categoryTag:Mervin</tags>
+      <handlers xmi:id="_wvIDYNrjEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.handler.toggle.additions" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.ToggleAdditionOverlays" command="_M7xUwNrjEeW5avyAcffSfQ"/>
+      <handlers xmi:id="_DriDANrkEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.handler.toggle.modifications" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.ToggleModificationOverlays" command="_W-8C0NrjEeW5avyAcffSfQ"/>
+      <handlers xmi:id="_SSUGMNrkEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.handler.toggle.deletions" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.ToggleDeletionOverlays" command="_cg4BYNrjEeW5avyAcffSfQ"/>
+      <handlers xmi:id="_Fahe8NrlEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.handler.toggle.layout.changes" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.ToggleLayoutChangeOverlays" command="_A3198NrlEeW5avyAcffSfQ"/>
+      <toolbar xmi:id="_R80pQNriEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.toolbar.0">
+        <children xsi:type="menu:HandledToolItem" xmi:id="_THpdoNriEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.handledtoolitem.showadditions" label="Show Additions" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/toolbar/addition.png" tooltip="Show Additions" selected="true" type="Check" command="_M7xUwNrjEeW5avyAcffSfQ"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_hj0MQNriEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.handledtoolitem.showmodifications" label="Show Modifications" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/toolbar/modification.png" tooltip="Show Modifications" selected="true" type="Check" command="_W-8C0NrjEeW5avyAcffSfQ"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_layd0NriEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.handledtoolitem.showdeletions" label="Show Deletions" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/toolbar/deletion.png" tooltip="Show Deletions" type="Check" command="_cg4BYNrjEeW5avyAcffSfQ"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_4xLY0NrkEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.handledtoolitem.showlayoutchanges" label="Show Layout Changes" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/toolbar/layout.png" tooltip="Show Layout Changes" selected="true" type="Check" command="_A3198NrlEeW5avyAcffSfQ"/>
+      </toolbar>
     </elements>
     <elements xsi:type="basic:PartDescriptor" xmi:id="_AaxDUP1dEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.review" label="Review Explorer" category="Mervin" closeable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.review.ReviewExplorer">
       <tags>View</tags>

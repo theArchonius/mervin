@@ -378,6 +378,42 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
+	public EAttribute getModelReview_ShowAdditions() {
+		return (EAttribute) modelReviewEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getModelReview_ShowModifications() {
+		return (EAttribute) modelReviewEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getModelReview_ShowDeletions() {
+		return (EAttribute) modelReviewEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getModelReview_ShowLayoutChanges() {
+		return (EAttribute) modelReviewEClass.getEStructuralFeatures().get(10);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	public EClass getPatchSet() {
 		return patchSetEClass;
 	}
@@ -1067,6 +1103,10 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		createEReference(modelReviewEClass, MODEL_REVIEW__RIGHT_PATCH_SET);
 		createEReference(modelReviewEClass, MODEL_REVIEW__SELECTED_MODEL_COMPARISON);
 		createEReference(modelReviewEClass, MODEL_REVIEW__SELECTED_DIAGRAM_COMPARISON);
+		createEAttribute(modelReviewEClass, MODEL_REVIEW__SHOW_ADDITIONS);
+		createEAttribute(modelReviewEClass, MODEL_REVIEW__SHOW_MODIFICATIONS);
+		createEAttribute(modelReviewEClass, MODEL_REVIEW__SHOW_DELETIONS);
+		createEAttribute(modelReviewEClass, MODEL_REVIEW__SHOW_LAYOUT_CHANGES);
 
 		patchSetEClass = createEClass(PATCH_SET);
 		createEAttribute(patchSetEClass, PATCH_SET__ID);
@@ -1236,6 +1276,18 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		initEReference(getModelReview_SelectedDiagramComparison(), theComparePackage.getComparison(), null,
 				"selectedDiagramComparison", null, 0, 1, ModelReview.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE,
 				!IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getModelReview_ShowAdditions(), ecorePackage.getEBoolean(), "showAdditions", "true", 0, 1,
+				ModelReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getModelReview_ShowModifications(), ecorePackage.getEBoolean(), "showModifications", "true", 0,
+				1, ModelReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getModelReview_ShowDeletions(), ecorePackage.getEBoolean(), "showDeletions", "false", 0, 1,
+				ModelReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getModelReview_ShowLayoutChanges(), ecorePackage.getEBoolean(), "showLayoutChanges", "true", 0,
+				1, ModelReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 
 		initEClass(patchSetEClass, PatchSet.class, "PatchSet", !IS_ABSTRACT, !IS_INTERFACE,
 				IS_GENERATED_INSTANCE_CLASS);

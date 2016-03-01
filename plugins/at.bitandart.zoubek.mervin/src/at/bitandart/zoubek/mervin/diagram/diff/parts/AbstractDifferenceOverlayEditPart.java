@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2015, 2016 Florian Zoubek.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Florian Zoubek - initial API and implementation
+ *******************************************************************************/
 package at.bitandart.zoubek.mervin.diagram.diff.parts;
 
 import org.eclipse.draw2d.IFigure;
@@ -19,6 +29,12 @@ import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenChangeIndica
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.DiagramContainerFigure;
 import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
 
+/**
+ * Abstract base class for all {@link DifferenceOverlay}s.
+ * 
+ * @author Florian Zoubek
+ *
+ */
 public abstract class AbstractDifferenceOverlayEditPart extends ShapeNodeEditPart implements IOverlayEditPart {
 
 	private DefaultChangeTypeStyleAdvisor styleAdvisor;
@@ -115,7 +131,7 @@ public abstract class AbstractDifferenceOverlayEditPart extends ShapeNodeEditPar
 		super.activate();
 		DiagramContainerFigure containerFigure = getContainerFigure();
 		Layer indicatorLayer = getIndicatorLayer();
-		offScreenIndicator = getOffScreenIndicator();
+		IOffScreenIndicator offScreenIndicator = getOffScreenIndicator();
 		offScreenIndicator.addLinkedFigure(getFigure());
 		offScreenIndicator.setContainerFigure(containerFigure.getScrollPane().getViewport());
 
@@ -142,6 +158,16 @@ public abstract class AbstractDifferenceOverlayEditPart extends ShapeNodeEditPar
 	@Override
 	public void deactivate() {
 		super.deactivate();
+
+		DiagramContainerFigure containerFigure = getContainerFigure();
+		Layer indicatorLayer = getIndicatorLayer();
+		if (offScreenIndicator != null) {
+			if (offScreenIndicator instanceof OffScreenChangeIndicator) {
+				containerFigure.getOffScreenChangeIndicatorMerger()
+						.unregisterIndicator((OffScreenChangeIndicator) offScreenIndicator);
+			}
+			indicatorLayer.remove(offScreenIndicator);
+		}
 		if (styleAdvisor != null) {
 			styleAdvisor.dispose();
 		}
