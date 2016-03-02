@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2016 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,16 +29,14 @@ import org.eclipse.swt.widgets.TreeColumn;
  * @author Florian Zoubek
  *
  */
-public class ThreeWayTreeViewerComparator extends ViewerComparator implements
-		SelectionListener {
+public class ThreeWayTreeViewerComparator extends ViewerComparator implements SelectionListener {
 
 	private TreeViewer viewer;
 	private TreeViewerColumn treeColumn;
 
 	private int sortDirection = SWT.NONE;
 
-	public ThreeWayTreeViewerComparator(TreeViewer viewer,
-			TreeViewerColumn treeColumn) {
+	public ThreeWayTreeViewerComparator(TreeViewer viewer, TreeViewerColumn treeColumn) {
 		this.viewer = viewer;
 		this.treeColumn = treeColumn;
 	}

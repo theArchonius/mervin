@@ -12,6 +12,7 @@ package at.bitandart.zoubek.mervin.patchset.history;
 
 import java.text.MessageFormat;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,11 +25,15 @@ import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.jface.util.Policy;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.StyledCellLabelProvider;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -44,7 +49,7 @@ import org.eclipse.swt.widgets.Tree;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.review.ModelReviewEditorTrackingView;
 import at.bitandart.zoubek.mervin.swt.ProgressPanel;
-import at.bitandart.zoubek.mervin.util.vis.ThreeWayLabelTreeViewerComparator;
+import at.bitandart.zoubek.mervin.util.vis.ThreeWayObjectTreeViewerComparator;
 
 /**
  * Shows the similarity of differences to differences of other patch sets.
@@ -141,7 +146,7 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 		DiffNameColumnLabelProvider labelColumnLabelProvider = new DiffNameColumnLabelProvider();
 		labelColumn.setLabelProvider(labelColumnLabelProvider);
 		labelColumn.getColumn().addSelectionListener(
-				new ThreeWayLabelTreeViewerComparator(historyTreeViewer, labelColumn, labelColumnLabelProvider));
+				new ThreeWayObjectTreeViewerComparator(historyTreeViewer, labelColumn, labelColumnLabelProvider));
 
 		viewInitialized = true;
 	}
@@ -274,7 +279,7 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 	 * @author Florian Zoubek
 	 *
 	 */
-	private class DiffNameColumnLabelProvider extends ColumnLabelProvider {
+	private class DiffNameColumnLabelProvider extends StyledCellLabelProvider implements Comparator<Object> {
 
 		private AdapterFactoryLabelProvider adapterFactoryLabelProvider;
 
@@ -283,13 +288,33 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 					EMFCompareRCPPlugin.getDefault().createFilteredAdapterFactoryRegistry()));
 		}
 
-		@Override
+		public void update(ViewerCell cell) {
+
+			Object element = cell.getElement();
+			StyledString text = new StyledString();
+			text.append(getText(element));
+			if (element instanceof NamedHistoryEntryContainer) {
+
+				NamedHistoryEntryContainer container = (NamedHistoryEntryContainer) element;
+				text.append(" ");
+				text.append(MessageFormat.format("({0})", container.entries.size()), StyledString.COUNTER_STYLER);
+
+			}
+
+			cell.setText(text.getString());
+			cell.setStyleRanges(text.getStyleRanges());
+			cell.setImage(getImage(element));
+
+			super.update(cell);
+
+		}
+
 		public String getText(Object element) {
 
 			if (element instanceof NamedHistoryEntryContainer) {
 
 				NamedHistoryEntryContainer container = (NamedHistoryEntryContainer) element;
-				return MessageFormat.format("{0} ({1})", container.getName(), container.entries.size());
+				return container.getName();
 
 			} else if (element instanceof IPatchSetHistoryEntry) {
 
@@ -298,10 +323,9 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 				return adapterFactoryLabelProvider.getText(entryObject);
 
 			}
-			return super.getText(element);
+			return element.toString();
 		}
 
-		@Override
 		public Image getImage(Object element) {
 
 			if (element instanceof IPatchSetHistoryEntry) {
@@ -311,7 +335,14 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 				return adapterFactoryLabelProvider.getImage(entryObject);
 
 			}
-			return super.getImage(element);
+			return null;
+		}
+
+		@Override
+		public int compare(Object object1, Object object2) {
+			String text1 = getText(object1);
+			String text2 = getText(object2);
+			return Policy.getComparator().compare(text1, text2);
 		}
 
 	}
