@@ -39,6 +39,11 @@ public class MervinServicesAddon {
 		DefaultModelReviewFactory defaultModelReviewFactory = new DefaultModelReviewFactory();
 		context.set(ModelReviewFactory.class, defaultModelReviewFactory);
 
+		// add highlight service
+		MervinReviewHighlightService highlightService = ContextInjectionFactory.make(MervinReviewHighlightService.class,
+				context);
+		context.set(IReviewHighlightService.class, highlightService);
+
 		// add diff service based on EMF Compare
 		IDiffService diffService = ContextInjectionFactory.make(EMFCompareDiffService.class, context);
 		context.set(IDiffService.class, diffService);

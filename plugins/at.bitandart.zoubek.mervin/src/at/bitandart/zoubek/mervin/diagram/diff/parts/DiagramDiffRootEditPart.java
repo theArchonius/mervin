@@ -17,11 +17,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.FigureListener;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.FreeformLayeredPane;
+import org.eclipse.draw2d.FreeformViewport;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Layer;
 import org.eclipse.draw2d.LayeredPane;
@@ -33,6 +35,8 @@ import org.eclipse.gmf.runtime.notation.MeasurementUnit;
 
 import at.bitandart.zoubek.mervin.draw2d.MervinLayerConstants;
 import at.bitandart.zoubek.mervin.draw2d.ViewportFillingLayout;
+import at.bitandart.zoubek.mervin.draw2d.figures.FocusFreeformViewport;
+import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 
 /**
  * A {@link ScalableFreeformRootEditPart} that contains the default layers and
@@ -41,10 +45,80 @@ import at.bitandart.zoubek.mervin.draw2d.ViewportFillingLayout;
  * @author Florian Zoubek
  *
  */
-public class DiagramDiffRootEditPart extends DiagramRootEditPart {
+public class DiagramDiffRootEditPart extends DiagramRootEditPart implements IFocusHighlightEditPart {
 
 	public DiagramDiffRootEditPart(MeasurementUnit measurementUnit) {
 		super(measurementUnit);
+	}
+
+	@Override
+	protected IFigure createFigure() {
+
+		/*
+		 * The default viewport must be replaced with a FocusFreeformViewport -
+		 * however, createFigure() also initializes inaccessible attributes so
+		 * this must be done by setting the old viewport content to the new
+		 * viewport content
+		 */
+		FreeformViewport oldViewport = (FreeformViewport) super.createFigure();
+		FreeformViewport viewport = new FocusFreeformViewport(ColorConstants.black, 128, 0.0f);
+		viewport.setContents(oldViewport.getContents());
+
+		return viewport;
+	}
+
+	private FocusFreeformViewport getFocusFreeformViewport() {
+		return (FocusFreeformViewport) getFigure();
+	}
+
+	@Override
+	public void addFocusHighlightFigure(IFigure focusFigure) {
+
+		if (focusFigure != null) {
+			FocusFreeformViewport viewport = getFocusFreeformViewport();
+			viewport.addFocusFigure(focusFigure);
+			viewport.setFocusEnabled(true);
+		}
+
+	}
+
+	@Override
+	public void removeFocusHighlightFigure(IFigure focusFigure) {
+
+		if (focusFigure != null) {
+			FocusFreeformViewport viewport = getFocusFreeformViewport();
+			viewport.removeFocusFigure(focusFigure);
+			if (viewport.getFocusedFigures().isEmpty()) {
+				viewport.setFocusEnabled(false);
+			}
+		}
+
+	}
+
+	@Override
+	public void disableFocusHighlightMode() {
+
+		FocusFreeformViewport viewport = getFocusFreeformViewport();
+		viewport.clearFocusedFigures();
+		viewport.setFocusEnabled(false);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see at.bitandart.zoubek.mervin.diagram.diff.parts.IFocusableEditPart#
+	 * isFocusModeEnabled()
+	 */
+	@Override
+	public boolean isFocusHighlightModeEnabled() {
+
+		return getFocusFreeformViewport().isFocusEnabled();
+
+	}
+
+	public ModelReview getModelReview() {
+		return (ModelReview) this.getModel();
 	}
 
 	@Override

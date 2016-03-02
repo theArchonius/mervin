@@ -523,6 +523,10 @@ public class CommentList extends ScrolledComposite {
 						public void handleEvent(Event event) {
 							try {
 								int offset = commentBodyText.getOffsetAtLocation(new Point(event.x, event.y));
+
+								// FIXME this won't work any more with a line
+								// style listener
+
 								StyleRange style = commentBodyText.getStyleRangeAtOffset(offset);
 								if (style != null && style instanceof LinkStyleRange) {
 									notifyCommentLinkClicked(((LinkStyleRange) style).getCommentLink());

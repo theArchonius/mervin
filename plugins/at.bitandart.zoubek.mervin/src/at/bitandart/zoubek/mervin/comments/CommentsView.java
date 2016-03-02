@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
+import at.bitandart.zoubek.mervin.IReviewHighlightService;
 import at.bitandart.zoubek.mervin.model.modelreview.Comment;
 import at.bitandart.zoubek.mervin.model.modelreview.CommentLink;
 import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
@@ -65,6 +66,9 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 
 	@Inject
 	private ModelReviewFactory modelFactory;
+
+	@Inject
+	private IReviewHighlightService reviewHighlightService;
 
 	@Inject
 	private User currentUser;
@@ -102,21 +106,41 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 
 			@Override
 			public void commentLinkClicked(ICommentLink commentLink) {
-				// TODO replace with correct click behaviour
-				System.out.println("comment link click handler not yet implemented");
+				// Intentionally left empty
 			}
 
 			@Override
 			public void commentLinkEnter(ICommentLink commentLink) {
-				// TODO replace with correct click behaviour
-				System.out.println("comment link enter handler not yet implemented");
+
+				ICommentLinkTarget commentLinkTarget = commentLink.getCommentLinkTarget();
+				ModelReview modelReview = getCurrentModelReview();
+
+				if (modelReview != null && commentLinkTarget instanceof MervinCommentLinkTarget) {
+					List<EObject> targets = ((MervinCommentLinkTarget) commentLinkTarget).getTargets();
+
+					for (EObject target : targets) {
+						reviewHighlightService.addHighlightFor(modelReview, target);
+					}
+				}
+
 			}
 
 			@Override
 			public void commentLinkExit(ICommentLink commentLink) {
-				// TODO replace with correct click behaviour
-				System.out.println("comment link exit handler not yet implemented");
+
+				ICommentLinkTarget commentLinkTarget = commentLink.getCommentLinkTarget();
+				ModelReview modelReview = getCurrentModelReview();
+
+				if (modelReview != null && commentLinkTarget instanceof MervinCommentLinkTarget) {
+					List<EObject> targets = ((MervinCommentLinkTarget) commentLinkTarget).getTargets();
+
+					for (EObject target : targets) {
+						reviewHighlightService.removeHighlightFor(modelReview, target);
+					}
+				}
+
 			}
+
 		});
 		control.addCommentModifyListener(new CommentModifyListener() {
 
