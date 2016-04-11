@@ -59,8 +59,8 @@ public class MervinReviewHighlightService implements IReviewHighlightService {
 
 		List<Object> elements = highlightedElements.get(review);
 		if (elements != null && elements.contains(object)) {
-			notifyElementRemoved(review, object);
 			elements.remove(object);
+			notifyElementRemoved(review, object);
 		}
 
 	}

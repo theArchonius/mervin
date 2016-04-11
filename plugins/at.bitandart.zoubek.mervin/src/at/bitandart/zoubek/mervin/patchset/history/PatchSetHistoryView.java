@@ -12,24 +12,33 @@ package at.bitandart.zoubek.mervin.patchset.history;
 
 import java.text.MessageFormat;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.util.Policy;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
@@ -37,8 +46,10 @@ import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -46,6 +57,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 
+import at.bitandart.zoubek.mervin.IReviewHighlightService;
+import at.bitandart.zoubek.mervin.IReviewHighlightServiceListener;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.review.ModelReviewEditorTrackingView;
 import at.bitandart.zoubek.mervin.swt.ProgressPanel;
@@ -70,6 +83,8 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 
 	@Inject
 	private ISimilarityHistoryService similarityHistoryService;
+	@Inject
+	private IReviewHighlightService highlightService;
 
 	// JFace Viewers
 
@@ -98,6 +113,8 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 	private Color progressBackgroundColor;
 	private Color progressForegroundColor;
 
+	private HighlightStyler highlightStyler;
+
 	private ProgressPanel progressPanel;
 
 	@Inject
@@ -110,6 +127,7 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 	public void postConstruct(Composite parent) {
 
 		initializeColors();
+		highlightStyler = new HighlightStyler();
 
 		mainPanel = new Composite(parent, SWT.NONE);
 		mainPanel.setLayout(new GridLayout());
@@ -149,6 +167,24 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 				new ThreeWayObjectTreeViewerComparator(historyTreeViewer, labelColumn, labelColumnLabelProvider));
 
 		viewInitialized = true;
+
+		// refresh the viewer highlights if highlighting is requested
+		highlightService.addHighlightServiceListener(new IReviewHighlightServiceListener() {
+
+			@Override
+			public void elementRemoved(ModelReview review, Object element) {
+
+				historyTreeViewer.refresh();
+
+			}
+
+			@Override
+			public void elementAdded(ModelReview review, Object element) {
+
+				historyTreeViewer.refresh();
+
+			}
+		});
 	}
 
 	/**
@@ -177,6 +213,9 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 
 				updateThread.start();
 
+			} else {
+				// no current review, so reset the input of the history tree
+				historyTreeViewer.setInput(Collections.EMPTY_LIST);
 			}
 
 			mainPanel.redraw();
@@ -187,7 +226,7 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 
 	@PreDestroy
 	private void dispose() {
-
+		highlightStyler.dispose();
 	}
 
 	private class UpdatePatchSetHistoryViewAdapter extends EContentAdapter {
@@ -271,6 +310,55 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 	}
 
 	/**
+	 * A {@link Styler} responsible for the style of highlighted elements. This
+	 * class allocates memory and must be explicitly disposed via
+	 * {@link #dispose()} if it is not used any more.
+	 * 
+	 * @author Florian Zoubek
+	 *
+	 */
+	private class HighlightStyler extends Styler {
+
+		private Map<Font, Font> highlightFonts;
+
+		public HighlightStyler() {
+			highlightFonts = new HashMap<Font, Font>();
+		}
+
+		@Override
+		public void applyStyles(TextStyle textStyle) {
+
+			/*
+			 * elements are highlighted with a bold font, so adapt the currently
+			 * used font and cache the adapted font
+			 */
+			Font font = textStyle.font;
+			if (font == null) {
+				font = display.getSystemFont();
+			}
+
+			Font highlightFont = highlightFonts.get(font);
+			if (highlightFont == null) {
+				highlightFont = FontDescriptor.createFrom(font).setStyle(SWT.BOLD).createFont(display);
+				highlightFonts.put(font, highlightFont);
+			}
+
+			textStyle.font = highlightFont;
+
+		}
+
+		public void dispose() {
+
+			// dispose created bold fonts
+			for (Entry<Font, Font> entry : highlightFonts.entrySet()) {
+				entry.getValue().dispose();
+			}
+
+		}
+
+	};
+
+	/**
 	 * A {@link ColumnLabelProvider} implementation that provides labels for
 	 * {@link NamedHistoryEntryContainer}s, as well as
 	 * {@link IPatchSetHistoryEntry} entry objects which are instances of EMF
@@ -291,8 +379,13 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 		public void update(ViewerCell cell) {
 
 			Object element = cell.getElement();
+			List<Object> highlightedElements = highlightService.getHighlightedElements(getCurrentModelReview());
 			StyledString text = new StyledString();
-			text.append(getText(element));
+			if (isHighlighted(element, highlightedElements)) {
+				text.append(getText(element), highlightStyler);
+			} else {
+				text.append(getText(element));
+			}
 			if (element instanceof NamedHistoryEntryContainer) {
 
 				NamedHistoryEntryContainer container = (NamedHistoryEntryContainer) element;
@@ -307,6 +400,53 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 
 			super.update(cell);
 
+		}
+
+		/**
+		 * checks if the given element should be highlighted or not.
+		 * 
+		 * @param element
+		 *            the element to check.
+		 * @param highlightedElements
+		 *            the set of elements to highlight.
+		 * @return true if the given element should be highlighted, false
+		 *         otherwise.
+		 */
+		private boolean isHighlighted(Object element, List<Object> highlightedElements) {
+
+			if (highlightedElements.contains(element)) {
+				return true;
+			}
+
+			if (element instanceof View) {
+				if (isHighlighted(((View) element).getElement(), highlightedElements)) {
+					return true;
+				}
+			}
+
+			if (element instanceof IPatchSetHistoryEntry) {
+				if (isHighlighted(((IPatchSetHistoryEntry<?, ?>) element).getEntryObject(), highlightedElements)) {
+					return true;
+				}
+			}
+
+			if (element instanceof Diff) {
+				Match match = ((Diff) element).getMatch();
+				if (isHighlighted(match.getLeft(), highlightedElements)
+						|| isHighlighted(match.getRight(), highlightedElements)) {
+					return true;
+				}
+			}
+
+			if (element instanceof NamedHistoryEntryContainer) {
+				for (IPatchSetHistoryEntry<?, ?> entry : ((NamedHistoryEntryContainer) element).getEntries()) {
+					if (isHighlighted(entry, highlightedElements)) {
+						return true;
+					}
+				}
+			}
+
+			return false;
 		}
 
 		public String getText(Object element) {
