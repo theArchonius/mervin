@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2016 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,25 +12,32 @@ package at.bitandart.zoubek.mervin.review;
 
 import java.text.MessageFormat;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.util.Policy;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.StyledCellLabelProvider;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -42,14 +49,20 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 
+import at.bitandart.zoubek.mervin.IReviewHighlightService;
+import at.bitandart.zoubek.mervin.IReviewHighlightServiceListener;
+import at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch;
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramResource;
+import at.bitandart.zoubek.mervin.model.modelreview.ModelPatch;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelResource;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.Patch;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
+import at.bitandart.zoubek.mervin.patchset.history.HighlightStyler;
 import at.bitandart.zoubek.mervin.util.vis.HSB;
 import at.bitandart.zoubek.mervin.util.vis.NumericColoredColumnLabelProvider;
 import at.bitandart.zoubek.mervin.util.vis.ThreeWayLabelTreeViewerComparator;
+import at.bitandart.zoubek.mervin.util.vis.ThreeWayObjectTreeViewerComparator;
 
 /**
  * Review exploration view - shows an overview of the currently loaded model
@@ -63,6 +76,14 @@ import at.bitandart.zoubek.mervin.util.vis.ThreeWayLabelTreeViewerComparator;
 public class ReviewExplorer extends ModelReviewEditorTrackingView {
 
 	public static final String PART_DESCRIPTOR_ID = "at.bitandart.zoubek.mervin.partdescriptor.review";
+
+	@Inject
+	private IReviewHighlightService highlightService;
+
+	@Inject
+	private Display display;
+
+	private HighlightStyler highlightStyler;
 
 	// JFace Viewers
 
@@ -88,6 +109,8 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 	@PostConstruct
 	public void postConstruct(Composite parent) {
 
+		highlightStyler = new HighlightStyler(display);
+
 		mainPanel = new Composite(parent, SWT.NONE);
 		mainPanel.setLayout(new GridLayout());
 
@@ -112,7 +135,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 		ModelReviewExplorerMainColumnLabelProvider labelColumnLabelProvider = new ModelReviewExplorerMainColumnLabelProvider();
 		labelColumn.setLabelProvider(labelColumnLabelProvider);
 		labelColumn.getColumn().addSelectionListener(
-				new ThreeWayLabelTreeViewerComparator(reviewTreeViewer, labelColumn, labelColumnLabelProvider));
+				new ThreeWayObjectTreeViewerComparator(reviewTreeViewer, labelColumn, labelColumnLabelProvider));
 
 		// change count column
 		TreeViewerColumn changeCountColumn = new TreeViewerColumn(reviewTreeViewer, SWT.NONE);
@@ -155,6 +178,25 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 
 		// all controls updated, now update them with the given values
 		viewInitialized = true;
+
+		// refresh the viewer highlights if highlighting is requested
+		highlightService.addHighlightServiceListener(new IReviewHighlightServiceListener() {
+
+			@Override
+			public void elementRemoved(ModelReview review, Object element) {
+
+				reviewTreeViewer.refresh();
+
+			}
+
+			@Override
+			public void elementAdded(ModelReview review, Object element) {
+
+				reviewTreeViewer.refresh();
+
+			}
+		});
+
 		updateValues();
 	}
 
@@ -185,7 +227,8 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 	 * @author Florian Zoubek
 	 *
 	 */
-	private class ModelReviewExplorerMainColumnLabelProvider extends ColumnLabelProvider {
+	private class ModelReviewExplorerMainColumnLabelProvider extends StyledCellLabelProvider
+			implements Comparator<Object> {
 
 		/**
 		 * label provider for model and diagram elements
@@ -202,6 +245,121 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 		}
 
 		@Override
+		public void update(ViewerCell cell) {
+
+			Object element = cell.getElement();
+			List<Object> highlightedElements = highlightService.getHighlightedElements(getCurrentModelReview());
+			StyledString text = new StyledString();
+			if (isHighlighted(element, highlightedElements)) {
+				text.append(getText(element), highlightStyler);
+			} else {
+				text.append(getText(element));
+			}
+
+			cell.setText(text.getString());
+			cell.setStyleRanges(text.getStyleRanges());
+			cell.setImage(getImage(element));
+
+			super.update(cell);
+
+		}
+
+		/**
+		 * checks if the given element should be highlighted or not.
+		 * 
+		 * @param element
+		 *            the element to check.
+		 * @param highlightedElements
+		 *            the set of elements to highlight.
+		 * @return true if the given element should be highlighted, false
+		 *         otherwise.
+		 */
+		private boolean isHighlighted(Object element, List<Object> highlightedElements) {
+
+			if (highlightedElements.contains(element)) {
+				return true;
+			}
+
+			if (element instanceof View) {
+				if (isHighlighted(((View) element).getElement(), highlightedElements)) {
+					return true;
+				}
+			}
+
+			if (element instanceof TreeItemContainer) {
+				return isHighlighted(((TreeItemContainer) element).getChildren(), highlightedElements);
+			}
+
+			if (element instanceof PatchSet) {
+				return isHighlighted(((PatchSet) element).getPatches(), highlightedElements);
+			}
+
+			if (element instanceof ModelPatch) {
+				return isHighlighted(((ModelPatch) element).getNewModelResource(), highlightedElements)
+						|| isHighlighted(((ModelPatch) element).getOldModelResource(), highlightedElements);
+			}
+
+			if (element instanceof DiagramPatch) {
+				return isHighlighted(((DiagramPatch) element).getNewDiagramResource(), highlightedElements)
+						|| isHighlighted(((DiagramPatch) element).getOldDiagramResource(), highlightedElements);
+			}
+
+			if (element instanceof ModelResource) {
+				return isHighlighted(((ModelResource) element).getObjects(), highlightedElements);
+			}
+
+			if (element instanceof EObject) {
+				return isHighlighted(((EObject) element).eContents(), highlightedElements);
+			}
+
+			return false;
+		}
+
+		/**
+		 * checks if one of the elements provided by the given iterable is
+		 * highlighted or not.
+		 * 
+		 * @param iterable
+		 *            the iterable that provides the elements.
+		 * @param highlightedElements
+		 *            the set of elements to highlight.
+		 * @return true if one of the elements provided by the given iterable
+		 *         should be highlighted, false otherwise.
+		 */
+		public boolean isHighlighted(Iterable<?> iterable, List<Object> highlightedElements) {
+			for (Object element : iterable) {
+				if (isHighlighted(element, highlightedElements)) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		/**
+		 * checks if one of the elements provided by the given array is
+		 * highlighted or not.
+		 * 
+		 * @param array
+		 *            the array that provides the elements.
+		 * @param highlightedElements
+		 *            the set of elements to highlight.
+		 * @return true if one of the elements provided by the given array
+		 *         should be highlighted, false otherwise.
+		 */
+		public boolean isHighlighted(Object[] array, List<Object> highlightedElements) {
+			for (Object element : array) {
+				if (isHighlighted(element, highlightedElements)) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		/**
+		 * @param element
+		 *            the element to retrieve the label text for.
+		 * @return the label text for the given element.
+		 */
 		public String getText(Object element) {
 
 			if (element instanceof PatchSet) {
@@ -227,7 +385,11 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 			return element.toString();
 		}
 
-		@Override
+		/**
+		 * @param element
+		 *            the element to retrieve the label image for.
+		 * @return the label icon for the given element
+		 */
 		public Image getImage(Object element) {
 
 			if (element instanceof EObject) {
@@ -258,6 +420,13 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 		public void removeListener(ILabelProviderListener listener) {
 			adapterFactoryLabelProvider.removeListener(listener);
 			super.removeListener(listener);
+		}
+
+		@Override
+		public int compare(Object object1, Object object2) {
+			String text1 = getText(object1);
+			String text2 = getText(object2);
+			return Policy.getComparator().compare(text1, text2);
 		}
 	}
 

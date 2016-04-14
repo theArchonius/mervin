@@ -25,7 +25,6 @@ import java.util.Set;
 import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -523,9 +522,10 @@ public class CommentList extends ScrolledComposite {
 						public void handleEvent(Event event) {
 							try {
 								int offset = commentBodyText.getOffsetAtLocation(new Point(event.x, event.y));
-								StyleRange style = commentBodyText.getStyleRangeAtOffset(offset);
-								if (style != null && style instanceof LinkStyleRange) {
-									notifyCommentLinkClicked(((LinkStyleRange) style).getCommentLink());
+
+								ICommentLink commentLink = commentLineStyleListener.getCommentLinkAtLocation(offset);
+								if (commentLink != null) {
+									notifyCommentLinkClicked(commentLink);
 								}
 							} catch (IllegalArgumentException e) {
 								// no character under event.x, event.y

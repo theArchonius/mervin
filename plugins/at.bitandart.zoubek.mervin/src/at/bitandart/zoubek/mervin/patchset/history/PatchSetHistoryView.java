@@ -12,6 +12,8 @@ package at.bitandart.zoubek.mervin.patchset.history;
 
 import java.text.MessageFormat;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,15 +22,22 @@ import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.util.Policy;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.StyledCellLabelProvider;
+import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -41,10 +50,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 
+import at.bitandart.zoubek.mervin.IReviewHighlightService;
+import at.bitandart.zoubek.mervin.IReviewHighlightServiceListener;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.review.ModelReviewEditorTrackingView;
 import at.bitandart.zoubek.mervin.swt.ProgressPanel;
-import at.bitandart.zoubek.mervin.util.vis.ThreeWayLabelTreeViewerComparator;
+import at.bitandart.zoubek.mervin.util.vis.ThreeWayObjectTreeViewerComparator;
 
 /**
  * Shows the similarity of differences to differences of other patch sets.
@@ -65,6 +76,8 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 
 	@Inject
 	private ISimilarityHistoryService similarityHistoryService;
+	@Inject
+	private IReviewHighlightService highlightService;
 
 	// JFace Viewers
 
@@ -93,6 +106,8 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 	private Color progressBackgroundColor;
 	private Color progressForegroundColor;
 
+	private HighlightStyler highlightStyler;
+
 	private ProgressPanel progressPanel;
 
 	@Inject
@@ -105,6 +120,7 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 	public void postConstruct(Composite parent) {
 
 		initializeColors();
+		highlightStyler = new HighlightStyler(display);
 
 		mainPanel = new Composite(parent, SWT.NONE);
 		mainPanel.setLayout(new GridLayout());
@@ -141,9 +157,27 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 		DiffNameColumnLabelProvider labelColumnLabelProvider = new DiffNameColumnLabelProvider();
 		labelColumn.setLabelProvider(labelColumnLabelProvider);
 		labelColumn.getColumn().addSelectionListener(
-				new ThreeWayLabelTreeViewerComparator(historyTreeViewer, labelColumn, labelColumnLabelProvider));
+				new ThreeWayObjectTreeViewerComparator(historyTreeViewer, labelColumn, labelColumnLabelProvider));
 
 		viewInitialized = true;
+
+		// refresh the viewer highlights if highlighting is requested
+		highlightService.addHighlightServiceListener(new IReviewHighlightServiceListener() {
+
+			@Override
+			public void elementRemoved(ModelReview review, Object element) {
+
+				historyTreeViewer.refresh();
+
+			}
+
+			@Override
+			public void elementAdded(ModelReview review, Object element) {
+
+				historyTreeViewer.refresh();
+
+			}
+		});
 	}
 
 	/**
@@ -172,6 +206,9 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 
 				updateThread.start();
 
+			} else {
+				// no current review, so reset the input of the history tree
+				historyTreeViewer.setInput(Collections.EMPTY_LIST);
 			}
 
 			mainPanel.redraw();
@@ -182,7 +219,7 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 
 	@PreDestroy
 	private void dispose() {
-
+		highlightStyler.dispose();
 	}
 
 	private class UpdatePatchSetHistoryViewAdapter extends EContentAdapter {
@@ -274,7 +311,7 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 	 * @author Florian Zoubek
 	 *
 	 */
-	private class DiffNameColumnLabelProvider extends ColumnLabelProvider {
+	private class DiffNameColumnLabelProvider extends StyledCellLabelProvider implements Comparator<Object> {
 
 		private AdapterFactoryLabelProvider adapterFactoryLabelProvider;
 
@@ -284,12 +321,85 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 		}
 
 		@Override
+		public void update(ViewerCell cell) {
+
+			Object element = cell.getElement();
+			List<Object> highlightedElements = highlightService.getHighlightedElements(getCurrentModelReview());
+			StyledString text = new StyledString();
+			if (isHighlighted(element, highlightedElements)) {
+				text.append(getText(element), highlightStyler);
+			} else {
+				text.append(getText(element));
+			}
+			if (element instanceof NamedHistoryEntryContainer) {
+
+				NamedHistoryEntryContainer container = (NamedHistoryEntryContainer) element;
+				text.append(" ");
+				text.append(MessageFormat.format("({0})", container.entries.size()), StyledString.COUNTER_STYLER);
+
+			}
+
+			cell.setText(text.getString());
+			cell.setStyleRanges(text.getStyleRanges());
+			cell.setImage(getImage(element));
+
+			super.update(cell);
+
+		}
+
+		/**
+		 * checks if the given element should be highlighted or not.
+		 * 
+		 * @param element
+		 *            the element to check.
+		 * @param highlightedElements
+		 *            the set of elements to highlight.
+		 * @return true if the given element should be highlighted, false
+		 *         otherwise.
+		 */
+		private boolean isHighlighted(Object element, List<Object> highlightedElements) {
+
+			if (highlightedElements.contains(element)) {
+				return true;
+			}
+
+			if (element instanceof View) {
+				if (isHighlighted(((View) element).getElement(), highlightedElements)) {
+					return true;
+				}
+			}
+
+			if (element instanceof IPatchSetHistoryEntry) {
+				if (isHighlighted(((IPatchSetHistoryEntry<?, ?>) element).getEntryObject(), highlightedElements)) {
+					return true;
+				}
+			}
+
+			if (element instanceof Diff) {
+				Match match = ((Diff) element).getMatch();
+				if (isHighlighted(match.getLeft(), highlightedElements)
+						|| isHighlighted(match.getRight(), highlightedElements)) {
+					return true;
+				}
+			}
+
+			if (element instanceof NamedHistoryEntryContainer) {
+				for (IPatchSetHistoryEntry<?, ?> entry : ((NamedHistoryEntryContainer) element).getEntries()) {
+					if (isHighlighted(entry, highlightedElements)) {
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
 		public String getText(Object element) {
 
 			if (element instanceof NamedHistoryEntryContainer) {
 
 				NamedHistoryEntryContainer container = (NamedHistoryEntryContainer) element;
-				return MessageFormat.format("{0} ({1})", container.getName(), container.entries.size());
+				return container.getName();
 
 			} else if (element instanceof IPatchSetHistoryEntry) {
 
@@ -298,10 +408,9 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 				return adapterFactoryLabelProvider.getText(entryObject);
 
 			}
-			return super.getText(element);
+			return element.toString();
 		}
 
-		@Override
 		public Image getImage(Object element) {
 
 			if (element instanceof IPatchSetHistoryEntry) {
@@ -311,7 +420,14 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 				return adapterFactoryLabelProvider.getImage(entryObject);
 
 			}
-			return super.getImage(element);
+			return null;
+		}
+
+		@Override
+		public int compare(Object object1, Object object2) {
+			String text1 = getText(object1);
+			String text2 = getText(object2);
+			return Policy.getComparator().compare(text1, text2);
 		}
 
 	}
