@@ -14,11 +14,8 @@ import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -32,13 +29,11 @@ import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.gmf.runtime.notation.View;
-import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.util.Policy;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
-import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
@@ -46,10 +41,8 @@ import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -127,7 +120,7 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 	public void postConstruct(Composite parent) {
 
 		initializeColors();
-		highlightStyler = new HighlightStyler();
+		highlightStyler = new HighlightStyler(display);
 
 		mainPanel = new Composite(parent, SWT.NONE);
 		mainPanel.setLayout(new GridLayout());
@@ -310,55 +303,6 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 	}
 
 	/**
-	 * A {@link Styler} responsible for the style of highlighted elements. This
-	 * class allocates memory and must be explicitly disposed via
-	 * {@link #dispose()} if it is not used any more.
-	 * 
-	 * @author Florian Zoubek
-	 *
-	 */
-	private class HighlightStyler extends Styler {
-
-		private Map<Font, Font> highlightFonts;
-
-		public HighlightStyler() {
-			highlightFonts = new HashMap<Font, Font>();
-		}
-
-		@Override
-		public void applyStyles(TextStyle textStyle) {
-
-			/*
-			 * elements are highlighted with a bold font, so adapt the currently
-			 * used font and cache the adapted font
-			 */
-			Font font = textStyle.font;
-			if (font == null) {
-				font = display.getSystemFont();
-			}
-
-			Font highlightFont = highlightFonts.get(font);
-			if (highlightFont == null) {
-				highlightFont = FontDescriptor.createFrom(font).setStyle(SWT.BOLD).createFont(display);
-				highlightFonts.put(font, highlightFont);
-			}
-
-			textStyle.font = highlightFont;
-
-		}
-
-		public void dispose() {
-
-			// dispose created bold fonts
-			for (Entry<Font, Font> entry : highlightFonts.entrySet()) {
-				entry.getValue().dispose();
-			}
-
-		}
-
-	};
-
-	/**
 	 * A {@link ColumnLabelProvider} implementation that provides labels for
 	 * {@link NamedHistoryEntryContainer}s, as well as
 	 * {@link IPatchSetHistoryEntry} entry objects which are instances of EMF
@@ -376,6 +320,7 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 					EMFCompareRCPPlugin.getDefault().createFilteredAdapterFactoryRegistry()));
 		}
 
+		@Override
 		public void update(ViewerCell cell) {
 
 			Object element = cell.getElement();
