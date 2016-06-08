@@ -40,10 +40,16 @@ public interface ITreeDiffItemProvider {
 	 *            the diff item to retrieve the label text for.
 	 * @param side
 	 *            the side to retrieve the label text for.
+	 * @param changedSide
+	 *            the side which is considered as containing the changed (new)
+	 *            version. This is needed to determine {@link TreeDiffType#ADD}
+	 *            and {@link TreeDiffType#DELETE} correctly, as an addition seen
+	 *            from the left side is also an deletion seen from the right
+	 *            side.
 	 * @return the label text for the given item shown on the given
 	 *         {@link TreeDiffSide}.
 	 */
-	public String getDiffItemText(Object item, TreeDiffSide side);
+	public String getDiffItemText(Object item, TreeDiffSide side, TreeDiffSide changedSide);
 
 	/**
 	 * 
@@ -51,16 +57,28 @@ public interface ITreeDiffItemProvider {
 	 *            the diff item to retrieve the image for.
 	 * @param side
 	 *            the side to retrieve the image for.
+	 * @param changedSide
+	 *            the side which is considered as containing the changed (new)
+	 *            version. This is needed to determine {@link TreeDiffType#ADD}
+	 *            and {@link TreeDiffType#DELETE} correctly, as an addition seen
+	 *            from the left side is also an deletion seen from the right
+	 *            side.
 	 * @return the image for the given item shown on the given
 	 *         {@link TreeDiffSide}.
 	 */
-	public Image getDiffItemImage(Object item, TreeDiffSide side);
+	public Image getDiffItemImage(Object item, TreeDiffSide side, TreeDiffSide changedSide);
 
 	/**
 	 * @param item
 	 *            the diff item to retrieve the {@link TreeDiffType} for.
+	 * @param changedSide
+	 *            the side which is considered as containing the changed (new)
+	 *            version. This is needed to determine {@link TreeDiffType#ADD}
+	 *            and {@link TreeDiffType#DELETE} correctly, as an addition seen
+	 *            from the left side is also an deletion seen from the right
+	 *            side.
 	 * @return the {@link TreeDiffType} of the given diff item.
 	 */
-	public TreeDiffType getTreeDiffType(Object item);
+	public TreeDiffType getTreeDiffType(Object item, TreeDiffSide changedSide);
 
 }

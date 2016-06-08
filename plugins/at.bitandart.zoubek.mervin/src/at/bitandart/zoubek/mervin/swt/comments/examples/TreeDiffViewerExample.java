@@ -66,7 +66,7 @@ public class TreeDiffViewerExample {
 			}
 
 			@Override
-			public String getDiffItemText(Object item, TreeDiffSide side) {
+			public String getDiffItemText(Object item, TreeDiffSide side, TreeDiffSide changedSide) {
 				if (item instanceof Match) {
 					switch (side) {
 					case LEFT:
@@ -81,7 +81,7 @@ public class TreeDiffViewerExample {
 			}
 
 			@Override
-			public Image getDiffItemImage(Object item, TreeDiffSide side) {
+			public Image getDiffItemImage(Object item, TreeDiffSide side, TreeDiffSide changedSide) {
 				return null;
 			}
 
@@ -96,13 +96,13 @@ public class TreeDiffViewerExample {
 			}
 
 			@Override
-			public TreeDiffType getTreeDiffType(Object item) {
+			public TreeDiffType getTreeDiffType(Object item, TreeDiffSide changedSide) {
 				if (item instanceof Match) {
 					switch (((Match) item).getDiffType()) {
 					case ADD:
-						return TreeDiffType.ADD;
+						return changedSide == TreeDiffSide.RIGHT ? TreeDiffType.ADD : TreeDiffType.DELETE;
 					case DELETE:
-						return TreeDiffType.DELETE;
+						return changedSide == TreeDiffSide.RIGHT ? TreeDiffType.DELETE : TreeDiffType.ADD;
 					case MODIFY:
 						return TreeDiffType.MODIFY;
 					case EQUAL:

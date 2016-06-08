@@ -49,7 +49,7 @@
       <tags>View</tags>
       <tags>categoryTag:Mervin</tags>
     </elements>
-    <elements xsi:type="basic:PartDescriptor" xmi:id="_791IgP1dEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.properties.diff" label="Property Diff" category="Mervin" closeable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.review.PropertyDiffView">
+    <elements xsi:type="basic:PartDescriptor" xmi:id="_791IgP1dEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.properties.diff" label="Property Diff" category="Mervin" closeable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.property.diff.PropertyDiffView">
       <tags>View</tags>
       <tags>categoryTag:Mervin</tags>
     </elements>

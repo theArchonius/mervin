@@ -48,6 +48,10 @@ public class MervinServicesAddon {
 		IDiffService diffService = ContextInjectionFactory.make(EMFCompareDiffService.class, context);
 		context.set(IDiffService.class, diffService);
 
+		/* add the default mervin diagram model helper */
+		IDiagramModelHelper semanticModelHelper = ContextInjectionFactory.make(MervinDiagramModelHelper.class, context);
+		context.set(IDiagramModelHelper.class, semanticModelHelper);
+
 		/*
 		 * the prototype supports currently only Gerrit, so use the Gerrit
 		 * service by default
