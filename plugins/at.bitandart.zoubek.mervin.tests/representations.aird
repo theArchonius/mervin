@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<viewpoint:DAnalysis xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xmi:id="_GMuUcCfzEeaFAdj7XdGt-A" version="10.1.0.201509162000">
+  <semanticResources>model/TestModel.ecore</semanticResources>
+  <semanticResources>model/TestModel.genmodel</semanticResources>
+  <semanticResources>http://www.eclipse.org/emf/2002/Ecore</semanticResources>
+</viewpoint:DAnalysis>

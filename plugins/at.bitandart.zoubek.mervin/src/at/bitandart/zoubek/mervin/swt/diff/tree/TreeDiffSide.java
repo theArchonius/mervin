@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2016 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,25 +8,25 @@
  * Contributors:
  *    Florian Zoubek - initial API and implementation
  *******************************************************************************/
-package at.bitandart.zoubek.mervin.review;
+package at.bitandart.zoubek.mervin.swt.diff.tree;
 
-import javax.inject.Inject;
-import javax.annotation.PostConstruct;
+/**
+ * Represents a side of a {@link TreeDiff}.
+ * 
+ * @author Florian Zoubek
+ *
+ */
+public enum TreeDiffSide {
+	LEFT, RIGHT;
 
-import org.eclipse.swt.widgets.Composite;
-
-public class PropertyDiffView {
-
-	public static final String PART_DESCRIPTOR_ID = "at.bitandart.zoubek.mervin.partdescriptor.properties.diff";
-
-	@Inject
-	public PropertyDiffView() {
-
+	/**
+	 * @return the opposite side.
+	 */
+	public TreeDiffSide getOpposite() {
+		if (this == LEFT) {
+			return RIGHT;
+		} else {
+			return LEFT;
+		}
 	}
-
-	@PostConstruct
-	public void postConstruct(Composite parent) {
-
-	}
-
 }

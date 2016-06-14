@@ -18,6 +18,8 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import at.bitandart.zoubek.mervin.comments.ICommonTargetResolver;
 import at.bitandart.zoubek.mervin.comments.MervinCommentProvider;
 import at.bitandart.zoubek.mervin.comments.MervinCommonTargetResolver;
+import at.bitandart.zoubek.mervin.draw2d.figures.DefaultChangeTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.IChangeTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.gerrit.GerritReviewRepositoryService;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
 import at.bitandart.zoubek.mervin.model.modelreview.User;
@@ -39,6 +41,11 @@ public class MervinServicesAddon {
 		DefaultModelReviewFactory defaultModelReviewFactory = new DefaultModelReviewFactory();
 		context.set(ModelReviewFactory.class, defaultModelReviewFactory);
 
+		// add default style advisor for change types
+		DefaultChangeTypeStyleAdvisor styleAdvisor = ContextInjectionFactory.make(DefaultChangeTypeStyleAdvisor.class,
+				context);
+		context.set(IChangeTypeStyleAdvisor.class, styleAdvisor);
+
 		// add highlight service
 		MervinReviewHighlightService highlightService = ContextInjectionFactory.make(MervinReviewHighlightService.class,
 				context);
@@ -47,6 +54,10 @@ public class MervinServicesAddon {
 		// add diff service based on EMF Compare
 		IDiffService diffService = ContextInjectionFactory.make(EMFCompareDiffService.class, context);
 		context.set(IDiffService.class, diffService);
+
+		/* add the default mervin diagram model helper */
+		IDiagramModelHelper semanticModelHelper = ContextInjectionFactory.make(MervinDiagramModelHelper.class, context);
+		context.set(IDiagramModelHelper.class, semanticModelHelper);
 
 		/*
 		 * the prototype supports currently only Gerrit, so use the Gerrit
