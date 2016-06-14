@@ -47,13 +47,6 @@ public class TreeDiffViewer extends Viewer {
 	private ITreeDiffItemProvider treeDiffItemProvider;
 
 	/**
-	 * determines which side is consider as changed (new) while building the
-	 * tree items. For now, always consider the right side as the new side as
-	 * long as TreeDiff does not support the other way round.
-	 */
-	private TreeDiffSide changedSide = TreeDiffSide.RIGHT;
-
-	/**
 	 * creates a new {@link TreeDiffViewer} and the underlying {@link TreeDiff}
 	 * as child of the given parent.
 	 * 
@@ -136,7 +129,7 @@ public class TreeDiffViewer extends Viewer {
 
 		TreeDiffSideItem leftSide = createTreeDiffItemSide(itemObj, TreeDiffSide.LEFT);
 		TreeDiffSideItem rightSide = createTreeDiffItemSide(itemObj, TreeDiffSide.RIGHT);
-		TreeDiffType diffType = treeDiffItemProvider.getTreeDiffType(itemObj, changedSide);
+		TreeDiffType diffType = treeDiffItemProvider.getTreeDiffType(itemObj, treeDiffControl.getChangedSide());
 
 		TreeDiffItem item = new TreeDiffItem(null, leftSide, rightSide, diffType);
 
@@ -173,8 +166,8 @@ public class TreeDiffViewer extends Viewer {
 	 */
 	private TreeDiffSideItem createTreeDiffItemSide(Object itemObj, TreeDiffSide side) {
 
-		Image diffItemImage = treeDiffItemProvider.getDiffItemImage(itemObj, side, changedSide);
-		String diffItemText = treeDiffItemProvider.getDiffItemText(itemObj, side, changedSide);
+		Image diffItemImage = treeDiffItemProvider.getDiffItemImage(itemObj, side, treeDiffControl.getChangedSide());
+		String diffItemText = treeDiffItemProvider.getDiffItemText(itemObj, side, treeDiffControl.getChangedSide());
 
 		return new TreeDiffSideItem(diffItemText, diffItemImage);
 	}

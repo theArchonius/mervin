@@ -121,6 +121,13 @@ public class TreeDiffViewerExample {
 
 		/* apply the colors for the different diff relations */
 		TreeDiff treeDiff = treeDiffViewer.getTreeDiff();
+		/*
+		 * By default the right side is considered as the changed side, so
+		 * elements present on the right side but not on the left side will be
+		 * considered as "added" - setting the the changed side to LEFT will
+		 * consider them as "deleted".
+		 */
+		// treeDiff.setChangedSide(TreeDiffSide.LEFT);
 		treeDiff.setDiffColor(TreeDiffType.ADD, styleAdvisor.getForegroundColorForChangeType(ChangeType.ADDITION));
 		treeDiff.setDiffColor(TreeDiffType.DELETE, styleAdvisor.getForegroundColorForChangeType(ChangeType.DELETION));
 		treeDiff.setDiffColor(TreeDiffType.MODIFY,

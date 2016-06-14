@@ -108,6 +108,11 @@ public class TreeDiff extends Composite {
 	private double splitRatio = 0.5;
 
 	/**
+	 * determines which side is considered as changed (new)
+	 */
+	private TreeDiffSide changedSide = TreeDiffSide.RIGHT;
+
+	/**
 	 * creates a new {@link TreeDiff} widget.
 	 * 
 	 * @param parent
@@ -462,10 +467,10 @@ public class TreeDiff extends Composite {
 	protected void drawAddedItemOverlay(TreeDiffItem item, TreeDiffSide side, GC gc) {
 
 		gc.setForeground(getDiffColor(TreeDiffType.ADD));
-		if (side == TreeDiffSide.LEFT) {
-			drawInsertionLine(item, TreeDiffSide.LEFT, TreeDiffType.ADD, gc);
+		if (side == changedSide.getOpposite()) {
+			drawInsertionLine(item, side, TreeDiffType.ADD, gc);
 		} else {
-			drawOutline(item, TreeDiffSide.RIGHT, TreeDiffType.ADD, gc);
+			drawOutline(item, side, TreeDiffType.ADD, gc);
 		}
 
 	}
@@ -483,10 +488,10 @@ public class TreeDiff extends Composite {
 	protected void drawDeletedItemOverlay(TreeDiffItem item, TreeDiffSide side, GC gc) {
 
 		gc.setForeground(getDiffColor(TreeDiffType.DELETE));
-		if (side == TreeDiffSide.RIGHT) {
-			drawInsertionLine(item, TreeDiffSide.RIGHT, TreeDiffType.DELETE, gc);
+		if (side == changedSide) {
+			drawInsertionLine(item, side, TreeDiffType.DELETE, gc);
 		} else {
-			drawOutline(item, TreeDiffSide.LEFT, TreeDiffType.DELETE, gc);
+			drawOutline(item, side, TreeDiffType.DELETE, gc);
 		}
 	}
 
@@ -573,13 +578,13 @@ public class TreeDiff extends Composite {
 
 		switch (item.getTreeDiffType()) {
 		case ADD:
-			if (side == TreeDiffSide.LEFT) {
+			if (side == changedSide.getOpposite()) {
 				return findContextTreeItemUsingInsertionPoint(item, treeViewer);
 			} else {
 				return findTreeItem(treeViewer, item);
 			}
 		case DELETE:
-			if (side == TreeDiffSide.RIGHT) {
+			if (side == changedSide) {
 				return findContextTreeItemUsingInsertionPoint(item, treeViewer);
 			} else {
 				return findTreeItem(treeViewer, item);
@@ -971,10 +976,10 @@ public class TreeDiff extends Composite {
 		}
 
 		Point fromPoint = new Point(0, 0);
-		if ((type == TreeDiffType.ADD && side == TreeDiffSide.LEFT)
-				|| (type == TreeDiffType.DELETE && side == TreeDiffSide.RIGHT)) {
+		if ((type == TreeDiffType.ADD && side == changedSide.getOpposite())
+				|| (type == TreeDiffType.DELETE && side == changedSide)) {
 			/*
-			 * "insertion line" (left side of an addition/right side of a
+			 * "insertion line" (opposite side of an addition/right side of a
 			 * deletion): attach to the projected lower corners of the bounds,
 			 * but ignore the x coordinate for now.
 			 */
@@ -1609,6 +1614,13 @@ public class TreeDiff extends Composite {
 			return result;
 		}
 
+		/**
+		 * @param typesToDisplay
+		 *            the types that should be displayed.
+		 */
+		public void setTypesToDisplay(TreeDiffType[] typesToDisplay) {
+			this.typesToDisplay = typesToDisplay;
+		}
 	}
 
 	/**
@@ -1783,7 +1795,42 @@ public class TreeDiff extends Composite {
 
 		leftTreeViewer.refresh();
 		rightTreeViewer.refresh();
+		centerSash.redraw();
 		redraw();
+	}
+
+	/**
+	 * sets the side which will be considered as changed. For example, elements
+	 * that are present on the left side but not on the right side will be
+	 * considered as deleted if the changed side is set to
+	 * {@link TreeDiffSide#RIGHT} and as deleted if the changed side is set to
+	 * {@link TreeDiffSide#LEFT}. The changed side is set to
+	 * {@link TreeDiffSide#RIGHT} by default.
+	 * 
+	 * @param changedSide
+	 *            the changed side.
+	 */
+	public void setChangedSide(TreeDiffSide changedSide) {
+		this.changedSide = changedSide;
+		if (changedSide == TreeDiffSide.RIGHT) {
+
+			leftTreeDiffContentProvider.setTypesToDisplay(TreeDiffType.getValuesExcluding(TreeDiffType.ADD));
+			rightTreeDiffContentProvider.setTypesToDisplay(TreeDiffType.getValuesExcluding(TreeDiffType.DELETE));
+
+		} else {
+
+			leftTreeDiffContentProvider.setTypesToDisplay(TreeDiffType.getValuesExcluding(TreeDiffType.DELETE));
+			rightTreeDiffContentProvider.setTypesToDisplay(TreeDiffType.getValuesExcluding(TreeDiffType.ADD));
+		}
+		refreshData();
+	}
+
+	/**
+	 * @return the side that is considered as changed.
+	 * @see #setChangedSide(TreeDiffSide)
+	 */
+	public TreeDiffSide getChangedSide() {
+		return changedSide;
 	}
 
 }

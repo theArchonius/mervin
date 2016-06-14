@@ -17,5 +17,16 @@ package at.bitandart.zoubek.mervin.swt.diff.tree;
  *
  */
 public enum TreeDiffSide {
-	LEFT, RIGHT
+	LEFT, RIGHT;
+
+	/**
+	 * @return the opposite side.
+	 */
+	public TreeDiffSide getOpposite() {
+		if (this == LEFT) {
+			return RIGHT;
+		} else {
+			return LEFT;
+		}
+	}
 }
