@@ -23,6 +23,7 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
@@ -251,17 +252,6 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 	protected boolean showLayoutChanges = SHOW_LAYOUT_CHANGES_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getUnifiedModelMap()
-	 * <em>Unified Model Map</em>}' attribute. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @see #getUnifiedModelMap()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final HashBiMap<Object, Object> UNIFIED_MODEL_MAP_EDEFAULT = null;
-
-	/**
 	 * The cached value of the '{@link #getUnifiedModelMap()
 	 * <em>Unified Model Map</em>}' attribute. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
@@ -270,7 +260,7 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 	 * @generated
 	 * @ordered
 	 */
-	protected HashBiMap<Object, Object> unifiedModelMap = UNIFIED_MODEL_MAP_EDEFAULT;
+	protected HashBiMap<EObject, EObject> unifiedModelMap;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -595,7 +585,7 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 	 * 
 	 * @generated
 	 */
-	public HashBiMap<Object, Object> getUnifiedModelMap() {
+	public HashBiMap<EObject, EObject> getUnifiedModelMap() {
 		return unifiedModelMap;
 	}
 
@@ -604,8 +594,8 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 	 * 
 	 * @generated
 	 */
-	public void setUnifiedModelMap(HashBiMap<Object, Object> newUnifiedModelMap) {
-		HashBiMap<Object, Object> oldUnifiedModelMap = unifiedModelMap;
+	public void setUnifiedModelMap(HashBiMap<EObject, EObject> newUnifiedModelMap) {
+		HashBiMap<EObject, EObject> oldUnifiedModelMap = unifiedModelMap;
 		unifiedModelMap = newUnifiedModelMap;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.MODEL_REVIEW__UNIFIED_MODEL_MAP,
@@ -730,7 +720,7 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 			setShowLayoutChanges((Boolean) newValue);
 			return;
 		case ModelReviewPackage.MODEL_REVIEW__UNIFIED_MODEL_MAP:
-			setUnifiedModelMap((HashBiMap<Object, Object>) newValue);
+			setUnifiedModelMap((HashBiMap<EObject, EObject>) newValue);
 			return;
 		}
 		super.eSet(featureID, newValue);
@@ -778,7 +768,7 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 			setShowLayoutChanges(SHOW_LAYOUT_CHANGES_EDEFAULT);
 			return;
 		case ModelReviewPackage.MODEL_REVIEW__UNIFIED_MODEL_MAP:
-			setUnifiedModelMap(UNIFIED_MODEL_MAP_EDEFAULT);
+			setUnifiedModelMap((HashBiMap<EObject, EObject>) null);
 			return;
 		}
 		super.eUnset(featureID);
@@ -815,8 +805,7 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 		case ModelReviewPackage.MODEL_REVIEW__SHOW_LAYOUT_CHANGES:
 			return showLayoutChanges != SHOW_LAYOUT_CHANGES_EDEFAULT;
 		case ModelReviewPackage.MODEL_REVIEW__UNIFIED_MODEL_MAP:
-			return UNIFIED_MODEL_MAP_EDEFAULT == null ? unifiedModelMap != null
-					: !UNIFIED_MODEL_MAP_EDEFAULT.equals(unifiedModelMap);
+			return unifiedModelMap != null;
 		}
 		return super.eIsSet(featureID);
 	}

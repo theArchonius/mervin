@@ -392,11 +392,12 @@ public interface ModelReview extends EObject {
 	 * @return the value of the '<em>Unified Model Map</em>' attribute.
 	 * @see #setUnifiedModelMap(HashBiMap)
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelReview_UnifiedModelMap()
-	 * @model dataType="at.bitandart.zoubek.mervin.model.modelreview.HashBiMap"
+	 * @model dataType=
+	 *        "at.bitandart.zoubek.mervin.model.modelreview.HashBiMap<org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject>"
 	 *        transient="true"
 	 * @generated
 	 */
-	HashBiMap<Object, Object> getUnifiedModelMap();
+	HashBiMap<EObject, EObject> getUnifiedModelMap();
 
 	/**
 	 * Sets the value of the '
@@ -409,6 +410,6 @@ public interface ModelReview extends EObject {
 	 * @see #getUnifiedModelMap()
 	 * @generated
 	 */
-	void setUnifiedModelMap(HashBiMap<Object, Object> value);
+	void setUnifiedModelMap(HashBiMap<EObject, EObject> value);
 
 } // ModelReview

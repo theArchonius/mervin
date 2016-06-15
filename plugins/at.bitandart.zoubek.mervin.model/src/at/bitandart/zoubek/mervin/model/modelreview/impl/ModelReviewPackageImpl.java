@@ -1265,6 +1265,8 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 				.getEPackage(NotationPackage.eNS_URI);
 
 		// Create type parameters
+		addETypeParameter(hashBiMapEDataType, "T");
+		addETypeParameter(hashBiMapEDataType, "U");
 
 		// Set bounds for type parameters
 
@@ -1316,9 +1318,13 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		initEAttribute(getModelReview_ShowLayoutChanges(), ecorePackage.getEBoolean(), "showLayoutChanges", "true", 0,
 				1, ModelReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
 				!IS_DERIVED, IS_ORDERED);
-		initEAttribute(getModelReview_UnifiedModelMap(), this.getHashBiMap(), "unifiedModelMap", null, 0, 1,
-				ModelReview.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
-				!IS_DERIVED, IS_ORDERED);
+		EGenericType g1 = createEGenericType(this.getHashBiMap());
+		EGenericType g2 = createEGenericType(ecorePackage.getEObject());
+		g1.getETypeArguments().add(g2);
+		g2 = createEGenericType(ecorePackage.getEObject());
+		g1.getETypeArguments().add(g2);
+		initEAttribute(getModelReview_UnifiedModelMap(), g1, "unifiedModelMap", null, 0, 1, ModelReview.class,
+				IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(patchSetEClass, PatchSet.class, "PatchSet", !IS_ABSTRACT, !IS_INTERFACE,
 				IS_GENERATED_INSTANCE_CLASS);
@@ -1348,8 +1354,8 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		initEReference(getPatchSet_DiagramComparison(), theComparePackage.getComparison(), null, "diagramComparison",
 				null, 0, 1, PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
 				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		EGenericType g1 = createEGenericType(ecorePackage.getEMap());
-		EGenericType g2 = createEGenericType(theEcorePackage.getEObject());
+		g1 = createEGenericType(ecorePackage.getEMap());
+		g2 = createEGenericType(theEcorePackage.getEObject());
 		g1.getETypeArguments().add(g2);
 		g2 = createEGenericType(ecorePackage.getEIntegerObject());
 		g1.getETypeArguments().add(g2);
@@ -1542,8 +1548,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 
 		// Initialize data types
 		initEDataType(vectorEDataType, Vector.class, "Vector", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
-		initEDataType(hashBiMapEDataType, HashBiMap.class, "HashBiMap", !IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS,
-				"com.google.common.collect.HashBiMap<EObject, EObject>");
+		initEDataType(hashBiMapEDataType, HashBiMap.class, "HashBiMap", !IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);
