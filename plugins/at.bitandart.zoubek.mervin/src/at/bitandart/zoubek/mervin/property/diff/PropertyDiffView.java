@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2016 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -157,6 +157,17 @@ public class PropertyDiffView extends ModelReviewEditorTrackingView {
 			Object object = selectionIterator.next();
 			EObject selectedSemanticModelElement = diagramModelHelper.getSemanticModel(object);
 			View selectedNotationModelElement = diagramModelHelper.getNotationModel(object);
+
+			ModelReview currentModelReview = getCurrentModelReview();
+			if (currentModelReview != null) {
+
+				View originalNotationModelElement = (View) currentModelReview.getUnifiedModelMap().inverse()
+						.get(selectedNotationModelElement);
+
+				if (originalNotationModelElement != null) {
+					selectedNotationModelElement = originalNotationModelElement;
+				}
+			}
 
 			Match semanticModelMatch = comparison.getMatch(selectedSemanticModelElement);
 			Match notationModelMatch = comparison.getMatch(selectedNotationModelElement);
