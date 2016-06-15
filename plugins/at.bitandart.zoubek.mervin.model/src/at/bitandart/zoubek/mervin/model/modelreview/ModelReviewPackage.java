@@ -178,13 +178,22 @@ public interface ModelReviewPackage extends EPackage {
 	int MODEL_REVIEW__SHOW_LAYOUT_CHANGES = 10;
 
 	/**
+	 * The feature id for the '<em><b>Unified Model Map</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_REVIEW__UNIFIED_MODEL_MAP = 11;
+
+	/**
 	 * The number of structural features of the '<em>Model Review</em>' class.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_REVIEW_FEATURE_COUNT = 11;
+	int MODEL_REVIEW_FEATURE_COUNT = 12;
 
 	/**
 	 * The number of operations of the '<em>Model Review</em>' class. <!--
@@ -810,8 +819,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * <em>Diagram Resource</em>}' class. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
-	 *      DiagramResourceImpl
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.DiagramResourceImpl
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDiagramResource()
 	 * @generated
 	 */
@@ -925,8 +933,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * <em>Node Difference Overlay</em>}' class. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
-	 *      NodeDifferenceOverlayImpl
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.NodeDifferenceOverlayImpl
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getNodeDifferenceOverlay()
 	 * @generated
 	 */
@@ -984,8 +991,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * <em>Edge Difference Overlay</em>}' class. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
-	 *      EdgeDifferenceOverlayImpl
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.EdgeDifferenceOverlayImpl
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getEdgeDifferenceOverlay()
 	 * @generated
 	 */
@@ -1160,8 +1166,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * <em>Location Difference</em>}' class. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
-	 *      LocationDifferenceImpl
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.LocationDifferenceImpl
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getLocationDifference()
 	 * @generated
 	 */
@@ -1266,8 +1271,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * <em>State Difference</em>}' class. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
-	 *      StateDifferenceImpl
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.StateDifferenceImpl
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getStateDifference()
 	 * @generated
 	 */
@@ -1315,8 +1319,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * <em>Bendpoints Difference</em>}' class. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
-	 *      BendpointsDifferenceImpl
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.BendpointsDifferenceImpl
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getBendpointsDifference()
 	 * @generated
 	 */
@@ -1500,6 +1503,16 @@ public interface ModelReviewPackage extends EPackage {
 	int VECTOR = 23;
 
 	/**
+	 * The meta object id for the '<em>Hash Bi Map</em>' data type. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see com.google.common.collect.HashBiMap
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getHashBiMap()
+	 * @generated
+	 */
+	int HASH_BI_MAP = 24;
+
+	/**
 	 * Returns the meta object for class '
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview
 	 * <em>Model Review</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1648,6 +1661,19 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getModelReview_ShowLayoutChanges();
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getUnifiedModelMap
+	 * <em>Unified Model Map</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @return the meta object for the attribute '<em>Unified Model Map</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getUnifiedModelMap()
+	 * @see #getModelReview()
+	 * @generated
+	 */
+	EAttribute getModelReview_UnifiedModelMap();
 
 	/**
 	 * Returns the meta object for class '
@@ -2545,6 +2571,20 @@ public interface ModelReviewPackage extends EPackage {
 	EDataType getVector();
 
 	/**
+	 * Returns the meta object for data type '
+	 * {@link com.google.common.collect.HashBiMap <em>Hash Bi Map</em>}'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for data type '<em>Hash Bi Map</em>'.
+	 * @see com.google.common.collect.HashBiMap
+	 * @model instanceClass=
+	 *        "com.google.common.collect.HashBiMap<java.lang.Object, java.lang.Object>"
+	 *        serializeable="false"
+	 * @generated
+	 */
+	EDataType getHashBiMap();
+
+	/**
 	 * Returns the factory that creates the instances of the model. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
@@ -2574,8 +2614,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * <em>Model Review</em>}' class. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
 		 * 
-		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
-		 *      ModelReviewImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewImpl
 		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getModelReview()
 		 * @generated
 		 */
@@ -2671,6 +2710,14 @@ public interface ModelReviewPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute MODEL_REVIEW__SHOW_LAYOUT_CHANGES = eINSTANCE.getModelReview_ShowLayoutChanges();
+
+		/**
+		 * The meta object literal for the '<em><b>Unified Model Map</b></em>'
+		 * attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute MODEL_REVIEW__UNIFIED_MODEL_MAP = eINSTANCE.getModelReview_UnifiedModelMap();
 
 		/**
 		 * The meta object literal for the '
@@ -2884,8 +2931,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * <em>Diagram Patch</em>}' class. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
 		 * 
-		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
-		 *      DiagramPatchImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.DiagramPatchImpl
 		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDiagramPatch()
 		 * @generated
 		 */
@@ -3018,8 +3064,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * <em>Model Resource</em>}' class. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
 		 * 
-		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
-		 *      ModelResourceImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelResourceImpl
 		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getModelResource()
 		 * @generated
 		 */
@@ -3047,8 +3092,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * <em>Diagram Resource</em>}' class. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
 		 * 
-		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
-		 *      DiagramResourceImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.DiagramResourceImpl
 		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDiagramResource()
 		 * @generated
 		 */
@@ -3105,8 +3149,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * <em>Node Difference Overlay</em>}' class. <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * 
-		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
-		 *      NodeDifferenceOverlayImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.NodeDifferenceOverlayImpl
 		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getNodeDifferenceOverlay()
 		 * @generated
 		 */
@@ -3118,8 +3161,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * <em>Edge Difference Overlay</em>}' class. <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * 
-		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
-		 *      EdgeDifferenceOverlayImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.EdgeDifferenceOverlayImpl
 		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getEdgeDifferenceOverlay()
 		 * @generated
 		 */
@@ -3175,8 +3217,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * <em>Location Difference</em>}' class. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
 		 * 
-		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
-		 *      LocationDifferenceImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.LocationDifferenceImpl
 		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getLocationDifference()
 		 * @generated
 		 */
@@ -3196,8 +3237,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * <em>Size Difference</em>}' class. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
 		 * 
-		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
-		 *      SizeDifferenceImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.SizeDifferenceImpl
 		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getSizeDifference()
 		 * @generated
 		 */
@@ -3225,8 +3265,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * <em>State Difference</em>}' class. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
 		 * 
-		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
-		 *      StateDifferenceImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.StateDifferenceImpl
 		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getStateDifference()
 		 * @generated
 		 */
@@ -3246,8 +3285,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * <em>Bendpoints Difference</em>}' class. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
 		 * 
-		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
-		 *      BendpointsDifferenceImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.BendpointsDifferenceImpl
 		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getBendpointsDifference()
 		 * @generated
 		 */
@@ -3259,8 +3297,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * <em>Comment Link</em>}' class. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
 		 * 
-		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.
-		 *      CommentLinkImpl
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.CommentLinkImpl
 		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getCommentLink()
 		 * @generated
 		 */
@@ -3362,6 +3399,16 @@ public interface ModelReviewPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType VECTOR = eINSTANCE.getVector();
+
+		/**
+		 * The meta object literal for the '<em>Hash Bi Map</em>' data type.
+		 * <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @see com.google.common.collect.HashBiMap
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getHashBiMap()
+		 * @generated
+		 */
+		EDataType HASH_BI_MAP = eINSTANCE.getHashBiMap();
 
 	}
 

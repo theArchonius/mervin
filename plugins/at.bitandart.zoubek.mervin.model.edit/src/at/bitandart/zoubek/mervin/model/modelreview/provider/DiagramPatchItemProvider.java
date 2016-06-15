@@ -66,11 +66,11 @@ public class DiagramPatchItemProvider extends PatchItemProvider {
 	 * @generated
 	 */
 	protected void addNewDiagramResourcePropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(), getString("_UI_DiagramPatch_newDiagramResource_feature"),
-						getString("_UI_PropertyDescriptor_description", "_UI_DiagramPatch_newDiagramResource_feature",
-								"_UI_DiagramPatch_type"),
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_DiagramPatch_newDiagramResource_feature"),
+				getString("_UI_PropertyDescriptor_description", "_UI_DiagramPatch_newDiagramResource_feature",
+						"_UI_DiagramPatch_type"),
 				ModelReviewPackage.Literals.DIAGRAM_PATCH__NEW_DIAGRAM_RESOURCE, true, false, true, null, null, null));
 	}
 
@@ -81,11 +81,11 @@ public class DiagramPatchItemProvider extends PatchItemProvider {
 	 * @generated
 	 */
 	protected void addOldDiagramResourcePropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(), getString("_UI_DiagramPatch_oldDiagramResource_feature"),
-						getString("_UI_PropertyDescriptor_description", "_UI_DiagramPatch_oldDiagramResource_feature",
-								"_UI_DiagramPatch_type"),
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_DiagramPatch_oldDiagramResource_feature"),
+				getString("_UI_PropertyDescriptor_description", "_UI_DiagramPatch_oldDiagramResource_feature",
+						"_UI_DiagramPatch_type"),
 				ModelReviewPackage.Literals.DIAGRAM_PATCH__OLD_DIAGRAM_RESOURCE, true, false, true, null, null, null));
 	}
 

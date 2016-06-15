@@ -12,6 +12,7 @@
  */
 package at.bitandart.zoubek.mervin.model.modelreview;
 
+import com.google.common.collect.HashBiMap;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.compare.Comparison;
@@ -57,6 +58,9 @@ import org.eclipse.emf.ecore.EObject;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#isShowLayoutChanges
  * <em>Show Layout Changes</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getUnifiedModelMap
+ * <em>Unified Model Map</em>}</li>
  * </ul>
  *
  * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelReview()
@@ -375,5 +379,36 @@ public interface ModelReview extends EObject {
 	 * @generated
 	 */
 	void setShowLayoutChanges(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Unified Model Map</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Unified Model Map</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Unified Model Map</em>' attribute.
+	 * @see #setUnifiedModelMap(HashBiMap)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelReview_UnifiedModelMap()
+	 * @model dataType="at.bitandart.zoubek.mervin.model.modelreview.HashBiMap"
+	 *        transient="true"
+	 * @generated
+	 */
+	HashBiMap<Object, Object> getUnifiedModelMap();
+
+	/**
+	 * Sets the value of the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getUnifiedModelMap
+	 * <em>Unified Model Map</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Unified Model Map</em>' attribute.
+	 * @see #getUnifiedModelMap()
+	 * @generated
+	 */
+	void setUnifiedModelMap(HashBiMap<Object, Object> value);
 
 } // ModelReview
