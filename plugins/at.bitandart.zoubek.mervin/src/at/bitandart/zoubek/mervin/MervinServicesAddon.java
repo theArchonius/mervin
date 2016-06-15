@@ -25,6 +25,8 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
 import at.bitandart.zoubek.mervin.model.modelreview.User;
 import at.bitandart.zoubek.mervin.model.modelreview.impl.extended.DefaultModelReviewFactory;
 import at.bitandart.zoubek.mervin.patchset.history.ChangeSimilarityHistoryService;
+import at.bitandart.zoubek.mervin.patchset.history.DependencyDiffOrganizer;
+import at.bitandart.zoubek.mervin.patchset.history.IPatchSetHistoryEntryOrganizer;
 import at.bitandart.zoubek.mervin.patchset.history.ISimilarityHistoryService;
 import at.bitandart.zoubek.mervin.swt.comments.data.ICommentProvider;
 
@@ -70,6 +72,11 @@ public class MervinServicesAddon {
 		ChangeSimilarityHistoryService changeSimilarityHistoryService = ContextInjectionFactory
 				.make(ChangeSimilarityHistoryService.class, context);
 		context.set(ISimilarityHistoryService.class, changeSimilarityHistoryService);
+
+		// add default patch set history entry organizer
+		IPatchSetHistoryEntryOrganizer entryOrganizer = ContextInjectionFactory.make(DependencyDiffOrganizer.class,
+				context);
+		context.set(IPatchSetHistoryEntryOrganizer.class, entryOrganizer);
 
 		// add default user to the context
 		User defaultUser = defaultModelReviewFactory.createUser();

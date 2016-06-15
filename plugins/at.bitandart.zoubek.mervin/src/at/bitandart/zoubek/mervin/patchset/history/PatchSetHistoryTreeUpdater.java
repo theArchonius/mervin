@@ -11,6 +11,7 @@
 package at.bitandart.zoubek.mervin.patchset.history;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -38,12 +39,9 @@ import at.bitandart.zoubek.mervin.util.vis.HSB;
  */
 public class PatchSetHistoryTreeUpdater extends Thread {
 
-	private static final String CONTAINER_NAME_MODEL_DIFFERENCES = "Model Differences";
-
-	private static final String CONTAINER_NAME_DIAGRAM_DIFFERENCES = "Diagram Differences";
-
 	private ModelReview currentModelReview;
 	private ISimilarityHistoryService similarityHistoryService;
+	private IPatchSetHistoryEntryOrganizer organizer;
 	private TreeViewer historyTreeViewer;
 	private TreeViewerColumn labelColumn;
 	private ProgressPanel progressPanel;
@@ -55,6 +53,8 @@ public class PatchSetHistoryTreeUpdater extends Thread {
 	 *            the model review instance to retrieve the data from.
 	 * @param similarityHistoryService
 	 *            the similarity service instance used to calculate the history.
+	 * @param organizer
+	 *            the organizer used to group and order the history entries.
 	 * @param historyTreeViewer
 	 *            the tree viewer that contains the history data.
 	 * @param labelColumn
@@ -67,11 +67,13 @@ public class PatchSetHistoryTreeUpdater extends Thread {
 	 *            panel is shown or hidden.
 	 */
 	public PatchSetHistoryTreeUpdater(ModelReview currentModelReview,
-			ISimilarityHistoryService similarityHistoryService, TreeViewer historyTreeViewer,
-			TreeViewerColumn labelColumn, ProgressPanel progressPanel, Composite mainPanel) {
+			ISimilarityHistoryService similarityHistoryService, IPatchSetHistoryEntryOrganizer organizer,
+			TreeViewer historyTreeViewer, TreeViewerColumn labelColumn, ProgressPanel progressPanel,
+			Composite mainPanel) {
 		super();
 		this.currentModelReview = currentModelReview;
 		this.similarityHistoryService = similarityHistoryService;
+		this.organizer = organizer;
 		this.historyTreeViewer = historyTreeViewer;
 		this.labelColumn = labelColumn;
 		this.progressPanel = progressPanel;
@@ -121,19 +123,19 @@ public class PatchSetHistoryTreeUpdater extends Thread {
 		// treat the right patch set as the "active" patch set
 		PatchSet rightPatchSet = currentModelReview.getRightPatchSet();
 
-		final List<Object> historyData = new ArrayList<Object>(2);
+		final Collection<Object> historyData;
 
 		if (rightPatchSet != null) {
 
 			List<IPatchSetHistoryEntry<Diff, Double>> modelHistoryEntries = similarityHistoryService
 					.createModelEntries(rightPatchSet, patchSets);
-			historyData.add(new NamedHistoryEntryContainer(CONTAINER_NAME_MODEL_DIFFERENCES, modelHistoryEntries));
 
 			List<IPatchSetHistoryEntry<Diff, Double>> diagramHistoryEntries = similarityHistoryService
 					.createDiagramEntries(rightPatchSet, patchSets);
-			historyData.add(new NamedHistoryEntryContainer(CONTAINER_NAME_DIAGRAM_DIFFERENCES, diagramHistoryEntries));
+			historyData = organizer.groupPatchSetHistoryEntries(modelHistoryEntries, diagramHistoryEntries);
 
 		} else {
+			historyData = new ArrayList<Object>(1);
 			historyData.add("Please select an active patch set (right side of the comparison is the active patch set)");
 		}
 

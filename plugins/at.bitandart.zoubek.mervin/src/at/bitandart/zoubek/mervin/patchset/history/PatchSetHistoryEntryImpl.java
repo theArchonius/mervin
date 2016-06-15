@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2016 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.patchset.history;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,15 +23,14 @@ import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
  * @author Florian Zoubek
  *
  */
-public class PatchSetHistoryEntryImpl<O, V> implements
-		IPatchSetHistoryEntry<O, V> {
+public class PatchSetHistoryEntryImpl<O, V> extends AbstractHistoryEntry<O, V> {
 
 	private O entryObject;
 
 	private Map<PatchSet, V> valueMap;
-	
+
 	public PatchSetHistoryEntryImpl(O entryObject) {
-		super();
+		super(new ArrayList<IPatchSetHistoryEntry<?, ?>>());
 		this.entryObject = entryObject;
 		valueMap = new HashMap<PatchSet, V>();
 	}
@@ -59,5 +59,4 @@ public class PatchSetHistoryEntryImpl<O, V> implements
 	public void setValue(PatchSet patchSet, V value) {
 		valueMap.put(patchSet, value);
 	}
-
 }
