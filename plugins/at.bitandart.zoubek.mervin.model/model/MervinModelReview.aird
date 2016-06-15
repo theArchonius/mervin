@@ -2840,7 +2840,7 @@
           <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EDataType']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EDataType']"/>
-        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_LxJNUDLKEea_XKWHiGEewg" name="com.google.common.collect.HashBiMap&lt;EObject, EObject>" tooltipText="">
+        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_LxJNUDLKEea_XKWHiGEewg" name="com.google.common.collect.HashBiMap" tooltipText="">
           <target xmi:type="ecore:EDataType" href="MervinModelReview.ecore#//HashBiMap"/>
           <semanticElements xmi:type="ecore:EDataType" href="MervinModelReview.ecore#//HashBiMap"/>
           <decorations xmi:type="viewpoint:Decoration" xmi:id="_LxLCgDLKEea_XKWHiGEewg">
