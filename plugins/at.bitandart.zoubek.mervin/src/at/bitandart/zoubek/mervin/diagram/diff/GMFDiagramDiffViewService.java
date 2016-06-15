@@ -173,6 +173,17 @@ public class GMFDiagramDiffViewService {
 	private void updateDiagramNodes(Diagram workspaceDiagram, ModelReview modelReview, EditDomain editDomain,
 			TransactionalEditingDomain transactionalEditingDomain, PreferencesHint preferencesHint) {
 
+		// create/clear old unified model map
+		HashBiMap<EObject, EObject> unifiedModelMap = modelReview.getUnifiedModelMap();
+		if (unifiedModelMap == null) {
+
+			unifiedModelMap = HashBiMap.create();
+			modelReview.setUnifiedModelMap(unifiedModelMap);
+
+		} else {
+			unifiedModelMap.clear();
+		}
+
 		// remove old diagram nodes
 		EList<?> children = workspaceDiagram.getChildren();
 		if (!children.isEmpty()) {
@@ -256,6 +267,8 @@ public class GMFDiagramDiffViewService {
 						reviewFactory, modelReview));
 
 				executeCommand(compositeCommand.reduce(), editDomain);
+
+				modelReview.getUnifiedModelMap().putAll(copyMap);
 			}
 		}
 
