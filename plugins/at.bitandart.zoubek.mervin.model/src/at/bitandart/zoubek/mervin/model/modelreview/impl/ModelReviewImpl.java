@@ -16,12 +16,14 @@ import at.bitandart.zoubek.mervin.model.modelreview.Comment;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
+import com.google.common.collect.HashBiMap;
 import java.util.Collection;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
@@ -69,6 +71,9 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewImpl#isShowLayoutChanges
  * <em>Show Layout Changes</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewImpl#getUnifiedModelMap
+ * <em>Unified Model Map</em>}</li>
  * </ul>
  *
  * @generated
@@ -245,6 +250,17 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 	 * @ordered
 	 */
 	protected boolean showLayoutChanges = SHOW_LAYOUT_CHANGES_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getUnifiedModelMap()
+	 * <em>Unified Model Map</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #getUnifiedModelMap()
+	 * @generated
+	 * @ordered
+	 */
+	protected HashBiMap<EObject, EObject> unifiedModelMap;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -569,6 +585,28 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 	 * 
 	 * @generated
 	 */
+	public HashBiMap<EObject, EObject> getUnifiedModelMap() {
+		return unifiedModelMap;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setUnifiedModelMap(HashBiMap<EObject, EObject> newUnifiedModelMap) {
+		HashBiMap<EObject, EObject> oldUnifiedModelMap = unifiedModelMap;
+		unifiedModelMap = newUnifiedModelMap;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.MODEL_REVIEW__UNIFIED_MODEL_MAP,
+					oldUnifiedModelMap, unifiedModelMap));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
@@ -631,6 +669,8 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 			return isShowDeletions();
 		case ModelReviewPackage.MODEL_REVIEW__SHOW_LAYOUT_CHANGES:
 			return isShowLayoutChanges();
+		case ModelReviewPackage.MODEL_REVIEW__UNIFIED_MODEL_MAP:
+			return getUnifiedModelMap();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -679,6 +719,9 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 		case ModelReviewPackage.MODEL_REVIEW__SHOW_LAYOUT_CHANGES:
 			setShowLayoutChanges((Boolean) newValue);
 			return;
+		case ModelReviewPackage.MODEL_REVIEW__UNIFIED_MODEL_MAP:
+			setUnifiedModelMap((HashBiMap<EObject, EObject>) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -724,6 +767,9 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 		case ModelReviewPackage.MODEL_REVIEW__SHOW_LAYOUT_CHANGES:
 			setShowLayoutChanges(SHOW_LAYOUT_CHANGES_EDEFAULT);
 			return;
+		case ModelReviewPackage.MODEL_REVIEW__UNIFIED_MODEL_MAP:
+			setUnifiedModelMap((HashBiMap<EObject, EObject>) null);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -758,6 +804,8 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 			return showDeletions != SHOW_DELETIONS_EDEFAULT;
 		case ModelReviewPackage.MODEL_REVIEW__SHOW_LAYOUT_CHANGES:
 			return showLayoutChanges != SHOW_LAYOUT_CHANGES_EDEFAULT;
+		case ModelReviewPackage.MODEL_REVIEW__UNIFIED_MODEL_MAP:
+			return unifiedModelMap != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -783,6 +831,8 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 		result.append(showDeletions);
 		result.append(", showLayoutChanges: ");
 		result.append(showLayoutChanges);
+		result.append(", unifiedModelMap: ");
+		result.append(unifiedModelMap);
 		result.append(')');
 		return result.toString();
 	}

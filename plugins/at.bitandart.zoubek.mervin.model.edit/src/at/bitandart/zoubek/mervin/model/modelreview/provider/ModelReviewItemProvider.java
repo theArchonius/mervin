@@ -77,6 +77,7 @@ public class ModelReviewItemProvider extends ItemProviderAdapter implements IEdi
 			addShowModificationsPropertyDescriptor(object);
 			addShowDeletionsPropertyDescriptor(object);
 			addShowLayoutChangesPropertyDescriptor(object);
+			addUnifiedModelMapPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -240,6 +241,22 @@ public class ModelReviewItemProvider extends ItemProviderAdapter implements IEdi
 	}
 
 	/**
+	 * This adds a property descriptor for the Unified Model Map feature. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addUnifiedModelMapPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_ModelReview_unifiedModelMap_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_ModelReview_unifiedModelMap_feature",
+								"_UI_ModelReview_type"),
+						ModelReviewPackage.Literals.MODEL_REVIEW__UNIFIED_MODEL_MAP, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+	}
+
+	/**
 	 * This specifies how to implement {@link #getChildren} and is used to
 	 * deduce an appropriate feature for an
 	 * {@link org.eclipse.emf.edit.command.AddCommand},
@@ -314,6 +331,7 @@ public class ModelReviewItemProvider extends ItemProviderAdapter implements IEdi
 		case ModelReviewPackage.MODEL_REVIEW__SHOW_MODIFICATIONS:
 		case ModelReviewPackage.MODEL_REVIEW__SHOW_DELETIONS:
 		case ModelReviewPackage.MODEL_REVIEW__SHOW_LAYOUT_CHANGES:
+		case ModelReviewPackage.MODEL_REVIEW__UNIFIED_MODEL_MAP:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 			return;
 		case ModelReviewPackage.MODEL_REVIEW__PATCH_SETS:

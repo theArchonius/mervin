@@ -80,11 +80,11 @@ public class EdgeDifferenceOverlayItemProvider extends ItemProviderAdapter imple
 	 * @generated
 	 */
 	protected void addLinkedViewPropertyDescriptor(Object object) {
-		itemPropertyDescriptors
-				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
-						getResourceLocator(), getString("_UI_DifferenceOverlay_linkedView_feature"),
-						getString("_UI_PropertyDescriptor_description", "_UI_DifferenceOverlay_linkedView_feature",
-								"_UI_DifferenceOverlay_type"),
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_DifferenceOverlay_linkedView_feature"),
+				getString("_UI_PropertyDescriptor_description", "_UI_DifferenceOverlay_linkedView_feature",
+						"_UI_DifferenceOverlay_type"),
 				ModelReviewPackage.Literals.DIFFERENCE_OVERLAY__LINKED_VIEW, true, false, true, null, null, null));
 	}
 
