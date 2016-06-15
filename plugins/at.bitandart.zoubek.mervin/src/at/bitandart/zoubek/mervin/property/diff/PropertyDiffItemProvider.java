@@ -293,13 +293,13 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 			rightList = (EList<?>) rightValue;
 		}
 
-		if (rightList == null || rightList.isEmpty()) {
+		if ((rightList == null || rightList.isEmpty()) && leftList != null) {
 
 			/* only the left list contains values, so simply add all of them */
 			addAllRemainingFeatureEntries(listEntry, leftList.listIterator(), TreeDiffSide.LEFT, comparison, feature,
 					featureDiffs);
 
-		} else if (leftList == null || leftList.isEmpty()) {
+		} else if ((leftList == null || leftList.isEmpty()) && rightList != null) {
 
 			/* only the right list contains values, so simply add all of them */
 			addAllRemainingFeatureEntries(listEntry, rightList.listIterator(), TreeDiffSide.RIGHT, comparison, feature,

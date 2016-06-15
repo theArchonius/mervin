@@ -13,6 +13,7 @@ package at.bitandart.zoubek.mervin.diagram.diff;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 import javax.inject.Inject;
 
@@ -23,8 +24,14 @@ import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
@@ -196,6 +203,7 @@ public class GMFDiagramDiffViewService {
 		}
 
 		// add children for each diagram
+		Comparison diagramComparison = modelReview.getSelectedDiagramComparison();
 
 		children = workspaceDiagram.getChildren();
 		for (Object workspaceChild : children) {
@@ -217,7 +225,27 @@ public class GMFDiagramDiffViewService {
 				Copier copier = new Copier();
 				Collection<Object> childrenAndEdgesCopy = copier.copyAll(childrenAndEdges);
 				copier.copyReferences();
+
 				HashBiMap<EObject, EObject> copyMap = HashBiMap.create(copier);
+
+				/*
+				 * create copies of the deleted elements and merge them into one
+				 * set of views to add to the unified diagram
+				 */
+				Match diagramMatch = diagramComparison.getMatch(diagram);
+				if (diagramMatch != null) {
+					Diagram matchedDiagram = safeCast(getOldValue(diagramMatch), Diagram.class);
+					if (matchedDiagram != null) {
+						Copier viewCopier = new Copier();
+						Iterable<Diff> allDifferences = diagramMatch.getAllDifferences();
+						for (Diff diff : allDifferences) {
+							if (needsCopy(diff, copyMap)) {
+								copyDiff(diagramComparison, childrenAndEdgesCopy, copyMap, viewCopier, diff);
+							}
+						}
+						viewCopier.copyReferences();
+					}
+				}
 
 				List<Object> childrenCopy = new LinkedList<Object>(childrenAndEdgesCopy);
 				compositeCommand.add(new AddDiagramEdgesAndNodesCommand(transactionalEditingDomain, workspaceDiagram,
@@ -236,6 +264,185 @@ public class GMFDiagramDiffViewService {
 				new ModelReviewVisibilityState(modelReview, true)));
 
 		executeCommand(compositeCommand, editDomain);
+	}
+
+	/**
+	 * determines if the value of the given {@link Diff} must be copied into the
+	 * given copy map. A value must be copied if the {@link Diff} represents a
+	 * deletion and the value has not been copied yet.
+	 * 
+	 * @param diff
+	 *            the diff to check.
+	 * @param copyMap
+	 *            the copy map that may contain the value of the diff.
+	 * @return true if the value of the given diff must be copied into the given
+	 *         copy map, false otherwise.
+	 */
+	private boolean needsCopy(Diff diff, HashBiMap<EObject, EObject> copyMap) {
+		Object value = MatchUtil.getValue(diff);
+		return diff.getKind() == DifferenceKind.DELETE && !copyMap.containsKey(value);
+	}
+
+	/**
+	 * copies the value of the given diff into the given copy map and view
+	 * collection if it is a view. Any Views in {@link Diff}s that require the
+	 * given {@link Diff} will also be copied if necessary. The copied view will
+	 * also placed into the corresponding copy of the matched new container at
+	 * the nearest insertion point. The new container of the view must be a
+	 * diagram or part of the copied objects, otherwise the value will not be
+	 * copied.
+	 * 
+	 * @param diagramComparison
+	 *            the comparison containing the {@link Diff}
+	 * @param childrenAndEdgesCopy
+	 *            the collection of copied views.
+	 * @param copyMap
+	 *            the bidirectional map that links the original model elements
+	 *            to the copied elements.
+	 * @param viewCopier
+	 *            the copier used to copy the object,
+	 *            {@link Copier#copyReferences()} must be invoked by the caller
+	 *            if it is desired.
+	 * @param diff
+	 *            the {@link Diff} whose value should be copied.
+	 */
+	private void copyDiff(Comparison diagramComparison, Collection<Object> childrenAndEdgesCopy,
+			HashBiMap<EObject, EObject> copyMap, Copier viewCopier, Diff diff) {
+
+		/* copy diffs that require the given diff */
+		EList<Diff> requiredByDiffs = diff.getRequiredBy();
+		for (Diff requiredDiff : requiredByDiffs) {
+			if (needsCopy(requiredDiff, copyMap)) {
+				copyDiff(diagramComparison, childrenAndEdgesCopy, copyMap, viewCopier, requiredDiff);
+			}
+		}
+
+		/* Copy the view, if possible */
+		Object value = MatchUtil.getValue(diff);
+		if (value instanceof View) {
+
+			View node = (View) value;
+			EObject oldContainer = node.eContainer();
+			Match containerMatch = diagramComparison.getMatch(oldContainer);
+			EReference containmentFeature = node.eContainmentFeature();
+
+			/*
+			 * the copy must be contained in a known (and copied) container, if
+			 * the container is unknown, ignore it.
+			 */
+			if (containerMatch != null) {
+
+				EObject newContainer = getNewValue(containerMatch);
+
+				/* the diagram is not part of the copy map */
+				if (newContainer instanceof Diagram || copyMap.containsKey(newContainer)) {
+
+					EObject containerCopy = copyMap.get(newContainer);
+					View copiedView = (View) viewCopier.copy(node);
+
+					if (containerCopy != null && containerCopy.eClass().getEReferences().contains(containmentFeature)) {
+
+						/*
+						 * Insert the copied element into the copy of the
+						 * matched container
+						 */
+
+						if (containmentFeature.isMany()) {
+
+							/*
+							 * Multi-valued feature, insert at the closest
+							 * original index
+							 */
+
+							@SuppressWarnings("unchecked")
+							EList<EObject> oldContainerContent = (EList<EObject>) oldContainer.eGet(containmentFeature);
+							int oldIndex = oldContainerContent.indexOf(node);
+							int newIndex = 0;
+							@SuppressWarnings("unchecked")
+							EList<EObject> newContainerContent = (EList<EObject>) newContainer.eGet(containmentFeature);
+
+							/*
+							 * determine the new index by finding the index of
+							 * the first previous unchanged element.
+							 */
+							ListIterator<EObject> listIterator = oldContainerContent.listIterator(oldIndex);
+							while (listIterator.hasPrevious()) {
+								EObject previous = listIterator.previous();
+								Match match = diagramComparison.getMatch(previous);
+								EObject newValue = getNewValue(match);
+								if (newValue != null) {
+									newIndex = newContainerContent.indexOf(newValue) + 1;
+									break;
+								}
+							}
+
+							@SuppressWarnings("unchecked")
+							EList<EObject> copiedContainerContent = (EList<EObject>) containerCopy
+									.eGet(containmentFeature);
+
+							copiedContainerContent.add(newIndex, copiedView);
+
+						} else {
+
+							/*
+							 * single-valued feature, simply set it
+							 */
+							containerCopy.eSet(containmentFeature, copiedView);
+						}
+					}
+					if (newContainer instanceof Diagram) {
+						/*
+						 * if the container is a diagram, add it to the
+						 * collection instead of the container
+						 */
+						childrenAndEdgesCopy.add(copiedView);
+					}
+					copyMap.putAll(viewCopier);
+				}
+
+			}
+		}
+	}
+
+	/**
+	 * convenience method to get the "old" value of a match.
+	 * 
+	 * @param match
+	 *            the match containing the value.
+	 * @return the old value of the given match.
+	 */
+	private EObject getOldValue(Match match) {
+		return match.getRight();
+	}
+
+	/**
+	 * 
+	 * convenience method to get the "new" value of a match.
+	 * 
+	 * @param match
+	 *            the match containing the value.
+	 * @return the new value of the given match.
+	 */
+	private EObject getNewValue(Match match) {
+		return match.getLeft();
+	}
+
+	/**
+	 * convenience method that casts the given object to the given type if
+	 * possible.
+	 * 
+	 * @param obj
+	 *            the object to cast.
+	 * @param type
+	 *            the type to cast to.
+	 * @return the casted object or null if the object could not be cast to that
+	 *         object or the object was null.
+	 */
+	private <T> T safeCast(Object obj, Class<T> type) {
+		if (type.isInstance(obj)) {
+			return type.cast(obj);
+		}
+		return null;
 	}
 
 	private List<Edge> filterEdges(List<Object> elements) {
