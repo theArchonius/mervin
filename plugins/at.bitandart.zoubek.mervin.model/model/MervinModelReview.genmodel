@@ -29,6 +29,7 @@
       <genEnumLiterals ecoreEnumLiteral="MervinModelReview.ecore#//DimensionChange/EQUAL"/>
     </genEnums>
     <genDataTypes ecoreDataType="MervinModelReview.ecore#//Vector"/>
+    <genDataTypes ecoreDataType="MervinModelReview.ecore#//HashBiMap"/>
     <genClasses ecoreClass="MervinModelReview.ecore#//ModelReview">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//ModelReview/id"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//ModelReview/patchSets"/>
@@ -41,6 +42,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//ModelReview/showModifications"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//ModelReview/showDeletions"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//ModelReview/showLayoutChanges"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//ModelReview/unifiedModelMap"/>
     </genClasses>
     <genClasses ecoreClass="MervinModelReview.ecore#//PatchSet">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//PatchSet/id"/>
