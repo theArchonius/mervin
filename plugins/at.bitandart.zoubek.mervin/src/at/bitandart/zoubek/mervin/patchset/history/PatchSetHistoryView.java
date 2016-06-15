@@ -79,6 +79,8 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 	@Inject
 	private IReviewHighlightService highlightService;
 
+	private IPatchSetHistoryEntryOrganizer entryOrganizer;
+
 	// JFace Viewers
 
 	/**
@@ -114,6 +116,11 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 	public PatchSetHistoryView() {
 		patchSetHistoryViewUpdater = new UpdatePatchSetHistoryViewAdapter();
 
+	}
+
+	@Inject
+	public void setEntryOrganizer(IPatchSetHistoryEntryOrganizer entryOrganizer) {
+		this.entryOrganizer = entryOrganizer;
 	}
 
 	@PostConstruct
@@ -202,7 +209,7 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 				}
 
 				Thread updateThread = new PatchSetHistoryTreeUpdater(currentModelReview, similarityHistoryService,
-						historyTreeViewer, labelColumn, progressPanel, mainPanel);
+						entryOrganizer, historyTreeViewer, labelColumn, progressPanel, mainPanel);
 
 				updateThread.start();
 
@@ -248,7 +255,7 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 	 */
 	public class PatchSetHistoryContentProvider implements ITreeContentProvider {
 
-		private List<NamedHistoryEntryContainer> cachedContainers = new LinkedList<NamedHistoryEntryContainer>();
+		private List<IPatchSetHistoryEntry<?, ?>> cachedContainers = new LinkedList<IPatchSetHistoryEntry<?, ?>>();
 
 		@Override
 		public void dispose() {
@@ -263,8 +270,8 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 
 			Object[] elements = getElements(newInput);
 			for (Object object : elements) {
-				if (object instanceof NamedHistoryEntryContainer) {
-					cachedContainers.add((NamedHistoryEntryContainer) object);
+				if (object instanceof IPatchSetHistoryEntry<?, ?>) {
+					cachedContainers.add((IPatchSetHistoryEntry<?, ?>) object);
 				}
 			}
 		}
@@ -279,16 +286,16 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 
 		@Override
 		public Object[] getChildren(Object parentElement) {
-			if (parentElement instanceof NamedHistoryEntryContainer) {
-				return ((NamedHistoryEntryContainer) parentElement).getEntries().toArray();
+			if (parentElement instanceof IPatchSetHistoryEntry<?, ?>) {
+				return ((IPatchSetHistoryEntry<?, ?>) parentElement).getSubEntries().toArray();
 			}
 			return new Object[0];
 		}
 
 		@Override
 		public Object getParent(Object element) {
-			for (NamedHistoryEntryContainer container : cachedContainers) {
-				if (container.getEntries().contains(element)) {
+			for (IPatchSetHistoryEntry<?, ?> container : cachedContainers) {
+				if (container.getSubEntries().contains(element)) {
 					return container;
 				}
 			}
@@ -297,7 +304,10 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 
 		@Override
 		public boolean hasChildren(Object element) {
-			return element instanceof NamedHistoryEntryContainer;
+			if (element instanceof IPatchSetHistoryEntry<?, ?>) {
+				return !((IPatchSetHistoryEntry<?, ?>) element).getSubEntries().isEmpty();
+			}
+			return false;
 		}
 
 	}
@@ -335,7 +345,8 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 
 				NamedHistoryEntryContainer container = (NamedHistoryEntryContainer) element;
 				text.append(" ");
-				text.append(MessageFormat.format("({0})", container.entries.size()), StyledString.COUNTER_STYLER);
+				text.append(MessageFormat.format("({0})", countTotalNumberOfEntries(container)),
+						StyledString.COUNTER_STYLER);
 
 			}
 
@@ -345,6 +356,22 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 
 			super.update(cell);
 
+		}
+
+		/**
+		 * counts the total number of child entries of the given entry.
+		 * 
+		 * @param entry
+		 *            the entry to count the child entries for.
+		 * @return the number of child entries.
+		 */
+		private int countTotalNumberOfEntries(IPatchSetHistoryEntry<?, ?> entry) {
+			List<IPatchSetHistoryEntry<?, ?>> subEntries = entry.getSubEntries();
+			int size = subEntries.size();
+			for (IPatchSetHistoryEntry<?, ?> subEntry : subEntries) {
+				size += countTotalNumberOfEntries(subEntry);
+			}
+			return size;
 		}
 
 		/**
@@ -384,7 +411,7 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 			}
 
 			if (element instanceof NamedHistoryEntryContainer) {
-				for (IPatchSetHistoryEntry<?, ?> entry : ((NamedHistoryEntryContainer) element).getEntries()) {
+				for (Object entry : ((NamedHistoryEntryContainer) element).getSubEntries()) {
 					if (isHighlighted(entry, highlightedElements)) {
 						return true;
 					}

@@ -339,7 +339,7 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 
 		EMFCompare comparator = EMFCompare.builder().build();
 
-		DefaultComparisonScope scope = new DefaultComparisonScope(oldResourceSet, newResourceSet, null);
+		DefaultComparisonScope scope = new DefaultComparisonScope(newResourceSet, oldResourceSet, null);
 		scope.setResourceSetContentFilter(new Predicate<Resource>() {
 
 			@Override
@@ -378,7 +378,7 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 
 		EMFCompare comparator = EMFCompare.builder().build();
 
-		DefaultComparisonScope scope = new DefaultComparisonScope(oldResourceSet, newResourceSet, null);
+		DefaultComparisonScope scope = new DefaultComparisonScope(newResourceSet, oldResourceSet, null);
 		scope.setResourceSetContentFilter(new Predicate<Resource>() {
 
 			@Override

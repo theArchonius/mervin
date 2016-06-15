@@ -12,40 +12,29 @@ package at.bitandart.zoubek.mervin.patchset.history;
 
 import java.util.List;
 
-import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
-
 /**
- * A named container for {@link IPatchSetHistoryEntry}s for use within the UI.
+ * Abstract base class for {@link IPatchSetHistoryEntry}s that provides the
+ * functionality to store a given list of the subentries.
  * 
  * @author Florian Zoubek
  *
+ * @param <O>
+ *            the type of the Object.
+ * @param <V>the
+ *            type of the values of the entry.
  */
-class NamedHistoryEntryContainer extends AbstractHistoryEntry<String, String> {
+public abstract class AbstractHistoryEntry<O, V> implements IPatchSetHistoryEntry<O, V> {
 
-	private String name;
+	protected List<IPatchSetHistoryEntry<?, ?>> subEntries;
 
-	public NamedHistoryEntryContainer(String name, List<IPatchSetHistoryEntry<?, ?>> entries) {
-		super(entries);
-		this.name = name;
-	}
-
-	public String getName() {
-		return name;
+	public AbstractHistoryEntry(List<IPatchSetHistoryEntry<?, ?>> subEntries) {
+		super();
+		this.subEntries = subEntries;
 	}
 
 	@Override
-	public String getValue(PatchSet patchSet) {
-		return null;
-	}
-
-	@Override
-	public void setValue(PatchSet patchSet, String value) {
-		// intentionally left empty
-	}
-
-	@Override
-	public String getEntryObject() {
-		return name;
+	public List<IPatchSetHistoryEntry<?, ?>> getSubEntries() {
+		return subEntries;
 	}
 
 }
