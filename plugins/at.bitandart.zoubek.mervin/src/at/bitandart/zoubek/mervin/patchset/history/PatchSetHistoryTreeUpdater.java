@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.TreeColumn;
 
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
+import at.bitandart.zoubek.mervin.patchset.history.ISimilarityHistoryService.DiffWithSimilarity;
 import at.bitandart.zoubek.mervin.swt.ProgressPanel;
 import at.bitandart.zoubek.mervin.util.vis.HSB;
 
@@ -127,10 +128,10 @@ public class PatchSetHistoryTreeUpdater extends Thread {
 
 		if (rightPatchSet != null) {
 
-			List<IPatchSetHistoryEntry<Diff, Double>> modelHistoryEntries = similarityHistoryService
+			List<IPatchSetHistoryEntry<Diff, DiffWithSimilarity>> modelHistoryEntries = similarityHistoryService
 					.createModelEntries(rightPatchSet, patchSets);
 
-			List<IPatchSetHistoryEntry<Diff, Double>> diagramHistoryEntries = similarityHistoryService
+			List<IPatchSetHistoryEntry<Diff, DiffWithSimilarity>> diagramHistoryEntries = similarityHistoryService
 					.createDiagramEntries(rightPatchSet, patchSets);
 			historyData = organizer.groupPatchSetHistoryEntries(modelHistoryEntries, diagramHistoryEntries);
 
