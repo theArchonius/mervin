@@ -33,6 +33,7 @@
       <genTypeParameters ecoreTypeParameter="MervinModelReview.ecore#//HashBiMap/T"/>
       <genTypeParameters ecoreTypeParameter="MervinModelReview.ecore#//HashBiMap/U"/>
     </genDataTypes>
+    <genDataTypes ecoreDataType="MervinModelReview.ecore#//Dimension"/>
     <genClasses ecoreClass="MervinModelReview.ecore#//ModelReview">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//ModelReview/id"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//ModelReview/patchSets"/>
@@ -112,10 +113,12 @@
     <genClasses image="false" ecoreClass="MervinModelReview.ecore#//ModelDifference"/>
     <genClasses ecoreClass="MervinModelReview.ecore#//LocationDifference">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//LocationDifference/moveDirection"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//LocationDifference/originalLocation"/>
     </genClasses>
     <genClasses ecoreClass="MervinModelReview.ecore#//SizeDifference">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//SizeDifference/widthChange"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//SizeDifference/heightChange"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//SizeDifference/originalDimension"/>
     </genClasses>
     <genClasses ecoreClass="MervinModelReview.ecore#//StateDifference">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//StateDifference/type"/>
