@@ -18,6 +18,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.SizeDifference;
 
 import java.util.Collection;
 
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.util.EList;
@@ -47,6 +48,9 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.SizeDifferenceImpl#getHeightChange
  * <em>Height Change</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.SizeDifferenceImpl#getOriginalDimension
+ * <em>Original Dimension</em>}</li>
  * </ul>
  *
  * @generated
@@ -102,6 +106,28 @@ public class SizeDifferenceImpl extends MinimalEObjectImpl.Container implements 
 	 * @ordered
 	 */
 	protected DimensionChange heightChange = HEIGHT_CHANGE_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getOriginalDimension()
+	 * <em>Original Dimension</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #getOriginalDimension()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final Dimension ORIGINAL_DIMENSION_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getOriginalDimension()
+	 * <em>Original Dimension</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #getOriginalDimension()
+	 * @generated
+	 * @ordered
+	 */
+	protected Dimension originalDimension = ORIGINAL_DIMENSION_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -183,6 +209,28 @@ public class SizeDifferenceImpl extends MinimalEObjectImpl.Container implements 
 	 * 
 	 * @generated
 	 */
+	public Dimension getOriginalDimension() {
+		return originalDimension;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setOriginalDimension(Dimension newOriginalDimension) {
+		Dimension oldOriginalDimension = originalDimension;
+		originalDimension = newOriginalDimension;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					ModelReviewPackage.SIZE_DIFFERENCE__ORIGINAL_DIMENSION, oldOriginalDimension, originalDimension));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -192,6 +240,8 @@ public class SizeDifferenceImpl extends MinimalEObjectImpl.Container implements 
 			return getWidthChange();
 		case ModelReviewPackage.SIZE_DIFFERENCE__HEIGHT_CHANGE:
 			return getHeightChange();
+		case ModelReviewPackage.SIZE_DIFFERENCE__ORIGINAL_DIMENSION:
+			return getOriginalDimension();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -215,6 +265,9 @@ public class SizeDifferenceImpl extends MinimalEObjectImpl.Container implements 
 		case ModelReviewPackage.SIZE_DIFFERENCE__HEIGHT_CHANGE:
 			setHeightChange((DimensionChange) newValue);
 			return;
+		case ModelReviewPackage.SIZE_DIFFERENCE__ORIGINAL_DIMENSION:
+			setOriginalDimension((Dimension) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -236,6 +289,9 @@ public class SizeDifferenceImpl extends MinimalEObjectImpl.Container implements 
 		case ModelReviewPackage.SIZE_DIFFERENCE__HEIGHT_CHANGE:
 			setHeightChange(HEIGHT_CHANGE_EDEFAULT);
 			return;
+		case ModelReviewPackage.SIZE_DIFFERENCE__ORIGINAL_DIMENSION:
+			setOriginalDimension(ORIGINAL_DIMENSION_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -254,6 +310,9 @@ public class SizeDifferenceImpl extends MinimalEObjectImpl.Container implements 
 			return widthChange != WIDTH_CHANGE_EDEFAULT;
 		case ModelReviewPackage.SIZE_DIFFERENCE__HEIGHT_CHANGE:
 			return heightChange != HEIGHT_CHANGE_EDEFAULT;
+		case ModelReviewPackage.SIZE_DIFFERENCE__ORIGINAL_DIMENSION:
+			return ORIGINAL_DIMENSION_EDEFAULT == null ? originalDimension != null
+					: !ORIGINAL_DIMENSION_EDEFAULT.equals(originalDimension);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -273,6 +332,8 @@ public class SizeDifferenceImpl extends MinimalEObjectImpl.Container implements 
 		result.append(widthChange);
 		result.append(", heightChange: ");
 		result.append(heightChange);
+		result.append(", originalDimension: ");
+		result.append(originalDimension);
 		result.append(')');
 		return result.toString();
 	}

@@ -25,6 +25,9 @@ import org.eclipse.draw2d.geometry.Vector;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.LocationDifference#getMoveDirection
  * <em>Move Direction</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.LocationDifference#getOriginalLocation
+ * <em>Original Location</em>}</li>
  * </ul>
  *
  * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getLocationDifference()
@@ -61,5 +64,35 @@ public interface LocationDifference extends LayoutDifference {
 	 * @generated
 	 */
 	void setMoveDirection(Vector value);
+
+	/**
+	 * Returns the value of the '<em><b>Original Location</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Original Location</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Original Location</em>' attribute.
+	 * @see #setOriginalLocation(Vector)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getLocationDifference_OriginalLocation()
+	 * @model dataType="at.bitandart.zoubek.mervin.model.modelreview.Vector"
+	 * @generated
+	 */
+	Vector getOriginalLocation();
+
+	/**
+	 * Sets the value of the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.LocationDifference#getOriginalLocation
+	 * <em>Original Location</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Original Location</em>' attribute.
+	 * @see #getOriginalLocation()
+	 * @generated
+	 */
+	void setOriginalLocation(Vector value);
 
 } // LocationDifference

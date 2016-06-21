@@ -68,6 +68,7 @@ public class LocationDifferenceItemProvider extends ItemProviderAdapter implemen
 
 			addRawDiffsPropertyDescriptor(object);
 			addMoveDirectionPropertyDescriptor(object);
+			addOriginalLocationPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -101,6 +102,22 @@ public class LocationDifferenceItemProvider extends ItemProviderAdapter implemen
 						"_UI_LocationDifference_type"),
 				ModelReviewPackage.Literals.LOCATION_DIFFERENCE__MOVE_DIRECTION, true, false, false,
 				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Original Location feature. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addOriginalLocationPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_LocationDifference_originalLocation_feature"),
+						getString("_UI_PropertyDescriptor_description",
+								"_UI_LocationDifference_originalLocation_feature", "_UI_LocationDifference_type"),
+						ModelReviewPackage.Literals.LOCATION_DIFFERENCE__ORIGINAL_LOCATION, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
 	/**
@@ -142,6 +159,7 @@ public class LocationDifferenceItemProvider extends ItemProviderAdapter implemen
 
 		switch (notification.getFeatureID(LocationDifference.class)) {
 		case ModelReviewPackage.LOCATION_DIFFERENCE__MOVE_DIRECTION:
+		case ModelReviewPackage.LOCATION_DIFFERENCE__ORIGINAL_LOCATION:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 			return;
 		}

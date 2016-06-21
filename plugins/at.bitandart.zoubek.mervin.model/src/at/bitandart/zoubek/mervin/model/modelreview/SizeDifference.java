@@ -12,6 +12,8 @@
  */
 package at.bitandart.zoubek.mervin.model.modelreview;
 
+import org.eclipse.draw2d.geometry.Dimension;
+
 /**
  * <!-- begin-user-doc --> A representation of the model object '
  * <em><b>Size Difference</b></em>'. <!-- end-user-doc -->
@@ -26,6 +28,9 @@ package at.bitandart.zoubek.mervin.model.modelreview;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.SizeDifference#getHeightChange
  * <em>Height Change</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.SizeDifference#getOriginalDimension
+ * <em>Original Dimension</em>}</li>
  * </ul>
  *
  * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getSizeDifference()
@@ -100,5 +105,35 @@ public interface SizeDifference extends LayoutDifference {
 	 * @generated
 	 */
 	void setHeightChange(DimensionChange value);
+
+	/**
+	 * Returns the value of the '<em><b>Original Dimension</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Original Dimension</em>' attribute isn't
+	 * clear, there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Original Dimension</em>' attribute.
+	 * @see #setOriginalDimension(Dimension)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getSizeDifference_OriginalDimension()
+	 * @model dataType="at.bitandart.zoubek.mervin.model.modelreview.Dimension"
+	 * @generated
+	 */
+	Dimension getOriginalDimension();
+
+	/**
+	 * Sets the value of the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.SizeDifference#getOriginalDimension
+	 * <em>Original Dimension</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Original Dimension</em>' attribute.
+	 * @see #getOriginalDimension()
+	 * @generated
+	 */
+	void setOriginalDimension(Dimension value);
 
 } // SizeDifference

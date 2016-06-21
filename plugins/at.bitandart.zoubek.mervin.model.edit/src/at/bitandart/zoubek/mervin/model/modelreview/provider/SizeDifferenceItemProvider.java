@@ -68,6 +68,7 @@ public class SizeDifferenceItemProvider extends ItemProviderAdapter implements I
 			addRawDiffsPropertyDescriptor(object);
 			addWidthChangePropertyDescriptor(object);
 			addHeightChangePropertyDescriptor(object);
+			addOriginalDimensionPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -120,6 +121,22 @@ public class SizeDifferenceItemProvider extends ItemProviderAdapter implements I
 	}
 
 	/**
+	 * This adds a property descriptor for the Original Dimension feature. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addOriginalDimensionPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_SizeDifference_originalDimension_feature"),
+				getString("_UI_PropertyDescriptor_description", "_UI_SizeDifference_originalDimension_feature",
+						"_UI_SizeDifference_type"),
+				ModelReviewPackage.Literals.SIZE_DIFFERENCE__ORIGINAL_DIMENSION, true, false, false,
+				ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+	}
+
+	/**
 	 * This returns SizeDifference.gif. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
@@ -159,6 +176,7 @@ public class SizeDifferenceItemProvider extends ItemProviderAdapter implements I
 		switch (notification.getFeatureID(SizeDifference.class)) {
 		case ModelReviewPackage.SIZE_DIFFERENCE__WIDTH_CHANGE:
 		case ModelReviewPackage.SIZE_DIFFERENCE__HEIGHT_CHANGE:
+		case ModelReviewPackage.SIZE_DIFFERENCE__ORIGINAL_DIMENSION:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 			return;
 		}

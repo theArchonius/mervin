@@ -45,6 +45,9 @@ import org.eclipse.emf.ecore.util.EObjectResolvingEList;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.LocationDifferenceImpl#getMoveDirection
  * <em>Move Direction</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.LocationDifferenceImpl#getOriginalLocation
+ * <em>Original Location</em>}</li>
  * </ul>
  *
  * @generated
@@ -81,6 +84,28 @@ public class LocationDifferenceImpl extends MinimalEObjectImpl.Container impleme
 	 * @ordered
 	 */
 	protected Vector moveDirection = MOVE_DIRECTION_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getOriginalLocation()
+	 * <em>Original Location</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #getOriginalLocation()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final Vector ORIGINAL_LOCATION_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getOriginalLocation()
+	 * <em>Original Location</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #getOriginalLocation()
+	 * @generated
+	 * @ordered
+	 */
+	protected Vector originalLocation = ORIGINAL_LOCATION_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -141,6 +166,28 @@ public class LocationDifferenceImpl extends MinimalEObjectImpl.Container impleme
 	 * 
 	 * @generated
 	 */
+	public Vector getOriginalLocation() {
+		return originalLocation;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setOriginalLocation(Vector newOriginalLocation) {
+		Vector oldOriginalLocation = originalLocation;
+		originalLocation = newOriginalLocation;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET,
+					ModelReviewPackage.LOCATION_DIFFERENCE__ORIGINAL_LOCATION, oldOriginalLocation, originalLocation));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -148,6 +195,8 @@ public class LocationDifferenceImpl extends MinimalEObjectImpl.Container impleme
 			return getRawDiffs();
 		case ModelReviewPackage.LOCATION_DIFFERENCE__MOVE_DIRECTION:
 			return getMoveDirection();
+		case ModelReviewPackage.LOCATION_DIFFERENCE__ORIGINAL_LOCATION:
+			return getOriginalLocation();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -168,6 +217,9 @@ public class LocationDifferenceImpl extends MinimalEObjectImpl.Container impleme
 		case ModelReviewPackage.LOCATION_DIFFERENCE__MOVE_DIRECTION:
 			setMoveDirection((Vector) newValue);
 			return;
+		case ModelReviewPackage.LOCATION_DIFFERENCE__ORIGINAL_LOCATION:
+			setOriginalLocation((Vector) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -186,6 +238,9 @@ public class LocationDifferenceImpl extends MinimalEObjectImpl.Container impleme
 		case ModelReviewPackage.LOCATION_DIFFERENCE__MOVE_DIRECTION:
 			setMoveDirection(MOVE_DIRECTION_EDEFAULT);
 			return;
+		case ModelReviewPackage.LOCATION_DIFFERENCE__ORIGINAL_LOCATION:
+			setOriginalLocation(ORIGINAL_LOCATION_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -203,6 +258,9 @@ public class LocationDifferenceImpl extends MinimalEObjectImpl.Container impleme
 		case ModelReviewPackage.LOCATION_DIFFERENCE__MOVE_DIRECTION:
 			return MOVE_DIRECTION_EDEFAULT == null ? moveDirection != null
 					: !MOVE_DIRECTION_EDEFAULT.equals(moveDirection);
+		case ModelReviewPackage.LOCATION_DIFFERENCE__ORIGINAL_LOCATION:
+			return ORIGINAL_LOCATION_EDEFAULT == null ? originalLocation != null
+					: !ORIGINAL_LOCATION_EDEFAULT.equals(originalLocation);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -220,6 +278,8 @@ public class LocationDifferenceImpl extends MinimalEObjectImpl.Container impleme
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (moveDirection: ");
 		result.append(moveDirection);
+		result.append(", originalLocation: ");
+		result.append(originalLocation);
 		result.append(')');
 		return result.toString();
 	}

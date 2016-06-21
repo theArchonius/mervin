@@ -39,6 +39,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.StateDifferenceType;
 import at.bitandart.zoubek.mervin.model.modelreview.User;
 
 import com.google.common.collect.HashBiMap;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Vector;
 
 import org.eclipse.emf.compare.ComparePackage;
@@ -238,6 +239,13 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * @generated
 	 */
 	private EDataType hashBiMapEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	private EDataType dimensionEDataType = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -935,6 +943,15 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
+	public EAttribute getLocationDifference_OriginalLocation() {
+		return (EAttribute) locationDifferenceEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	public EClass getSizeDifference() {
 		return sizeDifferenceEClass;
 	}
@@ -955,6 +972,15 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 */
 	public EAttribute getSizeDifference_HeightChange() {
 		return (EAttribute) sizeDifferenceEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getSizeDifference_OriginalDimension() {
+		return (EAttribute) sizeDifferenceEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -1097,6 +1123,15 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
+	public EDataType getDimension() {
+		return dimensionEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	public ModelReviewFactory getModelReviewFactory() {
 		return (ModelReviewFactory) getEFactoryInstance();
 	}
@@ -1204,10 +1239,12 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 
 		locationDifferenceEClass = createEClass(LOCATION_DIFFERENCE);
 		createEAttribute(locationDifferenceEClass, LOCATION_DIFFERENCE__MOVE_DIRECTION);
+		createEAttribute(locationDifferenceEClass, LOCATION_DIFFERENCE__ORIGINAL_LOCATION);
 
 		sizeDifferenceEClass = createEClass(SIZE_DIFFERENCE);
 		createEAttribute(sizeDifferenceEClass, SIZE_DIFFERENCE__WIDTH_CHANGE);
 		createEAttribute(sizeDifferenceEClass, SIZE_DIFFERENCE__HEIGHT_CHANGE);
+		createEAttribute(sizeDifferenceEClass, SIZE_DIFFERENCE__ORIGINAL_DIMENSION);
 
 		stateDifferenceEClass = createEClass(STATE_DIFFERENCE);
 		createEAttribute(stateDifferenceEClass, STATE_DIFFERENCE__TYPE);
@@ -1231,6 +1268,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		// Create data types
 		vectorEDataType = createEDataType(VECTOR);
 		hashBiMapEDataType = createEDataType(HASH_BI_MAP);
+		dimensionEDataType = createEDataType(DIMENSION);
 	}
 
 	/**
@@ -1490,6 +1528,9 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		initEAttribute(getLocationDifference_MoveDirection(), this.getVector(), "moveDirection", null, 0, 1,
 				LocationDifference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
 				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getLocationDifference_OriginalLocation(), this.getVector(), "originalLocation", null, 0, 1,
+				LocationDifference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 
 		initEClass(sizeDifferenceEClass, SizeDifference.class, "SizeDifference", !IS_ABSTRACT, !IS_INTERFACE,
 				IS_GENERATED_INSTANCE_CLASS);
@@ -1497,6 +1538,9 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 				SizeDifference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
 				!IS_DERIVED, IS_ORDERED);
 		initEAttribute(getSizeDifference_HeightChange(), this.getDimensionChange(), "heightChange", null, 0, 1,
+				SizeDifference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSizeDifference_OriginalDimension(), this.getDimension(), "originalDimension", null, 0, 1,
 				SizeDifference.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
 				!IS_DERIVED, IS_ORDERED);
 
@@ -1549,6 +1593,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		// Initialize data types
 		initEDataType(vectorEDataType, Vector.class, "Vector", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(hashBiMapEDataType, HashBiMap.class, "HashBiMap", !IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(dimensionEDataType, Dimension.class, "Dimension", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);
