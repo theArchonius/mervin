@@ -34,7 +34,6 @@ public class DiffCategoryOrganizer implements IPatchSetHistoryEntryOrganizer {
 	 * IPatchSetHistoryEntryOrganizer#groupPatchSetHistoryEntries(java.util.
 	 * List, java.util.List)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<Object> groupPatchSetHistoryEntries(List<? extends IPatchSetHistoryEntry<?, ?>> modelEntries,
 			List<? extends IPatchSetHistoryEntry<?, ?>> diagramEntries) {

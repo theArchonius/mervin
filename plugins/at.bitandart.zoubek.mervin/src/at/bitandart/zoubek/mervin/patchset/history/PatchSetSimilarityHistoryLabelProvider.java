@@ -13,6 +13,7 @@ package at.bitandart.zoubek.mervin.patchset.history;
 import org.eclipse.swt.graphics.Color;
 
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
+import at.bitandart.zoubek.mervin.patchset.history.ISimilarityHistoryService.DiffWithSimilarity;
 import at.bitandart.zoubek.mervin.util.vis.HSB;
 import at.bitandart.zoubek.mervin.util.vis.NumericColoredColumnLabelProvider;
 
@@ -50,6 +51,8 @@ class PatchSetSimilarityHistoryLabelProvider extends NumericColoredColumnLabelPr
 			Object value = ((IPatchSetHistoryEntry<?, ?>) element).getValue(patchSet);
 			if (value instanceof Number) {
 				return ((Number) value).floatValue();
+			} else if (value instanceof DiffWithSimilarity) {
+				return (float) ((DiffWithSimilarity) value).getSimilarity();
 			}
 		}
 		return 0;
@@ -59,7 +62,7 @@ class PatchSetSimilarityHistoryLabelProvider extends NumericColoredColumnLabelPr
 	public boolean hasValue(Object element) {
 		if (element instanceof IPatchSetHistoryEntry) {
 			Object value = ((IPatchSetHistoryEntry<?, ?>) element).getValue(patchSet);
-			return value instanceof Number;
+			return value instanceof Number || value instanceof DiffWithSimilarity;
 		}
 		return false;
 	}

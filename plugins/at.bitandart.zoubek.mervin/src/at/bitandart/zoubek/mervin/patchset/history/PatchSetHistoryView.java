@@ -21,6 +21,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
@@ -53,6 +54,8 @@ import org.eclipse.swt.widgets.Tree;
 import at.bitandart.zoubek.mervin.IReviewHighlightService;
 import at.bitandart.zoubek.mervin.IReviewHighlightServiceListener;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
+import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
+import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.review.ModelReviewEditorTrackingView;
 import at.bitandart.zoubek.mervin.swt.ProgressPanel;
 import at.bitandart.zoubek.mervin.util.vis.ThreeWayObjectTreeViewerComparator;
@@ -67,6 +70,12 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 
 	public static final String PART_DESCRIPTOR_ID = "at.bitandart.zoubek.mervin.partdescriptor.patchset.history";
 
+	public static final String PART_TOOLBAR_ID = "at.bitandart.zoubek.mervin.toolbar.patchset.history";
+
+	public enum VisibleDiffMode {
+		ALL_DIFFS, NEW_PATCHSET_DIFFS, OLD_PATCHSET_DIFFS
+	}
+
 	/**
 	 * indicates if all SWT controls and viewers have been correctly set up
 	 */
@@ -80,6 +89,10 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 	private IReviewHighlightService highlightService;
 
 	private IPatchSetHistoryEntryOrganizer entryOrganizer;
+
+	private VisibleDiffMode visibleDiffs = VisibleDiffMode.ALL_DIFFS;
+
+	private boolean mergeEqualDiffs = true;
 
 	// JFace Viewers
 
@@ -111,6 +124,8 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 	private HighlightStyler highlightStyler;
 
 	private ProgressPanel progressPanel;
+
+	private PatchSetHistoryTreeUpdater currentUpdateThread;
 
 	@Inject
 	public PatchSetHistoryView() {
@@ -208,10 +223,31 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 					currentModelReview.eAdapters().add(patchSetHistoryViewUpdater);
 				}
 
-				Thread updateThread = new PatchSetHistoryTreeUpdater(currentModelReview, similarityHistoryService,
-						entryOrganizer, historyTreeViewer, labelColumn, progressPanel, mainPanel);
+				if (currentUpdateThread != null && currentUpdateThread.isAlive()) {
+					/*
+					 * update thread is already running - disable the progress
+					 * panel update, create a new monitor for the progess panel
+					 * and cancel the previous thread using the old progress
+					 * monitor
+					 */
+					currentUpdateThread.setUpdateProgressPanel(false);
+					IProgressMonitor oldMonitor = progressPanel.getProgressMonitor();
+					progressPanel.createNewProgressMonitor();
+					oldMonitor.setCanceled(true);
+				}
 
-				updateThread.start();
+				PatchSet activePatchSet = null;
+				if (visibleDiffs == VisibleDiffMode.NEW_PATCHSET_DIFFS) {
+					activePatchSet = currentModelReview.getRightPatchSet();
+				} else if (visibleDiffs == VisibleDiffMode.OLD_PATCHSET_DIFFS) {
+					activePatchSet = currentModelReview.getLeftPatchSet();
+				}
+
+				currentUpdateThread = new PatchSetHistoryTreeUpdater(currentModelReview, activePatchSet,
+						mergeEqualDiffs, similarityHistoryService, entryOrganizer, historyTreeViewer, labelColumn,
+						progressPanel, mainPanel);
+
+				currentUpdateThread.start();
 
 			} else {
 				// no current review, so reset the input of the history tree
@@ -227,6 +263,8 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 	@PreDestroy
 	private void dispose() {
 		highlightStyler.dispose();
+		progressBackgroundColor.dispose();
+		progressForegroundColor.dispose();
 	}
 
 	private class UpdatePatchSetHistoryViewAdapter extends EContentAdapter {
@@ -234,15 +272,38 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 		@Override
 		public void notifyChanged(Notification notification) {
 			super.notifyChanged(notification);
-			display.syncExec(new Runnable() {
+			Object feature = notification.getFeature();
+			if (visibleDiffs != VisibleDiffMode.ALL_DIFFS
+					&& (feature == ModelReviewPackage.Literals.MODEL_REVIEW__LEFT_PATCH_SET
+							|| feature == ModelReviewPackage.Literals.MODEL_REVIEW__RIGHT_PATCH_SET))
+				display.syncExec(new Runnable() {
 
-				@Override
-				public void run() {
-					updateValues();
-				}
-			});
+					@Override
+					public void run() {
+						updateValues();
+					}
+				});
 		}
 
+	}
+
+	/**
+	 * @param visibleDiffMode
+	 */
+	public void setVisibleDiffs(VisibleDiffMode visibleDiffMode) {
+		this.visibleDiffs = visibleDiffMode;
+		updateValues();
+	}
+
+	/**
+	 * 
+	 * @param mergeEqualDiffs
+	 *            true if equal diffs should be merged into a single entry,
+	 *            false otherwise
+	 */
+	public void setMergeEqualDiffs(boolean mergeEqualDiffs) {
+		this.mergeEqualDiffs = mergeEqualDiffs;
+		updateValues();
 	}
 
 	/**

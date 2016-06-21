@@ -62,126 +62,43 @@ public class ProgressPanel extends Composite {
 	 */
 	public IProgressMonitor getProgressMonitor() {
 		if (monitor == null) {
-			monitor = new ProgressPanelMonitor();
+			createNewProgressMonitor();
 		}
 		return monitor;
 	}
 
 	/**
-	 * An {@link IProgressMonitor} implementation tied to this progress panel
-	 * control.
+	 * creates a new {@link IProgressMonitor} and registers it to this control.
+	 * Any existing registered {@link IProgressMonitor} will be unregistered and
+	 * won't affect this control any more.
 	 * 
-	 * @author Florian Zoubek
-	 *
+	 * @return the new {@link IProgressMonitor}
 	 */
-	private class ProgressPanelMonitor implements IProgressMonitor {
-
-		private String taskName;
-
-		private int workState;
-
-		private int totalWork;
-
-		private boolean canceled;
-
-		@Override
-		public void worked(int work) {
-			internalWorked(work);
+	public IProgressMonitor createNewProgressMonitor() {
+		if (monitor != null && monitor instanceof ProgressPanelMonitor) {
+			((ProgressPanelMonitor) monitor).setProgressPanel(null);
 		}
+		return monitor = new ProgressPanelMonitor(this);
+	}
 
-		@Override
-		public void subTask(String name) {
-			// not supported (yet)
-		}
+	protected Label getProgressLabel() {
+		return progressLabel;
+	}
 
-		@Override
-		public void setTaskName(String name) {
-			taskName = name;
-		}
+	protected StackLayout getProgressBarLayout() {
+		return progressBarLayout;
+	}
 
-		@Override
-		public void setCanceled(boolean value) {
-			canceled = value;
+	protected ProgressBar getProgressBar() {
+		return progressBar;
+	}
 
-		}
+	protected ProgressBar getIndeterminedProgressBar() {
+		return indeterminedProgressBar;
+	}
 
-		@Override
-		public boolean isCanceled() {
-			return canceled;
-		}
-
-		@Override
-		public void internalWorked(double work) {
-			workState += work;
-			if (workState > totalWork) {
-				workState = totalWork;
-			}
-
-			if (!isDisposed()) {
-				getDisplay().syncExec(new Runnable() {
-
-					@Override
-					public void run() {
-						progressBar.setSelection(workState);
-
-					}
-				});
-			}
-
-		}
-
-		@Override
-		public void done() {
-
-			workState = 0;
-			if (!isDisposed()) {
-				getDisplay().syncExec(new Runnable() {
-
-					@Override
-					public void run() {
-
-						progressLabel.setText("");
-
-						progressBarLayout.topControl = progressBar;
-						progressBar.setSelection(workState);
-						progressBar.setMaximum(0);
-
-						progressBarPanel.layout();
-
-					}
-				});
-			}
-
-		}
-
-		@Override
-		public void beginTask(String name, int totalWork) {
-
-			taskName = name;
-			this.totalWork = totalWork;
-
-			if (!isDisposed()) {
-				getDisplay().syncExec(new Runnable() {
-
-					@Override
-					public void run() {
-
-						progressLabel.setText(taskName);
-						if (ProgressPanelMonitor.this.totalWork == IProgressMonitor.UNKNOWN) {
-							progressBarLayout.topControl = indeterminedProgressBar;
-						} else {
-							progressBarLayout.topControl = progressBar;
-							progressBar.setSelection(workState);
-							progressBar.setMaximum(ProgressPanelMonitor.this.totalWork);
-						}
-
-						progressBarPanel.layout();
-
-					}
-				});
-			}
-
-		}
+	protected Composite getProgressBarPanel() {
+		return progressBarPanel;
 	}
 
 }

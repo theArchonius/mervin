@@ -70,7 +70,7 @@ public class DependencyDiffOrganizer extends DiffCategoryOrganizer {
 			if (entryObject instanceof Diff) {
 
 				Diff diff = (Diff) entryObject;
-				if (diff.getRequires().isEmpty()) {
+				if (isRootEntry(diff, entries)) {
 					rootEntries.add(entry);
 				}
 
@@ -90,6 +90,30 @@ public class DependencyDiffOrganizer extends DiffCategoryOrganizer {
 		entries.clear();
 		entries.addAll(rootEntries);
 
+	}
+
+	/**
+	 * checks if the entry assigned with the given diff should be a root entry
+	 * or not.
+	 * 
+	 * @param diff
+	 *            the diff assigned to the entry.
+	 * @param entries
+	 *            the other entries.
+	 * @return true if the entry is a root entry, false otherwise.
+	 */
+	private boolean isRootEntry(Diff diff, List<IPatchSetHistoryEntry<?, ?>> entries) {
+
+		if (!diff.getRequires().isEmpty()) {
+			for (Diff requiredDiff : diff.getRequires()) {
+				for (IPatchSetHistoryEntry<?, ?> entry : entries) {
+					if (requiredDiff == entry.getEntryObject()) {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
 	}
 
 	/**
