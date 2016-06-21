@@ -17,10 +17,18 @@
     <elements xsi:type="commands:Command" xmi:id="_W-8C0NrjEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.command.toggle.modifications" commandName="Toggle Modifications"/>
     <elements xsi:type="commands:Command" xmi:id="_cg4BYNrjEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.command.toggle.deletions" commandName="Toggle Deletions"/>
     <elements xsi:type="commands:Command" xmi:id="_A3198NrlEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.command.toggle.layout.changes" commandName="Toggle Layout Changes"/>
+    <elements xsi:type="commands:Command" xmi:id="_FjapQDYLEeae8OpmYdAj2A" elementId="at.bitandart.zoubek.mervin.command.patchset.history.visiblediffs.allpatchsets" commandName="Show All PatchSet Diffs"/>
+    <elements xsi:type="commands:Command" xmi:id="_3LJtwDYLEeae8OpmYdAj2A" elementId="at.bitandart.zoubek.mervin.command.patchset.history.visiblediffs.newpatchset" commandName="Show New PatchSet Diffs"/>
+    <elements xsi:type="commands:Command" xmi:id="_06ujQDYLEeae8OpmYdAj2A" elementId="at.bitandart.zoubek.mervin.command.patchset.history.visiblediffs.oldpatchset" commandName="Show Old PatchSet Diffs"/>
+    <elements xsi:type="commands:Command" xmi:id="_Z4Qh8Db8EeaRo_cgSmIxdQ" elementId="at.bitandart.zoubek.mervin.command.patchset.history.mergeequaldiffs" commandName="Merge Equal Diffs"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_rV6KoPsFEeS2q_4qNTgMUQ" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:Handler" xmi:id="_vQOrIPsFEeS2q_4qNTgMUQ" elementId="at.bitandart.zoubek.mervin.handler.debug.diagram.diff.case1" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.debug.OpenDiagramDiffCase1Handler" command="_dnOCgPsEEeS2q_4qNTgMUQ"/>
     <elements xsi:type="commands:Handler" xmi:id="_ZCDZQAX8EeWDm7E-HymwAA" elementId="at.bitandart.zoubek.mervin.handler.review.load" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.LoadReviewHandler" command="_UTSkEAX8EeWDm7E-HymwAA"/>
+    <elements xsi:type="commands:Handler" xmi:id="_gehIUDYMEeae8OpmYdAj2A" elementId="at.bitandart.zoubek.mervin.handler.patchset.history.visiblediffs.allpatchsets" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.ShowAllPatchSetDiffs" command="_FjapQDYLEeae8OpmYdAj2A"/>
+    <elements xsi:type="commands:Handler" xmi:id="_g1p18DYMEeae8OpmYdAj2A" elementId="at.bitandart.zoubek.mervin.handler.patchset.history.visiblediffs.newpatchset" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.ShowNewPatchSetDiffs" command="_3LJtwDYLEeae8OpmYdAj2A"/>
+    <elements xsi:type="commands:Handler" xmi:id="_hN3hoDYMEeae8OpmYdAj2A" elementId="at.bitandart.zoubek.mervin.handler.patchset.history.visiblediffs.oldpatchset" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.ShowOldPatchSetDiffs" command="_06ujQDYLEeae8OpmYdAj2A"/>
+    <elements xsi:type="commands:Handler" xmi:id="_g9QOsDb8EeaRo_cgSmIxdQ" elementId="at.bitandart.zoubek.mervin.handler.patchset.history.mergeequaldiffs" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.MergeEqualDiffs" command="_Z4Qh8Db8EeaRo_cgSmIxdQ"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_OapfwPsGEeS2q_4qNTgMUQ" featurename="descriptors" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="basic:PartDescriptor" xmi:id="_b4kdcPsGEeS2q_4qNTgMUQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.diagram.diffviewer" label="Diagram Diff Viewer" allowMultiple="true" category="Mervin" closeable="true" dirtyable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.diagram.diff.DiagramDiffView">
@@ -48,6 +56,15 @@
     <elements xsi:type="basic:PartDescriptor" xmi:id="_vxSTIP1dEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.patchset.history" label="Patch Set History" category="Mervin" closeable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.patchset.history.PatchSetHistoryView">
       <tags>View</tags>
       <tags>categoryTag:Mervin</tags>
+      <menus xmi:id="_eXGF0DYtEeaqYvWJLKfpjQ" elementId="at.bitandart.zoubek.mervin.menu.view.patchset.history.visiblediffs">
+        <tags>ViewMenu</tags>
+        <children xsi:type="menu:Menu" xmi:id="_PmlIsDb6EeaRo_cgSmIxdQ" elementId="at.bitandart.zoubek.mervin.menu.view.patchset.history.visiblediffs" label="Visible Diffs">
+          <children xsi:type="menu:HandledMenuItem" xmi:id="_hwit4DYtEeaqYvWJLKfpjQ" elementId="at.bitandart.zoubek.mervin.menu.view.patchset.history.visiblediffs.allpatchsets" label="All Patch Sets" selected="true" type="Radio" command="_FjapQDYLEeae8OpmYdAj2A"/>
+          <children xsi:type="menu:HandledMenuItem" xmi:id="_1NIpcDYtEeaqYvWJLKfpjQ" elementId="at.bitandart.zoubek.mervin.menu.view.patchset.history.visiblediffs.newpatchset" label="New Patch Set" type="Radio" command="_3LJtwDYLEeae8OpmYdAj2A"/>
+          <children xsi:type="menu:HandledMenuItem" xmi:id="_1pAGEDYtEeaqYvWJLKfpjQ" elementId="at.bitandart.zoubek.mervin.menu.view.patchset.history.visiblediffs.oldpatchset" label="Old Patch Set" type="Radio" command="_06ujQDYLEeae8OpmYdAj2A"/>
+        </children>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_LSMQcDb8EeaRo_cgSmIxdQ" elementId="at.bitandart.zoubek.mervin.menu.view.patchset.history.mergeequaldiffs" label="Merge Equal DIffs" selected="true" type="Check" command="_Z4Qh8Db8EeaRo_cgSmIxdQ"/>
+      </menus>
     </elements>
     <elements xsi:type="basic:PartDescriptor" xmi:id="_791IgP1dEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.properties.diff" label="Property Diff" category="Mervin" closeable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.property.diff.PropertyDiffView">
       <tags>View</tags>

@@ -93,15 +93,43 @@ public class ChangeSimilarityHistoryService implements ISimilarityHistoryService
 			match = findMatch(entryObject, patchSet, comparison);
 		}
 
-		if (match != null && match.getRight() != null) {
+		EObject oppositeObject = getOppositeObject(match, entryObject);
 
-			double distance = calculateDistance(comparison, entryObject, match.getRight());
-			entry.setValue(patchSet, new DiffWithSimilarity((Diff) match.getRight(), distance));
+		if (oppositeObject instanceof Diff) {
+
+			double distance = calculateDistance(comparison, entryObject, oppositeObject);
+			entry.setValue(patchSet, new DiffWithSimilarity((Diff) oppositeObject, distance));
 
 		}
 
 		postProcessEntry(entry, patchSet, match, comparison);
 
+	}
+
+	/**
+	 * extract the opposite object in the given match.
+	 * 
+	 * @param match
+	 *            the match to extract the opposite object from.
+	 * @param object
+	 *            the object whose opposite should extracted.
+	 * @return the opposite object or null if the given object has no opposite
+	 *         or if the given object is not present in the match.
+	 */
+	private EObject getOppositeObject(Match match, Object object) {
+
+		if (match != null) {
+
+			EObject left = match.getLeft();
+			EObject right = match.getRight();
+
+			if (left == object) {
+				return right;
+			} else if (right == object) {
+				return left;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -120,10 +148,20 @@ public class ChangeSimilarityHistoryService implements ISimilarityHistoryService
 		// intentionally left empty
 	}
 
+	/**
+	 * matches the given list of diffs and returns a comparison containing the
+	 * matches. However, no {@link Diff}s will be created for the matches.
+	 * 
+	 * @param leftEObjects
+	 *            the list of diffs on the left side to match.
+	 * @param rightEObjects
+	 *            the list of diffs on the right side to match.
+	 * @return a comparison containing the matches but without {@link Diff}s.
+	 */
 	protected Comparison matchDiffs(List<? extends EObject> leftEObjects, List<? extends EObject> rightEObjects) {
 
 		Comparison comparison = CompareFactory.eINSTANCE.createComparison();
-		IEObjectMatcher objectMatcher = DefaultMatchEngine.createDefaultEObjectMatcher(UseIdentifiers.NEVER);
+		IEObjectMatcher objectMatcher = DefaultMatchEngine.createDefaultEObjectMatcher(UseIdentifiers.WHEN_AVAILABLE);
 
 		objectMatcher.createMatches(comparison, leftEObjects.iterator(), rightEObjects.iterator(),
 				new ArrayList<EObject>().iterator(), new BasicMonitor());
@@ -131,9 +169,25 @@ public class ChangeSimilarityHistoryService implements ISimilarityHistoryService
 		return comparison;
 	}
 
+	/**
+	 * finds the {@link Match} for a given {@link Diff} in the differences of
+	 * the given patchset and stores the underlying matching the given
+	 * comparison.
+	 * 
+	 * @param entryObject
+	 *            the diff to search the match for.
+	 * @param patchSet
+	 *            the patch set to retrieve the diffs to match.
+	 * @param comparison
+	 *            the comparison to store the underlying matches to.
+	 * @return the match for the given diff or null if no match has been found.
+	 *         The match may contain the given diff on the left or the right
+	 *         side.
+	 */
 	protected Match findMatch(Diff entryObject, PatchSet patchSet, Comparison comparison) {
 
-		IEObjectMatcher objectMatcher = DefaultMatchEngine.createDefaultEObjectMatcher(UseIdentifiers.NEVER);
+		// TODO refactor: remove duplicated code here and in matchDiffs()
+		IEObjectMatcher objectMatcher = DefaultMatchEngine.createDefaultEObjectMatcher(UseIdentifiers.WHEN_AVAILABLE);
 		List<EObject> leftEObjects = new ArrayList<EObject>(1);
 		leftEObjects.add(entryObject);
 
@@ -150,7 +204,7 @@ public class ChangeSimilarityHistoryService implements ISimilarityHistoryService
 	}
 
 	/**
-	 * calculates the distance between to {@link EObject}s in the range 0(not
+	 * calculates the distance between two {@link EObject}s in the range 0(not
 	 * equal) and 1(equal).
 	 * 
 	 * @param comparison
@@ -165,16 +219,23 @@ public class ChangeSimilarityHistoryService implements ISimilarityHistoryService
 		return MathUtil.map(editionDistance.distance(comparison, left, right), 0.0, Double.MAX_VALUE, 1.0, 0.0);
 	}
 
+	/**
+	 * This method provides a consistent result across all create*Entries()
+	 * methods for the same list of patch sets and if the given patch set is
+	 * contained in the list of patch sets.
+	 * 
+	 * @see #createDiagramEntries(PatchSet, List)
+	 * @see #createDiagramEntries(List)
+	 * @see #createModelEntries(List)
+	 * 
+	 */
 	@Override
 	public List<IPatchSetHistoryEntry<Diff, DiffWithSimilarity>> createModelEntries(PatchSet patchSet,
-			List<PatchSet> patchSets) {
+			List<PatchSet> patchSets, boolean mergeEqualDiffs) {
 
 		EList<Diff> modelDiffs = patchSet.getModelComparison().getDifferences();
 		Map<PatchSet, List<Diff>> diffs = new HashMap<>();
 		diffs.put(patchSet, modelDiffs);
-
-		List<List<Diff>> patchSetToCacheDiffs = new ArrayList<>(1);
-		patchSetToCacheDiffs.add(modelDiffs);
 
 		List<List<Diff>> patchSetToMatchDiffs = new ArrayList<>(patchSets.size());
 
@@ -182,25 +243,33 @@ public class ChangeSimilarityHistoryService implements ISimilarityHistoryService
 			patchSetToMatchDiffs.add(otherPatchSet.getModelComparison().getDifferences());
 		}
 
-		List<PatchSet> patchSetsToIndex = new ArrayList<>(1);
-		patchSetsToIndex.add(patchSet);
+		/*
+		 * build the cache for all patch sets in order to be produce a
+		 * consistent matching along all create*Entries() methods
+		 */
+		Map<PatchSet, Map<PatchSet, Comparison>> diffMatchCache = buildDiffMatchCache(patchSets, patchSets,
+				patchSetToMatchDiffs, patchSetToMatchDiffs);
 
-		Map<PatchSet, Map<PatchSet, Comparison>> diffMatchCache = buildDiffMatchCache(patchSetsToIndex, patchSets,
-				patchSetToCacheDiffs, patchSetToMatchDiffs);
-
-		return createEntriesForDiffs(diffs, patchSets, diffMatchCache);
+		return createEntriesForDiffs(diffs, patchSets, diffMatchCache, mergeEqualDiffs);
 	}
 
+	/**
+	 * This method provides a consistent result across all create*Entries()
+	 * methods for the same list of patch sets and if the given patch set is
+	 * contained in the list of patch sets.
+	 * 
+	 * @see #createDiagramEntries(PatchSet, List)
+	 * @see #createDiagramEntries(List)
+	 * @see #createModelEntries(List)
+	 * 
+	 */
 	@Override
 	public List<IPatchSetHistoryEntry<Diff, DiffWithSimilarity>> createDiagramEntries(PatchSet patchSet,
-			List<PatchSet> patchSets) {
+			List<PatchSet> patchSets, boolean mergeEqualDiffs) {
 
 		EList<Diff> diagramDiffs = patchSet.getDiagramComparison().getDifferences();
 		Map<PatchSet, List<Diff>> diffs = new HashMap<>();
 		diffs.put(patchSet, diagramDiffs);
-
-		List<List<Diff>> patchSetToCacheDiffs = new ArrayList<>(1);
-		patchSetToCacheDiffs.add(diagramDiffs);
 
 		List<List<Diff>> patchSetToMatchDiffs = new ArrayList<>(patchSets.size());
 
@@ -208,13 +277,14 @@ public class ChangeSimilarityHistoryService implements ISimilarityHistoryService
 			patchSetToMatchDiffs.add(otherPatchSet.getDiagramComparison().getDifferences());
 		}
 
-		List<PatchSet> patchSetsToIndex = new ArrayList<>(1);
-		patchSetsToIndex.add(patchSet);
+		/*
+		 * build the cache for all patch sets in order to be produce a
+		 * consistent matching along all create*Entries() methods
+		 */
+		Map<PatchSet, Map<PatchSet, Comparison>> diffMatchCache = buildDiffMatchCache(patchSets, patchSets,
+				patchSetToMatchDiffs, patchSetToMatchDiffs);
 
-		Map<PatchSet, Map<PatchSet, Comparison>> diffMatchCache = buildDiffMatchCache(patchSetsToIndex, patchSets,
-				patchSetToCacheDiffs, patchSetToMatchDiffs);
-
-		return createEntriesForDiffs(diffs, patchSets, diffMatchCache);
+		return createEntriesForDiffs(diffs, patchSets, diffMatchCache, mergeEqualDiffs);
 	}
 
 	/**
@@ -229,11 +299,15 @@ public class ChangeSimilarityHistoryService implements ISimilarityHistoryService
 	 *            the patch sets to create values for
 	 * @param diffMatchCache
 	 *            a cache to speed up matching, may be null.
+	 * @param mergeEqualDiffs
+	 *            true if equal diffs should be merged into a single entry,
+	 *            false if an entry should be created for each diff in all patch
+	 *            sets.
 	 * @return a list of entries for the given differences.
 	 */
 	private List<IPatchSetHistoryEntry<Diff, DiffWithSimilarity>> createEntriesForDiffs(
 			Map<PatchSet, List<Diff>> differences, List<PatchSet> patchSets,
-			Map<PatchSet, Map<PatchSet, Comparison>> diffMatchCache) {
+			Map<PatchSet, Map<PatchSet, Comparison>> diffMatchCache, boolean mergeEqualDiffs) {
 
 		List<IPatchSetHistoryEntry<Diff, DiffWithSimilarity>> entries = new LinkedList<IPatchSetHistoryEntry<Diff, DiffWithSimilarity>>();
 		Set<Diff> processedDiffs = new HashSet<Diff>();
@@ -251,7 +325,7 @@ public class ChangeSimilarityHistoryService implements ISimilarityHistoryService
 					for (PatchSet patchSet : patchSets) {
 
 						DiffWithSimilarity value = historyEntry.getValue(patchSet);
-						if (value != null && value.getSimilarity() >= 1.0) {
+						if (mergeEqualDiffs && value != null && value.getSimilarity() >= 1.0) {
 							processedDiffs.add(value.getDiff());
 						}
 					}
@@ -299,6 +373,21 @@ public class ChangeSimilarityHistoryService implements ISimilarityHistoryService
 
 				int otherIndex = otherPatchSetIterator.nextIndex();
 				PatchSet otherPatchSet = otherPatchSetIterator.next();
+
+				/*
+				 * if an matching exists, reuse it to save computation time and
+				 * prevent inconsistency as a matching might be different when
+				 * switching sides
+				 */
+				Map<PatchSet, Comparison> existingMatchingMap = matchCache.get(otherPatchSet);
+				if (existingMatchingMap != null) {
+					Comparison comparison = existingMatchingMap.get(patchSet);
+					if (comparison != null) {
+						patchSetMatches.put(otherPatchSet, comparison);
+						continue;
+					}
+				}
+
 				patchSetMatches.put(otherPatchSet,
 						matchDiffs(patchSetsToCacheDiffs.get(currentIndex), patchSetsToMatchDiffs.get(otherIndex)));
 			}
@@ -308,8 +397,19 @@ public class ChangeSimilarityHistoryService implements ISimilarityHistoryService
 		return matchCache;
 	}
 
+	/**
+	 * This method provides a consistent result across all create*Entries()
+	 * methods for the same list of patch sets and if the given patch set is
+	 * contained in the list of patch sets.
+	 * 
+	 * @see #createDiagramEntries(PatchSet, List)
+	 * @see #createDiagramEntries(List)
+	 * @see #createModelEntries(PatchSet, List)
+	 * 
+	 */
 	@Override
-	public List<IPatchSetHistoryEntry<Diff, DiffWithSimilarity>> createModelEntries(List<PatchSet> patchSets) {
+	public List<IPatchSetHistoryEntry<Diff, DiffWithSimilarity>> createModelEntries(List<PatchSet> patchSets,
+			boolean mergeEqualDiffs) {
 
 		Map<PatchSet, List<Diff>> diffs = new HashMap<>();
 		List<List<Diff>> patchSetDiffs = new ArrayList<>(patchSets.size());
@@ -322,11 +422,22 @@ public class ChangeSimilarityHistoryService implements ISimilarityHistoryService
 		Map<PatchSet, Map<PatchSet, Comparison>> diffMatchCache = buildDiffMatchCache(patchSets, patchSets,
 				patchSetDiffs, patchSetDiffs);
 
-		return createEntriesForDiffs(diffs, patchSets, diffMatchCache);
+		return createEntriesForDiffs(diffs, patchSets, diffMatchCache, mergeEqualDiffs);
 	}
 
+	/**
+	 * This method provides a consistent result across all create*Entries()
+	 * methods for the same list of patch sets and if the given patch set is
+	 * contained in the list of patch sets.
+	 * 
+	 * @see #createDiagramEntries(PatchSet, List)
+	 * @see #createModelEntries(PatchSet, List)
+	 * @see #createModelEntries(List)
+	 * 
+	 */
 	@Override
-	public List<IPatchSetHistoryEntry<Diff, DiffWithSimilarity>> createDiagramEntries(List<PatchSet> patchSets) {
+	public List<IPatchSetHistoryEntry<Diff, DiffWithSimilarity>> createDiagramEntries(List<PatchSet> patchSets,
+			boolean mergeEqualDiffs) {
 
 		Map<PatchSet, List<Diff>> diffs = new HashMap<>();
 		List<List<Diff>> patchSetDiffs = new ArrayList<>(patchSets.size());
@@ -339,7 +450,7 @@ public class ChangeSimilarityHistoryService implements ISimilarityHistoryService
 		Map<PatchSet, Map<PatchSet, Comparison>> diffMatchCache = buildDiffMatchCache(patchSets, patchSets,
 				patchSetDiffs, patchSetDiffs);
 
-		return createEntriesForDiffs(diffs, patchSets, diffMatchCache);
+		return createEntriesForDiffs(diffs, patchSets, diffMatchCache, mergeEqualDiffs);
 	}
 
 }

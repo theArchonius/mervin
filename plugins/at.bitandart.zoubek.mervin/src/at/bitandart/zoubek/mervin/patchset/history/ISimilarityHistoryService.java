@@ -33,11 +33,15 @@ public interface ISimilarityHistoryService extends IPatchSetHistoryService<Diff,
 	 *            the patchSet to retrieve the {@link Diff}s from
 	 * @param patchSets
 	 *            the patchSets used to calculate the similarity
+	 * @param mergeEqualDiffs
+	 *            true if equal diffs should be merged into a single entry,
+	 *            false if an entry should be created for each diff in all patch
+	 *            sets.
 	 * @return a list of {@link IPatchSetHistoryEntry}s for all model
 	 *         differences in the given patch set
 	 */
 	public List<IPatchSetHistoryEntry<Diff, DiffWithSimilarity>> createModelEntries(PatchSet patchSet,
-			List<PatchSet> patchSets);
+			List<PatchSet> patchSets, boolean mergeEqualDiffs);
 
 	/**
 	 * creates all entries for all model differences in the given list of patch
@@ -45,10 +49,15 @@ public interface ISimilarityHistoryService extends IPatchSetHistoryService<Diff,
 	 * patch sets.
 	 * 
 	 * @param patchSets
+	 * @param mergeEqualDiffs
+	 *            true if equal diffs should be merged into a single entry,
+	 *            false if an entry should be created for each diff in all patch
+	 *            sets.
 	 * @return a list of {@link IPatchSetHistoryEntry}s for all model
 	 *         differences in the given patch set
 	 */
-	public List<IPatchSetHistoryEntry<Diff, DiffWithSimilarity>> createModelEntries(List<PatchSet> patchSets);
+	public List<IPatchSetHistoryEntry<Diff, DiffWithSimilarity>> createModelEntries(List<PatchSet> patchSets,
+			boolean mergeEqualDiffs);
 
 	/**
 	 * creates all entries for all diagram differences in the given patch set.
@@ -57,22 +66,31 @@ public interface ISimilarityHistoryService extends IPatchSetHistoryService<Diff,
 	 *            the patchSet to retrieve the {@link Diff}s from
 	 * @param patchSets
 	 *            the patchSets used to calculate the similarity
+	 * @param mergeEqualDiffs
+	 *            true if equal diffs should be merged into a single entry,
+	 *            false if an entry should be created for each diff in all patch
+	 *            sets.
 	 * @return a list of {@link IPatchSetHistoryEntry}s for all diagram
 	 *         differences in the given patch set
 	 */
 	public List<IPatchSetHistoryEntry<Diff, DiffWithSimilarity>> createDiagramEntries(PatchSet patchSet,
-			List<PatchSet> patchSets);
+			List<PatchSet> patchSets, boolean mergeEqualDiffs);
 
 	/**
 	 * creates all entries for all diagram differences in the given list of
 	 * patch sets. No duplicated entries will be created for equal diffs in
-	 * different patch sets.
+	 * different patch sets if specified.
 	 * 
 	 * @param patchSets
+	 * @param mergeEqualDiffs
+	 *            true if equal diffs should be merged into a single entry,
+	 *            false if an entry should be created for each diff in all patch
+	 *            sets.
 	 * @return a list of {@link IPatchSetHistoryEntry}s for all diagram
 	 *         differences in the given patch set
 	 */
-	public List<IPatchSetHistoryEntry<Diff, DiffWithSimilarity>> createDiagramEntries(List<PatchSet> patchSets);
+	public List<IPatchSetHistoryEntry<Diff, DiffWithSimilarity>> createDiagramEntries(List<PatchSet> patchSets,
+			boolean mergeEqualDiffs);
 
 	/**
 	 * 
