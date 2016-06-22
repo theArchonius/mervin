@@ -14,6 +14,7 @@ package at.bitandart.zoubek.mervin.model.modelreview.impl;
 
 import at.bitandart.zoubek.mervin.model.modelreview.*;
 
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Vector;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -121,6 +122,8 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements ModelReviewF
 			return createDimensionChangeFromString(eDataType, initialValue);
 		case ModelReviewPackage.VECTOR:
 			return createVectorFromString(eDataType, initialValue);
+		case ModelReviewPackage.DIMENSION:
+			return createDimensionFromString(eDataType, initialValue);
 		default:
 			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -142,6 +145,8 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements ModelReviewF
 			return convertDimensionChangeToString(eDataType, instanceValue);
 		case ModelReviewPackage.VECTOR:
 			return convertVectorToString(eDataType, instanceValue);
+		case ModelReviewPackage.DIMENSION:
+			return convertDimensionToString(eDataType, instanceValue);
 		default:
 			throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
 		}
@@ -388,6 +393,24 @@ public class ModelReviewFactoryImpl extends EFactoryImpl implements ModelReviewF
 	 * @generated
 	 */
 	public String convertVectorToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(eDataType, instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public Dimension createDimensionFromString(EDataType eDataType, String initialValue) {
+		return (Dimension) super.createFromString(eDataType, initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public String convertDimensionToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(eDataType, instanceValue);
 	}
 

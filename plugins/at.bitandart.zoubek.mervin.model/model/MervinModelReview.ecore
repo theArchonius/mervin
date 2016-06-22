@@ -144,10 +144,12 @@
       eSuperTypes="#//Difference"/>
   <eClassifiers xsi:type="ecore:EClass" name="LocationDifference" eSuperTypes="#//LayoutDifference">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="moveDirection" eType="#//Vector"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="originalLocation" eType="#//Vector"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SizeDifference" eSuperTypes="#//LayoutDifference">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="widthChange" eType="#//DimensionChange"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="heightChange" eType="#//DimensionChange"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="originalDimension" eType="#//Dimension"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="StateDifference" eSuperTypes="#//ModelDifference">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//StateDifferenceType"/>
@@ -184,4 +186,5 @@
     <eTypeParameters name="T"/>
     <eTypeParameters name="U"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="Dimension" instanceClassName="org.eclipse.draw2d.geometry.Dimension"/>
 </ecore:EPackage>

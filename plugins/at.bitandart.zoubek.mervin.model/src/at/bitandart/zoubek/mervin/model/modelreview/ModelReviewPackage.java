@@ -1191,13 +1191,22 @@ public interface ModelReviewPackage extends EPackage {
 	int LOCATION_DIFFERENCE__MOVE_DIRECTION = LAYOUT_DIFFERENCE_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Original Location</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int LOCATION_DIFFERENCE__ORIGINAL_LOCATION = LAYOUT_DIFFERENCE_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>Location Difference</em>'
 	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int LOCATION_DIFFERENCE_FEATURE_COUNT = LAYOUT_DIFFERENCE_FEATURE_COUNT + 1;
+	int LOCATION_DIFFERENCE_FEATURE_COUNT = LAYOUT_DIFFERENCE_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of operations of the '<em>Location Difference</em>' class.
@@ -1248,13 +1257,22 @@ public interface ModelReviewPackage extends EPackage {
 	int SIZE_DIFFERENCE__HEIGHT_CHANGE = LAYOUT_DIFFERENCE_FEATURE_COUNT + 1;
 
 	/**
+	 * The feature id for the '<em><b>Original Dimension</b></em>' attribute.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int SIZE_DIFFERENCE__ORIGINAL_DIMENSION = LAYOUT_DIFFERENCE_FEATURE_COUNT + 2;
+
+	/**
 	 * The number of structural features of the '<em>Size Difference</em>'
 	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int SIZE_DIFFERENCE_FEATURE_COUNT = LAYOUT_DIFFERENCE_FEATURE_COUNT + 2;
+	int SIZE_DIFFERENCE_FEATURE_COUNT = LAYOUT_DIFFERENCE_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>Size Difference</em>' class. <!--
@@ -1511,6 +1529,16 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 */
 	int HASH_BI_MAP = 24;
+
+	/**
+	 * The meta object id for the '<em>Dimension</em>' data type. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see org.eclipse.draw2d.geometry.Vector
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDimension()
+	 * @generated
+	 */
+	int DIMENSION = 25;
 
 	/**
 	 * Returns the meta object for class '
@@ -2370,6 +2398,19 @@ public interface ModelReviewPackage extends EPackage {
 	EAttribute getLocationDifference_MoveDirection();
 
 	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.LocationDifference#getOriginalLocation
+	 * <em>Original Location</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @return the meta object for the attribute '<em>Original Location</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.LocationDifference#getOriginalLocation()
+	 * @see #getLocationDifference()
+	 * @generated
+	 */
+	EAttribute getLocationDifference_OriginalLocation();
+
+	/**
 	 * Returns the meta object for class '
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.SizeDifference
 	 * <em>Size Difference</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -2403,6 +2444,19 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getSizeDifference_HeightChange();
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.SizeDifference#getOriginalDimension
+	 * <em>Original Dimension</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @return the meta object for the attribute '<em>Original Dimension</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.SizeDifference#getOriginalDimension()
+	 * @see #getSizeDifference()
+	 * @generated
+	 */
+	EAttribute getSizeDifference_OriginalDimension();
 
 	/**
 	 * Returns the meta object for class '
@@ -2583,6 +2637,18 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 */
 	EDataType getHashBiMap();
+
+	/**
+	 * Returns the meta object for data type '
+	 * {@link org.eclipse.draw2d.geometry.Vector <em>Dimension</em>}'. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for data type '<em>Dimension</em>'.
+	 * @see org.eclipse.draw2d.geometry.Vector
+	 * @model instanceClass="org.eclipse.draw2d.geometry.Vector"
+	 * @generated
+	 */
+	EDataType getDimension();
 
 	/**
 	 * Returns the factory that creates the instances of the model. <!--
@@ -3232,6 +3298,14 @@ public interface ModelReviewPackage extends EPackage {
 		EAttribute LOCATION_DIFFERENCE__MOVE_DIRECTION = eINSTANCE.getLocationDifference_MoveDirection();
 
 		/**
+		 * The meta object literal for the '<em><b>Original Location</b></em>'
+		 * attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute LOCATION_DIFFERENCE__ORIGINAL_LOCATION = eINSTANCE.getLocationDifference_OriginalLocation();
+
+		/**
 		 * The meta object literal for the '
 		 * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.SizeDifferenceImpl
 		 * <em>Size Difference</em>}' class. <!-- begin-user-doc --> <!--
@@ -3258,6 +3332,14 @@ public interface ModelReviewPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute SIZE_DIFFERENCE__HEIGHT_CHANGE = eINSTANCE.getSizeDifference_HeightChange();
+
+		/**
+		 * The meta object literal for the '<em><b>Original Dimension</b></em>'
+		 * attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute SIZE_DIFFERENCE__ORIGINAL_DIMENSION = eINSTANCE.getSizeDifference_OriginalDimension();
 
 		/**
 		 * The meta object literal for the '
@@ -3409,6 +3491,16 @@ public interface ModelReviewPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType HASH_BI_MAP = eINSTANCE.getHashBiMap();
+
+		/**
+		 * The meta object literal for the '<em>Dimension</em>' data type. <!--
+		 * begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @see org.eclipse.draw2d.geometry.Vector
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDimension()
+		 * @generated
+		 */
+		EDataType DIMENSION = eINSTANCE.getDimension();
 
 	}
 
