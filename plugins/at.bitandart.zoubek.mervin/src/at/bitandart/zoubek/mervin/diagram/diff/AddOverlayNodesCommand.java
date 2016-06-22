@@ -35,9 +35,11 @@ import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
 import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.Location;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.RelativeBendpoints;
+import org.eclipse.gmf.runtime.notation.Size;
 import org.eclipse.gmf.runtime.notation.View;
 
 import com.google.common.collect.BiMap;
@@ -255,19 +257,7 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 				 * found review relevant differences, so add the overlay into
 				 * the view model
 				 */
-				Node node = ViewService.createNode(container, differenceOverlay, type, preferencesHint);
-//				if (GMFDiagramDiffViewService.TYPE_DESCRIPTOR_ADDITION.isType(differenceOverlay)) {
-//					node.setVisible(modelReview.isShowAdditions());
-//				}
-//				if (GMFDiagramDiffViewService.TYPE_DESCRIPTOR_DELETION.isType(differenceOverlay)) {
-//					node.setVisible(modelReview.isShowDeletions());
-//				}
-//				if (GMFDiagramDiffViewService.TYPE_DESCRIPTOR_MODIFICATION.isType(differenceOverlay)) {
-//					node.setVisible(modelReview.isShowModifications());
-//				}
-//				if (GMFDiagramDiffViewService.TYPE_DESCRIPTOR_LAYOUT.isType(differenceOverlay)) {
-//					node.setVisible(modelReview.isShowLayoutChanges());
-//				}
+				ViewService.createNode(container, differenceOverlay, type, preferencesHint);
 
 			}
 
@@ -402,49 +392,21 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 					locationRawDiffs.add(attributeChange);
 
 					if (oldLocation == null) {
-						oldLocation = new DoublePrecisionVector(0.0, 0.0);
+
+						/*
+						 * two way comparison is assumed, so left is new, right
+						 * is old
+						 */
+						oldLocation = locationConstraintToVector(layoutConstraintMatch.getRight(), 0.0);
 					}
+
 					if (newLocation == null) {
-						newLocation = new DoublePrecisionVector(0.0, 0.0);
-					}
 
-					Object value = attributeChange.getValue();
-					if (value instanceof Number) {
-
-						double doubleValue = ((Number) value).doubleValue();
-						if (attributeChange.getAttribute() == NotationPackage.Literals.LOCATION__X) {
-							newLocation.x = doubleValue;
-						} else {
-							newLocation.y = doubleValue;
-						}
-
-					}
-
-					// two way comparison is assumed
-					EObject oldLayoutVersion = layoutConstraintMatch.getRight();
-					if (oldLayoutVersion != null) {
-
-						try {
-
-							Object oldValue = oldLayoutVersion.eGet(attributeChange.getAttribute());
-							if (oldValue instanceof Number) {
-
-								double doubleValue = ((Number) oldValue).doubleValue();
-								if (attributeChange.getAttribute() == NotationPackage.Literals.LOCATION__X) {
-									oldLocation.x = doubleValue;
-								} else {
-									oldLocation.y = doubleValue;
-								}
-
-							}
-
-						} catch (IllegalArgumentException e) {
-							/*
-							 * Intentionally left empty, use the default value 0
-							 * for the old location value
-							 */
-						}
-
+						/*
+						 * two way comparison is assumed, so left is new, right
+						 * is old
+						 */
+						newLocation = locationConstraintToVector(layoutConstraintMatch.getLeft(), -1.0);
 					}
 
 				} else if (attributeChange.getAttribute() == NotationPackage.Literals.SIZE__HEIGHT
@@ -453,55 +415,24 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 					sizeRawDiffs.add(attributeChange);
 
 					if (oldSize == null) {
-						oldSize = new PrecisionDimension(0.0, 0.0);
+
+						/*
+						 * two way comparison is assumed, so left is new, right
+						 * is old
+						 */
+						oldSize = sizeConstraintToDimension(layoutConstraintMatch.getRight(), -1.0);
 					}
+
 					if (newSize == null) {
-						newSize = new PrecisionDimension(0.0, 0.0);
+
+						/*
+						 * two way comparison is assumed, so left is new, right
+						 * is old
+						 */
+						newSize = sizeConstraintToDimension(layoutConstraintMatch.getLeft(), -1.0);
 					}
-
-					Object value = attributeChange.getValue();
-					if (value instanceof Number) {
-
-						double doubleValue = ((Number) value).doubleValue();
-						if (attributeChange.getAttribute() == NotationPackage.Literals.SIZE__HEIGHT) {
-							newSize.setPreciseHeight(doubleValue);
-						} else {
-							newSize.setPreciseWidth(doubleValue);
-						}
-
-					}
-
-					// two way comparison is assumed
-					EObject oldLayoutVersion = layoutConstraintMatch.getRight();
-					if (oldLayoutVersion != null) {
-
-						try {
-
-							Object oldValue = oldLayoutVersion.eGet(attributeChange.getAttribute());
-							if (oldValue instanceof Number) {
-
-								double doubleValue = ((Number) oldValue).doubleValue();
-								if (attributeChange.getAttribute() == NotationPackage.Literals.SIZE__HEIGHT) {
-									oldSize.setPreciseHeight(doubleValue);
-								} else {
-									oldSize.setPreciseWidth(doubleValue);
-								}
-
-							}
-
-						} catch (IllegalArgumentException e) {
-							/*
-							 * Intentionally left empty, use the default value 0
-							 * for the old location value
-							 */
-						}
-
-					}
-
 				}
-
 			}
-
 		}
 
 		if (oldLocation != null && newLocation != null) {
@@ -516,6 +447,7 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 				LocationDifference locationDifference = reviewFactory.createLocationDifference();
 				locationDifference.getRawDiffs().addAll(locationRawDiffs);
 				locationDifference.setMoveDirection(moveDirection);
+				locationDifference.setOriginalLocation(oldLocation);
 
 				differenceOverlay.getDifferences().add(locationDifference);
 
@@ -529,6 +461,7 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 
 			SizeDifference sizeDifference = reviewFactory.createSizeDifference();
 			sizeDifference.getRawDiffs().addAll(sizeRawDiffs);
+			sizeDifference.setOriginalDimension(oldSize);
 
 			if (oldSize.preciseWidth() < newSize.preciseWidth()) {
 
@@ -561,6 +494,57 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 			differenceOverlay.getDifferences().add(sizeDifference);
 
 		}
+	}
+
+	/**
+	 * convenience method to convert the given object to a double value. If the
+	 * object cannot be converted, the default value is returned.
+	 * 
+	 * @param value
+	 *            the object to convert.
+	 * @param defaultValue
+	 *            the default value to return if the conversion is not possible.
+	 * @return the converted double value or the default value if the conversion
+	 *         was not possible.
+	 */
+	private static double toDouble(Object value, double defaultValue) {
+
+		if (value instanceof Number) {
+			return ((Number) value).doubleValue();
+		}
+		return defaultValue;
+	}
+
+	/**
+	 * convenience method to extract the dimension from an {@link EObject}
+	 * representing a {@link Size} object.
+	 * 
+	 * @param object
+	 *            the {@link EObject} representing a {@link Size} object.
+	 * @param defaultValue
+	 *            the default value to use for the width and height if the
+	 *            size's values could not be converted to a number.
+	 * @return the extracted dimension.
+	 */
+	private static PrecisionDimension sizeConstraintToDimension(EObject object, double defaultValue) {
+		return new PrecisionDimension(toDouble(object.eGet(NotationPackage.Literals.SIZE__WIDTH), defaultValue),
+				toDouble(object.eGet(NotationPackage.Literals.SIZE__HEIGHT), defaultValue));
+	}
+
+	/**
+	 * convenience method to extract a vector from an {@link EObject}
+	 * representing a {@link Location} object.
+	 * 
+	 * @param object
+	 *            the {@link EObject} representing a {@link Location} object.
+	 * @param defaultValue
+	 *            the default value to use for the x and y if the location's
+	 *            values could not be converted to a number.
+	 * @return the extracted vector.
+	 */
+	private static DoublePrecisionVector locationConstraintToVector(EObject object, double defaultValue) {
+		return new DoublePrecisionVector(toDouble(object.eGet(NotationPackage.Literals.LOCATION__X), defaultValue),
+				toDouble(object.eGet(NotationPackage.Literals.LOCATION__Y), defaultValue));
 	}
 
 	/**
