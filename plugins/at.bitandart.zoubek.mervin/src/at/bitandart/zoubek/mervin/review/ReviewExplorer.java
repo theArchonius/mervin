@@ -40,14 +40,18 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
+import org.eclipse.swt.widgets.TreeItem;
 
 import at.bitandart.zoubek.mervin.IReviewHighlightService;
 import at.bitandart.zoubek.mervin.IReviewHighlightServiceListener;
@@ -123,6 +127,49 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 		reviewTree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		reviewTree.setLinesVisible(false);
 		reviewTree.setHeaderVisible(true);
+		reviewTree.addMouseTrackListener(new MouseTrackListener() {
+
+			@Override
+			public void mouseHover(MouseEvent e) {
+
+				Object source = e.getSource();
+
+				if (source instanceof Tree) {
+					Tree tree = (Tree) source;
+					TreeItem item = tree.getItem(new Point(e.x, e.y));
+
+					if (item != null) {
+
+						ModelReview modelReview = getCurrentModelReview();
+						Object data = item.getData();
+
+						if (data != null) {
+							/*
+							 * clear existing highlights as elements should only
+							 * be highlighted while the user hovers over them
+							 */
+							highlightService.clearHighlights(modelReview);
+							/* add new highlighted element */
+							highlightService.addHighlightFor(modelReview, item.getData());
+						}
+					}
+				}
+			}
+
+			@Override
+			public void mouseExit(MouseEvent e) {
+				/*
+				 * clear existing highlights as elements should only be
+				 * highlighted while the user hovers over them
+				 */
+				highlightService.clearHighlights(getCurrentModelReview());
+			}
+
+			@Override
+			public void mouseEnter(MouseEvent e) {
+				// Intentionally left empty
+			}
+		});
 
 		// set up all columns of the tree
 
@@ -573,7 +620,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 
 			PatchSet patchSet = findPatchSet(element);
 			if (patchSet != null) {
-				return patchSet.getMaxObjectChangeCount();
+				return patchSet.getMaxObjectChangeRefCount();
 			}
 
 			return 0;

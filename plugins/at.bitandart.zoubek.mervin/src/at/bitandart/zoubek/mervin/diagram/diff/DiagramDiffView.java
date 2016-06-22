@@ -25,6 +25,7 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -367,7 +368,7 @@ public class DiagramDiffView implements IAdaptable {
 		 * @param element
 		 *            the element to find the figure for.
 		 * @param rootEditPart
-		 *            the root {@link EditPart} to search in.
+		 *            the root edit part to start the search at (inclusive).
 		 * @return the figure representing the given element or null if none
 		 *         could be found.
 		 */
@@ -376,22 +377,63 @@ public class DiagramDiffView implements IAdaptable {
 			if (element instanceof EObject) {
 				EObject eObject = (EObject) element;
 
-				IFigure figure = findFigureInEditPartTree(eObject, rootEditPart);
+				IFigure figure = findFigureInSelectedComparison(review, eObject, rootEditPart);
 				if (figure != null) {
 					return figure;
 				}
-				figure = findFigureInPatchSetMatch(eObject, review.getRightPatchSet(), rootEditPart);
-				if (figure != null) {
-					return figure;
-				}
-				figure = findFigureInPatchSetMatch(eObject, review.getLeftPatchSet(), rootEditPart);
-				if (figure != null) {
-					return figure;
-				}
+				return findFigureNotContainedInSelectedComparison(review, eObject, rootEditPart);
 			}
 
 			return null;
 
+		}
+
+		/**
+		 * finds the corresponding figure for the given review and element which
+		 * is known not to be contained in the selected comparison of the
+		 * review.
+		 * 
+		 * @param review
+		 *            the model review associated with the given object.
+		 * @param eObject
+		 *            the object to search for.
+		 * @param rootEditPart
+		 *            the root edit part to start the search at (inclusive).
+		 * @return the corresponding figure or null if none could be found.
+		 */
+		private IFigure findFigureNotContainedInSelectedComparison(ModelReview review, EObject eObject,
+				EditPart rootEditPart) {
+
+			/*
+			 * A view has been very likely copied in the unified diagram
+			 * model,therefore check if there is also a figure for this model
+			 */
+			if (eObject instanceof View) {
+				EObject unifiedCopy = review.getUnifiedModelMap().get(eObject);
+				if (unifiedCopy != null) {
+					IFigure figure = findFigureFor(review, unifiedCopy, rootEditPart);
+					if (figure != null) {
+						return figure;
+					}
+				}
+			}
+
+			IFigure figure = findFigureInEditPartTree(eObject, rootEditPart);
+			if (figure != null) {
+				return figure;
+			}
+
+			figure = findFigureInPatchSetMatch(review, eObject, review.getRightPatchSet(), rootEditPart);
+			if (figure != null) {
+				return figure;
+			}
+
+			figure = findFigureInPatchSetMatch(review, eObject, review.getLeftPatchSet(), rootEditPart);
+			if (figure != null) {
+				return figure;
+			}
+
+			return null;
 		}
 
 		/**
@@ -416,35 +458,122 @@ public class DiagramDiffView implements IAdaptable {
 		}
 
 		/**
-		 * finds the corresponding figure for the given and element based on the
-		 * matching information of comparison in the given patch set.
+		 * finds the corresponding figure for the given review and element based
+		 * on the matching information of the comparisons in the given patch
+		 * set.
 		 * 
+		 * @param review
+		 *            the model review associated with the given object.
 		 * @param eObject
 		 *            the object to find the match for.
 		 * @param patchSet
 		 *            the patch set to search for the match.
 		 * @param rootEditPart
-		 *            the root edit part containing the potential match object
-		 *            of the match.
+		 *            the root edit part to start the search at (inclusive).
 		 * @return the corresponding figure or null if none could be found.
 		 */
-		private IFigure findFigureInPatchSetMatch(EObject eObject, PatchSet patchSet, EditPart rootEditPart) {
+		private IFigure findFigureInPatchSetMatch(ModelReview review, EObject eObject, PatchSet patchSet,
+				EditPart rootEditPart) {
 
 			if (patchSet != null) {
-				Match match = patchSet.getModelComparison().getMatch(eObject);
-				if (match != null) {
-					EObject matchedObject = match.getLeft();
-					if (matchedObject == eObject) {
-						matchedObject = match.getRight();
-					}
-					EditPart editPart = findEditPart(eObject, rootEditPart);
-					if (editPart != null && editPart instanceof GraphicalEditPart) {
-						return ((GraphicalEditPart) editPart).getFigure();
-					}
+
+				IFigure figure = findFigureInComparison(review, eObject, patchSet.getModelComparison(), rootEditPart);
+				if (figure != null) {
+					return figure;
+				}
+
+				figure = findFigureInComparison(review, eObject, patchSet.getDiagramComparison(), rootEditPart);
+				if (figure != null) {
+					return figure;
 				}
 			}
 			return null;
 
+		}
+
+		/**
+		 * finds the corresponding figure for the given review and element based
+		 * on the matching information of the selected comparison of the given
+		 * model review.
+		 * 
+		 * @param review
+		 *            the model review associated with the given object.
+		 * @param eObject
+		 *            the object to find the match for.
+		 * @param rootEditPart
+		 *            the root edit part to start the search at (inclusive).
+		 * @return the corresponding figure or null if none could be found.
+		 */
+		private IFigure findFigureInSelectedComparison(ModelReview review, EObject eObject, EditPart rootEditPart) {
+
+			IFigure figure = findFigureInComparison(review, eObject, review.getSelectedModelComparison(), rootEditPart);
+			if (figure != null) {
+				return figure;
+			}
+
+			figure = findFigureInComparison(review, eObject, review.getSelectedDiagramComparison(), rootEditPart);
+			if (figure != null) {
+				return figure;
+			}
+
+			return null;
+		}
+
+		/**
+		 * finds the corresponding figure for the given review and element based
+		 * on the matching information in the given comparison.
+		 * 
+		 * @param review
+		 *            the model review associated with the given object.
+		 * @param eObject
+		 *            the object to find the match for.
+		 * @param comparison
+		 *            the comparison to get the match for the given object.
+		 * @param rootEditPart
+		 *            the root edit part to start the search at (inclusive).
+		 * @return the corresponding figure or null if none could be found.
+		 */
+		private IFigure findFigureInComparison(ModelReview review, EObject eObject, Comparison comparison,
+				EditPart rootEditPart) {
+
+			Match match = comparison.getMatch(eObject);
+			if (match != null) {
+
+				IFigure figure = findFigureInMatch(review, eObject, match, rootEditPart);
+				if (figure != null) {
+					return figure;
+				}
+			}
+
+			return null;
+		}
+
+		/**
+		 * finds the corresponding figure for the given review and element based
+		 * on the matching information in the given match.
+		 * 
+		 * @param review
+		 *            the model review associated with the given object.
+		 * @param otherEObject
+		 *            the object to find the match for.
+		 * @param match
+		 *            the match used to get the matching eObject from.
+		 * @param rootEditPart
+		 *            the root edit part to start the search at (inclusive).
+		 * @return the corresponding figure or null if none could be found.
+		 */
+		private IFigure findFigureInMatch(ModelReview review, EObject otherEObject, Match match,
+				EditPart rootEditPart) {
+
+			EObject matchedObject = match.getLeft();
+			if (matchedObject == otherEObject) {
+				matchedObject = match.getRight();
+			}
+
+			if (matchedObject != null) {
+				return findFigureNotContainedInSelectedComparison(review, matchedObject, rootEditPart);
+			}
+			return null;
 		}
 
 		/**
@@ -453,7 +582,7 @@ public class DiagramDiffView implements IAdaptable {
 		 * @param object
 		 *            the object to search for.
 		 * @param rootEditPart
-		 *            the root edit part to start the search.
+		 *            the root edit part to start the search at (inclusive).
 		 * @return the corresponding edit part or null if none could be found.
 		 */
 		private EditPart findEditPart(Object object, EditPart rootEditPart) {
@@ -462,17 +591,54 @@ public class DiagramDiffView implements IAdaptable {
 			if (model == object || (model instanceof View && ((View) model).getElement() == object)) {
 				return rootEditPart;
 			}
-			List<?> children = rootEditPart.getChildren();
-			for (Object child : children) {
-				EditPart editPart = findEditPart(object, (EditPart) child);
+
+			/* search in children */
+			EditPart editPart = findEditPart(object, rootEditPart.getChildren());
+			if (editPart != null) {
+				return editPart;
+			}
+
+			if (rootEditPart instanceof GraphicalEditPart) {
+				GraphicalEditPart graphicalEditpart = (GraphicalEditPart) rootEditPart;
+
+				/* search in source connections */
+				editPart = findEditPart(object, graphicalEditpart.getSourceConnections());
+				if (editPart != null) {
+					return editPart;
+				}
+
+				/* search in target connections */
+				editPart = findEditPart(object, graphicalEditpart.getTargetConnections());
 				if (editPart != null) {
 					return editPart;
 				}
 			}
 			return null;
-
 		}
 
+		/**
+		 * finds the corresponding edit part for the given model object in the
+		 * given list of possible edit parts.
+		 * 
+		 * @param object
+		 *            the object to search for.
+		 * @param editParts
+		 *            a list that contain edit parts, non-edit parts will be
+		 *            ignored.
+		 * @return the corresponding edit part or null if none could be found.
+		 */
+		private EditPart findEditPart(Object object, List<?> editParts) {
+
+			for (Object child : editParts) {
+
+				EditPart editPart = findEditPart(object, (EditPart) child);
+				if (editPart != null) {
+					return editPart;
+				}
+			}
+
+			return null;
+		}
 	}
 
 }
