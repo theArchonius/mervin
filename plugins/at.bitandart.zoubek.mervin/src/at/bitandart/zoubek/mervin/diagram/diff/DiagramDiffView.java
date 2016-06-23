@@ -151,9 +151,6 @@ public class DiagramDiffView implements IAdaptable {
 			final Resource resource = resourceSet
 					.createResource(URI.createURI("mervin-model-review-resource.resource.notation"));
 			resourceSet.getResources().add(resource);
-			// Diagram diagram = ViewService.getInstance().createDiagram(new
-			// EObjectAdapter(getModelReview()),
-			// PART_DESCRIPTOR_ID, new PreferencesHint(PART_DESCRIPTOR_ID));
 			editingDomain = TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain(resourceSet);
 			context.set(EditingDomain.class, editingDomain);
 			context.set(TransactionalEditingDomain.class, editingDomain);

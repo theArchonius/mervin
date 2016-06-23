@@ -14,6 +14,7 @@ import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,11 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
+import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
+import org.eclipse.e4.ui.workbench.modeling.ElementMatcher;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -31,7 +37,11 @@ import org.eclipse.jface.util.Policy;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -77,9 +87,16 @@ import at.bitandart.zoubek.mervin.util.vis.ThreeWayObjectTreeViewerComparator;
  * @see ModelReviewEditorTrackingView
  *
  */
-public class ReviewExplorer extends ModelReviewEditorTrackingView {
+public class ReviewExplorer extends ModelReviewEditorTrackingView implements IHighlightModeSwitchableView {
 
 	public static final String PART_DESCRIPTOR_ID = "at.bitandart.zoubek.mervin.partdescriptor.review";
+
+	public static final String VIEW_MENU_ID = "at.bitandart.zoubek.mervin.menu.view.review.explorer";
+
+	public static final String VIEW_MENU_ITEM_HIGHLIGHT_SWITCH_MODE = "at.bitandart.zoubek.mervin.menu.view.review.explorer.highlight.switchmode";
+
+	@Inject
+	private ESelectionService selectionService;
 
 	@Inject
 	private IReviewHighlightService highlightService;
@@ -88,6 +105,11 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 	private Display display;
 
 	private HighlightStyler highlightStyler;
+
+	/**
+	 * the current highlight mode, never null
+	 */
+	private HighlightMode highlightMode = HighlightMode.SELECTION;
 
 	// JFace Viewers
 
@@ -111,7 +133,9 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 	private boolean viewInitialized = false;
 
 	@PostConstruct
-	public void postConstruct(Composite parent) {
+	public void postConstruct(Composite parent, EModelService modelService, MPart part) {
+
+		syncMenuAndToolbarItemState(modelService, part);
 
 		highlightStyler = new HighlightStyler(display);
 
@@ -123,6 +147,32 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 		reviewTreeViewer = new TreeViewer(mainPanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
 		reviewTreeViewer.setComparator(new ViewerComparator());
 		reviewTreeViewer.setContentProvider(new ModelReviewContentProvider());
+		reviewTreeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+
+				ModelReview review = getCurrentModelReview();
+				ISelection selection = event.getSelection();
+				if (highlightMode == HighlightMode.SELECTION && review != null) {
+
+					highlightService.clearHighlights(review);
+					if (selection instanceof IStructuredSelection) {
+
+						IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+						Iterator<?> iterator = structuredSelection.iterator();
+
+						while (iterator.hasNext()) {
+							highlightService.addHighlightFor(review, iterator.next());
+						}
+					}
+
+				}
+				selectionService.setSelection(selection);
+
+			}
+		});
+
 		Tree reviewTree = reviewTreeViewer.getTree();
 		reviewTree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		reviewTree.setLinesVisible(false);
@@ -132,25 +182,28 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 			@Override
 			public void mouseHover(MouseEvent e) {
 
-				Object source = e.getSource();
+				if (highlightMode == HighlightMode.HOVER) {
+					Object source = e.getSource();
 
-				if (source instanceof Tree) {
-					Tree tree = (Tree) source;
-					TreeItem item = tree.getItem(new Point(e.x, e.y));
+					if (source instanceof Tree) {
+						Tree tree = (Tree) source;
+						TreeItem item = tree.getItem(new Point(e.x, e.y));
 
-					if (item != null) {
+						if (item != null) {
 
-						ModelReview modelReview = getCurrentModelReview();
-						Object data = item.getData();
+							ModelReview modelReview = getCurrentModelReview();
+							Object data = item.getData();
 
-						if (data != null) {
-							/*
-							 * clear existing highlights as elements should only
-							 * be highlighted while the user hovers over them
-							 */
-							highlightService.clearHighlights(modelReview);
-							/* add new highlighted element */
-							highlightService.addHighlightFor(modelReview, item.getData());
+							if (data != null) {
+								/*
+								 * clear existing highlights as elements should
+								 * only be highlighted while the user hovers
+								 * over them
+								 */
+								highlightService.clearHighlights(modelReview);
+								/* add new highlighted element */
+								highlightService.addHighlightFor(modelReview, item.getData());
+							}
 						}
 					}
 				}
@@ -158,11 +211,14 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 
 			@Override
 			public void mouseExit(MouseEvent e) {
-				/*
-				 * clear existing highlights as elements should only be
-				 * highlighted while the user hovers over them
-				 */
-				highlightService.clearHighlights(getCurrentModelReview());
+
+				if (highlightMode == HighlightMode.HOVER) {
+					/*
+					 * clear existing highlights as elements should only be
+					 * highlighted while the user hovers over them
+					 */
+					highlightService.clearHighlights(getCurrentModelReview());
+				}
 			}
 
 			@Override
@@ -247,6 +303,31 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 		updateValues();
 	}
 
+	/**
+	 * synchronizes the menu and toolbar item state of radio and check items
+	 * with this view.
+	 * 
+	 * @param modelService
+	 *            the service used to find the menu items
+	 * @param part
+	 *            the part containing the menu items
+	 */
+	private void syncMenuAndToolbarItemState(EModelService modelService, MPart part) {
+
+		/* for now, just enforce the default state */
+		ElementMatcher matcher = new ElementMatcher(VIEW_MENU_ITEM_HIGHLIGHT_SWITCH_MODE, MHandledMenuItem.class,
+				(List<String>) null);
+		/*
+		 * IN_PART is not part of ANYWHERE, so use this variant of findElements
+		 * and pass IN_PART as search flag
+		 */
+		List<MHandledMenuItem> items = modelService.findElements(part, MHandledMenuItem.class, EModelService.IN_PART,
+				matcher);
+		for (MHandledMenuItem item : items) {
+			item.setSelected(false);
+		}
+	}
+
 	@Override
 	protected void updateValues() {
 
@@ -266,6 +347,16 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 			reviewTreeViewer.getTree().layout();
 			mainPanel.layout();
 		}
+	}
+
+	@Override
+	public void setHighlightMode(HighlightMode highlightMode) {
+
+		if (highlightMode != null) {
+			this.highlightMode = highlightMode;
+			highlightService.clearHighlights(getCurrentModelReview());
+		}
+
 	}
 
 	/**
