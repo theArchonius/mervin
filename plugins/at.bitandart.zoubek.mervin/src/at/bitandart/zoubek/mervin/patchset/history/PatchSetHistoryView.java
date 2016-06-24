@@ -56,6 +56,10 @@ import at.bitandart.zoubek.mervin.IReviewHighlightServiceListener;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
+import at.bitandart.zoubek.mervin.review.HighlightHoveredTreeItemMouseTracker;
+import at.bitandart.zoubek.mervin.review.HighlightMode;
+import at.bitandart.zoubek.mervin.review.HighlightSelectionListener;
+import at.bitandart.zoubek.mervin.review.IReviewHighlightProvidingPart;
 import at.bitandart.zoubek.mervin.review.ModelReviewEditorTrackingView;
 import at.bitandart.zoubek.mervin.swt.ProgressPanel;
 import at.bitandart.zoubek.mervin.util.vis.ThreeWayObjectTreeViewerComparator;
@@ -66,7 +70,7 @@ import at.bitandart.zoubek.mervin.util.vis.ThreeWayObjectTreeViewerComparator;
  * @author Florian Zoubek
  *
  */
-public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
+public class PatchSetHistoryView extends ModelReviewEditorTrackingView implements IReviewHighlightProvidingPart {
 
 	public static final String PART_DESCRIPTOR_ID = "at.bitandart.zoubek.mervin.partdescriptor.patchset.history";
 
@@ -82,6 +86,11 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 	private boolean viewInitialized = false;
 
 	private EContentAdapter patchSetHistoryViewUpdater;
+
+	/**
+	 * the current {@link HighlightMode}, never null;
+	 */
+	private HighlightMode highlightMode = HighlightMode.SELECTION;
 
 	@Inject
 	private ISimilarityHistoryService similarityHistoryService;
@@ -163,10 +172,12 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 		historyTreeViewer = new TreeViewer(mainPanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
 		historyTreeViewer.setComparator(new ViewerComparator());
 		historyTreeViewer.setContentProvider(new PatchSetHistoryContentProvider());
-		Tree reviewTree = historyTreeViewer.getTree();
-		reviewTree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		reviewTree.setLinesVisible(false);
-		reviewTree.setHeaderVisible(true);
+		historyTreeViewer.addSelectionChangedListener(new HighlightSelectionListener(this));
+		Tree histroryTree = historyTreeViewer.getTree();
+		histroryTree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		histroryTree.setLinesVisible(false);
+		histroryTree.setHeaderVisible(true);
+		histroryTree.addMouseTrackListener(new HighlightHoveredTreeItemMouseTracker(this));
 
 		// set up all columns of the tree
 
@@ -265,6 +276,30 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 		highlightStyler.dispose();
 		progressBackgroundColor.dispose();
 		progressForegroundColor.dispose();
+	}
+
+	@Override
+	public ModelReview getHighlightedModelReview() {
+		return getCurrentModelReview();
+	}
+
+	@Override
+	public HighlightMode getHighlightMode() {
+		return highlightMode;
+	}
+
+	@Override
+	public void setHighlightMode(HighlightMode highlightMode) {
+
+		if (highlightMode != null) {
+			this.highlightMode = highlightMode;
+			highlightService.clearHighlights(getCurrentModelReview());
+		}
+	}
+
+	@Override
+	public IReviewHighlightService getReviewHighlightService() {
+		return highlightService;
 	}
 
 	private class UpdatePatchSetHistoryViewAdapter extends EContentAdapter {
@@ -461,6 +496,7 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView {
 				if (isHighlighted(((IPatchSetHistoryEntry<?, ?>) element).getEntryObject(), highlightedElements)) {
 					return true;
 				}
+				// TODO include values
 			}
 
 			if (element instanceof Diff) {

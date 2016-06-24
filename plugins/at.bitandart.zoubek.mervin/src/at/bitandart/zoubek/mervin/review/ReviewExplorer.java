@@ -26,6 +26,10 @@ import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.e4.ui.workbench.modeling.ElementMatcher;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -66,6 +70,8 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.Patch;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.patchset.history.HighlightStyler;
+import at.bitandart.zoubek.mervin.patchset.history.IPatchSetHistoryEntry;
+import at.bitandart.zoubek.mervin.patchset.history.ISimilarityHistoryService.DiffWithSimilarity;
 import at.bitandart.zoubek.mervin.util.vis.HSB;
 import at.bitandart.zoubek.mervin.util.vis.NumericColoredColumnLabelProvider;
 import at.bitandart.zoubek.mervin.util.vis.ThreeWayLabelTreeViewerComparator;
@@ -98,6 +104,12 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 	private Display display;
 
 	private HighlightStyler highlightStyler;
+
+	/**
+	 * the complete list of filtered and derived elements to highlight in this
+	 * view.
+	 */
+	private List<Object> objectsToHighlight = new LinkedList<>();
 
 	/**
 	 * the current highlight mode, never null
@@ -218,6 +230,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 			@Override
 			public void elementRemoved(ModelReview review, Object element) {
 
+				updatesObjectToHighlight();
 				reviewTreeViewer.refresh();
 
 			}
@@ -225,12 +238,106 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 			@Override
 			public void elementAdded(ModelReview review, Object element) {
 
+				updatesObjectToHighlight();
 				reviewTreeViewer.refresh();
 
 			}
 		});
 
 		updateValues();
+	}
+
+	/**
+	 * updates the list of filtered and derived highlighted elements from the
+	 * current highlight service for the current model review.
+	 */
+	private void updatesObjectToHighlight() {
+
+		objectsToHighlight.clear();
+		ModelReview currentModelReview = getCurrentModelReview();
+
+		if (currentModelReview != null) {
+
+			List<Object> highlightedElements = highlightService.getHighlightedElements(getCurrentModelReview());
+			// TODO apply filter
+			objectsToHighlight.addAll(highlightedElements);
+
+			addDerivedElementsToHighlight(currentModelReview, highlightedElements, objectsToHighlight);
+		}
+
+	}
+
+	/**
+	 * adds the derived objects to highlight for the given {@link ModelReview}
+	 * {@link Diff} to the given list of highlighted objects.
+	 * 
+	 * @param modelReview
+	 *            the model review to highlight elements for.
+	 * @param highlightedElements
+	 *            the highlighted elements as reported by the highlight service.
+	 * @param objectsToHighlight
+	 *            the list of elements to add the derived highlighted elements
+	 *            to.
+	 */
+	protected void addDerivedElementsToHighlight(ModelReview modelReview, List<Object> highlightedElements,
+			List<Object> objectsToHighlight) {
+
+		for (Object highlightedElement : highlightedElements) {
+
+			if (highlightedElement instanceof IPatchSetHistoryEntry<?, ?>) {
+
+				IPatchSetHistoryEntry<?, ?> historyEntry = (IPatchSetHistoryEntry<?, ?>) highlightedElement;
+				Object entryObject = historyEntry.getEntryObject();
+
+				/* check the entry object first */
+				if (entryObject instanceof Diff) {
+
+					// TODO apply filter
+					Diff diff = (Diff) entryObject;
+					addDerivedElementsToHighlight(diff, objectsToHighlight);
+				}
+
+				EList<PatchSet> patchSets = modelReview.getPatchSets();
+				for (PatchSet patchSet : patchSets) {
+
+					Object value = historyEntry.getValue(patchSet);
+					if (value instanceof DiffWithSimilarity) {
+
+						// TODO apply filter
+						Diff diff = ((DiffWithSimilarity) value).getDiff();
+						// TODO apply filter
+						addDerivedElementsToHighlight(diff, objectsToHighlight);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * adds the derived objects to highlight for the given highlighted
+	 * {@link Diff} to the given list of highlighted objects.
+	 * 
+	 * @param diff
+	 *            the highlighted diff to add derived highlighted objects to the
+	 *            given list of highlighted objects
+	 * @param objectsToHighlight
+	 */
+	protected void addDerivedElementsToHighlight(Diff diff, List<Object> objectsToHighlight) {
+
+		Match match = diff.getMatch();
+		EObject left = match.getLeft();
+		EObject right = match.getRight();
+		Object value = MatchUtil.getValue(diff);
+		// TODO apply filter
+		if (value != null) {
+			objectsToHighlight.add(value);
+		}
+		if (left != null) {
+			objectsToHighlight.add(left);
+		}
+		if (right != null) {
+			objectsToHighlight.add(right);
+		}
 	}
 
 	/**
@@ -264,6 +371,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		// we cannot update the controls if they are not initialized yet
 		if (viewInitialized) {
 
+			updatesObjectToHighlight();
 			ModelReview currentModelReview = getCurrentModelReview();
 
 			// update the tree viewer
@@ -331,9 +439,8 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		public void update(ViewerCell cell) {
 
 			Object element = cell.getElement();
-			List<Object> highlightedElements = highlightService.getHighlightedElements(getCurrentModelReview());
 			StyledString text = new StyledString();
-			if (isHighlighted(element, highlightedElements)) {
+			if (isHighlighted(element, objectsToHighlight)) {
 				text.append(getText(element), highlightStyler);
 			} else {
 				text.append(getText(element));
