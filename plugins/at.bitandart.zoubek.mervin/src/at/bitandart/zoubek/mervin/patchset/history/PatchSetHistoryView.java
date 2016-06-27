@@ -22,6 +22,10 @@ import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
+import org.eclipse.e4.ui.workbench.modeling.ElementMatcher;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
@@ -75,6 +79,18 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 	public static final String PART_DESCRIPTOR_ID = "at.bitandart.zoubek.mervin.partdescriptor.patchset.history";
 
 	public static final String PART_TOOLBAR_ID = "at.bitandart.zoubek.mervin.toolbar.patchset.history";
+
+	public static final String VIEW_MENU_ID = "at.bitandart.zoubek.mervin.menu.view.patchset.history";
+
+	public static final String VIEW_MENU_ITEM_HIGHLIGHT_SWITCH_MODE = "at.bitandart.zoubek.mervin.menu.view.patchset.history.highlight.switchmode";
+
+	public static final String VIEW_MENU_ITEM_MERGE_EQUAL_DIFFS = "at.bitandart.zoubek.mervin.menu.view.patchset.history.mergeequaldiffs";
+
+	public static final String VIEW_MENU_ITEM_RADIO_VISIBLE_DIFFS_ALL_PATCHSETS = "at.bitandart.zoubek.mervin.menu.view.patchset.history.visiblediffs.allpatchsets";
+
+	public static final String VIEW_MENU_ITEM_RADIO_VISIBLE_DIFFS_NEW_PATCHSET = "at.bitandart.zoubek.mervin.menu.view.patchset.history.visiblediffs.newpatchset";
+
+	public static final String VIEW_MENU_ITEM_RADIO_VISIBLE_DIFFS_OLD_PATCHSET = "at.bitandart.zoubek.mervin.menu.view.patchset.history.visiblediffs.oldpatchset";
 
 	public enum VisibleDiffMode {
 		ALL_DIFFS, NEW_PATCHSET_DIFFS, OLD_PATCHSET_DIFFS
@@ -148,7 +164,9 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 	}
 
 	@PostConstruct
-	public void postConstruct(Composite parent) {
+	public void postConstruct(Composite parent, EModelService modelService, MPart part) {
+
+		syncMenuAndToolbarItemState(modelService, part);
 
 		initializeColors();
 		highlightStyler = new HighlightStyler(display);
@@ -211,6 +229,61 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 
 			}
 		});
+	}
+
+	/**
+	 * synchronizes the menu and toolbar item state of radio and check items
+	 * with this view.
+	 * 
+	 * @param modelService
+	 *            the service used to find the menu items
+	 * @param part
+	 *            the part containing the menu items
+	 */
+	private void syncMenuAndToolbarItemState(EModelService modelService, MPart part) {
+
+		/* for now, just enforce the default state */
+		/* highlight mode -> disabled by default */
+		ElementMatcher matcher = new ElementMatcher(VIEW_MENU_ITEM_HIGHLIGHT_SWITCH_MODE, MHandledMenuItem.class,
+				(List<String>) null);
+		/*
+		 * IN_PART is not part of ANYWHERE, so use this variant of findElements
+		 * and pass IN_PART as search flag
+		 */
+		List<MHandledMenuItem> items = modelService.findElements(part, MHandledMenuItem.class, EModelService.IN_PART,
+				matcher);
+		for (MHandledMenuItem item : items) {
+			item.setSelected(false);
+		}
+
+		/* visible diffs -> all patch sets is default */
+		matcher = new ElementMatcher(VIEW_MENU_ITEM_RADIO_VISIBLE_DIFFS_ALL_PATCHSETS, MHandledMenuItem.class,
+				(List<String>) null);
+		items = modelService.findElements(part, MHandledMenuItem.class, EModelService.IN_PART, matcher);
+		for (MHandledMenuItem item : items) {
+			item.setSelected(true);
+		}
+
+		matcher = new ElementMatcher(VIEW_MENU_ITEM_RADIO_VISIBLE_DIFFS_OLD_PATCHSET, MHandledMenuItem.class,
+				(List<String>) null);
+		items = modelService.findElements(part, MHandledMenuItem.class, EModelService.IN_PART, matcher);
+		for (MHandledMenuItem item : items) {
+			item.setSelected(false);
+		}
+
+		matcher = new ElementMatcher(VIEW_MENU_ITEM_RADIO_VISIBLE_DIFFS_NEW_PATCHSET, MHandledMenuItem.class,
+				(List<String>) null);
+		items = modelService.findElements(part, MHandledMenuItem.class, EModelService.IN_PART, matcher);
+		for (MHandledMenuItem item : items) {
+			item.setSelected(false);
+		}
+
+		/* merge equal diffs -> enabled by default */
+		matcher = new ElementMatcher(VIEW_MENU_ITEM_MERGE_EQUAL_DIFFS, MHandledMenuItem.class, (List<String>) null);
+		items = modelService.findElements(part, MHandledMenuItem.class, EModelService.IN_PART, matcher);
+		for (MHandledMenuItem item : items) {
+			item.setSelected(true);
+		}
 	}
 
 	/**
