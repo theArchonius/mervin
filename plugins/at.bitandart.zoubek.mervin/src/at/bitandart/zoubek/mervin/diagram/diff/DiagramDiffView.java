@@ -26,7 +26,9 @@ import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
+import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -61,9 +63,12 @@ import org.eclipse.swt.widgets.Label;
 
 import at.bitandart.zoubek.mervin.IReviewHighlightService;
 import at.bitandart.zoubek.mervin.IReviewHighlightServiceListener;
+import at.bitandart.zoubek.mervin.diagram.diff.GMFDiagramDiffViewService.DiagramDiffServiceListener;
 import at.bitandart.zoubek.mervin.diagram.diff.parts.IFocusHighlightEditPart;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
+import at.bitandart.zoubek.mervin.patchset.history.IPatchSetHistoryEntry;
+import at.bitandart.zoubek.mervin.patchset.history.ISimilarityHistoryService.DiffWithSimilarity;
 
 /**
  * <p>
@@ -106,10 +111,10 @@ public class DiagramDiffView implements IAdaptable {
 	private MPart part;
 	@Inject
 	private MWindow window;
-	@Inject
+
 	private GMFDiagramDiffViewService diagramDiffViewService;
 
-	private IReviewHighlightServiceListener highlightListener = new DiffHighlightListener();
+	private DiffHighlightListener highlightListener = new DiffHighlightListener();
 
 	/**
 	 * the default part descriptor id associated with this view
@@ -133,6 +138,22 @@ public class DiagramDiffView implements IAdaptable {
 	@Inject
 	public DiagramDiffView() {
 
+	}
+
+	@Inject
+	public void setDiagramDiffViewService(GMFDiagramDiffViewService diagramDiffViewService) {
+
+		/* remove old node update listener if necessary */
+		if (this.diagramDiffViewService != null) {
+			this.diagramDiffViewService.removeListener(highlightListener);
+		}
+
+		this.diagramDiffViewService = diagramDiffViewService;
+		/*
+		 * listen for node updates to update the highlighted elements
+		 * accordingly
+		 */
+		diagramDiffViewService.addListener(highlightListener);
 	}
 
 	@PostConstruct
@@ -324,7 +345,7 @@ public class DiagramDiffView implements IAdaptable {
 	 * @author Florian Zoubek
 	 *
 	 */
-	private class DiffHighlightListener implements IReviewHighlightServiceListener {
+	private class DiffHighlightListener implements IReviewHighlightServiceListener, DiagramDiffServiceListener {
 
 		@Override
 		public void elementAdded(ModelReview review, Object element) {
@@ -370,6 +391,45 @@ public class DiagramDiffView implements IAdaptable {
 		 *         could be found.
 		 */
 		private IFigure findFigureFor(ModelReview review, Object element, EditPart rootEditPart) {
+
+			if (element instanceof IPatchSetHistoryEntry<?, ?>) {
+
+				IPatchSetHistoryEntry<?, ?> historyEntry = (IPatchSetHistoryEntry<?, ?>) element;
+
+				IFigure figure = findFigureFor(review, historyEntry.getEntryObject(), rootEditPart);
+				if (figure != null) {
+					return figure;
+				}
+				Object value = historyEntry.getValue(review.getLeftPatchSet());
+				if (value != null) {
+					figure = findFigureFor(review, value, rootEditPart);
+					if (figure != null) {
+						return figure;
+					}
+				}
+
+				value = historyEntry.getValue(review.getRightPatchSet());
+				if (value != null) {
+					figure = findFigureFor(review, value, rootEditPart);
+					if (figure != null) {
+						return figure;
+					}
+				}
+			}
+
+			if (element instanceof DiffWithSimilarity) {
+				Diff diff = ((DiffWithSimilarity) element).getDiff();
+				if (diff != null) {
+					return findFigureFor(review, diff, rootEditPart);
+				}
+			}
+
+			if (element instanceof Diff) {
+				Object value = MatchUtil.getValue((Diff) element);
+				if (value != null) {
+					return findFigureFor(review, value, rootEditPart);
+				}
+			}
 
 			if (element instanceof EObject) {
 				EObject eObject = (EObject) element;
@@ -635,6 +695,27 @@ public class DiagramDiffView implements IAdaptable {
 			}
 
 			return null;
+		}
+
+		@Override
+		public void diagramNodesUpdated(Diagram workspaceDiagram, ModelReview review) {
+
+			if (review == getModelReview()) {
+
+				IFocusHighlightEditPart focusHighlightEditPart = getFocusHighlightEditPart();
+				if (focusHighlightEditPart != null) {
+
+					/*
+					 * clear the existing highlighted figures in the edit parts
+					 */
+					focusHighlightEditPart.disableFocusHighlightMode();
+
+					List<Object> highlightedElements = highlightService.getHighlightedElements(review);
+					for (Object element : highlightedElements) {
+						elementAdded(review, element);
+					}
+				}
+			}
 		}
 	}
 

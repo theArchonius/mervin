@@ -109,7 +109,7 @@ public class MervinReviewHighlightService implements IReviewHighlightService {
 	@Override
 	public void removeHighlightServiceListener(IReviewHighlightServiceListener listener) {
 
-		listeners.add(listener);
+		listeners.remove(listener);
 
 	}
 
