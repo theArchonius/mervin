@@ -21,6 +21,15 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
+import org.eclipse.e4.ui.workbench.modeling.EModelService;
+import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
+import org.eclipse.e4.ui.workbench.modeling.ElementMatcher;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -31,7 +40,9 @@ import org.eclipse.jface.util.Policy;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -59,6 +70,8 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.Patch;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.patchset.history.HighlightStyler;
+import at.bitandart.zoubek.mervin.patchset.history.IPatchSetHistoryEntry;
+import at.bitandart.zoubek.mervin.patchset.history.ISimilarityHistoryService.DiffWithSimilarity;
 import at.bitandart.zoubek.mervin.util.vis.HSB;
 import at.bitandart.zoubek.mervin.util.vis.NumericColoredColumnLabelProvider;
 import at.bitandart.zoubek.mervin.util.vis.ThreeWayLabelTreeViewerComparator;
@@ -73,9 +86,16 @@ import at.bitandart.zoubek.mervin.util.vis.ThreeWayObjectTreeViewerComparator;
  * @see ModelReviewEditorTrackingView
  *
  */
-public class ReviewExplorer extends ModelReviewEditorTrackingView {
+public class ReviewExplorer extends ModelReviewEditorTrackingView implements IReviewHighlightProvidingPart {
 
 	public static final String PART_DESCRIPTOR_ID = "at.bitandart.zoubek.mervin.partdescriptor.review";
+
+	public static final String VIEW_MENU_ID = "at.bitandart.zoubek.mervin.menu.view.review.explorer";
+
+	public static final String VIEW_MENU_ITEM_HIGHLIGHT_SWITCH_MODE = "at.bitandart.zoubek.mervin.menu.view.review.explorer.highlight.switchmode";
+
+	@Inject
+	private ESelectionService selectionService;
 
 	@Inject
 	private IReviewHighlightService highlightService;
@@ -84,6 +104,17 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 	private Display display;
 
 	private HighlightStyler highlightStyler;
+
+	/**
+	 * the complete list of filtered and derived elements to highlight in this
+	 * view.
+	 */
+	private List<Object> objectsToHighlight = new LinkedList<>();
+
+	/**
+	 * the current highlight mode, never null
+	 */
+	private HighlightMode highlightMode = HighlightMode.SELECTION;
 
 	// JFace Viewers
 
@@ -107,7 +138,9 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 	private boolean viewInitialized = false;
 
 	@PostConstruct
-	public void postConstruct(Composite parent) {
+	public void postConstruct(Composite parent, EModelService modelService, MPart part) {
+
+		syncMenuAndToolbarItemState(modelService, part);
 
 		highlightStyler = new HighlightStyler(display);
 
@@ -119,10 +152,22 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 		reviewTreeViewer = new TreeViewer(mainPanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
 		reviewTreeViewer.setComparator(new ViewerComparator());
 		reviewTreeViewer.setContentProvider(new ModelReviewContentProvider());
+		reviewTreeViewer.addSelectionChangedListener(new HighlightSelectionListener(this) {
+
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+
+				super.selectionChanged(event);
+				ISelection selection = event.getSelection();
+				selectionService.setSelection(selection);
+			}
+		});
+
 		Tree reviewTree = reviewTreeViewer.getTree();
 		reviewTree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		reviewTree.setLinesVisible(false);
 		reviewTree.setHeaderVisible(true);
+		reviewTree.addMouseTrackListener(new HighlightHoveredTreeItemMouseTracker(this));
 
 		// set up all columns of the tree
 
@@ -185,6 +230,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 			@Override
 			public void elementRemoved(ModelReview review, Object element) {
 
+				updatesObjectToHighlight();
 				reviewTreeViewer.refresh();
 
 			}
@@ -192,6 +238,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 			@Override
 			public void elementAdded(ModelReview review, Object element) {
 
+				updatesObjectToHighlight();
 				reviewTreeViewer.refresh();
 
 			}
@@ -200,12 +247,131 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 		updateValues();
 	}
 
+	/**
+	 * updates the list of filtered and derived highlighted elements from the
+	 * current highlight service for the current model review.
+	 */
+	private void updatesObjectToHighlight() {
+
+		objectsToHighlight.clear();
+		ModelReview currentModelReview = getCurrentModelReview();
+
+		if (currentModelReview != null) {
+
+			List<Object> highlightedElements = highlightService.getHighlightedElements(getCurrentModelReview());
+			// TODO apply filter
+			objectsToHighlight.addAll(highlightedElements);
+
+			addDerivedElementsToHighlight(currentModelReview, highlightedElements, objectsToHighlight);
+		}
+
+	}
+
+	/**
+	 * adds the derived objects to highlight for the given {@link ModelReview}
+	 * {@link Diff} to the given list of highlighted objects.
+	 * 
+	 * @param modelReview
+	 *            the model review to highlight elements for.
+	 * @param highlightedElements
+	 *            the highlighted elements as reported by the highlight service.
+	 * @param objectsToHighlight
+	 *            the list of elements to add the derived highlighted elements
+	 *            to.
+	 */
+	protected void addDerivedElementsToHighlight(ModelReview modelReview, List<Object> highlightedElements,
+			List<Object> objectsToHighlight) {
+
+		for (Object highlightedElement : highlightedElements) {
+
+			if (highlightedElement instanceof IPatchSetHistoryEntry<?, ?>) {
+
+				IPatchSetHistoryEntry<?, ?> historyEntry = (IPatchSetHistoryEntry<?, ?>) highlightedElement;
+				Object entryObject = historyEntry.getEntryObject();
+
+				/* check the entry object first */
+				if (entryObject instanceof Diff) {
+
+					// TODO apply filter
+					Diff diff = (Diff) entryObject;
+					addDerivedElementsToHighlight(diff, objectsToHighlight);
+				}
+
+				EList<PatchSet> patchSets = modelReview.getPatchSets();
+				for (PatchSet patchSet : patchSets) {
+
+					Object value = historyEntry.getValue(patchSet);
+					if (value instanceof DiffWithSimilarity) {
+
+						// TODO apply filter
+						Diff diff = ((DiffWithSimilarity) value).getDiff();
+						// TODO apply filter
+						addDerivedElementsToHighlight(diff, objectsToHighlight);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * adds the derived objects to highlight for the given highlighted
+	 * {@link Diff} to the given list of highlighted objects.
+	 * 
+	 * @param diff
+	 *            the highlighted diff to add derived highlighted objects to the
+	 *            given list of highlighted objects
+	 * @param objectsToHighlight
+	 */
+	protected void addDerivedElementsToHighlight(Diff diff, List<Object> objectsToHighlight) {
+
+		Match match = diff.getMatch();
+		EObject left = match.getLeft();
+		EObject right = match.getRight();
+		Object value = MatchUtil.getValue(diff);
+		// TODO apply filter
+		if (value != null) {
+			objectsToHighlight.add(value);
+		}
+		if (left != null) {
+			objectsToHighlight.add(left);
+		}
+		if (right != null) {
+			objectsToHighlight.add(right);
+		}
+	}
+
+	/**
+	 * synchronizes the menu and toolbar item state of radio and check items
+	 * with this view.
+	 * 
+	 * @param modelService
+	 *            the service used to find the menu items
+	 * @param part
+	 *            the part containing the menu items
+	 */
+	private void syncMenuAndToolbarItemState(EModelService modelService, MPart part) {
+
+		/* for now, just enforce the default state */
+		ElementMatcher matcher = new ElementMatcher(VIEW_MENU_ITEM_HIGHLIGHT_SWITCH_MODE, MHandledMenuItem.class,
+				(List<String>) null);
+		/*
+		 * IN_PART is not part of ANYWHERE, so use this variant of findElements
+		 * and pass IN_PART as search flag
+		 */
+		List<MHandledMenuItem> items = modelService.findElements(part, MHandledMenuItem.class, EModelService.IN_PART,
+				matcher);
+		for (MHandledMenuItem item : items) {
+			item.setSelected(false);
+		}
+	}
+
 	@Override
 	protected void updateValues() {
 
 		// we cannot update the controls if they are not initialized yet
 		if (viewInitialized) {
 
+			updatesObjectToHighlight();
 			ModelReview currentModelReview = getCurrentModelReview();
 
 			// update the tree viewer
@@ -219,6 +385,31 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 			reviewTreeViewer.getTree().layout();
 			mainPanel.layout();
 		}
+	}
+
+	@Override
+	public void setHighlightMode(HighlightMode highlightMode) {
+
+		if (highlightMode != null) {
+			this.highlightMode = highlightMode;
+			highlightService.clearHighlights(getCurrentModelReview());
+		}
+
+	}
+
+	@Override
+	public HighlightMode getHighlightMode() {
+		return highlightMode;
+	}
+
+	@Override
+	public IReviewHighlightService getReviewHighlightService() {
+		return highlightService;
+	}
+
+	@Override
+	public ModelReview getHighlightedModelReview() {
+		return getCurrentModelReview();
 	}
 
 	/**
@@ -248,9 +439,8 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 		public void update(ViewerCell cell) {
 
 			Object element = cell.getElement();
-			List<Object> highlightedElements = highlightService.getHighlightedElements(getCurrentModelReview());
 			StyledString text = new StyledString();
-			if (isHighlighted(element, highlightedElements)) {
+			if (isHighlighted(element, objectsToHighlight)) {
 				text.append(getText(element), highlightStyler);
 			} else {
 				text.append(getText(element));
@@ -573,7 +763,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView {
 
 			PatchSet patchSet = findPatchSet(element);
 			if (patchSet != null) {
-				return patchSet.getMaxObjectChangeCount();
+				return patchSet.getMaxObjectChangeRefCount();
 			}
 
 			return 0;

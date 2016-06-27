@@ -1,0 +1,32 @@
+/*******************************************************************************
+ * Copyright (c) 2016 Florian Zoubek.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Florian Zoubek - initial API and implementation
+ *******************************************************************************/
+package at.bitandart.zoubek.mervin.review;
+
+/**
+ * Describes all possible highlight modes a mervin view may support.
+ * 
+ * @author Florian Zoubek
+ *
+ */
+public enum HighlightMode {
+
+	/**
+	 * Highlighting of a particular element is triggered by hovering the mouse
+	 * over a control.
+	 */
+	HOVER,
+	/**
+	 * Highlighting of a particular element is triggered by selecting (e.g. by a
+	 * mouse click or keyboard) an element in a control
+	 */
+	SELECTION
+
+}

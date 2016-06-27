@@ -10,6 +10,7 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.diagram.diff;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -74,6 +75,12 @@ public class GMFDiagramDiffViewService {
 	private ModelReviewFactory reviewFactory;
 
 	/**
+	 * the currently registered {@link DiagramDiffServiceListener}s for this
+	 * service.
+	 */
+	private List<DiagramDiffServiceListener> serviceListeners = new ArrayList<>();
+
+	/**
 	 * creates a view model for the given {@link ModelReview} instance and adds
 	 * adapters to update the view model based on changes to the
 	 * {@link ModelReview} instance.
@@ -127,6 +134,33 @@ public class GMFDiagramDiffViewService {
 			}
 			eAdapters.remove(adapterToRemove);
 		}
+	}
+
+	/**
+	 * adds the given {@link DiagramDiffServiceListener} to the list of
+	 * registered service listeners of this service. Does nothing if the
+	 * listener has been registered before.
+	 * 
+	 * @param listener
+	 *            the {@link DiagramDiffServiceListener} to add to this service.
+	 */
+	public void addListener(DiagramDiffServiceListener listener) {
+		if (!serviceListeners.contains(listener)) {
+			serviceListeners.add(listener);
+		}
+	}
+
+	/**
+	 * removes the given {@link DiagramDiffServiceListener} from the list of
+	 * registered service listeners of this service. Does nothing if the
+	 * listener has not been registered before.
+	 * 
+	 * @param listener
+	 *            the {@link DiagramDiffServiceListener} to remove from this
+	 *            service.
+	 */
+	public void removeListener(DiagramDiffServiceListener listener) {
+		serviceListeners.remove(listener);
 	}
 
 	/**
@@ -277,6 +311,26 @@ public class GMFDiagramDiffViewService {
 				new ModelReviewVisibilityState(modelReview, true)));
 
 		executeCommand(compositeCommand, editDomain);
+
+		notifyNodesUpdated(workspaceDiagram, modelReview);
+	}
+
+	/**
+	 * notifies all registered {@link DiagramDiffServiceListener}s that the
+	 * diagram nodes of the given workspace diagram for the given model review
+	 * have been updated.
+	 * 
+	 * @param workspaceDiagram
+	 *            the workspace diagram (the root diagram for a model review)
+	 *            instance.
+	 * @param modelReview
+	 *            the model review associated with the given workspace diagram.
+	 */
+	private void notifyNodesUpdated(Diagram workspaceDiagram, ModelReview modelReview) {
+
+		for (DiagramDiffServiceListener listener : serviceListeners) {
+			listener.diagramNodesUpdated(workspaceDiagram, modelReview);
+		}
 	}
 
 	/**
@@ -544,6 +598,31 @@ public class GMFDiagramDiffViewService {
 	private CommandResult executeCommand(ICommand command, EditDomain editDomain) {
 		editDomain.getCommandStack().execute(new ICommandProxy(command));
 		return command.getCommandResult();
+	}
+
+	/**
+	 * A Listener for events of a {@link GMFDiagramDiffViewService} instance.
+	 * 
+	 * @author Florian Zoubek
+	 *
+	 * @see GMFDiagramDiffViewService#addListener(DiagramDiffServiceListener)
+	 * @see GMFDiagramDiffViewService#removeListener(DiagramDiffServiceListener)
+	 */
+	public interface DiagramDiffServiceListener {
+
+		/**
+		 * This method is called after all diagram nodes of the given workspace
+		 * diagram for the given model review have been updated.
+		 * 
+		 * @param workspaceDiagram
+		 *            the workspace diagram (the root diagram for a model
+		 *            review) instance.
+		 * @param modelReview
+		 *            the model review associated with the given workspace
+		 *            diagram.
+		 */
+		public void diagramNodesUpdated(Diagram workspaceDiagram, ModelReview review);
+
 	}
 
 	/**

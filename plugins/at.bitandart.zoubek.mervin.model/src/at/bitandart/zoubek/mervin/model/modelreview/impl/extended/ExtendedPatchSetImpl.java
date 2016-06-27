@@ -205,7 +205,7 @@ public class ExtendedPatchSetImpl extends PatchSetImpl {
 						element.eResource().getResourceSet());
 
 				int referenceCount = references.size();
-				if (referenceCount > maxObjectChangeCount) {
+				if (referenceCount > maxObjectChangeRefCount) {
 					maxObjectChangeRefCount = referenceCount;
 				}
 				objectChangeRefCount.put(element, referenceCount);
