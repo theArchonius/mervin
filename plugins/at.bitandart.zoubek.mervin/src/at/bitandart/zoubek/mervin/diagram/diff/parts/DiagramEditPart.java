@@ -23,6 +23,7 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.LayerConstants;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ResizableEditPolicyEx;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -107,6 +108,14 @@ public class DiagramEditPart extends LinkLFShapeCompartmentEditPart {
 		super.reorderChild(child, index);
 		if (constraint != null) {
 			setLayoutConstraint(child, childFigure, constraint);
+		}
+	}
+
+	@Override
+	protected void addChild(EditPart child, int index) {
+		super.addChild(child, index);
+		if (child instanceof IEditableEditPart) {
+			((IEditableEditPart) child).disableEditMode();
 		}
 	}
 
