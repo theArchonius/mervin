@@ -22,7 +22,6 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
-import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
@@ -61,6 +60,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
+import at.bitandart.zoubek.mervin.IMervinContextConstants;
 import at.bitandart.zoubek.mervin.IReviewHighlightService;
 import at.bitandart.zoubek.mervin.IReviewHighlightServiceListener;
 import at.bitandart.zoubek.mervin.diagram.diff.GMFDiagramDiffViewService.DiagramDiffServiceListener;
@@ -110,7 +110,7 @@ public class DiagramDiffView implements IAdaptable {
 	@Inject
 	private MPart part;
 	@Inject
-	private MWindow window;
+	private IEclipseContext context;
 
 	private GMFDiagramDiffViewService diagramDiffViewService;
 
@@ -157,7 +157,7 @@ public class DiagramDiffView implements IAdaptable {
 	}
 
 	@PostConstruct
-	public void postConstruct(Composite parent, IEclipseContext context) {
+	public void postConstruct(Composite parent) {
 
 		mainPanel = new Composite(parent, SWT.NONE);
 		mainPanel.setLayout(new GridLayout());
@@ -224,18 +224,28 @@ public class DiagramDiffView implements IAdaptable {
 
 		part.getTransientData().remove(DATA_TRANSIENT_DIAGRAM_VIEWER);
 		highlightService.removeHighlightServiceListener(highlightListener);
+		context.remove(ModelReview.class);
+		context.remove(Diagram.class);
+		context.modify(IMervinContextConstants.ACTIVE_MODEL_REVIEW, null);
+		context.modify(IMervinContextConstants.ACTIVE_DIAGRAM_DIFF_EDITOR, null);
 
 	}
 
 	@Focus
 	public void onFocus() {
+
 		if (viewerControl != null) {
 			viewerControl.setFocus();
 		} else {
 			mainPanel.setFocus();
 		}
+
+		/* update selection */
 		selectionService.setSelection(getModelReview());
-		window.getContext().set(DiagramDiffView.class, this);
+
+		/* update context */
+		context.modify(IMervinContextConstants.ACTIVE_DIAGRAM_DIFF_EDITOR, this);
+		context.modify(IMervinContextConstants.ACTIVE_MODEL_REVIEW, getModelReview());
 	}
 
 	/**
@@ -245,7 +255,9 @@ public class DiagramDiffView implements IAdaptable {
 	 *            the model review instance to set
 	 */
 	public void setModelReview(ModelReview modelReview) {
+
 		part.getTransientData().put(DATA_TRANSIENT_MODEL_REVIEW, modelReview);
+		context.modify(IMervinContextConstants.ACTIVE_MODEL_REVIEW, getModelReview());
 		selectionService.setSelection(getModelReview());
 	}
 
