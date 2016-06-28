@@ -16,6 +16,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.workbench.UIEvents;
+
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 
 /**
@@ -31,6 +39,13 @@ public class MervinReviewHighlightService implements IReviewHighlightService {
 
 	private List<IReviewHighlightServiceListener> listeners = new LinkedList<>();
 
+	private ModelReview activeModelReview;
+
+	private MApplication application;
+
+	@Inject
+	private IEventBroker eventBroker;
+
 	@Override
 	public void addHighlightFor(ModelReview review, Object object) {
 
@@ -44,6 +59,9 @@ public class MervinReviewHighlightService implements IReviewHighlightService {
 			notifyElementAdded(review, object);
 		}
 
+		if (review == activeModelReview) {
+			updateHighlightedElementsInContext();
+		}
 	}
 
 	private void notifyElementAdded(ModelReview review, Object object) {
@@ -63,6 +81,9 @@ public class MervinReviewHighlightService implements IReviewHighlightService {
 			notifyElementRemoved(review, object);
 		}
 
+		if (review == activeModelReview) {
+			updateHighlightedElementsInContext();
+		}
 	}
 
 	private void notifyElementRemoved(ModelReview review, Object object) {
@@ -82,6 +103,10 @@ public class MervinReviewHighlightService implements IReviewHighlightService {
 			for (Object object : elements) {
 				notifyElementRemoved(review, object);
 			}
+		}
+
+		if (review == activeModelReview) {
+			updateHighlightedElementsInContext();
 		}
 
 	}
@@ -111,6 +136,24 @@ public class MervinReviewHighlightService implements IReviewHighlightService {
 
 		listeners.remove(listener);
 
+	}
+
+	@Optional
+	@Inject
+	private void activeModelReviewChanged(MApplication application,
+			@Named(IMervinContextConstants.ACTIVE_MODEL_REVIEW) ModelReview modelReview) {
+
+		this.application = application;
+		this.activeModelReview = modelReview;
+		updateHighlightedElementsInContext();
+	}
+
+	private void updateHighlightedElementsInContext() {
+
+		application.getContext().modify(IMervinContextConstants.HIGHLIGHTED_ELEMENTS,
+				getHighlightedElements(activeModelReview));
+
+		eventBroker.send(UIEvents.REQUEST_ENABLEMENT_UPDATE_TOPIC, UIEvents.ALL_ELEMENT_ID);
 	}
 
 }

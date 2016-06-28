@@ -20,6 +20,7 @@ import javax.inject.Inject;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ParameterizedCommand;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
@@ -53,8 +54,22 @@ import at.bitandart.zoubek.mervin.IDiffService;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 
+/**
+ * A view that shows the options for the loaded {@link ModelReview} of the
+ * currently active editor.
+ * 
+ * <p>
+ * This class adapts to the following classes:
+ * <ul>
+ * <li>{@link ModelReview} - the current model review instance</li>
+ * </ul>
+ * </p>
+ * 
+ * @author Florian Zoubek
+ *
+ */
 @SuppressWarnings("restriction")
-public class ReviewOptionsView extends ModelReviewEditorTrackingView {
+public class ReviewOptionsView extends ModelReviewEditorTrackingView implements IAdaptable {
 
 	private final class PatchSetLabelProvider extends LabelProvider {
 		@Override
@@ -416,5 +431,14 @@ public class ReviewOptionsView extends ModelReviewEditorTrackingView {
 		mainForm.reflow(true);
 		mainForm.redraw();
 
+	}
+
+	@Override
+	public <T> T getAdapter(Class<T> adapterType) {
+
+		if (adapterType == ModelReview.class) {
+			return adapterType.cast(getCurrentModelReview());
+		}
+		return null;
 	}
 }

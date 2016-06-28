@@ -18,6 +18,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.services.IServiceConstants;
@@ -54,7 +55,21 @@ import at.bitandart.zoubek.mervin.swt.comments.data.ICommentLink;
 import at.bitandart.zoubek.mervin.swt.comments.data.ICommentLinkTarget;
 import at.bitandart.zoubek.mervin.swt.comments.data.ICommentProvider;
 
-public class CommentsView extends ModelReviewEditorTrackingView {
+/**
+ * A view that shows the comments of the loaded model review of the currently
+ * active editor.
+ * 
+ * <p>
+ * This class adapts to the following classes:
+ * <ul>
+ * <li>{@link ModelReview} - the current model review instance</li>
+ * </ul>
+ * </p>
+ * 
+ * @author Florian Zoubek
+ *
+ */
+public class CommentsView extends ModelReviewEditorTrackingView implements IAdaptable {
 
 	public static final String PART_DESCRIPTOR_ID = "at.bitandart.zoubek.mervin.partdescriptor.comments";
 
@@ -306,6 +321,15 @@ public class CommentsView extends ModelReviewEditorTrackingView {
 		}
 		commentListViewer.setInput(currentModelReview);
 		commentListViewer.refresh();
+	}
+
+	@Override
+	public <T> T getAdapter(Class<T> adapterType) {
+
+		if (adapterType == ModelReview.class) {
+			return adapterType.cast(getCurrentModelReview());
+		}
+		return null;
 	}
 
 	/**

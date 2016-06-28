@@ -91,6 +91,10 @@ public class MervinServicesAddon {
 				context);
 		context.set(ICommentProvider.class, mervinCommentProvider);
 
+		context.declareModifiable(IMervinContextConstants.ACTIVE_MODEL_REVIEW);
+		context.declareModifiable(IMervinContextConstants.ACTIVE_DIAGRAM_DIFF_EDITOR);
+		context.declareModifiable(IMervinContextConstants.HIGHLIGHTED_ELEMENTS);
+
 	}
 
 }
