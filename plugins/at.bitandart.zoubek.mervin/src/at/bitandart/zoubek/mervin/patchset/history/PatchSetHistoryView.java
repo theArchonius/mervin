@@ -21,6 +21,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
@@ -71,10 +72,18 @@ import at.bitandart.zoubek.mervin.util.vis.ThreeWayObjectTreeViewerComparator;
 /**
  * Shows the similarity of differences to differences of other patch sets.
  * 
+ * <p>
+ * This class adapts to the following classes:
+ * <ul>
+ * <li>{@link ModelReview} - the current model review instance</li>
+ * </ul>
+ * </p>
+ * 
  * @author Florian Zoubek
  *
  */
-public class PatchSetHistoryView extends ModelReviewEditorTrackingView implements IReviewHighlightProvidingPart {
+public class PatchSetHistoryView extends ModelReviewEditorTrackingView
+		implements IReviewHighlightProvidingPart, IAdaptable {
 
 	public static final String PART_DESCRIPTOR_ID = "at.bitandart.zoubek.mervin.partdescriptor.patchset.history";
 
@@ -412,6 +421,15 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 	public void setMergeEqualDiffs(boolean mergeEqualDiffs) {
 		this.mergeEqualDiffs = mergeEqualDiffs;
 		updateValues();
+	}
+
+	@Override
+	public <T> T getAdapter(Class<T> adapterType) {
+
+		if (adapterType == ModelReview.class) {
+			return adapterType.cast(getCurrentModelReview());
+		}
+		return null;
 	}
 
 	/**

@@ -21,6 +21,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
@@ -81,12 +82,19 @@ import at.bitandart.zoubek.mervin.util.vis.ThreeWayObjectTreeViewerComparator;
  * Review exploration view - shows an overview of the currently loaded model
  * review provided by the last active editor.
  * 
+ * <p>
+ * This class adapts to the following classes:
+ * <ul>
+ * <li>{@link ModelReview} - the current model review instance</li>
+ * </ul>
+ * </p>
+ * 
  * @author Florian Zoubek
  * 
  * @see ModelReviewEditorTrackingView
  *
  */
-public class ReviewExplorer extends ModelReviewEditorTrackingView implements IReviewHighlightProvidingPart {
+public class ReviewExplorer extends ModelReviewEditorTrackingView implements IReviewHighlightProvidingPart, IAdaptable {
 
 	public static final String PART_DESCRIPTOR_ID = "at.bitandart.zoubek.mervin.partdescriptor.review";
 
@@ -410,6 +418,15 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 	@Override
 	public ModelReview getHighlightedModelReview() {
 		return getCurrentModelReview();
+	}
+
+	@Override
+	public <T> T getAdapter(Class<T> adapterType) {
+
+		if (adapterType == ModelReview.class) {
+			return adapterType.cast(getCurrentModelReview());
+		}
+		return null;
 	}
 
 	/**
