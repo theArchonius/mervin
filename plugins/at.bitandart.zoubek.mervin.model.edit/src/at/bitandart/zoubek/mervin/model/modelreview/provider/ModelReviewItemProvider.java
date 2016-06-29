@@ -68,6 +68,7 @@ public class ModelReviewItemProvider extends ItemProviderAdapter implements IEdi
 			super.getPropertyDescriptors(object);
 
 			addIdPropertyDescriptor(object);
+			addRepositoryURIPropertyDescriptor(object);
 			addCommentsPropertyDescriptor(object);
 			addLeftPatchSetPropertyDescriptor(object);
 			addRightPatchSetPropertyDescriptor(object);
@@ -78,6 +79,7 @@ public class ModelReviewItemProvider extends ItemProviderAdapter implements IEdi
 			addShowDeletionsPropertyDescriptor(object);
 			addShowLayoutChangesPropertyDescriptor(object);
 			addUnifiedModelMapPropertyDescriptor(object);
+			addCurrentReviewerPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -95,6 +97,22 @@ public class ModelReviewItemProvider extends ItemProviderAdapter implements IEdi
 						getString("_UI_PropertyDescriptor_description", "_UI_ModelReview_id_feature",
 								"_UI_ModelReview_type"),
 						ModelReviewPackage.Literals.MODEL_REVIEW__ID, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Repository URI feature. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addRepositoryURIPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_ModelReview_repositoryURI_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_ModelReview_repositoryURI_feature",
+								"_UI_ModelReview_type"),
+						ModelReviewPackage.Literals.MODEL_REVIEW__REPOSITORY_URI, true, false, false,
 						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
 	}
 
@@ -257,6 +275,22 @@ public class ModelReviewItemProvider extends ItemProviderAdapter implements IEdi
 	}
 
 	/**
+	 * This adds a property descriptor for the Current Reviewer feature. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addCurrentReviewerPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_ModelReview_currentReviewer_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_ModelReview_currentReviewer_feature",
+								"_UI_ModelReview_type"),
+						ModelReviewPackage.Literals.MODEL_REVIEW__CURRENT_REVIEWER, true, false, true, null, null,
+						null));
+	}
+
+	/**
 	 * This specifies how to implement {@link #getChildren} and is used to
 	 * deduce an appropriate feature for an
 	 * {@link org.eclipse.emf.edit.command.AddCommand},
@@ -327,6 +361,7 @@ public class ModelReviewItemProvider extends ItemProviderAdapter implements IEdi
 
 		switch (notification.getFeatureID(ModelReview.class)) {
 		case ModelReviewPackage.MODEL_REVIEW__ID:
+		case ModelReviewPackage.MODEL_REVIEW__REPOSITORY_URI:
 		case ModelReviewPackage.MODEL_REVIEW__SHOW_ADDITIONS:
 		case ModelReviewPackage.MODEL_REVIEW__SHOW_MODIFICATIONS:
 		case ModelReviewPackage.MODEL_REVIEW__SHOW_DELETIONS:

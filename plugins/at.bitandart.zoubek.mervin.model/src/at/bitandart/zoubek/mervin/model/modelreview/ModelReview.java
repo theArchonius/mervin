@@ -29,6 +29,9 @@ import org.eclipse.emf.ecore.EObject;
  * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getId
  * <em>Id</em>}</li>
  * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getRepositoryURI
+ * <em>Repository URI</em>}</li>
+ * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getPatchSets
  * <em>Patch Sets</em>}</li>
  * <li>
@@ -61,6 +64,9 @@ import org.eclipse.emf.ecore.EObject;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getUnifiedModelMap
  * <em>Unified Model Map</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getCurrentReviewer
+ * <em>Current Reviewer</em>}</li>
  * </ul>
  *
  * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelReview()
@@ -96,6 +102,36 @@ public interface ModelReview extends EObject {
 	 * @generated
 	 */
 	void setId(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Repository URI</b></em>' attribute. <!--
+	 * begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Repository URI</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Repository URI</em>' attribute.
+	 * @see #setRepositoryURI(String)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelReview_RepositoryURI()
+	 * @model
+	 * @generated
+	 */
+	String getRepositoryURI();
+
+	/**
+	 * Sets the value of the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getRepositoryURI
+	 * <em>Repository URI</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Repository URI</em>' attribute.
+	 * @see #getRepositoryURI()
+	 * @generated
+	 */
+	void setRepositoryURI(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Patch Sets</b></em>' containment
@@ -411,5 +447,35 @@ public interface ModelReview extends EObject {
 	 * @generated
 	 */
 	void setUnifiedModelMap(HashBiMap<EObject, EObject> value);
+
+	/**
+	 * Returns the value of the '<em><b>Current Reviewer</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Current Reviewer</em>' reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Current Reviewer</em>' reference.
+	 * @see #setCurrentReviewer(User)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelReview_CurrentReviewer()
+	 * @model
+	 * @generated
+	 */
+	User getCurrentReviewer();
+
+	/**
+	 * Sets the value of the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getCurrentReviewer
+	 * <em>Current Reviewer</em>}' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Current Reviewer</em>' reference.
+	 * @see #getCurrentReviewer()
+	 * @generated
+	 */
+	void setCurrentReviewer(User value);
 
 } // ModelReview

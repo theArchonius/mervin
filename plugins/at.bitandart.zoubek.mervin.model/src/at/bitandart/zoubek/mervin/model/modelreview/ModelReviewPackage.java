@@ -88,13 +88,22 @@ public interface ModelReviewPackage extends EPackage {
 	int MODEL_REVIEW__ID = 0;
 
 	/**
+	 * The feature id for the '<em><b>Repository URI</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_REVIEW__REPOSITORY_URI = 1;
+
+	/**
 	 * The feature id for the '<em><b>Patch Sets</b></em>' containment reference
 	 * list. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_REVIEW__PATCH_SETS = 1;
+	int MODEL_REVIEW__PATCH_SETS = 2;
 
 	/**
 	 * The feature id for the '<em><b>Comments</b></em>' reference list. <!--
@@ -103,7 +112,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_REVIEW__COMMENTS = 2;
+	int MODEL_REVIEW__COMMENTS = 3;
 
 	/**
 	 * The feature id for the '<em><b>Left Patch Set</b></em>' reference. <!--
@@ -112,7 +121,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_REVIEW__LEFT_PATCH_SET = 3;
+	int MODEL_REVIEW__LEFT_PATCH_SET = 4;
 
 	/**
 	 * The feature id for the '<em><b>Right Patch Set</b></em>' reference. <!--
@@ -121,7 +130,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_REVIEW__RIGHT_PATCH_SET = 4;
+	int MODEL_REVIEW__RIGHT_PATCH_SET = 5;
 
 	/**
 	 * The feature id for the '<em><b>Selected Model Comparison</b></em>'
@@ -130,7 +139,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_REVIEW__SELECTED_MODEL_COMPARISON = 5;
+	int MODEL_REVIEW__SELECTED_MODEL_COMPARISON = 6;
 
 	/**
 	 * The feature id for the '<em><b>Selected Diagram Comparison</b></em>'
@@ -139,7 +148,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_REVIEW__SELECTED_DIAGRAM_COMPARISON = 6;
+	int MODEL_REVIEW__SELECTED_DIAGRAM_COMPARISON = 7;
 
 	/**
 	 * The feature id for the '<em><b>Show Additions</b></em>' attribute. <!--
@@ -148,7 +157,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_REVIEW__SHOW_ADDITIONS = 7;
+	int MODEL_REVIEW__SHOW_ADDITIONS = 8;
 
 	/**
 	 * The feature id for the '<em><b>Show Modifications</b></em>' attribute.
@@ -157,7 +166,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_REVIEW__SHOW_MODIFICATIONS = 8;
+	int MODEL_REVIEW__SHOW_MODIFICATIONS = 9;
 
 	/**
 	 * The feature id for the '<em><b>Show Deletions</b></em>' attribute. <!--
@@ -166,7 +175,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_REVIEW__SHOW_DELETIONS = 9;
+	int MODEL_REVIEW__SHOW_DELETIONS = 10;
 
 	/**
 	 * The feature id for the '<em><b>Show Layout Changes</b></em>' attribute.
@@ -175,7 +184,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_REVIEW__SHOW_LAYOUT_CHANGES = 10;
+	int MODEL_REVIEW__SHOW_LAYOUT_CHANGES = 11;
 
 	/**
 	 * The feature id for the '<em><b>Unified Model Map</b></em>' attribute.
@@ -184,7 +193,16 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_REVIEW__UNIFIED_MODEL_MAP = 11;
+	int MODEL_REVIEW__UNIFIED_MODEL_MAP = 12;
+
+	/**
+	 * The feature id for the '<em><b>Current Reviewer</b></em>' reference. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_REVIEW__CURRENT_REVIEWER = 13;
 
 	/**
 	 * The number of structural features of the '<em>Model Review</em>' class.
@@ -193,7 +211,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_REVIEW_FEATURE_COUNT = 12;
+	int MODEL_REVIEW_FEATURE_COUNT = 14;
 
 	/**
 	 * The number of operations of the '<em>Model Review</em>' class. <!--
@@ -1564,6 +1582,18 @@ public interface ModelReviewPackage extends EPackage {
 	EAttribute getModelReview_Id();
 
 	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getRepositoryURI
+	 * <em>Repository URI</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Repository URI</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getRepositoryURI()
+	 * @see #getModelReview()
+	 * @generated
+	 */
+	EAttribute getModelReview_RepositoryURI();
+
+	/**
 	 * Returns the meta object for the containment reference list '
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getPatchSets
 	 * <em>Patch Sets</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1702,6 +1732,19 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getModelReview_UnifiedModelMap();
+
+	/**
+	 * Returns the meta object for the reference '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getCurrentReviewer
+	 * <em>Current Reviewer</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @return the meta object for the reference '<em>Current Reviewer</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getCurrentReviewer()
+	 * @see #getModelReview()
+	 * @generated
+	 */
+	EReference getModelReview_CurrentReviewer();
 
 	/**
 	 * Returns the meta object for class '
@@ -2695,6 +2738,14 @@ public interface ModelReviewPackage extends EPackage {
 		EAttribute MODEL_REVIEW__ID = eINSTANCE.getModelReview_Id();
 
 		/**
+		 * The meta object literal for the '<em><b>Repository URI</b></em>'
+		 * attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute MODEL_REVIEW__REPOSITORY_URI = eINSTANCE.getModelReview_RepositoryURI();
+
+		/**
 		 * The meta object literal for the '<em><b>Patch Sets</b></em>'
 		 * containment reference list feature. <!-- begin-user-doc --> <!--
 		 * end-user-doc -->
@@ -2784,6 +2835,14 @@ public interface ModelReviewPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute MODEL_REVIEW__UNIFIED_MODEL_MAP = eINSTANCE.getModelReview_UnifiedModelMap();
+
+		/**
+		 * The meta object literal for the '<em><b>Current Reviewer</b></em>'
+		 * reference feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference MODEL_REVIEW__CURRENT_REVIEWER = eINSTANCE.getModelReview_CurrentReviewer();
 
 		/**
 		 * The meta object literal for the '

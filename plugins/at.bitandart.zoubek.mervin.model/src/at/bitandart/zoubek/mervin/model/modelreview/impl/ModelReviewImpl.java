@@ -16,6 +16,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.Comment;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
+import at.bitandart.zoubek.mervin.model.modelreview.User;
 import com.google.common.collect.HashBiMap;
 import java.util.Collection;
 import org.eclipse.emf.common.notify.Notification;
@@ -41,6 +42,9 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewImpl#getId
  * <em>Id</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewImpl#getRepositoryURI
+ * <em>Repository URI</em>}</li>
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewImpl#getPatchSets
  * <em>Patch Sets</em>}</li>
@@ -74,6 +78,9 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewImpl#getUnifiedModelMap
  * <em>Unified Model Map</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewImpl#getCurrentReviewer
+ * <em>Current Reviewer</em>}</li>
  * </ul>
  *
  * @generated
@@ -98,6 +105,28 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 	 * @ordered
 	 */
 	protected String id = ID_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getRepositoryURI()
+	 * <em>Repository URI</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #getRepositoryURI()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String REPOSITORY_URI_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getRepositoryURI()
+	 * <em>Repository URI</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #getRepositoryURI()
+	 * @generated
+	 * @ordered
+	 */
+	protected String repositoryURI = REPOSITORY_URI_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getPatchSets() <em>Patch Sets</em>}'
@@ -263,6 +292,17 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 	protected HashBiMap<EObject, EObject> unifiedModelMap;
 
 	/**
+	 * The cached value of the '{@link #getCurrentReviewer()
+	 * <em>Current Reviewer</em>}' reference. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #getCurrentReviewer()
+	 * @generated
+	 * @ordered
+	 */
+	protected User currentReviewer;
+
+	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
@@ -300,6 +340,28 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 		id = newId;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.MODEL_REVIEW__ID, oldId, id));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public String getRepositoryURI() {
+		return repositoryURI;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setRepositoryURI(String newRepositoryURI) {
+		String oldRepositoryURI = repositoryURI;
+		repositoryURI = newRepositoryURI;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.MODEL_REVIEW__REPOSITORY_URI,
+					oldRepositoryURI, repositoryURI));
 	}
 
 	/**
@@ -607,6 +669,46 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 	 * 
 	 * @generated
 	 */
+	public User getCurrentReviewer() {
+		if (currentReviewer != null && currentReviewer.eIsProxy()) {
+			InternalEObject oldCurrentReviewer = (InternalEObject) currentReviewer;
+			currentReviewer = (User) eResolveProxy(oldCurrentReviewer);
+			if (currentReviewer != oldCurrentReviewer) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE,
+							ModelReviewPackage.MODEL_REVIEW__CURRENT_REVIEWER, oldCurrentReviewer, currentReviewer));
+			}
+		}
+		return currentReviewer;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public User basicGetCurrentReviewer() {
+		return currentReviewer;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setCurrentReviewer(User newCurrentReviewer) {
+		User oldCurrentReviewer = currentReviewer;
+		currentReviewer = newCurrentReviewer;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.MODEL_REVIEW__CURRENT_REVIEWER,
+					oldCurrentReviewer, currentReviewer));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
@@ -641,6 +743,8 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 		switch (featureID) {
 		case ModelReviewPackage.MODEL_REVIEW__ID:
 			return getId();
+		case ModelReviewPackage.MODEL_REVIEW__REPOSITORY_URI:
+			return getRepositoryURI();
 		case ModelReviewPackage.MODEL_REVIEW__PATCH_SETS:
 			return getPatchSets();
 		case ModelReviewPackage.MODEL_REVIEW__COMMENTS:
@@ -671,6 +775,10 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 			return isShowLayoutChanges();
 		case ModelReviewPackage.MODEL_REVIEW__UNIFIED_MODEL_MAP:
 			return getUnifiedModelMap();
+		case ModelReviewPackage.MODEL_REVIEW__CURRENT_REVIEWER:
+			if (resolve)
+				return getCurrentReviewer();
+			return basicGetCurrentReviewer();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -686,6 +794,9 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 		switch (featureID) {
 		case ModelReviewPackage.MODEL_REVIEW__ID:
 			setId((String) newValue);
+			return;
+		case ModelReviewPackage.MODEL_REVIEW__REPOSITORY_URI:
+			setRepositoryURI((String) newValue);
 			return;
 		case ModelReviewPackage.MODEL_REVIEW__PATCH_SETS:
 			getPatchSets().clear();
@@ -722,6 +833,9 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 		case ModelReviewPackage.MODEL_REVIEW__UNIFIED_MODEL_MAP:
 			setUnifiedModelMap((HashBiMap<EObject, EObject>) newValue);
 			return;
+		case ModelReviewPackage.MODEL_REVIEW__CURRENT_REVIEWER:
+			setCurrentReviewer((User) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -736,6 +850,9 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 		switch (featureID) {
 		case ModelReviewPackage.MODEL_REVIEW__ID:
 			setId(ID_EDEFAULT);
+			return;
+		case ModelReviewPackage.MODEL_REVIEW__REPOSITORY_URI:
+			setRepositoryURI(REPOSITORY_URI_EDEFAULT);
 			return;
 		case ModelReviewPackage.MODEL_REVIEW__PATCH_SETS:
 			getPatchSets().clear();
@@ -770,6 +887,9 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 		case ModelReviewPackage.MODEL_REVIEW__UNIFIED_MODEL_MAP:
 			setUnifiedModelMap((HashBiMap<EObject, EObject>) null);
 			return;
+		case ModelReviewPackage.MODEL_REVIEW__CURRENT_REVIEWER:
+			setCurrentReviewer((User) null);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -784,6 +904,9 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 		switch (featureID) {
 		case ModelReviewPackage.MODEL_REVIEW__ID:
 			return ID_EDEFAULT == null ? id != null : !ID_EDEFAULT.equals(id);
+		case ModelReviewPackage.MODEL_REVIEW__REPOSITORY_URI:
+			return REPOSITORY_URI_EDEFAULT == null ? repositoryURI != null
+					: !REPOSITORY_URI_EDEFAULT.equals(repositoryURI);
 		case ModelReviewPackage.MODEL_REVIEW__PATCH_SETS:
 			return patchSets != null && !patchSets.isEmpty();
 		case ModelReviewPackage.MODEL_REVIEW__COMMENTS:
@@ -806,6 +929,8 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 			return showLayoutChanges != SHOW_LAYOUT_CHANGES_EDEFAULT;
 		case ModelReviewPackage.MODEL_REVIEW__UNIFIED_MODEL_MAP:
 			return unifiedModelMap != null;
+		case ModelReviewPackage.MODEL_REVIEW__CURRENT_REVIEWER:
+			return currentReviewer != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -823,6 +948,8 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (id: ");
 		result.append(id);
+		result.append(", repositoryURI: ");
+		result.append(repositoryURI);
 		result.append(", showAdditions: ");
 		result.append(showAdditions);
 		result.append(", showModifications: ");
