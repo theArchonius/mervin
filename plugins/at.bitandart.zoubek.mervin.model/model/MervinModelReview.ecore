@@ -4,6 +4,7 @@
     nsPrefix="at.bitandart.zoubek.mervin">
   <eClassifiers xsi:type="ecore:EClass" name="ModelReview">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="repositoryURI" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="patchSets" upperBound="-1"
         eType="#//PatchSet" containment="true" eOpposite="#//PatchSet/review"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="comments" upperBound="-1"
@@ -30,6 +31,7 @@
         <eTypeArguments eClassifier="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
       </eGenericType>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="currentReviewer" eType="#//User"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PatchSet">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

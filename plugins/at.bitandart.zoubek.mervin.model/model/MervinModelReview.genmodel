@@ -36,6 +36,7 @@
     <genDataTypes ecoreDataType="MervinModelReview.ecore#//Dimension"/>
     <genClasses ecoreClass="MervinModelReview.ecore#//ModelReview">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//ModelReview/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//ModelReview/repositoryURI"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//ModelReview/patchSets"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//ModelReview/comments"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//ModelReview/leftPatchSet"/>
@@ -47,6 +48,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//ModelReview/showDeletions"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//ModelReview/showLayoutChanges"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//ModelReview/unifiedModelMap"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MervinModelReview.ecore#//ModelReview/currentReviewer"/>
     </genClasses>
     <genClasses ecoreClass="MervinModelReview.ecore#//PatchSet">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MervinModelReview.ecore#//PatchSet/id"/>
