@@ -10,15 +10,21 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.diagram.diff.parts;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Layer;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.NonResizableEditPolicyEx;
 import org.eclipse.gmf.runtime.notation.View;
 
+import at.bitandart.zoubek.mervin.diagram.diff.OffScreenIndicatorResolver;
 import at.bitandart.zoubek.mervin.draw2d.MervinLayerConstants;
 import at.bitandart.zoubek.mervin.draw2d.figures.DefaultChangeTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.DefaultOverlayLocator;
@@ -59,6 +65,16 @@ public abstract class AbstractDifferenceOverlayEditPart extends ShapeNodeEditPar
 		}
 		return null;
 
+	}
+
+	@Override
+	public EditPolicy getPrimaryDragEditPolicy() {
+		return new NonResizableEditPolicyEx() {
+			@Override
+			protected List<?> createSelectionHandles() {
+				return Collections.emptyList();
+			}
+		};
 	}
 
 	protected Layer getParentOverlayLayer() {
@@ -131,9 +147,10 @@ public abstract class AbstractDifferenceOverlayEditPart extends ShapeNodeEditPar
 		super.activate();
 		DiagramContainerFigure containerFigure = getContainerFigure();
 		Layer indicatorLayer = getIndicatorLayer();
-		IOffScreenIndicator offScreenIndicator = getOffScreenIndicator();
+		final IOffScreenIndicator offScreenIndicator = getOffScreenIndicator();
 		offScreenIndicator.addLinkedFigure(getFigure());
 		offScreenIndicator.setContainerFigure(containerFigure.getScrollPane().getViewport());
+		offScreenIndicator.addMouseListener(new OffScreenIndicatorResolver(getContainerFigure()));
 
 		if (offScreenIndicator instanceof OffScreenChangeIndicator) {
 			containerFigure.getOffScreenChangeIndicatorMerger()

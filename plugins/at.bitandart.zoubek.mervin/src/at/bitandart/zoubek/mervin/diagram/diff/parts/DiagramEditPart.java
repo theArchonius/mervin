@@ -10,6 +10,7 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.diagram.diff.parts;
 
+import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Layer;
 import org.eclipse.draw2d.LayoutAnimator;
@@ -25,14 +26,19 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ResizableEditPolicyEx;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.gmf.tooling.runtime.linklf.LinkLFShapeCompartmentEditPart;
 
+import at.bitandart.zoubek.mervin.diagram.diff.OffScreenIndicatorResolver;
 import at.bitandart.zoubek.mervin.draw2d.MervinLayerConstants;
 import at.bitandart.zoubek.mervin.draw2d.figures.DefaultChangeTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.IChangeTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.IOffScreenIndicator;
+import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.MergedOffScreenChangeIndicator;
+import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenChangeIndicatorMerger;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.DiagramContainerFigure;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbench;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbench.DisplayMode;
@@ -58,10 +64,44 @@ public class DiagramEditPart extends LinkLFShapeCompartmentEditPart {
 
 	@Override
 	public IFigure createFigure() {
-		DiagramContainerFigure figure = new DiagramContainerFigure(getCompartmentName(), styleAdvisor, getMapMode());
+		DiagramContainerFigure figure = new InternalDiagramContainerFigure(getCompartmentName(), styleAdvisor,
+				getMapMode());
 		figure.getContentPane().setLayoutManager(getLayoutManager());
 		figure.getContentPane().addLayoutListener(LayoutAnimator.getDefault());
 		return figure;
+	}
+
+	/**
+	 * A {@link DiagramContainerFigure} that allows scrolling to merged
+	 * {@link IOffScreenIndicator}s if a mouse button click is detected on a
+	 * merged off-screen indicator.
+	 * 
+	 * @author Florian Zoubek
+	 *
+	 */
+	private static class InternalDiagramContainerFigure extends DiagramContainerFigure {
+
+		public InternalDiagramContainerFigure(String compartmentTitle, IChangeTypeStyleAdvisor styleAdvisor,
+				IMapMode mm) {
+			super(compartmentTitle, styleAdvisor, mm);
+		}
+
+		@Override
+		protected OffScreenChangeIndicatorMerger createOffScreenChangeIndicatorMerger(
+				IChangeTypeStyleAdvisor styleAdvisor, FreeformLayer indicatorLayer) {
+
+			return new OffScreenChangeIndicatorMerger(indicatorLayer, styleAdvisor) {
+
+				@Override
+				protected MergedOffScreenChangeIndicator createMergedOffScreenChangeIndicator() {
+					MergedOffScreenChangeIndicator mergedIndicator = super.createMergedOffScreenChangeIndicator();
+					mergedIndicator
+							.addMouseListener(new OffScreenIndicatorResolver(InternalDiagramContainerFigure.this));
+					return mergedIndicator;
+				}
+			};
+		}
+
 	}
 
 	@Override

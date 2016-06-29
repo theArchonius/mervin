@@ -32,6 +32,7 @@ import org.eclipse.gmf.tooling.runtime.linklf.LinkLFShapeCompartmentEditPart;
 
 import at.bitandart.zoubek.mervin.draw2d.MervinLayerConstants;
 import at.bitandart.zoubek.mervin.draw2d.figures.IChangeTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenChangeIndicator;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenChangeIndicatorMerger;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenIndicatorLayout;
 
@@ -104,13 +105,24 @@ public class DiagramContainerFigure extends LinkLFShapeCompartmentEditPart.Shape
 
 		FreeformLayer indicatorLayer = new FreeformLayer();
 		indicatorLayer.setLayoutManager(new OffScreenIndicatorLayout());
-		offScreenChangeIndicatorMerger = new OffScreenChangeIndicatorMerger(indicatorLayer, styleAdvisor);
+		offScreenChangeIndicatorMerger = createOffScreenChangeIndicatorMerger(styleAdvisor, indicatorLayer);
 		indicatorLayer.addLayoutListener(offScreenChangeIndicatorMerger);
 		layeredPane.add(indicatorLayer, MervinLayerConstants.DIFF_INDICATOR_LAYER);
 		scrollPane.setContents(layeredPane);
 
 		setBorder(new LineBorder(ColorConstants.lightGray, 2));
 		setOpaque(true);
+	}
+
+	/**
+	 * @param styleAdvisor
+	 * @param indicatorLayer
+	 * @return a new {@link OffScreenChangeIndicatorMerger} that should be used
+	 *         to merge {@link OffScreenChangeIndicator}s.
+	 */
+	protected OffScreenChangeIndicatorMerger createOffScreenChangeIndicatorMerger(IChangeTypeStyleAdvisor styleAdvisor,
+			FreeformLayer indicatorLayer) {
+		return new OffScreenChangeIndicatorMerger(indicatorLayer, styleAdvisor);
 	}
 
 	@Override
