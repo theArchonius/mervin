@@ -19,6 +19,7 @@ import at.bitandart.zoubek.mervin.exceptions.InvalidReviewException;
 import at.bitandart.zoubek.mervin.exceptions.InvalidReviewRepositoryException;
 import at.bitandart.zoubek.mervin.exceptions.RepositoryIOException;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
+import at.bitandart.zoubek.mervin.model.modelreview.User;
 
 /**
  * Base interface for all services that provide access to a repository that
@@ -50,9 +51,11 @@ public interface IReviewRepositoryService {
 	 * given {@link URI}.
 	 * 
 	 * @param uri
-	 *            the {@link URI} of the repository
+	 *            the {@link URI} of the repository.
 	 * @param id
-	 *            the identifier of the review to load
+	 *            the identifier of the review to load.
+	 * @param currentReviewer
+	 *            the reviewer that requests to load the review.
 	 * @param monitor
 	 *            the progress monitor to report to
 	 * @return the review instance
@@ -64,7 +67,7 @@ public interface IReviewRepositoryService {
 	 *             if an IO error occurs during reading the review from the
 	 *             repository
 	 */
-	public ModelReview loadReview(URI uri, String id, IProgressMonitor monitor)
+	public ModelReview loadReview(URI uri, String id, User currentReviewer, IProgressMonitor monitor)
 			throws InvalidReviewRepositoryException, InvalidReviewException, RepositoryIOException;
 
 	/**
@@ -75,6 +78,12 @@ public interface IReviewRepositoryService {
 	 *            the {@link URI} of the repository to save the review into
 	 * @param modelReview
 	 *            the model review instance to save
+	 * @param currentReviewer
+	 *            the reviewer that requests to save the review.
+	 * @param monitor
+	 *            the progress monitor to report to
+	 * @throws InvalidReviewRepositoryException
+	 *             if the repository cannot be found or is not accessible
 	 * @throws InvalidReviewException
 	 *             if the specified review instance does not met any constraints
 	 *             defined by the repository or contains elements that cannot be
@@ -82,6 +91,7 @@ public interface IReviewRepositoryService {
 	 * @throws RepositoryIOException
 	 *             if an IO error occurs while writing to the repository
 	 */
-	public void saveReview(URI uri, ModelReview modelReview) throws InvalidReviewException, RepositoryIOException;
+	public void saveReview(URI uri, ModelReview modelReview, User currentReviewer, IProgressMonitor monitor)
+			throws InvalidReviewRepositoryException, InvalidReviewException, RepositoryIOException;
 
 }

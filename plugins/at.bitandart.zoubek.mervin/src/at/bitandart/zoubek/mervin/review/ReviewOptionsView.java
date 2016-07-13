@@ -339,12 +339,12 @@ public class ReviewOptionsView extends ModelReviewEditorTrackingView implements 
 
 				Command command = commandService.getCommand(ICommandConstants.SAVE_REVIEW);
 				if (command != null && command.isEnabled()) {
-					ParameterizedCommand loadCommand = new ParameterizedCommand(command, null);
-					if (handlerService.canExecute(loadCommand)) {
-						handlerService.executeHandler(loadCommand);
+					ParameterizedCommand saveCommand = new ParameterizedCommand(command, null);
+					if (handlerService.canExecute(saveCommand)) {
+						handlerService.executeHandler(saveCommand);
 					} else {
 						logger.error(MessageFormat.format(
-								"Could not save review, no handler could execute the command {0}", loadCommand));
+								"Could not save review, no handler could execute the command {0}", saveCommand));
 					}
 				} else {
 					if (command == null) {

@@ -43,6 +43,12 @@ public class MervinServicesAddon {
 		DefaultModelReviewFactory defaultModelReviewFactory = new DefaultModelReviewFactory();
 		context.set(ModelReviewFactory.class, defaultModelReviewFactory);
 
+		// add default user to the context
+		User defaultUser = defaultModelReviewFactory.createUser();
+		defaultUser.setName("Mervin Default User");
+		context.set(User.class, defaultUser);
+		context.set(IMervinContextConstants.CURRENT_REVIEWER, defaultUser);
+
 		// add default style advisor for change types
 		DefaultChangeTypeStyleAdvisor styleAdvisor = ContextInjectionFactory.make(DefaultChangeTypeStyleAdvisor.class,
 				context);
@@ -78,11 +84,6 @@ public class MervinServicesAddon {
 				context);
 		context.set(IPatchSetHistoryEntryOrganizer.class, entryOrganizer);
 
-		// add default user to the context
-		User defaultUser = defaultModelReviewFactory.createUser();
-		defaultUser.setName("Mervin Default User");
-		context.set(User.class, defaultUser);
-
 		ICommonTargetResolver commonTargetResolver = ContextInjectionFactory.make(MervinCommonTargetResolver.class,
 				context);
 		context.set(ICommonTargetResolver.class, commonTargetResolver);
@@ -92,6 +93,7 @@ public class MervinServicesAddon {
 		context.set(ICommentProvider.class, mervinCommentProvider);
 
 		context.declareModifiable(IMervinContextConstants.ACTIVE_MODEL_REVIEW);
+		context.declareModifiable(IMervinContextConstants.CURRENT_REVIEWER);
 		context.declareModifiable(IMervinContextConstants.ACTIVE_DIAGRAM_DIFF_EDITOR);
 		context.declareModifiable(IMervinContextConstants.HIGHLIGHTED_ELEMENTS);
 

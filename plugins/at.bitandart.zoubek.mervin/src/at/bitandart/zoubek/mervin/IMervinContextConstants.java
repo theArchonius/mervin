@@ -31,6 +31,11 @@ public interface IMervinContextConstants {
 	public static final String ACTIVE_DIAGRAM_DIFF_EDITOR = "at.bitandart.zoubek.mervin.active.editor";
 
 	/**
+	 * constant for the current user who reviews the active model review.
+	 */
+	public static final String CURRENT_REVIEWER = "at.bitandart.zoubek.mervin.active.user";
+
+	/**
 	 * constant for a unmodifiable list of the highlighted elements for the
 	 * currently active model review.
 	 */
