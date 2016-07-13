@@ -74,6 +74,7 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 			addRepliesPropertyDescriptor(object);
 			addRepliedToPropertyDescriptor(object);
 			addPatchsetPropertyDescriptor(object);
+			addPatchSetRefIdPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -185,6 +186,22 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 	}
 
 	/**
+	 * This adds a property descriptor for the Patch Set Ref Id feature. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addPatchSetRefIdPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_Comment_patchSetRefId_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_Comment_patchSetRefId_feature",
+								"_UI_Comment_type"),
+						ModelReviewPackage.Literals.COMMENT__PATCH_SET_REF_ID, true, false, false,
+						ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+	}
+
+	/**
 	 * This specifies how to implement {@link #getChildren} and is used to
 	 * deduce an appropriate feature for an
 	 * {@link org.eclipse.emf.edit.command.AddCommand},
@@ -246,6 +263,7 @@ public class CommentItemProvider extends ItemProviderAdapter implements IEditing
 		case ModelReviewPackage.COMMENT__ID:
 		case ModelReviewPackage.COMMENT__CREATION_TIME:
 		case ModelReviewPackage.COMMENT__TEXT:
+		case ModelReviewPackage.COMMENT__PATCH_SET_REF_ID:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 			return;
 		case ModelReviewPackage.COMMENT__COMMENT_LINKS:

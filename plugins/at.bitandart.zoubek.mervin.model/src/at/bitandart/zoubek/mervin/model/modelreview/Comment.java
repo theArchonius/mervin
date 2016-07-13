@@ -42,6 +42,9 @@ import org.eclipse.emf.ecore.EObject;
  * <em>Replied To</em>}</li>
  * <li>{@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getPatchset
  * <em>Patchset</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getPatchSetRefId
+ * <em>Patch Set Ref Id</em>}</li>
  * </ul>
  *
  * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getComment()
@@ -275,5 +278,43 @@ public interface Comment extends EObject {
 	 * @generated
 	 */
 	void setPatchset(PatchSet value);
+
+	/**
+	 * Returns the value of the '<em><b>Patch Set Ref Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Patch Set Ref Id</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Patch Set Ref Id</em>' attribute.
+	 * @see #setPatchSetRefId(String)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getComment_PatchSetRefId()
+	 * @model
+	 * @generated
+	 */
+	String getPatchSetRefId();
+
+	/**
+	 * Sets the value of the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getPatchSetRefId
+	 * <em>Patch Set Ref Id</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Patch Set Ref Id</em>' attribute.
+	 * @see #getPatchSetRefId()
+	 * @generated
+	 */
+	void setPatchSetRefId(String value);
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @model
+	 * @generated
+	 */
+	void resolvePatchSet(ModelReview review);
 
 } // Comment

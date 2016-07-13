@@ -340,8 +340,8 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	public EReference getModelReview_PatchSets() {
-		return (EReference) modelReviewEClass.getEStructuralFeatures().get(1);
+	public EAttribute getModelReview_RepositoryURI() {
+		return (EAttribute) modelReviewEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -349,7 +349,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	public EReference getModelReview_Comments() {
+	public EReference getModelReview_PatchSets() {
 		return (EReference) modelReviewEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -358,7 +358,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	public EReference getModelReview_LeftPatchSet() {
+	public EReference getModelReview_Comments() {
 		return (EReference) modelReviewEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -367,7 +367,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	public EReference getModelReview_RightPatchSet() {
+	public EReference getModelReview_LeftPatchSet() {
 		return (EReference) modelReviewEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -376,7 +376,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	public EReference getModelReview_SelectedModelComparison() {
+	public EReference getModelReview_RightPatchSet() {
 		return (EReference) modelReviewEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -385,7 +385,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	public EReference getModelReview_SelectedDiagramComparison() {
+	public EReference getModelReview_SelectedModelComparison() {
 		return (EReference) modelReviewEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -394,8 +394,8 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	public EAttribute getModelReview_ShowAdditions() {
-		return (EAttribute) modelReviewEClass.getEStructuralFeatures().get(7);
+	public EReference getModelReview_SelectedDiagramComparison() {
+		return (EReference) modelReviewEClass.getEStructuralFeatures().get(7);
 	}
 
 	/**
@@ -403,7 +403,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	public EAttribute getModelReview_ShowModifications() {
+	public EAttribute getModelReview_ShowAdditions() {
 		return (EAttribute) modelReviewEClass.getEStructuralFeatures().get(8);
 	}
 
@@ -412,7 +412,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	public EAttribute getModelReview_ShowDeletions() {
+	public EAttribute getModelReview_ShowModifications() {
 		return (EAttribute) modelReviewEClass.getEStructuralFeatures().get(9);
 	}
 
@@ -421,7 +421,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	public EAttribute getModelReview_ShowLayoutChanges() {
+	public EAttribute getModelReview_ShowDeletions() {
 		return (EAttribute) modelReviewEClass.getEStructuralFeatures().get(10);
 	}
 
@@ -430,8 +430,26 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	public EAttribute getModelReview_UnifiedModelMap() {
+	public EAttribute getModelReview_ShowLayoutChanges() {
 		return (EAttribute) modelReviewEClass.getEStructuralFeatures().get(11);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getModelReview_UnifiedModelMap() {
+		return (EAttribute) modelReviewEClass.getEStructuralFeatures().get(12);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EReference getModelReview_CurrentReviewer() {
+		return (EReference) modelReviewEClass.getEStructuralFeatures().get(13);
 	}
 
 	/**
@@ -783,6 +801,24 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 */
 	public EReference getComment_Patchset() {
 		return (EReference) commentEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getComment_PatchSetRefId() {
+		return (EAttribute) commentEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EOperation getComment__ResolvePatchSet__ModelReview() {
+		return commentEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -1158,6 +1194,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		// Create classes and their features
 		modelReviewEClass = createEClass(MODEL_REVIEW);
 		createEAttribute(modelReviewEClass, MODEL_REVIEW__ID);
+		createEAttribute(modelReviewEClass, MODEL_REVIEW__REPOSITORY_URI);
 		createEReference(modelReviewEClass, MODEL_REVIEW__PATCH_SETS);
 		createEReference(modelReviewEClass, MODEL_REVIEW__COMMENTS);
 		createEReference(modelReviewEClass, MODEL_REVIEW__LEFT_PATCH_SET);
@@ -1169,6 +1206,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		createEAttribute(modelReviewEClass, MODEL_REVIEW__SHOW_DELETIONS);
 		createEAttribute(modelReviewEClass, MODEL_REVIEW__SHOW_LAYOUT_CHANGES);
 		createEAttribute(modelReviewEClass, MODEL_REVIEW__UNIFIED_MODEL_MAP);
+		createEReference(modelReviewEClass, MODEL_REVIEW__CURRENT_REVIEWER);
 
 		patchSetEClass = createEClass(PATCH_SET);
 		createEAttribute(patchSetEClass, PATCH_SET__ID);
@@ -1213,6 +1251,8 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		createEReference(commentEClass, COMMENT__REPLIES);
 		createEReference(commentEClass, COMMENT__REPLIED_TO);
 		createEReference(commentEClass, COMMENT__PATCHSET);
+		createEAttribute(commentEClass, COMMENT__PATCH_SET_REF_ID);
+		createEOperation(commentEClass, COMMENT___RESOLVE_PATCH_SET__MODELREVIEW);
 
 		modelResourceEClass = createEClass(MODEL_RESOURCE);
 		createEReference(modelResourceEClass, MODEL_RESOURCE__OBJECTS);
@@ -1326,6 +1366,9 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 				IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getModelReview_Id(), ecorePackage.getEString(), "id", null, 0, 1, ModelReview.class,
 				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getModelReview_RepositoryURI(), ecorePackage.getEString(), "repositoryURI", null, 0, 1,
+				ModelReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 		initEReference(getModelReview_PatchSets(), this.getPatchSet(), this.getPatchSet_Review(), "patchSets", null, 0,
 				-1, ModelReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1363,6 +1406,9 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		g1.getETypeArguments().add(g2);
 		initEAttribute(getModelReview_UnifiedModelMap(), g1, "unifiedModelMap", null, 0, 1, ModelReview.class,
 				IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getModelReview_CurrentReviewer(), this.getUser(), null, "currentReviewer", null, 0, 1,
+				ModelReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
+				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(patchSetEClass, PatchSet.class, "PatchSet", !IS_ABSTRACT, !IS_INTERFACE,
 				IS_GENERATED_INSTANCE_CLASS);
@@ -1477,6 +1523,13 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		initEReference(getComment_Patchset(), this.getPatchSet(), this.getPatchSet_Comments(), "patchset", null, 0, 1,
 				Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getComment_PatchSetRefId(), theEcorePackage.getEString(), "patchSetRefId", null, 0, 1,
+				Comment.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
+
+		EOperation op = initEOperation(getComment__ResolvePatchSet__ModelReview(), null, "resolvePatchSet", 0, 1,
+				IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getModelReview(), "review", 0, 1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(modelResourceEClass, ModelResource.class, "ModelResource", !IS_ABSTRACT, !IS_INTERFACE,
 				IS_GENERATED_INSTANCE_CLASS);

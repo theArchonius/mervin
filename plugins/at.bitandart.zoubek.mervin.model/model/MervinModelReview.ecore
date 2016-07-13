@@ -4,6 +4,7 @@
     nsPrefix="at.bitandart.zoubek.mervin">
   <eClassifiers xsi:type="ecore:EClass" name="ModelReview">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="repositoryURI" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="patchSets" upperBound="-1"
         eType="#//PatchSet" containment="true" eOpposite="#//PatchSet/review"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="comments" upperBound="-1"
@@ -30,6 +31,7 @@
         <eTypeArguments eClassifier="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
       </eGenericType>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="currentReviewer" eType="#//User"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PatchSet">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -95,6 +97,9 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="oldModelResource" eType="#//ModelResource"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Comment">
+    <eOperations name="resolvePatchSet">
+      <eParameters name="review" eType="#//ModelReview"/>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="author" lowerBound="1"
         eType="#//User"/>
@@ -109,6 +114,7 @@
         eOpposite="#//Comment/replies"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="patchset" eType="#//PatchSet"
         eOpposite="#//PatchSet/comments"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="patchSetRefId" eType="ecore:EDataType ../../org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ModelResource">
     <eStructuralFeatures xsi:type="ecore:EReference" name="objects" upperBound="-1"

@@ -21,6 +21,14 @@ import junit.textui.TestRunner;
 /**
  * <!-- begin-user-doc --> A test case for the model object '
  * <em><b>Comment</b></em>'. <!-- end-user-doc -->
+ * <p>
+ * The following operations are tested:
+ * <ul>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment#resolvePatchSet(at.bitandart.zoubek.mervin.model.modelreview.ModelReview)
+ * <em>Resolve Patch Set</em>}</li>
+ * </ul>
+ * </p>
  * 
  * @generated
  */
@@ -93,6 +101,21 @@ public class CommentTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		setFixture(null);
+	}
+
+	/**
+	 * Tests the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment#resolvePatchSet(at.bitandart.zoubek.mervin.model.modelreview.ModelReview)
+	 * <em>Resolve Patch Set</em>}' operation. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.Comment#resolvePatchSet(at.bitandart.zoubek.mervin.model.modelreview.ModelReview)
+	 * @generated
+	 */
+	public void testResolvePatchSet__ModelReview() {
+		// TODO: implement this operation test method
+		// Ensure that you remove @generated or mark it @generated NOT
+		fail();
 	}
 
 } // CommentTest

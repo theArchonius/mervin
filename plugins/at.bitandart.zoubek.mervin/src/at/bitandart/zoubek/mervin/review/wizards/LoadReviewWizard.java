@@ -29,6 +29,7 @@ import at.bitandart.zoubek.mervin.exceptions.InvalidReviewException;
 import at.bitandart.zoubek.mervin.exceptions.InvalidReviewRepositoryException;
 import at.bitandart.zoubek.mervin.exceptions.RepositoryIOException;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
+import at.bitandart.zoubek.mervin.model.modelreview.User;
 
 /**
  * A Wizard that loads a {@link ModelReview} from a review repository.
@@ -47,6 +48,9 @@ public class LoadReviewWizard extends Wizard {
 
 	@Inject
 	private IReviewRepositoryService repoService;
+
+	@Inject
+	private User reviewer;
 
 	@SuppressWarnings("restriction")
 	@Inject
@@ -90,7 +94,11 @@ public class LoadReviewWizard extends Wizard {
 				@Override
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
-						modelReview = repoService.loadReview(uri, id, monitor);
+						/*
+						 * TODO add reviewer selection page and let the user
+						 * choose the reviewer
+						 */
+						modelReview = repoService.loadReview(uri, id, reviewer, monitor);
 					} catch (RepositoryIOException | InvalidReviewRepositoryException | InvalidReviewException e) {
 						new InvocationTargetException(e);
 					}

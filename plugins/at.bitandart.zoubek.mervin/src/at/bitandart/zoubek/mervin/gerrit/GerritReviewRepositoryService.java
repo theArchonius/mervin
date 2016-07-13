@@ -10,16 +10,23 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.gerrit;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,6 +35,7 @@ import javax.inject.Inject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
+import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
@@ -41,20 +49,44 @@ import org.eclipse.emf.ecore.resource.URIHandler;
 import org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
+import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.edit.domain.IEditingDomainProvider;
+import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
+import org.eclipse.jgit.dircache.DirCache;
+import org.eclipse.jgit.dircache.DirCacheBuilder;
+import org.eclipse.jgit.dircache.DirCacheEntry;
+import org.eclipse.jgit.errors.CorruptObjectException;
+import org.eclipse.jgit.errors.IncorrectObjectTypeException;
+import org.eclipse.jgit.errors.MissingObjectException;
+import org.eclipse.jgit.internal.JGitText;
+import org.eclipse.jgit.lib.CommitBuilder;
+import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.lib.FileMode;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectInserter;
 import org.eclipse.jgit.lib.ObjectLoader;
 import org.eclipse.jgit.lib.ObjectReader;
+import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.RefUpdate;
+import org.eclipse.jgit.lib.RefUpdate.Result;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.RepositoryState;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
+import org.eclipse.jgit.treewalk.TreeWalk;
 
 import com.google.common.base.Predicate;
 
@@ -63,6 +95,8 @@ import at.bitandart.zoubek.mervin.IReviewRepositoryService;
 import at.bitandart.zoubek.mervin.exceptions.InvalidReviewException;
 import at.bitandart.zoubek.mervin.exceptions.InvalidReviewRepositoryException;
 import at.bitandart.zoubek.mervin.exceptions.RepositoryIOException;
+import at.bitandart.zoubek.mervin.model.modelreview.Comment;
+import at.bitandart.zoubek.mervin.model.modelreview.CommentLink;
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch;
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramResource;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelPatch;
@@ -72,6 +106,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
 import at.bitandart.zoubek.mervin.model.modelreview.Patch;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchChangeType;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
+import at.bitandart.zoubek.mervin.model.modelreview.User;
 
 /**
  * <p>
@@ -104,6 +139,9 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 	private static final String CHANGE_REF_PATTERN_GROUP_MOD_CHANGE_PK = "modChangePk";
 	private static final String CHANGE_REF_PATTERN_GROUP_CHANGE_PK = "changePk";
 	private static final String CHANGE_REF_PATTERN_GROUP_PATCH_SET_ID = "patchSetId";
+	private static final String COMMENTS_BASE_REF = "refs/mervin/comments";
+	private static final String COMMENTS_FILE_EXTENSION = "modelreview";
+	private static final String COMMENTS_FILE_URI = "comments." + COMMENTS_FILE_EXTENSION;
 
 	/**
 	 * the model review factory used by this service to create all model
@@ -194,7 +232,7 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 	}
 
 	@Override
-	public ModelReview loadReview(URI uri, String id, IProgressMonitor monitor)
+	public ModelReview loadReview(URI uri, String id, User currentReviewer, IProgressMonitor monitor)
 			throws InvalidReviewRepositoryException, InvalidReviewException, RepositoryIOException {
 		/*
 		 * Fetch all refs to the patch sets for the particular change and create
@@ -223,6 +261,8 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 
 			ModelReview modelReview = modelReviewFactory.createModelReview();
 			modelReview.setId(id);
+			modelReview.setRepositoryURI(uri.toString());
+			modelReview.setCurrentReviewer(currentReviewer);
 			EList<PatchSet> patchSets = modelReview.getPatchSets();
 
 			Repository repository = git.getRepository();
@@ -230,6 +270,8 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 			Pattern changeRefPattern = Pattern.compile(CHANGE_REF_PATTERN);
 
 			monitor.beginTask("Loading Patch Sets", allRefs.size());
+
+			List<ResourceSet> resourceSets = new LinkedList<>();
 
 			for (Entry<String, Ref> refEntry : allRefs.entrySet()) {
 				Matcher matcher = changeRefPattern.matcher(refEntry.getValue().getName());
@@ -245,7 +287,7 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 					loadPatches(patchSet, refEntry.getValue(), git);
 
 					// load involved models
-					loadInvolvedModelsAndDiagrams(patchSet, refEntry.getValue(), git);
+					resourceSets.addAll(loadInvolvedModelsAndDiagrams(patchSet, refEntry.getValue(), git));
 
 					// compare the involved models
 					patchSet.setModelComparison(compareModels(patchSet));
@@ -298,6 +340,10 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 					return psId1.compareTo(psId2);
 				}
 			});
+
+			monitor.beginTask("Loading Comments", IProgressMonitor.UNKNOWN);
+
+			loadComments(repository, modelReview, resourceSets);
 
 			monitor.done();
 
@@ -400,9 +446,11 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 	 *            the git ref to the commit which contains the patch set.
 	 * @param git
 	 *            the git instance to use
+	 * @return a list containing the resource sets for the old and the new model
+	 *         resources.
 	 * @throws IOException
 	 */
-	private void loadInvolvedModelsAndDiagrams(PatchSet patchSet, Ref ref, Git git) throws IOException {
+	private List<ResourceSet> loadInvolvedModelsAndDiagrams(PatchSet patchSet, Ref ref, Git git) throws IOException {
 
 		String commitHash = ref.getObjectId().name();
 
@@ -422,8 +470,10 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 			repoPath = repoPath.substring(0, repoPath.length() - 1);
 		}
 
-		ResourceSet newResourceSet = createGitAwareResourceSet(commitHash, repoPath);
-		ResourceSet oldModelResourceSet = createGitAwareResourceSet(parentCommitHash, repoPath);
+		ResourceSet newResourceSet = createGitAwareResourceSet(commitHash, repoPath,
+				Collections.<ResourceSet> emptyList());
+		ResourceSet oldModelResourceSet = createGitAwareResourceSet(parentCommitHash, repoPath,
+				Collections.<ResourceSet> emptyList());
 
 		for (Patch patch : patchSet.getPatches()) {
 			if (patch instanceof ModelPatch || patch instanceof DiagramPatch) {
@@ -460,6 +510,10 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 			}
 		}
 
+		List<ResourceSet> resourceSets = new ArrayList<>(2);
+		resourceSets.add(oldModelResourceSet);
+		resourceSets.add(newResourceSet);
+		return resourceSets;
 	}
 
 	/**
@@ -640,10 +694,34 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 	 *            the commit hash
 	 * @param repoPath
 	 *            the absolute path to the git repo
+	 * @param fallbackSets
+	 *            a list of {@link ResourceSet}s that should be considered when
+	 *            searching for a resource with a specific URI
 	 * @return the resource set
 	 */
-	private ResourceSet createGitAwareResourceSet(final String commitHash, final String repoPath) {
-		ResourceSet resourceSet = new ResourceSetImpl();
+	private ResourceSet createGitAwareResourceSet(final String commitHash, final String repoPath,
+			final List<ResourceSet> fallbackSets) {
+
+		ResourceSet resourceSet = new ResourceSetImpl() {
+			@Override
+			protected Resource delegatedGetResource(org.eclipse.emf.common.util.URI uri, boolean loadOnDemand) {
+
+				/*
+				 * try to resolve the resource from one of the fallback resource
+				 * sets
+				 */
+				for (ResourceSet resourceSet : fallbackSets) {
+
+					Resource resource = resourceSet.getResource(uri, false);
+					if (resource != null) {
+						return resource;
+					}
+				}
+
+				return super.delegatedGetResource(uri, loadOnDemand);
+			}
+		};
+
 		resourceSet.setURIConverter(new ExtensibleURIConverterImpl() {
 			@Override
 			public org.eclipse.emf.common.util.URI normalize(org.eclipse.emf.common.util.URI uri) {
@@ -659,9 +737,11 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 		});
 		EList<URIHandler> uriHandlers = resourceSet.getURIConverter().getURIHandlers();
 		uriHandlers.add(ContextInjectionFactory.make(ReadOnlyGitCommitURIHandler.class, eclipseContext));
-		// make sure the Git commit URI handler is placed before the standard
-		// URI Handler which handles by default any URI (otherwise the default
-		// URI handler is visited first and is used to load the resource)
+		/*
+		 * make sure the Git commit URI handler is placed before the standard
+		 * URI Handler which handles by default any URI (otherwise the default
+		 * URI handler is visited first and is used to load the resource)
+		 */
 		uriHandlers.move(uriHandlers.size() - 1, uriHandlers.size() - 2);
 		TransactionalEditingDomain.Factory.INSTANCE.createEditingDomain(resourceSet);
 		return resourceSet;
@@ -772,10 +852,421 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 		}
 	}
 
-	@Override
-	public void saveReview(URI uri, ModelReview modelReview) throws InvalidReviewException, RepositoryIOException {
-		// TODO Auto-generated method stub
+	/**
+	 * loads the comments for the given {@link ModelReview} from the given
+	 * repository. The current reviewer should be set for the given model to
+	 * avoid duplicated user objects representing the same user. The resource
+	 * set used to load the comments tries to load resources containing
+	 * referenced EObjects from the given list of model resource sets before
+	 * creating the resource directly, in order to avoid duplicated model
+	 * elements. This is necessary as {@link CommentLink}s may refer to objects
+	 * contained in other resource sets.
+	 * 
+	 * @param repository
+	 *            the repository to load the comments from.
+	 * @param modelReview
+	 *            the {@link ModelReview} to load the comments for.
+	 * @param modelResourceSets
+	 *            a list of resource sets to resolve referenced model elements
+	 *            if they cannot be found in the comments model.
+	 * @throws RepositoryIOException
+	 */
+	private void loadComments(Repository repository, final ModelReview modelReview, List<ResourceSet> modelResourceSets)
+			throws RepositoryIOException {
 
+		String commentRefName = getCommentRefName(modelReview);
+		String repoPath = repository.getWorkTree().getPath();
+		Ref commentRef;
+
+		try {
+
+			commentRef = repository.exactRef(commentRefName);
+			String commitHash = commentRef.getObjectId().name();
+
+			/* prepare the resource set and the resource for the comments */
+			org.eclipse.emf.common.util.URI commentsUri = org.eclipse.emf.common.util.URI.createURI(
+					GitURIParser.GIT_COMMIT_SCHEME + "://" + repoPath + "/" + commitHash + "/" + COMMENTS_FILE_URI);
+			ResourceSet resourceSet = createGitAwareResourceSet(commitHash, repoPath, modelResourceSets);
+			Resource commentsResource = resourceSet.createResource(commentsUri);
+
+			/* load the comments from the repository */
+			commentsResource.load(null);
+			final EList<EObject> content = commentsResource.getContents();
+
+			/* add the loaded comments to the given model review */
+
+			TransactionalEditingDomain editingDomain = findTransactionalEditingDomainFor(commentsResource);
+
+			Command addCommentsCommand = new RecordingCommand(editingDomain) {
+
+				@Override
+				protected void doExecute() {
+
+					User reviewer = modelReview.getCurrentReviewer();
+
+					for (EObject object : content) {
+
+						if (object instanceof Comment) {
+
+							Comment comment = (Comment) object;
+							comment.resolvePatchSet(modelReview);
+							User author = comment.getAuthor();
+
+							if (isSameUser(reviewer, author)) {
+								// avoid duplicated users
+								comment.setAuthor(reviewer);
+							}
+
+							modelReview.getComments().add(comment);
+						}
+					}
+				}
+
+			};
+
+			editingDomain.getCommandStack().execute(addCommentsCommand);
+
+		} catch (IOException e) {
+			throw new RepositoryIOException(
+					MessageFormat.format("An IO error occured during loading the comments for the review with id #{0}",
+							modelReview.getId()),
+					e);
+		}
+	}
+
+	/**
+	 * finds the {@link TransactionalEditingDomain} for the given
+	 * {@link Resource} if there is one.
+	 * 
+	 * @param resource
+	 *            the resource to find the {@link TransactionalEditingDomain}
+	 *            for.
+	 * @return the {@link TransactionalEditingDomain} for the given resource or
+	 *         null if no {@link TransactionalEditingDomain} can be found.
+	 */
+	private static TransactionalEditingDomain findTransactionalEditingDomainFor(Resource resource) {
+
+		if (resource != null) {
+
+			IEditingDomainProvider editingDomainProvider = (IEditingDomainProvider) EcoreUtil
+					.getExistingAdapter(resource, IEditingDomainProvider.class);
+			if (editingDomainProvider != null) {
+
+				EditingDomain editingDomain = editingDomainProvider.getEditingDomain();
+				if (editingDomain instanceof TransactionalEditingDomain) {
+					return (TransactionalEditingDomain) editingDomain;
+				}
+
+			} else {
+				return findTransactionalEditingDomainFor(resource.getResourceSet());
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * finds the {@link TransactionalEditingDomain} for the given
+	 * {@link ResourceSet} if there is one.
+	 * 
+	 * @param resourceSet
+	 *            the resource set to find the
+	 *            {@link TransactionalEditingDomain} for.
+	 * @return the {@link TransactionalEditingDomain} for the given resource set
+	 *         or null if no {@link TransactionalEditingDomain} can be found.
+	 */
+	private static TransactionalEditingDomain findTransactionalEditingDomainFor(ResourceSet resourceSet) {
+
+		IEditingDomainProvider editingDomainProvider;
+		if (resourceSet instanceof IEditingDomainProvider) {
+
+			EditingDomain editingDomain = ((IEditingDomainProvider) resourceSet).getEditingDomain();
+			if (editingDomain instanceof TransactionalEditingDomain) {
+				return (TransactionalEditingDomain) editingDomain;
+			}
+
+		} else if (resourceSet != null) {
+
+			editingDomainProvider = (IEditingDomainProvider) EcoreUtil.getExistingAdapter(resourceSet,
+					IEditingDomainProvider.class);
+
+			if (editingDomainProvider != null) {
+				EditingDomain editingDomain = editingDomainProvider.getEditingDomain();
+				if (editingDomain instanceof TransactionalEditingDomain) {
+					return (TransactionalEditingDomain) editingDomain;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * @param user1
+	 * @param user2
+	 * @return true if the given objects represent the same users, false
+	 *         otherwise.
+	 */
+	private boolean isSameUser(User user1, User user2) {
+		return user1 != null && user2 != null && user1.getName().equals(user2.getName());
+	}
+
+	@Override
+	public void saveReview(URI uri, ModelReview modelReview, User currentReviewer, IProgressMonitor monitor)
+			throws InvalidReviewRepositoryException, InvalidReviewException, RepositoryIOException {
+
+		monitor.beginTask("Connecting to repository", IProgressMonitor.UNKNOWN);
+
+		String repoFileURI = COMMENTS_FILE_URI;
+
+		try {
+			Git git = Git.open(new File(uri));
+			Repository repository = git.getRepository();
+			ObjectInserter objectInserter = repository.newObjectInserter();
+
+			String commentRefName = getCommentRefName(modelReview);
+			Ref commentRef = repository.exactRef(commentRefName);
+
+			DirCache index = DirCache.newInCore();
+			DirCacheBuilder dirCacheBuilder = index.builder();
+
+			monitor.beginTask("Preparing commit...", IProgressMonitor.UNKNOWN);
+
+			if (commentRef != null) {
+
+				/*
+				 * The ref already exists so we have to copy the previous
+				 * RevTree to keep all already attached files
+				 */
+
+				RevWalk revWalk = new RevWalk(repository);
+				RevCommit prevCommit = revWalk.parseCommit(commentRef.getObjectId());
+				RevTree tree = prevCommit.getTree();
+
+				List<String> ignoredFiles = new ArrayList<>();
+				/*
+				 * add file path of the new file to the ignored file paths, as
+				 * we don't want any already existing old file in our new tree
+				 */
+				ignoredFiles.add(repoFileURI);
+				buildDirCacheFromTree(tree, repository, dirCacheBuilder, ignoredFiles);
+
+				revWalk.close();
+			}
+
+			monitor.beginTask("Writing comments file...", IProgressMonitor.UNKNOWN);
+
+			ResourceSet resourceSet = new ResourceSetImpl();
+			Resource resource = resourceSet.createResource(org.eclipse.emf.common.util.URI.createURI(repoFileURI));
+
+			addCommentsToResource(modelReview, resource);
+
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			resource.save(outputStream, null);
+
+			// insert file as object
+			byte[] content = outputStream.toByteArray();
+			long length = content.length;
+			InputStream inputStream = new ByteArrayInputStream(content);
+			ObjectId objectId = objectInserter.insert(Constants.OBJ_BLOB, length, inputStream);
+			inputStream.close();
+
+			// create tree entry
+			DirCacheEntry entry = new DirCacheEntry(repoFileURI);
+			entry.setFileMode(FileMode.REGULAR_FILE);
+			entry.setLastModified(System.currentTimeMillis());
+			entry.setLength(length);
+			entry.setObjectId(objectId);
+			dirCacheBuilder.add(entry);
+
+			dirCacheBuilder.finish();
+
+			// write new tree in database
+			ObjectId indexTreeId = index.writeTree(objectInserter);
+
+			monitor.beginTask("Commiting comments...", IProgressMonitor.UNKNOWN);
+
+			// create commit
+			CommitBuilder commitBuilder = new CommitBuilder();
+			PersonIdent personIdent = new PersonIdent("Mervin", "mervin@mervin.modelreview");
+			commitBuilder.setCommitter(personIdent);
+			commitBuilder.setAuthor(personIdent);
+			commitBuilder
+					.setMessage(MessageFormat.format("Updated comments by user \"{0}\"", currentReviewer.getName()));
+
+			if (commentRef != null) {
+				commitBuilder.setParentId(commentRef.getObjectId());
+			}
+			commitBuilder.setTreeId(indexTreeId);
+
+			// commit
+			ObjectId commitId = objectInserter.insert(commitBuilder);
+			objectInserter.flush();
+
+			RefUpdate refUpdate = repository.updateRef(commentRefName);
+			refUpdate.setNewObjectId(commitId);
+			if (commentRef != null)
+				refUpdate.setExpectedOldObjectId(commentRef.getObjectId());
+			else
+				refUpdate.setExpectedOldObjectId(ObjectId.zeroId());
+
+			/*
+			 * TODO the result handling below is copied from the CommitCommand
+			 * class, I don't know if this is really necessary in our case
+			 */
+			Result result = refUpdate.forceUpdate();
+			switch (result) {
+			case NEW:
+			case FORCED:
+			case FAST_FORWARD: {
+				if (repository.getRepositoryState() == RepositoryState.MERGING_RESOLVED) {
+					/*
+					 * Commit was successful. Now delete the files used for
+					 * merge commits
+					 */
+					repository.writeMergeCommitMsg(null);
+					repository.writeMergeHeads(null);
+				} else if (repository.getRepositoryState() == RepositoryState.CHERRY_PICKING_RESOLVED) {
+					repository.writeMergeCommitMsg(null);
+					repository.writeCherryPickHead(null);
+				} else if (repository.getRepositoryState() == RepositoryState.REVERTING_RESOLVED) {
+					repository.writeMergeCommitMsg(null);
+					repository.writeRevertHead(null);
+				}
+				break;
+			}
+			case REJECTED:
+			case LOCK_FAILURE:
+				throw new RepositoryIOException("Error occured during writing to the git repository",
+						new ConcurrentRefUpdateException("Could not lock ref " + refUpdate.getRef().getName(),
+								refUpdate.getRef(), result));
+			default:
+				throw new RepositoryIOException("Error occured during writing to the git repository",
+						new JGitInternalException(MessageFormat.format(JGitText.get().updatingRefFailed,
+								refUpdate.getRef().getName(), commitId.toString(), result)));
+			}
+
+		} catch (IOException e) {
+			throw new InvalidReviewRepositoryException("Could not open local git repository", e);
+		} finally {
+			monitor.done();
+		}
+
+	}
+
+	/**
+	 * adds a copy of the comments and their respective authors of the given
+	 * model review to the given resource.
+	 * 
+	 * @param modelReview
+	 *            the review to copy the comments from.
+	 * @param resource
+	 *            the resource to store the copied objects to.
+	 */
+	private void addCommentsToResource(ModelReview modelReview, Resource resource) {
+
+		EList<Comment> originalComments = modelReview.getComments();
+		Set<EObject> objectsToCopy = new HashSet<>();
+		objectsToCopy.addAll(originalComments);
+		objectsToCopy.addAll(modelReview.getPatchSets());
+
+		Copier copier = new Copier();
+		copier.copyAll(objectsToCopy);
+		copier.copyReferences();
+
+		List<Comment> comments = new ArrayList<>(originalComments.size());
+		List<User> users = new LinkedList<>();
+		for (Comment originalComment : originalComments) {
+
+			Comment comment = (Comment) copier.get(originalComment);
+			comments.add(comment);
+			User author = comment.getAuthor();
+			boolean skipAuthor = false;
+
+			/*
+			 * replace the patchset with a reference to the patch set id, as the
+			 * patch set is derived from the repository in this case.
+			 */
+
+			PatchSet patchset = comment.getPatchset();
+			comment.setPatchSetRefId(patchset.getId());
+			comment.setPatchset(null);
+
+			for (User user : users) {
+				if (isSameUser(user, author)) {
+					skipAuthor = true;
+					break;
+				}
+			}
+
+			if (!skipAuthor) {
+				users.add(author);
+			}
+		}
+
+		resource.getContents().addAll(comments);
+		resource.getContents().addAll(users);
+	}
+
+	/**
+	 * builds a dir cache by copying entries from an existing tree, skipping
+	 * files if specified.
+	 *
+	 * @param tree
+	 *            the tree to copy from.
+	 * @param repository
+	 *            the repository to work upon.
+	 * @param dirCacheBuilder
+	 *            the dir builder instance used to add entries to the dir cache.
+	 * @param ignoredFilePaths
+	 *            a list of file paths to ignore during copying.
+	 * @throws MissingObjectException
+	 * @throws IncorrectObjectTypeException
+	 * @throws CorruptObjectException
+	 * @throws IOException
+	 */
+	private void buildDirCacheFromTree(RevTree tree, Repository repository, DirCacheBuilder dirCacheBuilder,
+			List<String> ignoredFilePaths)
+			throws MissingObjectException, IncorrectObjectTypeException, CorruptObjectException, IOException {
+		// TODO improve exception handling
+
+		TreeWalk treeWalk = new TreeWalk(repository);
+		int treeId = treeWalk.addTree(tree);
+		treeWalk.setRecursive(true);
+
+		while (treeWalk.next()) {
+			String path = treeWalk.getPathString();
+
+			CanonicalTreeParser prevTreeParser = treeWalk.getTree(treeId, CanonicalTreeParser.class);
+			if (prevTreeParser != null && !ignoredFilePaths.contains(path)) {
+				// create a new DirCacheEntry with data from the previous commit
+
+				final DirCacheEntry dcEntry = new DirCacheEntry(path);
+				dcEntry.setObjectId(prevTreeParser.getEntryObjectId());
+				dcEntry.setFileMode(prevTreeParser.getEntryFileMode());
+				dirCacheBuilder.add(dcEntry);
+			}
+		}
+		treeWalk.close();
+	}
+
+	/**
+	 * @param review
+	 *            the review to retrieve the ref name for.
+	 * @return the comment ref name for the given {@link ModelReview}.
+	 */
+	private String getCommentRefName(ModelReview review) {
+		return getCommentRefName(review.getId());
+	}
+
+	/**
+	 * @param changeId
+	 *            the id of the gerrit change (primary key of the gerrit
+	 *            change).
+	 * @return the comment ref name for the given changeId.
+	 */
+	private String getCommentRefName(String changeId) {
+		return COMMENTS_BASE_REF + "/" + changeId;
 	}
 
 }
