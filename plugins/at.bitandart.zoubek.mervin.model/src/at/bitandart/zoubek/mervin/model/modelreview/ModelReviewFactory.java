@@ -26,9 +26,10 @@ public interface ModelReviewFactory extends EFactory {
 	 * The singleton instance of the factory. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->
 	 * 
-	 * @generated
+	 * @generated NOT
 	 */
-	ModelReviewFactory eINSTANCE = at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewFactoryImpl.init();
+	ModelReviewFactory eINSTANCE = at.bitandart.zoubek.mervin.model.modelreview.impl.extended.DefaultModelReviewFactory
+			.init();
 
 	/**
 	 * Returns a new object of class '<em>Model Review</em>'. <!--

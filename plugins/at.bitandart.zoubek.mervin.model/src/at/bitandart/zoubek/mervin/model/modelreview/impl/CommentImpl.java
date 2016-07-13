@@ -14,10 +14,12 @@ package at.bitandart.zoubek.mervin.model.modelreview.impl;
 
 import at.bitandart.zoubek.mervin.model.modelreview.Comment;
 import at.bitandart.zoubek.mervin.model.modelreview.CommentLink;
+import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.model.modelreview.User;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -66,6 +68,9 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.CommentImpl#getPatchset
  * <em>Patchset</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.CommentImpl#getPatchSetRefId
+ * <em>Patch Set Ref Id</em>}</li>
  * </ul>
  *
  * @generated
@@ -182,6 +187,28 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 	 * @ordered
 	 */
 	protected PatchSet patchset;
+
+	/**
+	 * The default value of the '{@link #getPatchSetRefId()
+	 * <em>Patch Set Ref Id</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #getPatchSetRefId()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String PATCH_SET_REF_ID_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getPatchSetRefId()
+	 * <em>Patch Set Ref Id</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #getPatchSetRefId()
+	 * @generated
+	 * @ordered
+	 */
+	protected String patchSetRefId = PATCH_SET_REF_ID_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -473,6 +500,39 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 	 * 
 	 * @generated
 	 */
+	public String getPatchSetRefId() {
+		return patchSetRefId;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setPatchSetRefId(String newPatchSetRefId) {
+		String oldPatchSetRefId = patchSetRefId;
+		patchSetRefId = newPatchSetRefId;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.COMMENT__PATCH_SET_REF_ID,
+					oldPatchSetRefId, patchSetRefId));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void resolvePatchSet(ModelReview review) {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
@@ -545,6 +605,8 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 			if (resolve)
 				return getPatchset();
 			return basicGetPatchset();
+		case ModelReviewPackage.COMMENT__PATCH_SET_REF_ID:
+			return getPatchSetRefId();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -584,6 +646,9 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 		case ModelReviewPackage.COMMENT__PATCHSET:
 			setPatchset((PatchSet) newValue);
 			return;
+		case ModelReviewPackage.COMMENT__PATCH_SET_REF_ID:
+			setPatchSetRefId((String) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -620,6 +685,9 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 		case ModelReviewPackage.COMMENT__PATCHSET:
 			setPatchset((PatchSet) null);
 			return;
+		case ModelReviewPackage.COMMENT__PATCH_SET_REF_ID:
+			setPatchSetRefId(PATCH_SET_REF_ID_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -648,8 +716,26 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 			return repliedTo != null;
 		case ModelReviewPackage.COMMENT__PATCHSET:
 			return patchset != null;
+		case ModelReviewPackage.COMMENT__PATCH_SET_REF_ID:
+			return PATCH_SET_REF_ID_EDEFAULT == null ? patchSetRefId != null
+					: !PATCH_SET_REF_ID_EDEFAULT.equals(patchSetRefId);
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+		case ModelReviewPackage.COMMENT___RESOLVE_PATCH_SET__MODELREVIEW:
+			resolvePatchSet((ModelReview) arguments.get(0));
+			return null;
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**
@@ -669,6 +755,8 @@ public class CommentImpl extends MinimalEObjectImpl.Container implements Comment
 		result.append(creationTime);
 		result.append(", text: ");
 		result.append(text);
+		result.append(", patchSetRefId: ");
+		result.append(patchSetRefId);
 		result.append(')');
 		return result.toString();
 	}

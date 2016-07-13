@@ -766,13 +766,31 @@ public interface ModelReviewPackage extends EPackage {
 	int COMMENT__PATCHSET = 7;
 
 	/**
+	 * The feature id for the '<em><b>Patch Set Ref Id</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int COMMENT__PATCH_SET_REF_ID = 8;
+
+	/**
 	 * The number of structural features of the '<em>Comment</em>' class. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int COMMENT_FEATURE_COUNT = 8;
+	int COMMENT_FEATURE_COUNT = 9;
+
+	/**
+	 * The operation id for the '<em>Resolve Patch Set</em>' operation. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int COMMENT___RESOLVE_PATCH_SET__MODELREVIEW = 0;
 
 	/**
 	 * The number of operations of the '<em>Comment</em>' class. <!--
@@ -781,7 +799,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int COMMENT_OPERATION_COUNT = 0;
+	int COMMENT_OPERATION_COUNT = 1;
 
 	/**
 	 * The meta object id for the '
@@ -2238,6 +2256,31 @@ public interface ModelReviewPackage extends EPackage {
 	EReference getComment_Patchset();
 
 	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment#getPatchSetRefId
+	 * <em>Patch Set Ref Id</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @return the meta object for the attribute '<em>Patch Set Ref Id</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.Comment#getPatchSetRefId()
+	 * @see #getComment()
+	 * @generated
+	 */
+	EAttribute getComment_PatchSetRefId();
+
+	/**
+	 * Returns the meta object for the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.Comment#resolvePatchSet(at.bitandart.zoubek.mervin.model.modelreview.ModelReview)
+	 * <em>Resolve Patch Set</em>}' operation. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @return the meta object for the '<em>Resolve Patch Set</em>' operation.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.Comment#resolvePatchSet(at.bitandart.zoubek.mervin.model.modelreview.ModelReview)
+	 * @generated
+	 */
+	EOperation getComment__ResolvePatchSet__ModelReview();
+
+	/**
 	 * Returns the meta object for class '
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelResource
 	 * <em>Model Resource</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -3182,6 +3225,22 @@ public interface ModelReviewPackage extends EPackage {
 		 * @generated
 		 */
 		EReference COMMENT__PATCHSET = eINSTANCE.getComment_Patchset();
+
+		/**
+		 * The meta object literal for the '<em><b>Patch Set Ref Id</b></em>'
+		 * attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute COMMENT__PATCH_SET_REF_ID = eINSTANCE.getComment_PatchSetRefId();
+
+		/**
+		 * The meta object literal for the '<em><b>Resolve Patch Set</b></em>'
+		 * operation. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EOperation COMMENT___RESOLVE_PATCH_SET__MODELREVIEW = eINSTANCE.getComment__ResolvePatchSet__ModelReview();
 
 		/**
 		 * The meta object literal for the '
