@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/at.bitandart.zoubek.mervin.feature_1.0.0.201607191142.jar" id="at.bitandart.zoubek.mervin.feature" version="1.0.0.201607191142">
+      <category name="mervin"/>
+   </feature>
+   <category-def name="mervin" label="Mervin Model Review"/>
+</site>
