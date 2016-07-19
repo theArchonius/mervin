@@ -1,0 +1,3 @@
+[submodule "patched-gmf-runtime"]
+	path = patched-gmf-runtime
+	url = ssh://git@github.com/theArchonius/gmf-runtime.git
