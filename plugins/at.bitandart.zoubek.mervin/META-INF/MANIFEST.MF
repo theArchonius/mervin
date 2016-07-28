@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: ModelReviewVis Prototype
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: at.bitandart.zoubek.mervin;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: Florian Zoubek
+Bundle-Vendor: %Bundle-Vendor
 Export-Package: at.bitandart.zoubek.mervin.comments,
  at.bitandart.zoubek.mervin.property.diff;x-friends:="at.bitandart.zoubek.mervin.tests",
  at.bitandart.zoubek.mervin.swt.comments,
@@ -33,7 +33,6 @@ Require-Bundle: org.eclipse.swt,
  org.eclipse.emf.edit,
  org.eclipse.emf.edit.ui,
  org.eclipse.emf.compare.edit,
- org.eclipse.emf.compare.rcp,
  org.eclipse.gef,
  org.eclipse.gmf.runtime.diagram.ui,
  org.eclipse.gmf.runtime.notation.edit,

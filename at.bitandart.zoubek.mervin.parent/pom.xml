@@ -1,0 +1,62 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>at.bitandart.zoubek.mervin</groupId>
+  <artifactId>at.bitandart.zoubek.mervin.parent</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <properties>
+		<tycho-version>0.24.0</tycho-version>
+	</properties>
+	<build>
+		<plugins>
+			<plugin>
+				<!-- enable the Tycho build extension -->
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<extensions>true</extensions>
+			 </plugin>
+			 <plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<target>
+						<artifact>
+							<groupId>at.bitandart.zoubek.mervin</groupId>
+							<artifactId>at.bitandart.zoubek.mervin.target.mars</artifactId>
+							<version>1.0.0-SNAPSHOT</version>
+						</artifact>
+					</target>
+				</configuration>
+			</plugin>
+		 </plugins>
+	</build>
+	<modules>
+		<module>../plugins/at.bitandart.zoubek.mervin</module>
+		<module>
+			../targets/at.bitandart.zoubek.mervin.target.mars
+		</module>
+		<module>../plugins/at.bitandart.zoubek.mervin.feature</module>
+		<module>../plugins/at.bitandart.zoubek.mervin.model</module>
+		<module>
+			../plugins/at.bitandart.zoubek.mervin.model.edit
+		</module>
+		<module>
+			../plugins/at.bitandart.zoubek.mervin.model.editor
+		</module>
+		<module>
+			../plugins/at.bitandart.zoubek.mervin.model.tests
+		</module>
+		
+		<module>../plugins/at.bitandart.zoubek.mervin.tests</module>
+		<module>../plugins/at.bitandart.zoubek.mervin.draw2d</module>
+    	
+    	<module>
+    		../plugins/at.bitandart.zoubek.mervin.product
+    	</module>
+    	<module>
+    		../plugins/at.bitandart.zoubek.mervin.updatesite
+    	</module>
+	</modules>
+</project>

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.diagram.diff.parts;
 
+import java.net.MalformedURLException;
+
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
@@ -33,8 +35,8 @@ import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.swt.graphics.Image;
 
 import at.bitandart.zoubek.mervin.draw2d.MervinResourceRegistry;
+import at.bitandart.zoubek.mervin.draw2d.PluginMervinResourceRegistry;
 import at.bitandart.zoubek.mervin.draw2d.RegistryResourceManager;
-import at.bitandart.zoubek.mervin.draw2d.StandaloneMervinResourceRegistry;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.DiffWorkbench;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbench;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
@@ -53,8 +55,12 @@ public class WorkspaceEditPart extends ShapeNodeEditPart implements IPrimaryEdit
 	public WorkspaceEditPart(View model) {
 		super(model);
 
-		registryResourceManager = new RegistryResourceManager(new StandaloneMervinResourceRegistry(),
-				new LocalResourceManager(JFaceResources.getResources()));
+		try {
+			registryResourceManager = new RegistryResourceManager(new PluginMervinResourceRegistry(),
+					new LocalResourceManager(JFaceResources.getResources()));
+		} catch (MalformedURLException e) {
+			throw new IllegalStateException(e);
+		}
 	}
 
 	@Override
