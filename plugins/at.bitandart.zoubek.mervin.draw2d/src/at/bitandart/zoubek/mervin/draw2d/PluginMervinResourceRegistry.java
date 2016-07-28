@@ -23,14 +23,14 @@ public class PluginMervinResourceRegistry extends MervinResourceRegistry {
 
 	public PluginMervinResourceRegistry() throws MalformedURLException {
 
-		imageRegistry.put(IMAGE_WORKBENCH_TAB_MODE, ImageDescriptor.createFromURL(
-				new URL("platform:/plugin/at.bitandart.zoubek.mervin.draw2d/icons/16/workbench_tab_mode.png")));
-		imageRegistry.put(IMAGE_WORKBENCH_WINDOW_MODE, ImageDescriptor.createFromURL(
-				new URL("platform:/plugin/at.bitandart.zoubek.mervin.draw2d/icons/16/workbench_window_mode.png")));
-		imageRegistry.put(IMAGE_WORKBENCH_MINIMIZE, ImageDescriptor.createFromURL(
-				new URL("platform:/plugin/at.bitandart.zoubek.mervin.draw2d/icons/16/workbench_to_content.png")));
-		imageRegistry.put(IMAGE_WORKBENCH_MAXIMIZE, ImageDescriptor.createFromURL(
-				new URL("platform:/plugin/at.bitandart.zoubek.mervin.draw2d/icons/16/workbench_to_tray.png")));
+		imageRegistry.put(IMAGE_WORKBENCH_TAB_MODE, ImageDescriptor.createFromURL(new URL(
+				"platform:/plugin/at.bitandart.zoubek.mervin.draw2d/resources/icons/16/workbench_tab_mode.png")));
+		imageRegistry.put(IMAGE_WORKBENCH_WINDOW_MODE, ImageDescriptor.createFromURL(new URL(
+				"platform:/plugin/at.bitandart.zoubek.mervin.draw2d/resources/icons/16/workbench_window_mode.png")));
+		imageRegistry.put(IMAGE_WORKBENCH_MINIMIZE, ImageDescriptor.createFromURL(new URL(
+				"platform:/plugin/at.bitandart.zoubek.mervin.draw2d/resources/icons/16/workbench_to_content.png")));
+		imageRegistry.put(IMAGE_WORKBENCH_MAXIMIZE, ImageDescriptor.createFromURL(new URL(
+				"platform:/plugin/at.bitandart.zoubek.mervin.draw2d/resources/icons/16/workbench_to_tray.png")));
 
 	}
 

@@ -77,14 +77,14 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="org.eclipse.ui.ide.workbench"
-            name="%productName">
+            name="%product.name">
          <property
                name="windowImages"
                value="eclipse16.png,eclipse32.png,eclipse48.png">
          </property>
          <property
                name="aboutText"
-               value="%productBlurb">
+               value="%product.about">
          </property>
          <property
                name="aboutImage"
@@ -104,7 +104,7 @@
          </property>
          <property
                name="appName"
-               value="%productName">
+               value="%product.name">
          </property>
          <property
                name="preferenceCustomization"
