@@ -3,15 +3,12 @@
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_VuxXAPrtEeSNIagO6cD0dw" featurename="menuContributions" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="menu:MenuContribution" xmi:id="_regZ4PrtEeSNIagO6cD0dw" elementId="at.bitandart.zoubek.mervin.menucontribution.main" parentId="org.eclipse.ui.main.menu">
       <children xsi:type="menu:Menu" xmi:id="_rNJFoPsEEeS2q_4qNTgMUQ" elementId="at.bitandart.zoubek.mervin.menu.main" label="Mervin">
-        <children xsi:type="menu:Menu" xmi:id="_cKe3MP1TEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.menu.diagram.diff" label="Diagram Diff">
-          <children xsi:type="menu:HandledMenuItem" xmi:id="_VAzBQPruEeSNIagO6cD0dw" elementId="at.bitandart.zoubek.mervin.menuitem.diagram.diff.case1" label="Diagram Diff case 1" command="_dnOCgPsEEeS2q_4qNTgMUQ"/>
-        </children>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_M8pGoAX8EeWDm7E-HymwAA" elementId="at.bitandart.zoubek.mervin.menuitem.review.load" label="Load Review..." command="_UTSkEAX8EeWDm7E-HymwAA"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_5BxEQFTPEeaw1Pbzdzvq3A" elementId="at.bitandart.zoubek.mervin.menuitem.highlights.clear" label="Clear Highlights" command="_Vi6tID0BEeaYz6GEb20auA"/>
       </children>
     </elements>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_0er4kPr7EeS2q_4qNTgMUQ" featurename="commands" parentElementId="org.eclipse.e4.legacy.ide.application">
-    <elements xsi:type="commands:Command" xmi:id="_dnOCgPsEEeS2q_4qNTgMUQ" elementId="at.bitandart.zoubek.mervin.command.debug.diagram.diff.case1" commandName="Open Diagram Diff Case 1"/>
     <elements xsi:type="commands:Command" xmi:id="_UTSkEAX8EeWDm7E-HymwAA" elementId="at.bitandart.zoubek.mervin.command.review.load" commandName="Load Review"/>
     <elements xsi:type="commands:Command" xmi:id="_u7C8sD32EeaD-eNVglSszQ" elementId="at.bitandart.zoubek.mervin.command.review.save" commandName="Save Review"/>
     <elements xsi:type="commands:Command" xmi:id="_M7xUwNrjEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.command.diff.toggle.additions" commandName="Toggle Additions"/>
@@ -26,7 +23,6 @@
     <elements xsi:type="commands:Command" xmi:id="_Vi6tID0BEeaYz6GEb20auA" elementId="at.bitandart.zoubek.mervin.command.highlights.clear" commandName="Clear Highlights"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_rV6KoPsFEeS2q_4qNTgMUQ" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
-    <elements xsi:type="commands:Handler" xmi:id="_vQOrIPsFEeS2q_4qNTgMUQ" elementId="at.bitandart.zoubek.mervin.handler.debug.diagram.diff.case1" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.debug.OpenDiagramDiffCase1Handler" command="_dnOCgPsEEeS2q_4qNTgMUQ"/>
     <elements xsi:type="commands:Handler" xmi:id="_ZCDZQAX8EeWDm7E-HymwAA" elementId="at.bitandart.zoubek.mervin.handler.review.load" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.LoadReviewHandler" command="_UTSkEAX8EeWDm7E-HymwAA"/>
     <elements xsi:type="commands:Handler" xmi:id="_rB79ID32EeaD-eNVglSszQ" elementId="at.bitandart.zoubek.mervin.handler.review.save" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.SaveReview" command="_u7C8sD32EeaD-eNVglSszQ"/>
     <elements xsi:type="commands:Handler" xmi:id="_gehIUDYMEeae8OpmYdAj2A" elementId="at.bitandart.zoubek.mervin.handler.patchset.history.visiblediffs.allpatchsets" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.ShowAllPatchSetDiffs" command="_FjapQDYLEeae8OpmYdAj2A"/>
