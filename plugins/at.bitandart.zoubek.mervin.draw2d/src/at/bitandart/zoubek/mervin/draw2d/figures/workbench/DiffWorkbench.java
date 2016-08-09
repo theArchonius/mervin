@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2016 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,6 +37,9 @@ import org.eclipse.gmf.tooling.runtime.linklf.LinkLFShapeCompartmentEditPart;
 import org.eclipse.swt.graphics.Image;
 
 import at.bitandart.zoubek.mervin.draw2d.figures.ComposedClickable;
+import at.bitandart.zoubek.mervin.draw2d.figures.workbench.DiffWorkbench.ContainerElementActionListener;
+import at.bitandart.zoubek.mervin.draw2d.figures.workbench.DiffWorkbench.ImageButton;
+import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbench.DisplayMode;
 
 /**
  * Default implementation of {@link IDiffWorkbench}.
@@ -72,9 +75,9 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 	private DisplayMode displayMode;
 
 	/**
-	 * the listener for events related to tray figures
+	 * the action listener for events related to container elements
 	 */
-	private TrayFigureListener trayFigureListener;
+	private ContainerElementActionListener containerElementActionListener;
 
 	/**
 	 * the image icon for the display mode switch button to
@@ -131,7 +134,7 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 		remove(getTextPane());
 		remove(getScrollPane());
 		this.displayMode = displayMode;
-		trayFigureListener = new TrayFigureListener(this);
+		containerElementActionListener = new ContainerElementActionListener();
 
 		this.btnImageWindowMode = btnImageWindowMode;
 		this.btnImageTabMode = btnImageTabMode;
@@ -273,7 +276,7 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 						if (firstTrayFigure == null) {
 							firstTrayFigure = trayFigure;
 						}
-						hasActiveFigure = hasActiveFigure || trayFigure.isActive();
+						hasActiveFigure = hasActiveFigure || trayFigure.getContainer().isActive();
 						if (oldMode != DisplayMode.TAB) {
 							// update the children of the tray figure
 							clearTrayContentPane(trayFigure);
@@ -305,11 +308,12 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 				if (firstTrayFigure == null) {
 					firstTrayFigure = trayFigure;
 				}
+				hasActiveFigure = hasActiveFigure || trayFigure.getContainer().isActive();
 			}
 
 			// if there is not active tray figure mark the first one as active
 			if (!hasActiveFigure && firstTrayFigure != null) {
-				firstTrayFigure.setActive(true);
+				firstTrayFigure.getContainer().setActive();
 			}
 
 		} else if (newMode == DisplayMode.WINDOW) {
@@ -332,11 +336,11 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 			removeUnexpectedWindowTitleFigures(expectedWindowTitleFigures, trayArea, oldMode);
 
 			// add missing expected title figures
-			for (IDiffWorkbenchWindowTitleFigure trayFigure : expectedWindowTitleFigures) {
-				registerListeners(trayFigure);
-				clearFigure(trayFigure.getContentPane());
-				contentArea.add(trayFigure);
-				addButtons(trayFigure);
+			for (IDiffWorkbenchWindowTitleFigure titleFigure : expectedWindowTitleFigures) {
+				registerListeners(titleFigure);
+				clearFigure(titleFigure.getContentPane());
+				contentArea.add(titleFigure);
+				addButtons(titleFigure);
 			}
 
 			// update constraints for window title figures in the content area
@@ -578,8 +582,46 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
+
+				Object source = event.getSource();
+
+				if (source instanceof IFigure) {
+
+					IWorkbenchContainerElement containerElement = findContainingContainerElement((IFigure) source);
+					if (containerElement != null) {
+						containerElement.getContainer().setActive();
+					}
+				}
+
 				setDisplayMode(DisplayMode.TAB);
 			}
+
+			/**
+			 * finds the {@link IWorkbenchContainerElement} of the parent
+			 * hierarchy (inlcuding the given figure) of the given figure.
+			 * 
+			 * @param figure
+			 *            the figure to find the containing
+			 *            {@link IWorkbenchContainerElement} for.
+			 * @return the containing {@link IWorkbenchContainerElement} or null
+			 *         if the figure is not an
+			 *         {@link IWorkbenchContainerElement} and is not contained
+			 *         in an {@link IWorkbenchContainerElement}.
+			 */
+			private IWorkbenchContainerElement findContainingContainerElement(IFigure figure) {
+
+				IFigure parent = figure;
+				while (parent != null && !(parent instanceof IWorkbenchContainerElement)) {
+					parent = parent.getParent();
+				}
+
+				if (parent instanceof IWorkbenchContainerElement) {
+					return (IWorkbenchContainerElement) parent;
+				}
+
+				return null;
+			}
+
 		});
 		titleFigure.getContentPane().add(windowModeBtn);
 
@@ -602,7 +644,7 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 	 * @param trayFigure
 	 */
 	protected void registerListeners(IDiffWorkbenchTrayFigure trayFigure) {
-		trayFigure.addActionListener(trayFigureListener);
+		trayFigure.addActionListener(containerElementActionListener);
 	}
 
 	/**
@@ -612,7 +654,7 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 	 * @param titleFigure
 	 */
 	protected void registerListeners(IDiffWorkbenchWindowTitleFigure titleFigure) {
-		// Intentionally left empty
+		titleFigure.addActionListener(containerElementActionListener);
 	}
 
 	/**
@@ -622,7 +664,7 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 	 * @param trayFigure
 	 */
 	protected void unregisterListeners(IDiffWorkbenchTrayFigure trayFigure) {
-		trayFigure.removeActionListener(trayFigureListener);
+		trayFigure.removeActionListener(containerElementActionListener);
 	}
 
 	/**
@@ -632,7 +674,7 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 	 * @param titleFigure
 	 */
 	protected void unregisterListeners(IDiffWorkbenchWindowTitleFigure titleFigure) {
-		// Intentionally left empty
+		titleFigure.removeActionListener(containerElementActionListener);
 	}
 
 	@Override
@@ -668,7 +710,7 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 	public void add(IFigure figure, Object constraint, int index) {
 
 		if (figure instanceof IDiffWorkbenchContainer) {
-			addContainer((IDiffWorkbenchContainer) figure);
+			addContainer((IDiffWorkbenchContainer) figure, constraint);
 		} else {
 			super.add(figure, constraint, index);
 		}
@@ -676,8 +718,14 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 	}
 
 	@Override
-	public void addContainer(IDiffWorkbenchContainer container) {
-		getContentArea().add(container);
+	public void addContainer(IDiffWorkbenchContainer container, Object constraint) {
+		getContentArea().add(container, constraint);
+		registerContainer(container);
+	}
+
+	@Override
+	public void registerContainer(IDiffWorkbenchContainer container) {
+		container.setWorkbench(this);
 	}
 
 	@Override
@@ -692,6 +740,12 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 	@Override
 	public void removeContainer(IDiffWorkbenchContainer container) {
 		getContentArea().remove(container);
+		unregisterContainer(container);
+	}
+
+	@Override
+	public void unregisterContainer(IDiffWorkbenchContainer container) {
+		container.setWorkbench(null);
 	}
 
 	@Override
@@ -743,7 +797,7 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 	}
 
 	@Override
-	public void setTopContainer(IDiffWorkbenchContainer container) {
+	public void setActiveContainer(IDiffWorkbenchContainer container) {
 
 		IFigure parent = container.getParent();
 		if (parent != null) {
@@ -768,6 +822,25 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 			notifyPostTopContainerChanged(this, oldTopContainer, container);
 		}
 
+	}
+
+	@Override
+	public IDiffWorkbenchContainer getActiveContainer() {
+
+		List<?> contentChildren = getContentArea().getChildren();
+
+		for (Object child : contentChildren) {
+			if (child instanceof IDiffWorkbenchContainer) {
+				return (IDiffWorkbenchContainer) child;
+			}
+		}
+
+		return null;
+	}
+
+	@Override
+	public boolean containsContainer(IDiffWorkbenchContainer container) {
+		return getContentArea().getChildren().contains(container);
 	}
 
 	@Override
@@ -889,38 +962,23 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 	}
 
 	/**
-	 * A listener that handles the mouse events to determine the active tab.
+	 * A listener that handles the mouse events to determine the active
+	 * workbench container.
 	 * 
 	 * @author Florian Zoubek
 	 *
 	 */
-	public static class TrayFigureListener implements ActionListener {
-
-		private IDiffWorkbench workbench;
-
-		public TrayFigureListener(IDiffWorkbench workbench) {
-			this.workbench = workbench;
-		}
+	public static class ContainerElementActionListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent event) {
 
 			Object source = event.getSource();
-			if (source instanceof IDiffWorkbenchTrayFigure) {
-				IDiffWorkbenchTrayFigure trayFigure = (IDiffWorkbenchTrayFigure) source;
-				workbench.setTopContainer(trayFigure.getContainer());
+			if (source instanceof IWorkbenchContainerElement) {
 
-				// mark other trayChildren as inactive
-				Iterator<?> trayChildren = workbench.getTrayArea().getChildren().iterator();
-				while (trayChildren.hasNext()) {
-					Object child = trayChildren.next();
-					if (child instanceof IDiffWorkbenchTrayFigure && child != trayFigure) {
-						((IDiffWorkbenchTrayFigure) child).setActive(false);
-					}
-				}
-
-				// last but not least, mark the tray figure as active
-				trayFigure.setActive(true);
+				// mark the related container as active
+				IWorkbenchContainerElement containerElement = (IWorkbenchContainerElement) source;
+				containerElement.getContainer().setActive();
 			}
 
 		}

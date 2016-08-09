@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2016 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,11 +32,17 @@ public class TitleTrayFigure extends ComposedClickable implements IDiffWorkbench
 
 	private IDiffWorkbenchContainer container;
 
-	private boolean active = false;
-
 	private Label titleLabel;
 
 	private IFigure contentPane;
+
+	private IWorkbenchContainerListener workbenchContainerListener = new IWorkbenchContainerListener() {
+
+		@Override
+		public void activeStateChanged(boolean active) {
+			updateStateColors();
+		}
+	};
 
 	/**
 	 * @param container
@@ -45,6 +51,7 @@ public class TitleTrayFigure extends ComposedClickable implements IDiffWorkbench
 	public TitleTrayFigure(IDiffWorkbenchContainer container) {
 		super();
 		this.container = container;
+		container.addWorkbenchContainerListener(workbenchContainerListener);
 	}
 
 	@Override
@@ -122,7 +129,7 @@ public class TitleTrayFigure extends ComposedClickable implements IDiffWorkbench
 	 * updates the color based on the current state.
 	 */
 	protected void updateStateColors() {
-		if (isActive()) {
+		if (getContainer().isActive()) {
 			setBackgroundColor(ColorConstants.white);
 			setForegroundColor(ColorConstants.black);
 		} else {
@@ -148,17 +155,6 @@ public class TitleTrayFigure extends ComposedClickable implements IDiffWorkbench
 	@Override
 	public IDiffWorkbenchContainer getContainer() {
 		return container;
-	}
-
-	@Override
-	public void setActive(boolean value) {
-		this.active = value;
-		updateStateColors();
-	}
-
-	@Override
-	public boolean isActive() {
-		return active;
 	}
 
 	@Override

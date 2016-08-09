@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2016 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,8 @@ import at.bitandart.zoubek.mervin.draw2d.ViewportFillingLayout;
 import at.bitandart.zoubek.mervin.draw2d.figures.DefaultChangeTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.DiagramContainerFigure;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.DiffWorkbench;
+import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbench;
+import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbenchContainer;
 
 /**
  * Demonstrates the usage of {@link DiffWorkbench}.
@@ -57,21 +59,27 @@ public class WorkbenchExample extends GMFExample {
 		primaryLayer.setLayoutManager(new ViewportFillingLayout());
 
 		// create the workbench
-		DiffWorkbench diffWorkbench = new DiffWorkbench(getMapMode(), workbenchWindowModeImage, workbenchTabModeImage,
+		IDiffWorkbench diffWorkbench = new DiffWorkbench(getMapMode(), workbenchWindowModeImage, workbenchTabModeImage,
 				workbenchMaximizeImage, workbenchMinimizeImage);
 		primaryLayer.add(diffWorkbench, new Rectangle(0, 0, getCanvasWidth(), getCanvasHeight()));
 
 		// add first workbench child
-		IFigure firstChild = createFirstWorkbenchChild();
-		diffWorkbench.getContentArea().add(firstChild, new Rectangle(-10, 20, 200, 100));
+		IDiffWorkbenchContainer firstChild = createFirstWorkbenchChild();
+		diffWorkbench.add(firstChild, new Rectangle(-10, 20, 200, 100));
 
 		// add second workbench child
-		IFigure secondChild = createSecondWorkbenchChild();
+		IDiffWorkbenchContainer secondChild = createSecondWorkbenchChild();
+		/*
+		 * the child may be also added directly to the content area/pane, but
+		 * must be registered using
+		 * IDiffWorkbench#registerContainer(IDiffWorkbenchContainer).
+		 */
+		diffWorkbench.registerContainer(secondChild);
 		diffWorkbench.getContentArea().add(secondChild, new Rectangle(400, -40, 300, 150));
 
 	}
 
-	private IFigure createFirstWorkbenchChild() {
+	private IDiffWorkbenchContainer createFirstWorkbenchChild() {
 		DiagramContainerFigure figure = createWorkbenchChild("First Window");
 		// the first child also has a toolbar with some child figures
 		figure.getToolbarArea().add(new Label("Toolbar item 1"));
@@ -93,7 +101,7 @@ public class WorkbenchExample extends GMFExample {
 		return figure;
 	}
 
-	private IFigure createSecondWorkbenchChild() {
+	private IDiffWorkbenchContainer createSecondWorkbenchChild() {
 		DiagramContainerFigure figure = createWorkbenchChild("Second Window");
 		IFigure contentPane = figure.getContentPane();
 

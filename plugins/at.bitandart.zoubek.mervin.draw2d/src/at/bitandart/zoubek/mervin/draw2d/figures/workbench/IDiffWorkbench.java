@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2016 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,13 +44,13 @@ public interface IDiffWorkbench extends IFigure {
 		 * leaving only one visible to the user. Tabs in the tray area allow
 		 * selection of the visible container.
 		 */
-		TAB, /**
-				 * Child {@link IDiffWorkbenchContainer} are drawn as windows
-				 * with a certain size and position. Additionally containers may
-				 * also be removed from the content layer and placed in the tray
-				 * area, which makes them invisible but the title and is drawn
-				 * in the tray area.
-				 */
+		TAB,
+		/**
+		 * Child {@link IDiffWorkbenchContainer} are drawn as windows with a
+		 * certain size and position. Additionally containers may also be
+		 * removed from the content layer and placed in the tray area, which
+		 * makes them invisible but the title and is drawn in the tray area.
+		 */
 		WINDOW
 	}
 
@@ -72,8 +72,30 @@ public interface IDiffWorkbench extends IFigure {
 	 * 
 	 * @param container
 	 *            the container to add.
+	 * @param constraint
+	 *            the constraint of the container to add.
 	 */
-	public void addContainer(IDiffWorkbenchContainer container);
+	public void addContainer(IDiffWorkbenchContainer container, Object contraint);
+
+	/**
+	 * registers an unknown container inside the content area to this workbench.
+	 * This method must be called if the container has been added directly to
+	 * the content pane.
+	 * 
+	 * @param container
+	 *            the container to register.
+	 */
+	public void registerContainer(IDiffWorkbenchContainer container);
+
+	/**
+	 * unregisters an container inside the content area from this workbench. The
+	 * container must be removed manually from the content pane so that this
+	 * workbench operates properly.
+	 * 
+	 * @param container
+	 *            the container to unregister.
+	 */
+	public void unregisterContainer(IDiffWorkbenchContainer container);
 
 	/**
 	 * removes the given container from the workbench.
@@ -82,6 +104,16 @@ public interface IDiffWorkbench extends IFigure {
 	 *            the container to remove.
 	 */
 	public void removeContainer(IDiffWorkbenchContainer container);
+
+	/**
+	 * tests if the given container is contained in this Workbench.
+	 * 
+	 * @param container
+	 *            the container to test.
+	 * @return true if the container is directly contained in this workbench,
+	 *         false otherwise.
+	 */
+	public boolean containsContainer(IDiffWorkbenchContainer container);
 
 	/**
 	 * sends the given container to the tray area. Does nothing if the container
@@ -119,12 +151,18 @@ public interface IDiffWorkbench extends IFigure {
 	public void sendToContentArea(IDiffWorkbenchTrayFigure trayFigure);
 
 	/**
-	 * moves the given container to the front.
+	 * sets the active container of this workbench, only one container can be
+	 * active at once.
 	 * 
 	 * @param container
-	 *            the container to move to the front.
+	 *            the container to set as active container.
 	 */
-	public void setTopContainer(IDiffWorkbenchContainer container);
+	public void setActiveContainer(IDiffWorkbenchContainer container);
+
+	/**
+	 * @return the active container in the workbench.
+	 */
+	public IDiffWorkbenchContainer getActiveContainer();
 
 	/**
 	 * @return the content area figure.

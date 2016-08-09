@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2016 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -60,5 +60,49 @@ public interface IDiffWorkbenchContainer extends IFigure {
 	 *         mode.
 	 */
 	public IDiffWorkbenchWindowTitleFigure getWindowTitleFigure();
+
+	/**
+	 * sets this container to be the active container in its containing
+	 * {@link IDiffWorkbench}.
+	 */
+	public void setActive();
+
+	/**
+	 * @return true if this container is active, false otherwise.
+	 */
+	public boolean isActive();
+
+	/**
+	 * sets the workbench that contains this container.
+	 * 
+	 * @param workbench
+	 *            the workbench containing this container or null, if this
+	 *            container is not contained in any workbench.
+	 */
+	public void setWorkbench(IDiffWorkbench workbench);
+
+	/**
+	 * @return the current workbench that this container is assigned to.
+	 */
+	public IDiffWorkbench getWorkbench();
+
+	/**
+	 * registers the given workbench container listener to this workbench
+	 * container.
+	 * 
+	 * @param workbenchContainerListener
+	 *            the listener to register.
+	 */
+	public void addWorkbenchContainerListener(IWorkbenchContainerListener workbenchContainerListener);
+
+	/**
+	 * removes the given registered workbench container listener from this
+	 * workbench container. Does nothing if the given listener is unknown to
+	 * this figure.
+	 * 
+	 * @param workbenchContainerListener
+	 *            the listener to remove.
+	 */
+	public void removeWorkbenchContainerListener(IWorkbenchContainerListener workbenchContainerListener);
 
 }
