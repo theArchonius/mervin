@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2016 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,25 +20,7 @@ import org.eclipse.draw2d.IFigure;
  * @author Florian Zoubek
  *
  */
-public interface IDiffWorkbenchTrayFigure extends IFigure {
-
-	/**
-	 * @return the associated {@link IDiffWorkbenchContainer}
-	 */
-	public IDiffWorkbenchContainer getContainer();
-
-	/**
-	 * sets if the figure is marked as active or not.
-	 * 
-	 * @param value
-	 */
-	public void setActive(boolean value);
-
-	/**
-	 * 
-	 * @return true if the figure is active, false otherwise
-	 */
-	public boolean isActive();
+public interface IDiffWorkbenchTrayFigure extends IFigure, IWorkbenchContainerElement {
 
 	/**
 	 * Returns the figure which should be used to attach child figures of this

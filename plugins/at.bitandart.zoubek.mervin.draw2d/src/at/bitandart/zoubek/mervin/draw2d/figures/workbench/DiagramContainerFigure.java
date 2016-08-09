@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2016 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,8 @@
  *    Florian Zoubek - initial API and implementation
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.draw2d.figures.workbench;
+
+import java.util.Iterator;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.DelegatingLayout;
@@ -35,6 +37,7 @@ import at.bitandart.zoubek.mervin.draw2d.figures.IChangeTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenChangeIndicator;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenChangeIndicatorMerger;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenIndicatorLayout;
+import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbench.DisplayMode;
 
 /**
  * An {@link IDiffWorkbenchContainer} implementation that shows the contents of
@@ -55,6 +58,76 @@ public class DiagramContainerFigure extends LinkLFShapeCompartmentEditPart.Shape
 	private OffScreenChangeIndicatorMerger offScreenChangeIndicatorMerger;
 
 	private IFigure toolbarFigure;
+
+	private IDiffWorkbench workbench;
+
+	private IWorkbenchListener workbenchListener = new IWorkbenchListener() {
+
+		private boolean oldActiveState = false;
+
+		@Override
+		public void preTrayUpdate(IDiffWorkbench workbench) {
+			// intentionally left empty
+		}
+
+		@Override
+		public void preTopContainerChanged(IDiffWorkbench workbench, IDiffWorkbenchContainer oldTopContainer,
+				IDiffWorkbenchContainer newTopContainer) {
+			oldActiveState = isActive();
+		}
+
+		@Override
+		public void preSendToTrayArea(IDiffWorkbench workbench, IDiffWorkbenchContainer container) {
+			// intentionally left empty
+
+		}
+
+		@Override
+		public void preSendToContentArea(IDiffWorkbench workbench, IDiffWorkbenchContainer container) {
+			// intentionally left empty
+
+		}
+
+		@Override
+		public void preDisplayModeChange(IDiffWorkbench workbench, DisplayMode oldMode, DisplayMode newMode) {
+			// intentionally left empty
+
+		}
+
+		@Override
+		public void postTrayUpdate(IDiffWorkbench workbench) {
+			// intentionally left empty
+		}
+
+		@Override
+		public void postTopContainerChanged(IDiffWorkbench workbench, IDiffWorkbenchContainer oldTopContainer,
+				IDiffWorkbenchContainer newTopContainer) {
+
+			boolean newActiveState = isActive();
+
+			if (oldActiveState != newActiveState) {
+				Iterator<?> listeners = getListeners(IWorkbenchContainerListener.class);
+				while (listeners.hasNext()) {
+					((IWorkbenchContainerListener) listeners.next()).activeStateChanged(newActiveState);
+				}
+			}
+		}
+
+		@Override
+		public void postSendToTrayArea(IDiffWorkbench workbench, IDiffWorkbenchContainer container) {
+			// intentionally left empty
+		}
+
+		@Override
+		public void postSendToContentArea(IDiffWorkbench workbench, IDiffWorkbenchContainer container) {
+			// intentionally left empty
+		}
+
+		@Override
+		public void postDisplayModeChange(IDiffWorkbench workbench, DisplayMode oldMode, DisplayMode newMode) {
+			// intentionally left empty
+		}
+	};
 
 	public DiagramContainerFigure(String compartmentTitle, IChangeTypeStyleAdvisor styleAdvisor, IMapMode mm) {
 		super(compartmentTitle, mm);
@@ -205,6 +278,55 @@ public class DiagramContainerFigure extends LinkLFShapeCompartmentEditPart.Shape
 	 */
 	protected IDiffWorkbenchWindowTitleFigure createWindowTitleFigure() {
 		return new LabelWindowTitle(this);
+	}
+
+	@Override
+	public void setActive() {
+
+		if (workbench != null) {
+			workbench.setActiveContainer(this);
+		}
+	}
+
+	@Override
+	public boolean isActive() {
+		return workbench != null && workbench.getActiveContainer() == this;
+	}
+
+	@Override
+	public void setWorkbench(IDiffWorkbench workbench) {
+
+		if (workbench != this.workbench) {
+
+			if (this.workbench != null && this.workbench.containsContainer(this)) {
+				this.workbench.removeContainer(this);
+				this.workbench.removeWorkbenchListener(workbenchListener);
+			}
+
+			this.workbench = workbench;
+
+			if (!workbench.containsContainer(this)) {
+				workbench.addContainer(this, null);
+			}
+
+			workbench.addWorkbenchListener(workbenchListener);
+		}
+	}
+
+	@Override
+	public IDiffWorkbench getWorkbench() {
+		return workbench;
+	}
+
+	@Override
+	public void addWorkbenchContainerListener(IWorkbenchContainerListener workbenchContainerListener) {
+		addListener(IWorkbenchContainerListener.class, workbenchContainerListener);
+
+	}
+
+	@Override
+	public void removeWorkbenchContainerListener(IWorkbenchContainerListener workbenchContainerListener) {
+		removeListener(IWorkbenchContainerListener.class, workbenchContainerListener);
 	}
 
 }
