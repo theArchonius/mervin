@@ -1,5 +1,6 @@
 package at.bitandart.zoubek.mervin.diagram.diff.toolcontrols;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -7,16 +8,26 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.core.services.log.Logger;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 
+import at.bitandart.zoubek.mervin.IDiffService;
 import at.bitandart.zoubek.mervin.IMervinContextConstants;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 
@@ -27,12 +38,24 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
  * @author Florian Zoubek
  *
  */
+@SuppressWarnings("restriction")
 public abstract class VersionSelector {
+
+	@Inject
+	private IDiffService diffService;
+
+	@Inject
+	private Shell shell;
+
+	// Logger
+
+	@Inject
+	private Logger logger;
 
 	/**
 	 * item value that represents the base version
 	 */
-	protected final String COMPARE_BASE = "Base";
+	protected final String COMPARE_BASE = "Base Version";
 
 	/**
 	 * the combo viewer that allows selection of the version
@@ -71,6 +94,22 @@ public abstract class VersionSelector {
 		versionViewer = new ComboViewer(oldVersionCombo);
 		versionViewer.setContentProvider(ArrayContentProvider.getInstance());
 		versionViewer.setLabelProvider(new VersionLabelProvider());
+		versionViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+
+				ISelection selection = event.getSelection();
+
+				if (!selection.isEmpty() && selection instanceof IStructuredSelection) {
+
+					IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+					setVersion(structuredSelection.getFirstElement());
+					udpateSelectedComparison();
+
+				}
+			}
+		});
 		update();
 	}
 
@@ -107,6 +146,15 @@ public abstract class VersionSelector {
 	protected abstract Object getSelectedVersion();
 
 	/**
+	 * sets the given version as selected value in the active model review.
+	 * 
+	 * @param version
+	 *            the version or {@link #COMPARE_BASE} if the base version has
+	 *            been selected. Null is not permitted.
+	 */
+	protected abstract void setVersion(Object version);
+
+	/**
 	 * @return the review to switch the comparison version for.
 	 */
 	public ModelReview getActiveReview() {
@@ -118,6 +166,28 @@ public abstract class VersionSelector {
 	 */
 	public ComboViewer getVersionViewer() {
 		return versionViewer;
+	}
+
+	/**
+	 * updates the selected model comparison of the current model review.
+	 */
+	private void udpateSelectedComparison() {
+
+		ProgressMonitorDialog progressMonitorDialog = new ProgressMonitorDialog(shell);
+		try {
+			progressMonitorDialog.run(true, false, new IRunnableWithProgress() {
+
+				@Override
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					ModelReview modelReview = getActiveReview();
+					diffService.updateSelectedComparison(modelReview, monitor);
+					monitor.done();
+				}
+			});
+		} catch (InvocationTargetException | InterruptedException e) {
+			logger.error(e, "Could not update the selected comparison");
+		}
+
 	}
 
 }

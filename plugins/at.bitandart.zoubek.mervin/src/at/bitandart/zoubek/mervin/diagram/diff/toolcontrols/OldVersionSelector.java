@@ -11,6 +11,7 @@
 package at.bitandart.zoubek.mervin.diagram.diff.toolcontrols;
 
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
+import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 
 /**
  * A {@link VersionSelector} for the old version of a {@link ModelReview}.
@@ -28,6 +29,19 @@ public class OldVersionSelector extends VersionSelector {
 	protected Object getSelectedVersion() {
 		ModelReview activeReview = getActiveReview();
 		return activeReview.getLeftPatchSet();
+	}
+
+	@Override
+	protected void setVersion(Object version) {
+
+		ModelReview activeReview = getActiveReview();
+		if (COMPARE_BASE.equals(version)) {
+			// null represents the base version
+			activeReview.setLeftPatchSet(null);
+
+		} else if (version instanceof PatchSet) {
+			activeReview.setLeftPatchSet((PatchSet) version);
+		}
 	}
 
 }

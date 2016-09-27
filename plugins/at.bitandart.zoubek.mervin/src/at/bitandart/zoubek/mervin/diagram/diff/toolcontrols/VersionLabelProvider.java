@@ -28,7 +28,7 @@ public class VersionLabelProvider extends LabelProvider {
 	public String getText(Object element) {
 		if (element instanceof PatchSet) {
 			PatchSet patchSet = (PatchSet) element;
-			return MessageFormat.format("{0}", patchSet.getId());
+			return MessageFormat.format("PatchSet #{0}", patchSet.getId());
 		}
 		return super.getText(element);
 	}
