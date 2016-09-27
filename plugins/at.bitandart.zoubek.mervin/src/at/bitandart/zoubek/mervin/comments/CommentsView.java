@@ -10,6 +10,7 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.comments;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -21,6 +22,7 @@ import javax.inject.Named;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.di.Focus;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
@@ -90,6 +92,9 @@ public class CommentsView extends ModelReviewEditorTrackingView implements IAdap
 
 	@Inject
 	private Display display;
+
+	@Inject
+	private MPart part;
 
 	// Viewers
 	private CommentListViewer commentListViewer;
@@ -315,9 +320,13 @@ public class CommentsView extends ModelReviewEditorTrackingView implements IAdap
 		}
 		ModelReview currentModelReview = getCurrentModelReview();
 		if (currentModelReview != null) {
+			part.setLabel(MessageFormat.format("Review Comments - Total: {0} Comment(s)",
+					currentModelReview.getComments().size()));
 			if (!currentModelReview.eAdapters().contains(commentViewUpdater)) {
 				currentModelReview.eAdapters().add(commentViewUpdater);
 			}
+		} else {
+			part.setLabel("Review Comments");
 		}
 		commentListViewer.setInput(currentModelReview);
 		commentListViewer.refresh();

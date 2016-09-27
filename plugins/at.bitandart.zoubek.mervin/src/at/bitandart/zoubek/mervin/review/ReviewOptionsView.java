@@ -28,10 +28,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.eclipse.ui.forms.widgets.Section;
 
 import at.bitandart.zoubek.mervin.ICommandConstants;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
@@ -64,9 +62,6 @@ public class ReviewOptionsView extends ModelReviewEditorTrackingView implements 
 	private Button loadButton;
 	private Button saveButton;
 
-	private Composite informationPanel;
-	private Label commentsValueLabel;
-
 	// Data
 
 	private boolean viewInitialized = false;
@@ -97,32 +92,9 @@ public class ReviewOptionsView extends ModelReviewEditorTrackingView implements 
 		mainPanel = mainForm.getBody();
 		mainPanel.setLayout(new GridLayout());
 
-		createInfoSection(toolkit);
 		createPersistenceSection(toolkit);
 		viewInitialized = true;
 		updateValues();
-
-	}
-
-	/**
-	 * creates the general information section
-	 * 
-	 * @param toolkit
-	 */
-	private void createInfoSection(FormToolkit toolkit) {
-
-		Section informationSection = toolkit.createSection(mainPanel, Section.TITLE_BAR);
-		informationSection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		informationSection.setText("Review Information");
-
-		informationPanel = toolkit.createComposite(informationSection);
-		informationPanel.setLayout(new GridLayout(2, true));
-		informationSection.setClient(informationPanel);
-
-		Label commentsLabel = toolkit.createLabel(informationPanel, "Comments:");
-		commentsLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		commentsValueLabel = toolkit.createLabel(informationPanel, "");
-		commentsValueLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
 
 	}
 
@@ -210,17 +182,11 @@ public class ReviewOptionsView extends ModelReviewEditorTrackingView implements 
 		ModelReview currentModelReview = getCurrentModelReview();
 		if (currentModelReview == null) {
 
-			// update information section
-			commentsValueLabel.setText("<none>");
-
 			// update persistence section
 			loadButton.setEnabled(true);
 			saveButton.setEnabled(false);
 
 		} else {
-
-			// update information section
-			commentsValueLabel.setText(currentModelReview.getComments().size() + "");
 
 			// update persistence section
 			loadButton.setEnabled(true);
@@ -228,7 +194,6 @@ public class ReviewOptionsView extends ModelReviewEditorTrackingView implements 
 
 		}
 
-		informationPanel.layout();
 		persistencePanel.layout();
 		mainPanel.layout();
 
