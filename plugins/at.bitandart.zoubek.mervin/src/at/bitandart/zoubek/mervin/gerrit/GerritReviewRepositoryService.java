@@ -881,6 +881,10 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 		try {
 
 			commentRef = repository.exactRef(commentRefName);
+			if (commentRef == null) {
+				// No comment ref -> no comments exist yet
+				return;
+			}
 			String commitHash = commentRef.getObjectId().name();
 
 			/* prepare the resource set and the resource for the comments */
