@@ -65,8 +65,6 @@ public class ReviewOptionsView extends ModelReviewEditorTrackingView implements 
 	private Button saveButton;
 
 	private Composite informationPanel;
-	private Label reviewIdValueLabel;
-	private Label patchSetsValueLabel;
 	private Label commentsValueLabel;
 
 	// Data
@@ -121,20 +119,10 @@ public class ReviewOptionsView extends ModelReviewEditorTrackingView implements 
 		informationPanel.setLayout(new GridLayout(2, true));
 		informationSection.setClient(informationPanel);
 
-		Label reviewIdLabel = toolkit.createLabel(informationPanel, "Review Id:");
-		reviewIdLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		reviewIdValueLabel = toolkit.createLabel(informationPanel, "");
-		reviewIdValueLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-
 		Label commentsLabel = toolkit.createLabel(informationPanel, "Comments:");
 		commentsLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
 		commentsValueLabel = toolkit.createLabel(informationPanel, "");
 		commentsValueLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-
-		Label patchSetsLabel = toolkit.createLabel(informationPanel, "PatchSets:");
-		patchSetsLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-		patchSetsValueLabel = toolkit.createLabel(informationPanel, "");
-		patchSetsValueLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
 
 	}
 
@@ -223,9 +211,7 @@ public class ReviewOptionsView extends ModelReviewEditorTrackingView implements 
 		if (currentModelReview == null) {
 
 			// update information section
-			reviewIdValueLabel.setText("<none>");
 			commentsValueLabel.setText("<none>");
-			patchSetsValueLabel.setText("<none>");
 
 			// update persistence section
 			loadButton.setEnabled(true);
@@ -234,9 +220,7 @@ public class ReviewOptionsView extends ModelReviewEditorTrackingView implements 
 		} else {
 
 			// update information section
-			reviewIdValueLabel.setText(currentModelReview.getId());
 			commentsValueLabel.setText(currentModelReview.getComments().size() + "");
-			patchSetsValueLabel.setText(currentModelReview.getPatchSets().size() + "");
 
 			// update persistence section
 			loadButton.setEnabled(true);
