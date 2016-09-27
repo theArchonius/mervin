@@ -10,6 +10,7 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.diagram.diff;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -166,6 +167,10 @@ public class DiagramDiffView implements IAdaptable {
 		context.set(ModelReview.class, modelReview);
 
 		if (modelReview != null) {
+
+			String title = MessageFormat.format("Mervin Review #{0}", modelReview.getId(),
+					modelReview.getPatchSets().size());
+			part.setLabel(title);
 
 			ResourceSet resourceSet = new ResourceSetImpl();
 			CSSHelper.installCSSSupport(resourceSet);

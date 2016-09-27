@@ -87,10 +87,6 @@
       <tags>View</tags>
       <tags>categoryTag:Mervin</tags>
     </elements>
-    <elements xsi:type="basic:PartDescriptor" xmi:id="_G4WVUP1eEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.review.options" label="Review Options" category="Mervin" closeable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.review.ReviewOptionsView">
-      <tags>View</tags>
-      <tags>categoryTag:Mervin</tags>
-    </elements>
     <elements xsi:type="basic:PartDescriptor" xmi:id="_Pb5oEEo8EeWfAoXJ8X3mpw" elementId="at.bitandart.zoubek.mervin.partdescriptor.debug.diff.diagram" label="DiagramDiff Debug" category="Mervin" closeable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.review.DiagramDiffDebugView">
       <tags>View</tags>
       <tags>categoryTag:Mervin</tags>
@@ -99,13 +95,8 @@
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_hVAaUP1eEeSbdbEoUfEbuQ" featurename="snippets" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="advanced:Perspective" xmi:id="_2b3p4P1fEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.perspective" selectedElement="_q5Z20P1gEeSbdbEoUfEbuQ" label="Mervin">
       <children xsi:type="basic_1:PartSashContainer" xmi:id="_q5Z20P1gEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partsashcontainer.0" selectedElement="_St-YIP1hEeSbdbEoUfEbuQ" horizontal="true">
-        <children xsi:type="basic_1:PartSashContainer" xmi:id="_cH6d0P1zEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partsashcontainer.3" containerData="2000">
-          <children xsi:type="basic_1:PartStack" xmi:id="_jXrQIP1zEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.perspective.left.top" containerData="3000">
-            <children xsi:type="advanced:Placeholder" xmi:id="_azu-IP-tEeSMrf4Vhz6vbQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.review.options"/>
-          </children>
-          <children xsi:type="basic_1:PartStack" xmi:id="_kUUekP1zEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.perspective.left.bottom" containerData="7000">
-            <children xsi:type="advanced:Placeholder" xmi:id="_oF7M8P-tEeSMrf4Vhz6vbQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.review"/>
-          </children>
+        <children xsi:type="basic_1:PartStack" xmi:id="_kUUekP1zEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.perspective.left" containerData="2000">
+          <children xsi:type="advanced:Placeholder" xmi:id="_oF7M8P-tEeSMrf4Vhz6vbQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.review"/>
         </children>
         <children xsi:type="basic_1:PartSashContainer" xmi:id="_St-YIP1hEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partsashcontainer.1" containerData="5500">
           <children xsi:type="basic_1:PartStack" xmi:id="_sEf2UP1zEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.perspective.middle.top" containerData="2000">
