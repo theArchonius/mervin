@@ -10,10 +10,7 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.review;
 
-import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -21,22 +18,10 @@ import javax.inject.Inject;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ParameterizedCommand;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.commands.ECommandService;
 import org.eclipse.e4.core.commands.EHandlerService;
 import org.eclipse.e4.core.services.log.Logger;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -44,15 +29,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 
 import at.bitandart.zoubek.mervin.ICommandConstants;
-import at.bitandart.zoubek.mervin.IDiffService;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
-import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 
 /**
  * A view that shows the options for the loaded {@link ModelReview} of the
@@ -71,31 +53,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 @SuppressWarnings("restriction")
 public class ReviewOptionsView extends ModelReviewEditorTrackingView implements IAdaptable {
 
-	private final class PatchSetLabelProvider extends LabelProvider {
-		@Override
-		public String getText(Object element) {
-			if (element instanceof PatchSet) {
-				PatchSet patchSet = (PatchSet) element;
-				return MessageFormat.format("{0}", patchSet.getId());
-			}
-			return super.getText(element);
-		}
-	}
-
 	public static final String PART_DESCRIPTOR_ID = "at.bitandart.zoubek.mervin.partdescriptor.review.options";
-
-	/**
-	 * Element that represents the base in the patch set comparison selector
-	 */
-	private static final String COMPARE_BASE = "Base";
-
-	@Inject
-	private Shell shell;
-
-	// JFace viewers
-
-	private ComboViewer leftSidePatchSetViewer;
-	private ComboViewer rightSidePatchSetViewer;
 
 	// SWT controls
 
@@ -105,8 +63,6 @@ public class ReviewOptionsView extends ModelReviewEditorTrackingView implements 
 	private Composite persistencePanel;
 	private Button loadButton;
 	private Button saveButton;
-
-	private Composite comparePanel;
 
 	private Composite informationPanel;
 	private Label reviewIdValueLabel;
@@ -123,8 +79,6 @@ public class ReviewOptionsView extends ModelReviewEditorTrackingView implements 
 	private ECommandService commandService;
 	@Inject
 	private EHandlerService handlerService;
-	@Inject
-	private IDiffService diffService;
 
 	// Logger
 
@@ -146,7 +100,6 @@ public class ReviewOptionsView extends ModelReviewEditorTrackingView implements 
 		mainPanel.setLayout(new GridLayout());
 
 		createInfoSection(toolkit);
-		createCompareSection(toolkit);
 		createPersistenceSection(toolkit);
 		viewInitialized = true;
 		updateValues();
@@ -182,109 +135,6 @@ public class ReviewOptionsView extends ModelReviewEditorTrackingView implements 
 		patchSetsLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
 		patchSetsValueLabel = toolkit.createLabel(informationPanel, "");
 		patchSetsValueLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
-
-	}
-
-	/**
-	 * creates the compare section
-	 * 
-	 * @param toolkit
-	 */
-	private void createCompareSection(FormToolkit toolkit) {
-
-		Section compareSection = toolkit.createSection(mainPanel, Section.TITLE_BAR);
-		compareSection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		compareSection.setText("Compare Patch Sets");
-
-		comparePanel = toolkit.createComposite(compareSection);
-		comparePanel.setLayout(new GridLayout(2, true));
-		compareSection.setClient(comparePanel);
-
-		CCombo leftSidePatchSetCombo = new CCombo(comparePanel, SWT.DROP_DOWN | SWT.READ_ONLY);
-		leftSidePatchSetCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		toolkit.adapt(leftSidePatchSetCombo);
-		leftSidePatchSetViewer = new ComboViewer(leftSidePatchSetCombo);
-		leftSidePatchSetViewer.setContentProvider(ArrayContentProvider.getInstance());
-		leftSidePatchSetViewer.setLabelProvider(new PatchSetLabelProvider());
-		leftSidePatchSetViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
-
-				ISelection selection = event.getSelection();
-
-				if (!selection.isEmpty() && selection instanceof IStructuredSelection) {
-
-					IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-					Object element = structuredSelection.getFirstElement();
-					ModelReview currentModelReview = getCurrentModelReview();
-
-					if (COMPARE_BASE.equals(element)) {
-						// null represents the base version
-						currentModelReview.setLeftPatchSet(null);
-						udpateSelectedComparison();
-
-					} else if (element instanceof PatchSet) {
-						currentModelReview.setLeftPatchSet((PatchSet) element);
-						udpateSelectedComparison();
-					}
-				}
-			}
-		});
-
-		CCombo rightSidePatchSetCombo = new CCombo(comparePanel, SWT.DROP_DOWN | SWT.READ_ONLY);
-		rightSidePatchSetCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		toolkit.adapt(rightSidePatchSetCombo);
-		rightSidePatchSetViewer = new ComboViewer(rightSidePatchSetCombo);
-		rightSidePatchSetViewer.setContentProvider(ArrayContentProvider.getInstance());
-		rightSidePatchSetViewer.setLabelProvider(new PatchSetLabelProvider());
-		rightSidePatchSetViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-			@Override
-			public void selectionChanged(SelectionChangedEvent event) {
-
-				ISelection selection = event.getSelection();
-
-				if (!selection.isEmpty() && selection instanceof IStructuredSelection) {
-
-					IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-					Object element = structuredSelection.getFirstElement();
-					ModelReview currentModelReview = getCurrentModelReview();
-
-					if (COMPARE_BASE.equals(element)) {
-						// null represents the base version
-						currentModelReview.setRightPatchSet(null);
-						udpateSelectedComparison();
-
-					} else if (element instanceof PatchSet) {
-						currentModelReview.setRightPatchSet((PatchSet) element);
-						udpateSelectedComparison();
-					}
-				}
-			}
-		});
-
-	}
-
-	/**
-	 * updates the selected model comparison of the current model review.
-	 */
-	private void udpateSelectedComparison() {
-
-		ProgressMonitorDialog progressMonitorDialog = new ProgressMonitorDialog(shell);
-		try {
-			progressMonitorDialog.run(true, false, new IRunnableWithProgress() {
-
-				@Override
-				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					ModelReview modelReview = getCurrentModelReview();
-					diffService.updateSelectedComparison(modelReview, monitor);
-					monitor.done();
-				}
-			});
-		} catch (InvocationTargetException | InterruptedException e) {
-			logger.error(e, "Could not udapte the selected comparison");
-		}
 
 	}
 
@@ -377,13 +227,6 @@ public class ReviewOptionsView extends ModelReviewEditorTrackingView implements 
 			commentsValueLabel.setText("<none>");
 			patchSetsValueLabel.setText("<none>");
 
-			// update compare section
-			leftSidePatchSetViewer.getCCombo().setEnabled(false);
-			rightSidePatchSetViewer.getCCombo().setEnabled(false);
-
-			leftSidePatchSetViewer.setInput(new Object[0]);
-			rightSidePatchSetViewer.setInput(new Object[0]);
-
 			// update persistence section
 			loadButton.setEnabled(true);
 			saveButton.setEnabled(false);
@@ -395,27 +238,6 @@ public class ReviewOptionsView extends ModelReviewEditorTrackingView implements 
 			commentsValueLabel.setText(currentModelReview.getComments().size() + "");
 			patchSetsValueLabel.setText(currentModelReview.getPatchSets().size() + "");
 
-			// update compare section
-			leftSidePatchSetViewer.getCCombo().setEnabled(true);
-			rightSidePatchSetViewer.getCCombo().setEnabled(true);
-
-			List<Object> patchSets = new LinkedList<Object>(currentModelReview.getPatchSets());
-			patchSets.add(0, COMPARE_BASE);
-			leftSidePatchSetViewer.setInput(patchSets);
-			rightSidePatchSetViewer.setInput(patchSets);
-
-			if (currentModelReview.getLeftPatchSet() != null) {
-				leftSidePatchSetViewer.setSelection(new StructuredSelection(currentModelReview.getLeftPatchSet()));
-			} else {
-				leftSidePatchSetViewer.setSelection(new StructuredSelection(COMPARE_BASE));
-			}
-
-			if (currentModelReview.getRightPatchSet() != null) {
-				leftSidePatchSetViewer.setSelection(new StructuredSelection(currentModelReview.getRightPatchSet()));
-			} else {
-				rightSidePatchSetViewer.setSelection(new StructuredSelection(COMPARE_BASE));
-			}
-
 			// update persistence section
 			loadButton.setEnabled(true);
 			saveButton.setEnabled(true);
@@ -423,7 +245,6 @@ public class ReviewOptionsView extends ModelReviewEditorTrackingView implements 
 		}
 
 		informationPanel.layout();
-		comparePanel.layout();
 		persistencePanel.layout();
 		mainPanel.layout();
 
