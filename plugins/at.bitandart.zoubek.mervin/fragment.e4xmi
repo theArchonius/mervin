@@ -3,8 +3,9 @@
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_VuxXAPrtEeSNIagO6cD0dw" featurename="menuContributions" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="menu:MenuContribution" xmi:id="_regZ4PrtEeSNIagO6cD0dw" elementId="at.bitandart.zoubek.mervin.menucontribution.main" parentId="org.eclipse.ui.main.menu">
       <children xsi:type="menu:Menu" xmi:id="_rNJFoPsEEeS2q_4qNTgMUQ" elementId="at.bitandart.zoubek.mervin.menu.main" label="Mervin">
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_M8pGoAX8EeWDm7E-HymwAA" elementId="at.bitandart.zoubek.mervin.menuitem.review.load" label="Load Review..." command="_UTSkEAX8EeWDm7E-HymwAA"/>
-        <children xsi:type="menu:HandledMenuItem" xmi:id="_5BxEQFTPEeaw1Pbzdzvq3A" elementId="at.bitandart.zoubek.mervin.menuitem.highlights.clear" label="Clear Highlights" command="_Vi6tID0BEeaYz6GEb20auA"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_M8pGoAX8EeWDm7E-HymwAA" elementId="at.bitandart.zoubek.mervin.menuitem.review.load" label="Load Review..." iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/etool/loadReview_16.png" command="_UTSkEAX8EeWDm7E-HymwAA"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_hcOeYISHEeadQ7Sb89he3A" elementId="at.bitandart.zoubek.mervin.menuitem.review.save" label="Save Review" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/etool/saveReview_16.png" command="_u7C8sD32EeaD-eNVglSszQ"/>
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_5BxEQFTPEeaw1Pbzdzvq3A" elementId="at.bitandart.zoubek.mervin.menuitem.highlights.clear" label="Clear Highlights" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/etool/clearHighlights_16.png" command="_Vi6tID0BEeaYz6GEb20auA"/>
       </children>
     </elements>
   </fragments>
@@ -40,11 +41,12 @@
       <handlers xmi:id="_DriDANrkEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.handler.toggle.modifications" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.ToggleModificationOverlays" command="_W-8C0NrjEeW5avyAcffSfQ"/>
       <handlers xmi:id="_SSUGMNrkEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.handler.toggle.deletions" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.ToggleDeletionOverlays" command="_cg4BYNrjEeW5avyAcffSfQ"/>
       <handlers xmi:id="_Fahe8NrlEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.handler.toggle.layout.changes" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.ToggleLayoutChangeOverlays" command="_A3198NrlEeW5avyAcffSfQ"/>
-      <toolbar xmi:id="_R80pQNriEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.toolbar.0">
-        <children xsi:type="menu:HandledToolItem" xmi:id="_THpdoNriEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.handledtoolitem.showadditions" label="Show Additions" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/toolbar/addition.png" tooltip="Show Additions" selected="true" type="Check" command="_M7xUwNrjEeW5avyAcffSfQ"/>
-        <children xsi:type="menu:HandledToolItem" xmi:id="_hj0MQNriEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.handledtoolitem.showmodifications" label="Show Modifications" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/toolbar/modification.png" tooltip="Show Modifications" selected="true" type="Check" command="_W-8C0NrjEeW5avyAcffSfQ"/>
-        <children xsi:type="menu:HandledToolItem" xmi:id="_layd0NriEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.handledtoolitem.showdeletions" label="Show Deletions" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/toolbar/deletion.png" tooltip="Show Deletions" type="Check" command="_cg4BYNrjEeW5avyAcffSfQ"/>
-        <children xsi:type="menu:HandledToolItem" xmi:id="_4xLY0NrkEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.handledtoolitem.showlayoutchanges" label="Show Layout Changes" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/toolbar/layout.png" tooltip="Show Layout Changes" selected="true" type="Check" command="_A3198NrlEeW5avyAcffSfQ"/>
+      <toolbar xmi:id="_R80pQNriEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.toolbar.diffviewer">
+        <children xsi:type="menu:HandledToolItem" xmi:id="_THpdoNriEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.toolbar.diffviewer.addition.toggle" label="Toggle Additions" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/etool/addition_16.png" tooltip="Toggle Additions" selected="true" type="Check" command="_M7xUwNrjEeW5avyAcffSfQ"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_hj0MQNriEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.toolbar.diffviewer.modifications.toggle" label="Toggle Modifications" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/etool/modification_16.png" tooltip="Toggle Modifications" selected="true" type="Check" command="_W-8C0NrjEeW5avyAcffSfQ"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_layd0NriEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.toolbar.diffviewer.deletions.toggle" label="Toggle Deletions" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/etool/deletion_16.png" tooltip="Toggle Deletions" type="Check" command="_cg4BYNrjEeW5avyAcffSfQ"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_4xLY0NrkEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.toolbar.diffviewer.layout.toggle" label="Toggle Layout Changes" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/etool/layout_16.png" tooltip="Toggle Layout Changes" selected="true" type="Check" command="_A3198NrlEeW5avyAcffSfQ"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_gfak8ISUEeadQ7Sb89he3A" elementId="at.bitandart.zoubek.mervin.toolbar.diffviewer.highlights.clear" label="Clear Highlights" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/etool/clearHighlights_16.png" tooltip="Clear Highlights" command="_Vi6tID0BEeaYz6GEb20auA"/>
       </toolbar>
     </elements>
     <elements xsi:type="basic:PartDescriptor" xmi:id="_AaxDUP1dEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.review" label="Review Explorer" category="Mervin" closeable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.review.ReviewExplorer">
@@ -54,6 +56,9 @@
         <tags>ViewMenu</tags>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_y4mMEDh_EeaJkOmvJc6KWA" elementId="at.bitandart.zoubek.mervin.menu.view.review.explorer.highlight.switchmode" label="Quick Highlight" type="Check" command="_S-b8kDh_EeaJkOmvJc6KWA"/>
       </menus>
+      <toolbar xmi:id="_f9fuMISVEeadQ7Sb89he3A" elementId="at.bitandart.zoubek.mervin.toolbar.review">
+        <children xsi:type="menu:HandledToolItem" xmi:id="_58FXIISVEeadQ7Sb89he3A" elementId="at.bitandart.zoubek.mervin.toolbar.review.highlights.clear" label="Clear Highlights" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/etool/clearHighlights_16.png" tooltip="Clear Highlights" command="_Vi6tID0BEeaYz6GEb20auA"/>
+      </toolbar>
     </elements>
     <elements xsi:type="basic:PartDescriptor" xmi:id="_kGxz0P1dEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.comments" label="Review Comments" category="Mervin" closeable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.comments.CommentsView">
       <tags>View</tags>
@@ -72,6 +77,9 @@
         <children xsi:type="menu:HandledMenuItem" xmi:id="_LSMQcDb8EeaRo_cgSmIxdQ" elementId="at.bitandart.zoubek.mervin.menu.view.patchset.history.mergeequaldiffs" label="Merge Equal DIffs" selected="true" type="Check" command="_Z4Qh8Db8EeaRo_cgSmIxdQ"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_nGt9gDxxEeaGXtmajgSMmg" elementId="at.bitandart.zoubek.mervin.menu.view.patchset.history.highlight.switchmode" label="Quick Highlight" type="Check" command="_S-b8kDh_EeaJkOmvJc6KWA"/>
       </menus>
+      <toolbar xmi:id="_IhtjwISWEeadQ7Sb89he3A" elementId="at.bitandart.zoubek.mervin.toolbar.patchset.history">
+        <children xsi:type="menu:HandledToolItem" xmi:id="_OBaGoISWEeadQ7Sb89he3A" elementId="at.bitandart.zoubek.mervin.toolbar.patchset.history.highlights.clear" label="Clear Highlights" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/etool/clearHighlights_16.png" tooltip="Clear Highlights" command="_Vi6tID0BEeaYz6GEb20auA"/>
+      </toolbar>
     </elements>
     <elements xsi:type="basic:PartDescriptor" xmi:id="_791IgP1dEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.properties.diff" label="Property Diff" category="Mervin" closeable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.property.diff.PropertyDiffView">
       <tags>View</tags>
@@ -118,7 +126,9 @@
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_xpkEMD0AEeaYz6GEb20auA" featurename="trimContributions" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="menu:TrimContribution" xmi:id="_9WDggD0AEeaYz6GEb20auA" elementId="at.bitandart.zoubek.mervin.trimcontribution.main" parentId="org.eclipse.ui.main.toolbar">
       <children xsi:type="menu:ToolBar" xmi:id="_HSfUcD0BEeaYz6GEb20auA" elementId="at.bitandart.zoubek.mervin.toolbar.main">
-        <children xsi:type="menu:HandledToolItem" xmi:id="_IjXGcD0BEeaYz6GEb20auA" elementId="at.bitandart.zoubek.mervin.toolbar.main.highlights.clear" label="Clear Highlights" command="_Vi6tID0BEeaYz6GEb20auA"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_6OJf4ISHEeadQ7Sb89he3A" elementId="at.bitandart.zoubek.mervin.toolbar.main.review.load" label="Load Review..." iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/etool/loadReview_16.png" command="_UTSkEAX8EeWDm7E-HymwAA"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_xwA18ISHEeadQ7Sb89he3A" elementId="at.bitandart.zoubek.mervin.toolbar.main.review.save" label="Save Review" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/etool/saveReview_16.png" command="_u7C8sD32EeaD-eNVglSszQ"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_IjXGcD0BEeaYz6GEb20auA" elementId="at.bitandart.zoubek.mervin.toolbar.main.highlights.clear" label="Clear Highlights" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/etool/clearHighlights_16.png" command="_Vi6tID0BEeaYz6GEb20auA"/>
       </children>
     </elements>
   </fragments>
