@@ -10,6 +10,9 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.draw2d;
 
+import java.io.File;
+import java.net.MalformedURLException;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 
 /**
@@ -18,16 +21,18 @@ import org.eclipse.jface.resource.ImageDescriptor;
  */
 public class StandaloneMervinResourceRegistry extends MervinResourceRegistry {
 
-	public StandaloneMervinResourceRegistry() {
+	public final String ICON_DGM_PATH = "icons/dgm/";
 
-		imageRegistry.put(IMAGE_WORKBENCH_TAB_MODE,
-				ImageDescriptor.createFromURL(getClass().getResource("/icons/16/workbench_tab_mode.png")));
-		imageRegistry.put(IMAGE_WORKBENCH_WINDOW_MODE,
-				ImageDescriptor.createFromURL(getClass().getResource("/icons/16/workbench_window_mode.png")));
-		imageRegistry.put(IMAGE_WORKBENCH_MINIMIZE,
-				ImageDescriptor.createFromURL(getClass().getResource("/icons/16/workbench_to_content.png")));
-		imageRegistry.put(IMAGE_WORKBENCH_MAXIMIZE,
-				ImageDescriptor.createFromURL(getClass().getResource("/icons/16/workbench_to_tray.png")));
+	public StandaloneMervinResourceRegistry() throws MalformedURLException {
+
+		imageRegistry.put(IMAGE_WORKBENCH_TAB_MODE, ImageDescriptor
+				.createFromURL(new File(ICON_DGM_PATH + IMAGE_WORKBENCH_TAB_MODE + "_16.png").toURI().toURL()));
+		imageRegistry.put(IMAGE_WORKBENCH_WINDOW_MODE, ImageDescriptor
+				.createFromURL(new File(ICON_DGM_PATH + IMAGE_WORKBENCH_WINDOW_MODE + "_16.png").toURI().toURL()));
+		imageRegistry.put(IMAGE_WORKBENCH_MINIMIZE, ImageDescriptor
+				.createFromURL(new File(ICON_DGM_PATH + IMAGE_WORKBENCH_MINIMIZE + "_16.png").toURI().toURL()));
+		imageRegistry.put(IMAGE_WORKBENCH_MAXIMIZE, ImageDescriptor
+				.createFromURL(new File(ICON_DGM_PATH + IMAGE_WORKBENCH_MAXIMIZE + "_16.png").toURI().toURL()));
 
 	}
 
