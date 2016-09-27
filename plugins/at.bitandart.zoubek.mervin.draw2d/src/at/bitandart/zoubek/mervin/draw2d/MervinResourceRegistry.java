@@ -26,10 +26,10 @@ import org.eclipse.jface.resource.ImageDescriptor;
  */
 public abstract class MervinResourceRegistry implements IResourceRegistry {
 
-	public static final String IMAGE_WORKBENCH_TAB_MODE = "image_workbech_tab_mode";
-	public static final String IMAGE_WORKBENCH_WINDOW_MODE = "image_workbech_window_mode";
-	public static final String IMAGE_WORKBENCH_MINIMIZE = "image_workbech_minimize";
-	public static final String IMAGE_WORKBENCH_MAXIMIZE = "image_workbech_maximize";
+	public static final String IMAGE_WORKBENCH_TAB_MODE = "workbench_tab_mode";
+	public static final String IMAGE_WORKBENCH_WINDOW_MODE = "workbench_window_mode";
+	public static final String IMAGE_WORKBENCH_MINIMIZE = "workbench_minimize";
+	public static final String IMAGE_WORKBENCH_MAXIMIZE = "workbench_maximize";
 
 	protected Map<String, ImageDescriptor> imageRegistry;
 

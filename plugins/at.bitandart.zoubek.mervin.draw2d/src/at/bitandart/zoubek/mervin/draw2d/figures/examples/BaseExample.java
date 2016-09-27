@@ -10,6 +10,8 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.draw2d.figures.examples;
 
+import java.net.MalformedURLException;
+
 import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LayoutAnimator;
@@ -82,7 +84,12 @@ public class BaseExample {
 		d = new Display();
 
 		resourceManager = new LocalResourceManager(JFaceResources.getResources());
-		resourceRegistry = new StandaloneMervinResourceRegistry();
+		try {
+			resourceRegistry = new StandaloneMervinResourceRegistry();
+		} catch (MalformedURLException e) {
+			System.err.println("Error while loading the default resource registry:");
+			e.printStackTrace();
+		}
 
 		registryResourceManager = new RegistryResourceManager(resourceRegistry, resourceManager);
 

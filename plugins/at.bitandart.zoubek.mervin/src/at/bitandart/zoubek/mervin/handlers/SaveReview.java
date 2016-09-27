@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -44,6 +45,11 @@ public class SaveReview {
 	@SuppressWarnings("restriction")
 	@Inject
 	private org.eclipse.e4.core.services.log.Logger logger;
+
+	@CanExecute
+	public boolean canExecute(@Named(IMervinContextConstants.ACTIVE_MODEL_REVIEW) ModelReview modelReview) {
+		return modelReview != null;
+	}
 
 	@SuppressWarnings("restriction")
 	@Execute
