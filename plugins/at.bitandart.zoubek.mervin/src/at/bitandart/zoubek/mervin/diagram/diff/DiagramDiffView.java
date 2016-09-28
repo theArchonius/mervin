@@ -465,6 +465,41 @@ public class DiagramDiffView implements IAdaptable {
 		}
 
 		/**
+		 * finds the figure for a given eObject that has been extracted out of a
+		 * match.
+		 * 
+		 * @param review
+		 *            the model review associated with the given object.
+		 * @param eObject
+		 *            the object to search the figure for.
+		 * @param rootEditPart
+		 * @return the corresponding figure or null if none could be found.
+		 */
+		private IFigure findFigureOfMatchedObject(ModelReview review, EObject eObject, EditPart rootEditPart) {
+
+			/*
+			 * A view has been very likely copied in the unified diagram
+			 * model,therefore check if there is also a figure for this model
+			 */
+			if (eObject instanceof View) {
+				EObject unifiedCopy = review.getUnifiedModelMap().get(eObject);
+				if (unifiedCopy != null) {
+					IFigure figure = findFigureInEditPartTree(unifiedCopy, rootEditPart);
+					if (figure != null) {
+						return figure;
+					}
+				}
+			}
+
+			IFigure figure = findFigureInEditPartTree(eObject, rootEditPart);
+			if (figure != null) {
+				return figure;
+			}
+
+			return null;
+		}
+
+		/**
 		 * finds the corresponding figure for the given review and element which
 		 * is known not to be contained in the selected comparison of the
 		 * review.
@@ -480,26 +515,7 @@ public class DiagramDiffView implements IAdaptable {
 		private IFigure findFigureNotContainedInSelectedComparison(ModelReview review, EObject eObject,
 				EditPart rootEditPart) {
 
-			/*
-			 * A view has been very likely copied in the unified diagram
-			 * model,therefore check if there is also a figure for this model
-			 */
-			if (eObject instanceof View) {
-				EObject unifiedCopy = review.getUnifiedModelMap().get(eObject);
-				if (unifiedCopy != null) {
-					IFigure figure = findFigureFor(review, unifiedCopy, rootEditPart);
-					if (figure != null) {
-						return figure;
-					}
-				}
-			}
-
-			IFigure figure = findFigureInEditPartTree(eObject, rootEditPart);
-			if (figure != null) {
-				return figure;
-			}
-
-			figure = findFigureInPatchSetMatch(review, eObject, review.getRightPatchSet(), rootEditPart);
+			IFigure figure = findFigureInPatchSetMatch(review, eObject, review.getRightPatchSet(), rootEditPart);
 			if (figure != null) {
 				return figure;
 			}
@@ -615,7 +631,7 @@ public class DiagramDiffView implements IAdaptable {
 			Match match = comparison.getMatch(eObject);
 			if (match != null) {
 
-				IFigure figure = findFigureInMatch(review, eObject, match, rootEditPart);
+				IFigure figure = findFigureInMatch(review, match, rootEditPart);
 				if (figure != null) {
 					return figure;
 				}
@@ -630,24 +646,29 @@ public class DiagramDiffView implements IAdaptable {
 		 * 
 		 * @param review
 		 *            the model review associated with the given object.
-		 * @param otherEObject
-		 *            the object to find the match for.
 		 * @param match
 		 *            the match used to get the matching eObject from.
 		 * @param rootEditPart
 		 *            the root edit part to start the search at (inclusive).
 		 * @return the corresponding figure or null if none could be found.
 		 */
-		private IFigure findFigureInMatch(ModelReview review, EObject otherEObject, Match match,
-				EditPart rootEditPart) {
+		private IFigure findFigureInMatch(ModelReview review, Match match, EditPart rootEditPart) {
 
-			EObject matchedObject = match.getLeft();
-			if (matchedObject == otherEObject) {
-				matchedObject = match.getRight();
+			EObject left = match.getLeft();
+			EObject right = match.getRight();
+
+			if (left != null) {
+				IFigure figure = findFigureOfMatchedObject(review, left, rootEditPart);
+				if (figure != null) {
+					return figure;
+				}
 			}
 
-			if (matchedObject != null) {
-				return findFigureNotContainedInSelectedComparison(review, matchedObject, rootEditPart);
+			if (right != null) {
+				IFigure figure = findFigureOfMatchedObject(review, right, rootEditPart);
+				if (figure != null) {
+					return figure;
+				}
 			}
 			return null;
 		}
