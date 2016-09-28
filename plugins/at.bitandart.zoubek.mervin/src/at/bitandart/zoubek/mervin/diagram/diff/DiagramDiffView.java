@@ -24,6 +24,7 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
@@ -515,16 +516,78 @@ public class DiagramDiffView implements IAdaptable {
 		private IFigure findFigureNotContainedInSelectedComparison(ModelReview review, EObject eObject,
 				EditPart rootEditPart) {
 
-			IFigure figure = findFigureInPatchSetMatch(review, eObject, review.getRightPatchSet(), rootEditPart);
+			EObject baseEObject = findMatchingEObject(review, eObject);
+
+			if (baseEObject == null) {
+				/*
+				 * No base version found, so give up any further search. There
+				 * might be a match in one of the other patch sets, but this
+				 * requires a potentially expensive compare of the given patch
+				 * sets. If this changes in the future, add the lookup here
+				 * before canceling the search.
+				 */
+				return null;
+			}
+
+			IFigure figure = findFigureInPatchSetMatch(review, baseEObject, review.getRightPatchSet(), rootEditPart);
 			if (figure != null) {
 				return figure;
 			}
 
-			figure = findFigureInPatchSetMatch(review, eObject, review.getLeftPatchSet(), rootEditPart);
+			figure = findFigureInPatchSetMatch(review, baseEObject, review.getLeftPatchSet(), rootEditPart);
 			if (figure != null) {
 				return figure;
 			}
 
+			return null;
+		}
+
+		/**
+		 * finds the corresponding matched eObject in one of the patch sets of
+		 * the given review, if it exists.
+		 * 
+		 * @param review
+		 *            the review containing the patch sets to search for the
+		 *            matching eObject
+		 * @param eObject
+		 *            the {@link EObject} to search the matching object for.
+		 * @return the matched {@link EObject} or null if none could be found.
+		 */
+		private EObject findMatchingEObject(ModelReview review, EObject eObject) {
+			EList<PatchSet> patchSets = review.getPatchSets();
+			for (PatchSet patchSet : patchSets) {
+				EObject baseEObject = findMatchingEObject(patchSet.getModelComparison(), eObject);
+				if (baseEObject != null) {
+					return baseEObject;
+				}
+				baseEObject = findMatchingEObject(patchSet.getDiagramComparison(), eObject);
+				if (baseEObject != null) {
+					return baseEObject;
+				}
+			}
+			return null;
+		}
+
+		/**
+		 * finds the corresponding matched eObject in the given comparison, if
+		 * it exists.
+		 * 
+		 * @param comparison
+		 *            the comparison used to find the matching object.
+		 * @param eObject
+		 *            the {@link EObject} to search the matching object for.
+		 * @return the matched {@link EObject} or null if none could be found.
+		 */
+		private EObject findMatchingEObject(Comparison comparison, EObject eObject) {
+			Match match = comparison.getMatch(eObject);
+			if (match != null) {
+				EObject left = match.getLeft();
+				if (left != eObject) {
+					return left;
+				} else {
+					return match.getRight();
+				}
+			}
 			return null;
 		}
 
