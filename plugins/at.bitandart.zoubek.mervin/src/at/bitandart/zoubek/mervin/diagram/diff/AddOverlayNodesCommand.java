@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.PrecisionDimension;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.compare.AttributeChange;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
@@ -153,7 +154,8 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 		 * Get all matches that might contain differences that should be part of
 		 * an overlay
 		 */
-		Match viewElementMatch = diagramComparison.getMatch(view.getElement());
+		Match viewMatch = diagramComparison.getMatch(originalView);
+		Match elementMatch = diagramComparison.getMatch(view.getElement());
 		Match layoutConstraintMatch = null;
 		Match bendpointsMatch = null;
 
@@ -184,10 +186,15 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 		}
 		boolean hasComments = false;
 		boolean hasChildComments = false;
-		if (viewElementMatch != null) {
-			viewElementDifferences = viewElementMatch.getDifferences();
-			hasComments = containsTargetsOfCommentLinks(viewElementMatch);
-			hasChildComments = containSubmatchesTargetsOfCommentLinks(viewElementMatch);
+		if (elementMatch != null) {
+			viewElementDifferences = elementMatch.getDifferences();
+			hasComments = containsTargetsOfCommentLinks(elementMatch);
+			/*
+			 * use the view match to determine the child comments as the
+			 * notation model does not have to resemble the same containment
+			 * hierarchy as the referencing model
+			 */
+			hasChildComments = hasChildComments(viewMatch);
 		}
 
 		boolean hasViewReferenceDifferences = viewReferenceChange != null;
@@ -288,22 +295,67 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 	}
 
 	/**
-	 * determines if the submatches contain an {@link EObject} that is a target
-	 * of a comment link.
+	 * determines if any child of the given matched view objects has comments.
 	 * 
 	 * @param match
-	 *            the match containing the submatches to check
-	 * @return true if any of the submatches contain an {@link EObject} that is
-	 *         a target of a comment link.
+	 *            the match of the parent view object.
+	 * @return true if any child object of the matched view objects has
+	 *         comments, false otherwise. Returns always false for matches of
+	 *         non-{@link View} objects.
 	 */
-	private boolean containSubmatchesTargetsOfCommentLinks(Match match) {
+	private boolean hasChildComments(Match match) {
 
-		for (Match submatch : match.getAllSubmatches()) {
-			if (containsTargetsOfCommentLinks(submatch)) {
+		if (match != null) {
+			Comparison comparison = match.getComparison();
+
+			EObject left = match.getLeft();
+			if (left instanceof View && hasChildComments((View) left, comparison)) {
+				return true;
+			}
+
+			EObject right = match.getRight();
+			if (right instanceof View && hasChildComments((View) right, comparison)) {
 				return true;
 			}
 		}
+		return false;
+	}
 
+	/**
+	 * determines if any child of the given view object has comments.
+	 * 
+	 * @param view
+	 *            the parent view to determine the child comment state for.
+	 * @param comparison
+	 *            the comparison used to look up matches of the children.
+	 * @return true if any child object of the given view object has comments,
+	 *         false otherwise.
+	 */
+	private boolean hasChildComments(View view, Comparison comparison) {
+
+		if (view != null) {
+
+			TreeIterator<EObject> contents = view.eAllContents();
+			while (contents.hasNext()) {
+
+				EObject child = contents.next();
+
+				/* check comments for views */
+				Match childMatch = comparison.getMatch(child);
+				if (childMatch != null && containsTargetsOfCommentLinks(childMatch)) {
+					return true;
+				}
+
+				/* check comments for view elements */
+				if (child instanceof View) {
+					View childView = (View) child;
+					Match elementMatch = comparison.getMatch(childView.getElement());
+					if (elementMatch != null && containsTargetsOfCommentLinks(elementMatch)) {
+						return true;
+					}
+				}
+			}
+		}
 		return false;
 	}
 
