@@ -913,6 +913,11 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 						if (object instanceof Comment) {
 
 							Comment comment = (Comment) object;
+
+							/* create a copy to avoid transaction problems */
+							EcoreUtil.resolveAll(comment);
+							comment = EcoreUtil.copy(comment);
+
 							comment.resolvePatchSet(modelReview);
 							User author = comment.getAuthor();
 

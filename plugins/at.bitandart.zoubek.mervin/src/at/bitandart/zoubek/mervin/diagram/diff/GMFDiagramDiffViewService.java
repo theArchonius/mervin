@@ -49,6 +49,8 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
+import org.eclipse.gmf.runtime.emf.type.core.commands.SetValueCommand;
+import org.eclipse.gmf.runtime.emf.type.core.requests.SetRequest;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Node;
@@ -212,7 +214,9 @@ public class GMFDiagramDiffViewService {
 		if (unifiedModelMap == null) {
 
 			unifiedModelMap = HashBiMap.create();
-			modelReview.setUnifiedModelMap(unifiedModelMap);
+			SetValueCommand setUnifiedMapCommand = new SetValueCommand(new SetRequest(transactionalEditingDomain,
+					modelReview, ModelReviewPackage.Literals.MODEL_REVIEW__UNIFIED_MODEL_MAP, unifiedModelMap));
+			executeCommand(setUnifiedMapCommand, editDomain);
 
 		} else {
 			unifiedModelMap.clear();

@@ -20,31 +20,38 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EContentAdapter;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.gef.EditDomain;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gmf.runtime.common.core.command.CommandResult;
+import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
+import at.bitandart.zoubek.mervin.IMervinContextConstants;
 import at.bitandart.zoubek.mervin.IReviewHighlightService;
-import at.bitandart.zoubek.mervin.model.modelreview.Comment;
-import at.bitandart.zoubek.mervin.model.modelreview.CommentLink;
 import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
-import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.model.modelreview.User;
 import at.bitandart.zoubek.mervin.review.ModelReviewEditorTrackingView;
 import at.bitandart.zoubek.mervin.swt.comments.CommentList;
@@ -71,6 +78,7 @@ import at.bitandart.zoubek.mervin.swt.comments.data.ICommentProvider;
  * @author Florian Zoubek
  *
  */
+@SuppressWarnings("restriction")
 public class CommentsView extends ModelReviewEditorTrackingView implements IAdaptable {
 
 	public static final String PART_DESCRIPTOR_ID = "at.bitandart.zoubek.mervin.partdescriptor.comments";
@@ -88,13 +96,28 @@ public class CommentsView extends ModelReviewEditorTrackingView implements IAdap
 	private IReviewHighlightService reviewHighlightService;
 
 	@Inject
+	@Named(IMervinContextConstants.CURRENT_REVIEWER)
 	private User currentUser;
+
+	@Inject
+	@Named(IMervinContextConstants.ACTIVE_TRANSACTIONAL_EDITING_DOMAIN)
+	private TransactionalEditingDomain transactionalEditingDomain;
+
+	@Inject
+	@Named(IMervinContextConstants.ACTIVE_EDIT_DOMAIN)
+	private EditDomain editDomain;
 
 	@Inject
 	private Display display;
 
 	@Inject
 	private MPart part;
+
+	@Inject
+	private Logger logger;
+
+	@Inject
+	private Shell shell;
 
 	// Viewers
 	private CommentListViewer commentListViewer;
@@ -166,45 +189,34 @@ public class CommentsView extends ModelReviewEditorTrackingView implements IAdap
 
 			@Override
 			public void commentAdded(String text, List<ICommentLink> commentLinks, ICommentColumn commentColumn,
-					IComment answerdComment) {
+					IComment answeredComment) {
 
 				ModelReview currentModelReview = getCurrentModelReview();
-				if (currentModelReview != null) {
+				if (editDomain == null) {
+					showInternalErrorMessageDialog("adding a new comment");
+					logger.error("Could not save comment, no edit domain available");
+				} else if (transactionalEditingDomain == null) {
+					showInternalErrorMessageDialog("adding a new comment");
+					logger.error("Could not save comment, no transactional editing domain available");
+				} else if (currentModelReview == null) {
+					showInternalErrorMessageDialog("adding a new comment");
+					logger.error("Could not save comment, no active review available");
+				} else {
 
-					Comment comment = modelFactory.createComment();
-					comment.setText(text);
-					comment.setAuthor(currentUser);
-					comment.setCreationTime(System.currentTimeMillis());
-
-					if (answerdComment != null && answerdComment instanceof MervinComment) {
-						comment.setRepliedTo(((MervinComment) answerdComment).getRealComment());
+					ICommand addCommentCommand = new AddCommentCommand(transactionalEditingDomain, text, commentLinks,
+							currentUser, commentColumn, answeredComment, modelFactory, currentModelReview);
+					CommandResult result = executeCommand(addCommentCommand, editDomain);
+					if (!result.getStatus().isOK()) {
+						IStatus status = result.getStatus();
+						showInternalErrorMessageDialog("adding a new comment");
+						logger.error(MessageFormat.format(
+								"Could not save comment, command result was not ok:\n" + "Status code: {0}\n"
+										+ "Message: {1}\n" + "Exception: {2}",
+								status.getCode(), status.getMessage(), status.getException()));
 					}
 
-					if (commentColumn instanceof PatchSetColumn) {
-						PatchSet patchSet = ((PatchSetColumn) commentColumn).getPatchSet();
-						if (patchSet != null) {
-							comment.setPatchset(patchSet);
-						}
-					}
-
-					for (ICommentLink commentLink : commentLinks) {
-
-						ICommentLinkTarget commentLinkTarget = commentLink.getCommentLinkTarget();
-						if (commentLinkTarget instanceof MervinCommentLinkTarget) {
-							CommentLink realCommentLink = modelFactory.createCommentLink();
-							realCommentLink.setStart(commentLink.getStartIndex());
-							realCommentLink.setLength(commentLink.getLength());
-							realCommentLink.setComment(comment);
-							realCommentLink.getTargets()
-									.addAll(((MervinCommentLinkTarget) commentLinkTarget).getTargets());
-						}
-
-					}
-
-					currentModelReview.getComments().add(comment);
-
-					commentListViewer.refresh();
 				}
+				commentListViewer.refresh();
 
 			}
 		});
@@ -212,6 +224,28 @@ public class CommentsView extends ModelReviewEditorTrackingView implements IAdap
 		viewInitialized = true;
 		updateValues();
 
+	}
+
+	private void showInternalErrorMessageDialog(String task) {
+		MessageDialog.openError(shell, "Internal Error",
+				MessageFormat.format(
+						"An internal error occured while {0} - the operation has been aborted. See error log for details.",
+						task));
+	}
+
+	/**
+	 * executes the given {@link ICommand} with the given {@link EditDomain} and
+	 * returns the result of the command.
+	 * 
+	 * @param command
+	 *            the command to execute
+	 * @param editDomain
+	 *            the GEF {@link EditDomain} used to execute the command
+	 * @return the result of the command
+	 */
+	private CommandResult executeCommand(ICommand command, EditDomain editDomain) {
+		editDomain.getCommandStack().execute(new ICommandProxy(command));
+		return command.getCommandResult();
 	}
 
 	@Inject
