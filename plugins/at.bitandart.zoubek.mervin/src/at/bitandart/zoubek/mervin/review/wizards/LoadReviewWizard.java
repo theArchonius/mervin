@@ -29,6 +29,7 @@ import at.bitandart.zoubek.mervin.exceptions.InvalidReviewException;
 import at.bitandart.zoubek.mervin.exceptions.InvalidReviewRepositoryException;
 import at.bitandart.zoubek.mervin.exceptions.RepositoryIOException;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
+import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
 import at.bitandart.zoubek.mervin.model.modelreview.User;
 
 /**
@@ -44,13 +45,19 @@ public class LoadReviewWizard extends Wizard {
 	private GerritRepositorySelectionPage selectRepositoryPage;
 
 	@Inject
+	private ReviewerLoginPage reviewerLoginPage;
+
+	@Inject
 	private ReviewSelectionPage gerritChangeSelectionPage;
 
 	@Inject
 	private IReviewRepositoryService repoService;
 
+	/**
+	 * the model review factory used by this wizard to create all model elements
+	 */
 	@Inject
-	private User reviewer;
+	private ModelReviewFactory modelReviewFactory;
 
 	@SuppressWarnings("restriction")
 	@Inject
@@ -61,6 +68,7 @@ public class LoadReviewWizard extends Wizard {
 	@Override
 	public void addPages() {
 		super.addPages();
+		addPage(reviewerLoginPage);
 		addPage(selectRepositoryPage);
 		addPage(gerritChangeSelectionPage);
 	}
@@ -77,6 +85,8 @@ public class LoadReviewWizard extends Wizard {
 		String repositoryPath = selectRepositoryPage.getSelectedRepositoryPath();
 		final URI uri;
 		final String id = gerritChangeSelectionPage.getReviewId();
+		final User reviewer = modelReviewFactory.createUser();
+		reviewer.setName(reviewerLoginPage.getReviewerName());
 
 		try {
 			uri = new URI(repositoryPath);
@@ -94,10 +104,6 @@ public class LoadReviewWizard extends Wizard {
 				@Override
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
-						/*
-						 * TODO add reviewer selection page and let the user
-						 * choose the reviewer
-						 */
 						modelReview = repoService.loadReview(uri, id, reviewer, monitor);
 					} catch (RepositoryIOException | InvalidReviewRepositoryException | InvalidReviewException e) {
 						new InvocationTargetException(e);
