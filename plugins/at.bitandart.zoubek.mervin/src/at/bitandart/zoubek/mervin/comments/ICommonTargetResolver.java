@@ -18,8 +18,8 @@ import org.eclipse.emf.ecore.EObject;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 
 /**
- * Base interface that for classes that resolve the common target objects shared
- * by different target objects. Such a resolver is used by
+ * Base interface for classes that resolve the common target objects shared by
+ * different target objects. Such a resolver is used by
  * {@link MervinCommentProvider} instances to determine the groups and their
  * common targets shared between link targets of different patch sets.
  * 
