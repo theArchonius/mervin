@@ -234,6 +234,8 @@ public class DiagramDiffView implements IAdaptable {
 		context.remove(Diagram.class);
 		context.modify(IMervinContextConstants.ACTIVE_MODEL_REVIEW, null);
 		context.modify(IMervinContextConstants.ACTIVE_DIAGRAM_DIFF_EDITOR, null);
+		context.modify(IMervinContextConstants.ACTIVE_TRANSACTIONAL_EDITING_DOMAIN, null);
+		context.modify(IMervinContextConstants.ACTIVE_EDIT_DOMAIN, null);
 		context.modify(IMervinContextConstants.CURRENT_REVIEWER, null);
 
 	}
@@ -254,6 +256,10 @@ public class DiagramDiffView implements IAdaptable {
 		context.modify(IMervinContextConstants.ACTIVE_DIAGRAM_DIFF_EDITOR, this);
 		context.modify(IMervinContextConstants.ACTIVE_MODEL_REVIEW, getModelReview());
 		context.modify(IMervinContextConstants.CURRENT_REVIEWER, getModelReview().getCurrentReviewer());
+		context.modify(IMervinContextConstants.ACTIVE_TRANSACTIONAL_EDITING_DOMAIN, editingDomain);
+		if (viewer != null) {
+			context.modify(IMervinContextConstants.ACTIVE_EDIT_DOMAIN, viewer.getEditDomain());
+		}
 	}
 
 	/**

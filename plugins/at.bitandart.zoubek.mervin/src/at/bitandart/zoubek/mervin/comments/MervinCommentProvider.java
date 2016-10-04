@@ -21,9 +21,11 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.eclipse.emf.ecore.EObject;
 
+import at.bitandart.zoubek.mervin.IMervinContextConstants;
 import at.bitandart.zoubek.mervin.model.modelreview.Comment;
 import at.bitandart.zoubek.mervin.model.modelreview.CommentLink;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
@@ -42,6 +44,7 @@ import at.bitandart.zoubek.mervin.swt.comments.data.ICommentProvider;
 public class MervinCommentProvider implements ICommentProvider {
 
 	@Inject
+	@Named(IMervinContextConstants.CURRENT_REVIEWER)
 	private User currentMervinUser;
 
 	@Inject
@@ -346,7 +349,7 @@ public class MervinCommentProvider implements ICommentProvider {
 
 				@Override
 				public int compare(Comment o1, Comment o2) {
-					return (int) (o1.getCreationTime() - o2.getCreationTime());
+					return (int) (o2.getCreationTime() - o1.getCreationTime());
 				}
 			});
 

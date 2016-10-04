@@ -4,7 +4,8 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: at.bitandart.zoubek.mervin;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
-Export-Package: at.bitandart.zoubek.mervin.comments,
+Export-Package: at.bitandart.zoubek.mervin,
+ at.bitandart.zoubek.mervin.comments,
  at.bitandart.zoubek.mervin.property.diff;x-friends:="at.bitandart.zoubek.mervin.tests",
  at.bitandart.zoubek.mervin.swt.comments,
  at.bitandart.zoubek.mervin.swt.comments.data,

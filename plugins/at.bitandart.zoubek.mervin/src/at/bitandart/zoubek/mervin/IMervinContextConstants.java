@@ -36,6 +36,17 @@ public interface IMervinContextConstants {
 	public static final String CURRENT_REVIEWER = "at.bitandart.zoubek.mervin.active.user";
 
 	/**
+	 * constant for the current EMF transactional editing domain for the active
+	 * model review.
+	 */
+	public static final String ACTIVE_TRANSACTIONAL_EDITING_DOMAIN = "at.bitandart.zoubek.mervin.active.transactional.editing.domain";
+
+	/**
+	 * constant for the current GEF edit domain for the active model review.
+	 */
+	public static final String ACTIVE_EDIT_DOMAIN = "at.bitandart.zoubek.mervin.active.edit.domain";
+
+	/**
 	 * constant for a unmodifiable list of the highlighted elements for the
 	 * currently active model review.
 	 */

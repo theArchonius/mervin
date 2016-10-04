@@ -96,6 +96,8 @@ public class MervinServicesAddon {
 		context.declareModifiable(IMervinContextConstants.CURRENT_REVIEWER);
 		context.declareModifiable(IMervinContextConstants.ACTIVE_DIAGRAM_DIFF_EDITOR);
 		context.declareModifiable(IMervinContextConstants.HIGHLIGHTED_ELEMENTS);
+		context.declareModifiable(IMervinContextConstants.ACTIVE_TRANSACTIONAL_EDITING_DOMAIN);
+		context.declareModifiable(IMervinContextConstants.ACTIVE_EDIT_DOMAIN);
 
 	}
 

@@ -10,8 +10,7 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +29,7 @@ import org.eclipse.emf.ecore.EcoreFactory;
 import org.junit.Before;
 import org.junit.Test;
 
+import at.bitandart.zoubek.mervin.IMervinContextConstants;
 import at.bitandart.zoubek.mervin.comments.ICommonTargetResolver;
 import at.bitandart.zoubek.mervin.comments.MervinComment;
 import at.bitandart.zoubek.mervin.comments.MervinCommentGroup;
@@ -83,6 +83,7 @@ public class MervinCommentProviderTest {
 
 		testUser = reviewFactory.createUser();
 		context.set(User.class, testUser);
+		context.set(IMervinContextConstants.CURRENT_REVIEWER, testUser);
 
 		ICommonTargetResolver commonTargetResolver = new ICommonTargetResolver() {
 
@@ -397,7 +398,7 @@ public class MervinCommentProviderTest {
 		List<PatchSet> patchSets = new ArrayList<PatchSet>();
 		patchSets.add(createLeftPatchSet(review));
 
-		List<Comment> leftPSG1Comments = createComments(5, patchSets.get(0), null, review);
+		List<Comment> leftPSG1Comments = createComments(250, patchSets.get(0), null, review);
 
 		shuffle(review.getComments(), new Random(0));
 		shuffle(patchSets.get(0).getComments(), new Random(0));
