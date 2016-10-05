@@ -25,6 +25,8 @@ import javax.inject.Named;
 
 import org.eclipse.emf.ecore.EObject;
 
+import com.google.common.collect.Ordering;
+
 import at.bitandart.zoubek.mervin.IMervinContextConstants;
 import at.bitandart.zoubek.mervin.model.modelreview.Comment;
 import at.bitandart.zoubek.mervin.model.modelreview.CommentLink;
@@ -81,7 +83,7 @@ public class MervinCommentProvider implements ICommentProvider {
 
 			@Override
 			public int compare(MervinCommentGroup o1, MervinCommentGroup o2) {
-				return (int) (oldestComments.get(o1) - oldestComments.get(o2));
+				return Long.compare(oldestComments.get(o1), oldestComments.get(o2));
 			}
 		});
 
@@ -343,15 +345,14 @@ public class MervinCommentProvider implements ICommentProvider {
 
 			PatchSet patchSet = ((PatchSetColumn) column).getPatchSet();
 			Set<EObject> targets = ((MervinCommentGroup) group).getTargets();
-			ArrayList<Comment> patchSetComments = new ArrayList<>(patchSet.getComments());
 
-			Collections.sort(patchSetComments, new Comparator<Comment>() {
+			List<Comment> patchSetComments = Ordering.from(new Comparator<Comment>() {
 
 				@Override
 				public int compare(Comment o1, Comment o2) {
-					return (int) (o2.getCreationTime() - o1.getCreationTime());
+					return Long.compare(o1.getCreationTime(), o2.getCreationTime());
 				}
-			});
+			}).sortedCopy(patchSet.getComments());
 
 			for (Comment realComment : patchSetComments) {
 				Set<EObject> commentTargets = new HashSet<>();
