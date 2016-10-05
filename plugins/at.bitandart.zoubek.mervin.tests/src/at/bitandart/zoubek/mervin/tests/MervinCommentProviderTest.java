@@ -10,6 +10,7 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.tests;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
@@ -673,6 +674,50 @@ public class MervinCommentProviderTest {
 	}
 
 	/**
+	 * tests comment ordering when the creation time difference exceeds the
+	 * limits of the integer range. Necessary to ensure proper sorting with
+	 * comparators as comparators operate with integers and the creation time is
+	 * encoded as a long - developers may by misled to cast to integer in a
+	 * comparator without considering the integer limits.
+	 */
+	@Test
+	public void testCommentsWithCreationTimeDifferenceExceedingIntRange() {
+
+		// input
+		ModelReview review = reviewFactory.createModelReview();
+
+		List<PatchSet> patchSets = createBothPatchSets(review);
+
+		EObject target1 = EcoreFactory.eINSTANCE.createEObject();
+
+		Set<EObject> group1Targets = new HashSet<EObject>();
+		group1Targets.add(target1);
+
+		List<Comment> rightPSG1Comments = createComments(3, patchSets.get(1), null, review);
+		rightPSG1Comments.get(0).setCreationTime(1468314857113l);
+		rightPSG1Comments.get(1).setCreationTime(1475664142968l);
+		rightPSG1Comments.get(1).setRepliedTo(rightPSG1Comments.get(0));
+		rightPSG1Comments.get(2).setCreationTime(1475664157582l);
+		rightPSG1Comments.get(2).setRepliedTo(rightPSG1Comments.get(0));
+
+		createCommentLink(rightPSG1Comments.get(0), new HashSet<EObject>(Arrays.asList(new EObject[] { target1 })));
+
+		List<Set<EObject>> expectedTargetSets = new ArrayList<Set<EObject>>();
+		expectedTargetSets.add(group1Targets);
+
+		// test
+		List<ICommentColumn> commentColumns = commentProvider.getCommentColumns(review);
+		assertColumns(patchSets, commentColumns);
+
+		List<ICommentGroup> commentGroups = commentProvider.getCommentGroups(review);
+		assertCommentGroups(expectedTargetSets, commentGroups);
+
+		assertComments(rightPSG1Comments,
+				commentProvider.getComments(review, commentGroups.get(0), commentColumns.get(1)));
+
+	}
+
+	/**
 	 * creates a patch set for the given review.
 	 * 
 	 * @param review
@@ -870,8 +915,8 @@ public class MervinCommentProviderTest {
 		Iterator<ICommentColumn> iterator = columns.iterator();
 		for (PatchSet patchSet : patchSets) {
 			ICommentColumn column = iterator.next();
-			assertTrue(column instanceof PatchSetColumn);
-			assertEquals(patchSet, ((PatchSetColumn) column).getPatchSet());
+			assertThat(column, instanceOf(PatchSetColumn.class));
+			assertThat(((PatchSetColumn) column).getPatchSet(), is(sameInstance(patchSet)));
 		}
 
 	}
@@ -888,8 +933,8 @@ public class MervinCommentProviderTest {
 		Iterator<IComment> iterator = comments.iterator();
 		for (Comment expectedComment : expectedComments) {
 			IComment comment = iterator.next();
-			assertTrue(comment instanceof MervinComment);
-			assertEquals(expectedComment, ((MervinComment) comment).getRealComment());
+			assertThat(comment, instanceOf(MervinComment.class));
+			assertThat(((MervinComment) comment).getRealComment(), is(sameInstance(expectedComment)));
 		}
 
 	}
@@ -902,14 +947,14 @@ public class MervinCommentProviderTest {
 	 */
 	private static void assertCommentGroups(List<Set<EObject>> expectedTargetSets, List<ICommentGroup> groups) {
 
-		assertEquals(expectedTargetSets.size(), groups.size());
+		assertThat(groups.size(), is(expectedTargetSets.size()));
 
 		Iterator<Set<EObject>> iterator = expectedTargetSets.iterator();
 		for (ICommentGroup group : groups) {
 			Set<EObject> expectedTargets = iterator.next();
-			assertTrue(group instanceof MervinCommentGroup);
+			assertThat(group, instanceOf(MervinCommentGroup.class));
 			Set<EObject> targets = ((MervinCommentGroup) group).getTargets();
-			assertEquals(expectedTargets, targets);
+			assertThat(targets, is(expectedTargets));
 		}
 
 	}
