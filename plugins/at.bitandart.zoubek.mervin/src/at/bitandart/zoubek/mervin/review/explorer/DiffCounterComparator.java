@@ -31,8 +31,8 @@ public class DiffCounterComparator implements Comparator<Object> {
 	 * number of differences of two objects.
 	 * 
 	 * @param diffCounter
-	 *            the {@link IDifferenceCounter} that provides the difference count
-	 *            for the objects to compare.
+	 *            the {@link IDifferenceCounter} that provides the difference
+	 *            count for the objects to compare.
 	 */
 	public DiffCounterComparator(IDifferenceCounter diffCounter) {
 		this.diffCounter = diffCounter;
@@ -44,8 +44,8 @@ public class DiffCounterComparator implements Comparator<Object> {
 	 * number of differences of the given kind of two objects.
 	 * 
 	 * @param diffCounter
-	 *            the {@link IDifferenceCounter} that provides the difference count
-	 *            for the objects to compare.
+	 *            the {@link IDifferenceCounter} that provides the difference
+	 *            count for the objects to compare.
 	 * @param kind
 	 *            the difference kind to restrict the comparison to, pass null
 	 *            for no restriction.
@@ -58,7 +58,7 @@ public class DiffCounterComparator implements Comparator<Object> {
 	@Override
 	public int compare(Object o1, Object o2) {
 		int diff = 0;
-		if (kind == null) {
+		if (kind != null) {
 			diff = diffCounter.getDiffCount(o1, kind) - diffCounter.getDiffCount(o2, kind);
 		} else {
 			diff = diffCounter.getDiffCount(o1) - diffCounter.getDiffCount(o2);
