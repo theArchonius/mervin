@@ -34,7 +34,7 @@ public class TotalDiffTypeLabelProvider extends DiffTypeOverviewLabelProvider {
 
 	@Override
 	protected int getMaximumCount(Object element) {
-		return getDiffCounter().getTotalDiffCount(element);
+		return Math.max(getDiffCounter().getTotalDiffCount(element), 0);
 	}
 
 }

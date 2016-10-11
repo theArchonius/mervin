@@ -25,7 +25,8 @@ public interface IDifferenceCounter {
 	 * @param object
 	 *            the object to obtain the maximum difference count for.
 	 * @return the maximum difference count within the scope that contains the
-	 *         given object. This value must be always less that or equal to
+	 *         given object or -1 if the count cannot be determined. This value
+	 *         must be always less that or equal to
 	 *         {@link #getTotalDiffCount(Object)} for the same object.
 	 */
 	public int getMaximumDiffCount(Object object);
@@ -35,7 +36,8 @@ public interface IDifferenceCounter {
 	 * @param object
 	 *            the object to obtain the total difference count for.
 	 * @return the total difference count within the scope that contains the
-	 *         given object. This value must be always greater that or equal to
+	 *         given object or -1 if the count cannot be determined. This value
+	 *         must be always greater that or equal to
 	 *         {@link #getMaximumDiffCount(Object)} for the same object. Also
 	 *         this value must be equal to the sum of all difference counts of
 	 *         all elements within the same scope as the given object.
@@ -45,9 +47,10 @@ public interface IDifferenceCounter {
 	/**
 	 * @param object
 	 *            the object to obtain the difference count for.
-	 * @return the difference count of the object. The value must be the the
-	 *         same as the sum {@link #getDiffCount(Object, DifferenceKind)}
-	 *         with all possible {@link DifferenceKind} for the same object.
+	 * @return the difference count of the object or -1 if the count cannot be
+	 *         determined. The value must be the the same as the sum
+	 *         {@link #getDiffCount(Object, DifferenceKind)} with all possible
+	 *         {@link DifferenceKind} for the same object.
 	 */
 	public int getDiffCount(Object object);
 
@@ -58,7 +61,7 @@ public interface IDifferenceCounter {
 	 * @param kind
 	 *            the kind to obtain the difference count for.
 	 * @return the count of differences with the given {@link DifferenceKind} of
-	 *         the object.
+	 *         the object or -1 if the count cannot be determined.
 	 */
 	public int getDiffCount(Object object, DifferenceKind kind);
 

@@ -46,7 +46,7 @@ public class ModelReviewContentViewerDiffCounter implements IDifferenceCounter {
 		if (patchSet != null) {
 			return patchSet.getMaxObjectChangeCount();
 		}
-		return 0;
+		return -1;
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class ModelReviewContentViewerDiffCounter implements IDifferenceCounter {
 			return patchSet.getModelComparison().getDifferences().size()
 					+ patchSet.getDiagramComparison().getDifferences().size();
 		}
-		return 0;
+		return -1;
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class ModelReviewContentViewerDiffCounter implements IDifferenceCounter {
 
 		}
 
-		return 0;
+		return -1;
 	}
 
 	@Override
@@ -96,7 +96,7 @@ public class ModelReviewContentViewerDiffCounter implements IDifferenceCounter {
 
 		}
 
-		return 0;
+		return -1;
 	}
 
 	/**

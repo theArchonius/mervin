@@ -33,7 +33,7 @@ public class ElementDiffTypeLabelProvider extends DiffTypeOverviewLabelProvider 
 
 	@Override
 	protected int getMaximumCount(Object element) {
-		return getDiffCounter().getDiffCount(element);
+		return Math.max(getDiffCounter().getDiffCount(element), 0);
 	}
 
 	@Override

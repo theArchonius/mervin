@@ -49,8 +49,8 @@ public abstract class DiffTypeOverviewLabelProvider extends OwnerDrawLabelProvid
 	 * @param styleAdvisor
 	 *            the style advisor used to obtain the colors for the bars.
 	 * @param diffCounter
-	 *            the {@link IDifferenceCounter} that is used to obtain the count
-	 *            values for the stacked bars.
+	 *            the {@link IDifferenceCounter} that is used to obtain the
+	 *            count values for the stacked bars.
 	 */
 	public DiffTypeOverviewLabelProvider(IChangeTypeStyleAdvisor styleAdvisor, IDifferenceCounter diffCounter) {
 		this.styleAdvisor = styleAdvisor;
@@ -142,7 +142,7 @@ public abstract class DiffTypeOverviewLabelProvider extends OwnerDrawLabelProvid
 		int xOffset = 0;
 		boolean drawSeparator = false;
 		for (DifferenceKind kind : kinds) {
-			int diffKindCount = diffCounter.getDiffCount(element, kind);
+			int diffKindCount = Math.max(diffCounter.getDiffCount(element, kind), 0);
 			/*
 			 * the int cast is safe as the mapped value will be in the range
 			 * from 0 to bounds.width - the latter is an integer, so the result
@@ -175,8 +175,8 @@ public abstract class DiffTypeOverviewLabelProvider extends OwnerDrawLabelProvid
 	}
 
 	/**
-	 * @return the {@link IDifferenceCounter} used to obtain the count values for the
-	 *         bars.
+	 * @return the {@link IDifferenceCounter} used to obtain the count values
+	 *         for the bars.
 	 */
 	public IDifferenceCounter getDiffCounter() {
 		return diffCounter;
