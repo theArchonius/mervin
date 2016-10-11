@@ -51,7 +51,7 @@
         <children xsi:type="menu:HandledToolItem" xmi:id="_gfak8ISUEeadQ7Sb89he3A" elementId="at.bitandart.zoubek.mervin.toolbar.diffviewer.highlights.clear" label="Clear Highlights" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/etool/clearHighlights_16.png" tooltip="Clear Highlights" command="_Vi6tID0BEeaYz6GEb20auA"/>
       </toolbar>
     </elements>
-    <elements xsi:type="basic:PartDescriptor" xmi:id="_AaxDUP1dEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.review" label="Review Explorer" category="Mervin" closeable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.review.ReviewExplorer">
+    <elements xsi:type="basic:PartDescriptor" xmi:id="_AaxDUP1dEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.review" label="Review Explorer" category="Mervin" closeable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.review.explorer.ReviewExplorer">
       <tags>View</tags>
       <tags>categoryTag:Mervin</tags>
       <menus xmi:id="_nRSKsDh_EeaJkOmvJc6KWA" elementId="at.bitandart.zoubek.mervin.menu.view.review.explorer">

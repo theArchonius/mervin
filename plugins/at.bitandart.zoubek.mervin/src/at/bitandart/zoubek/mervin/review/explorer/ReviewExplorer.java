@@ -8,7 +8,7 @@
  * Contributors:
  *    Florian Zoubek - initial API and implementation
  *******************************************************************************/
-package at.bitandart.zoubek.mervin.review;
+package at.bitandart.zoubek.mervin.review.explorer;
 
 import java.text.MessageFormat;
 import java.util.Collection;
@@ -76,12 +76,11 @@ import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.patchset.history.HighlightStyler;
 import at.bitandart.zoubek.mervin.patchset.history.IPatchSetHistoryEntry;
 import at.bitandart.zoubek.mervin.patchset.history.ISimilarityHistoryService.DiffWithSimilarity;
-import at.bitandart.zoubek.mervin.review.explorer.DiffCounterComparator;
-import at.bitandart.zoubek.mervin.review.explorer.DiffTypeOverviewLabelProvider;
-import at.bitandart.zoubek.mervin.review.explorer.ElementDiffTypeLabelProvider;
-import at.bitandart.zoubek.mervin.review.explorer.IDifferenceCounter;
-import at.bitandart.zoubek.mervin.review.explorer.ModelReviewContentViewerDiffCounter;
-import at.bitandart.zoubek.mervin.review.explorer.TotalDiffTypeLabelProvider;
+import at.bitandart.zoubek.mervin.review.HighlightHoveredTreeItemMouseTracker;
+import at.bitandart.zoubek.mervin.review.HighlightMode;
+import at.bitandart.zoubek.mervin.review.HighlightSelectionListener;
+import at.bitandart.zoubek.mervin.review.IReviewHighlightProvidingPart;
+import at.bitandart.zoubek.mervin.review.ModelReviewEditorTrackingView;
 import at.bitandart.zoubek.mervin.util.vis.HSB;
 import at.bitandart.zoubek.mervin.util.vis.NumericColoredColumnLabelProvider;
 import at.bitandart.zoubek.mervin.util.vis.ThreeWayLabelTreeViewerComparator;
