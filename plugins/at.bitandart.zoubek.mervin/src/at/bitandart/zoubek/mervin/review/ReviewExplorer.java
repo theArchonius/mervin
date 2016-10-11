@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.eclipse.core.runtime.IAdaptable;
@@ -63,6 +64,8 @@ import org.eclipse.swt.widgets.TreeColumn;
 
 import at.bitandart.zoubek.mervin.IReviewHighlightService;
 import at.bitandart.zoubek.mervin.IReviewHighlightServiceListener;
+import at.bitandart.zoubek.mervin.draw2d.figures.DefaultChangeTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.IChangeTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch;
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramResource;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelPatch;
@@ -73,6 +76,12 @@ import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.patchset.history.HighlightStyler;
 import at.bitandart.zoubek.mervin.patchset.history.IPatchSetHistoryEntry;
 import at.bitandart.zoubek.mervin.patchset.history.ISimilarityHistoryService.DiffWithSimilarity;
+import at.bitandart.zoubek.mervin.review.explorer.DiffCounterComparator;
+import at.bitandart.zoubek.mervin.review.explorer.DiffTypeOverviewLabelProvider;
+import at.bitandart.zoubek.mervin.review.explorer.ElementDiffTypeLabelProvider;
+import at.bitandart.zoubek.mervin.review.explorer.IDifferenceCounter;
+import at.bitandart.zoubek.mervin.review.explorer.ModelReviewContentViewerDiffCounter;
+import at.bitandart.zoubek.mervin.review.explorer.TotalDiffTypeLabelProvider;
 import at.bitandart.zoubek.mervin.util.vis.HSB;
 import at.bitandart.zoubek.mervin.util.vis.NumericColoredColumnLabelProvider;
 import at.bitandart.zoubek.mervin.util.vis.ThreeWayLabelTreeViewerComparator;
@@ -113,6 +122,8 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 
 	private HighlightStyler highlightStyler;
 
+	private IChangeTypeStyleAdvisor styleAdvisor;
+
 	/**
 	 * the complete list of filtered and derived elements to highlight in this
 	 * view.
@@ -151,6 +162,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		syncMenuAndToolbarItemState(modelService, part);
 
 		highlightStyler = new HighlightStyler(display);
+		styleAdvisor = new DefaultChangeTypeStyleAdvisor();
 
 		mainPanel = new Composite(parent, SWT.NONE);
 		mainPanel.setLayout(new GridLayout());
@@ -190,13 +202,40 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		labelColumn.getColumn().addSelectionListener(
 				new ThreeWayObjectTreeViewerComparator(reviewTreeViewer, labelColumn, labelColumnLabelProvider));
 
+		// total diff type overview column
+		IDifferenceCounter diffCounter = new ModelReviewContentViewerDiffCounter(reviewTreeViewer);
+		TreeViewerColumn totalDiffTypeColumn = new TreeViewerColumn(reviewTreeViewer, SWT.NONE);
+		totalDiffTypeColumn.getColumn().setResizable(true);
+		totalDiffTypeColumn.getColumn().setMoveable(false);
+		totalDiffTypeColumn.getColumn().setText("");
+		totalDiffTypeColumn.getColumn().setAlignment(SWT.CENTER);
+		totalDiffTypeColumn.getColumn().setToolTipText("Total diff type overview");
+		DiffTypeOverviewLabelProvider totalDiffTypeLabelProvider = new TotalDiffTypeLabelProvider(styleAdvisor,
+				diffCounter);
+		totalDiffTypeColumn.setLabelProvider(totalDiffTypeLabelProvider);
+		totalDiffTypeColumn.getColumn().addSelectionListener(new ThreeWayObjectTreeViewerComparator(reviewTreeViewer,
+				totalDiffTypeColumn, new DiffCounterComparator(diffCounter)));
+
+		// element diff type overview column
+		TreeViewerColumn elementDiffTypeColumn = new TreeViewerColumn(reviewTreeViewer, SWT.NONE);
+		elementDiffTypeColumn.getColumn().setResizable(true);
+		elementDiffTypeColumn.getColumn().setMoveable(false);
+		elementDiffTypeColumn.getColumn().setText("");
+		elementDiffTypeColumn.getColumn().setAlignment(SWT.CENTER);
+		elementDiffTypeColumn.getColumn().setToolTipText("Element diff type overview");
+		DiffTypeOverviewLabelProvider elementDiffTypeLabelProvider = new ElementDiffTypeLabelProvider(styleAdvisor,
+				diffCounter);
+		elementDiffTypeColumn.setLabelProvider(elementDiffTypeLabelProvider);
+		elementDiffTypeColumn.getColumn().addSelectionListener(new ThreeWayObjectTreeViewerComparator(reviewTreeViewer,
+				elementDiffTypeColumn, new DiffCounterComparator(diffCounter)));
+
 		// change count column
 		TreeViewerColumn changeCountColumn = new TreeViewerColumn(reviewTreeViewer, SWT.NONE);
 		changeCountColumn.getColumn().setResizable(true);
 		changeCountColumn.getColumn().setMoveable(false);
 		changeCountColumn.getColumn().setText("#C");
 		changeCountColumn.getColumn().setAlignment(SWT.CENTER);
-		changeCountColumn.getColumn().setToolTipText("Number of changed elements");
+		changeCountColumn.getColumn().setToolTipText("Number of contained differences");
 		ChangeCountColumnLabelProvider changeCountColumnLabelProvider = new ChangeCountColumnLabelProvider(
 				reviewTreeViewer, Display.getCurrent().getSystemColor(SWT.COLOR_WHITE),
 				Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
@@ -210,7 +249,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		refCountColumn.getColumn().setMoveable(false);
 		refCountColumn.getColumn().setText("#RC");
 		refCountColumn.getColumn().setAlignment(SWT.CENTER);
-		refCountColumn.getColumn().setToolTipText("Number of references to the tgiven elements");
+		refCountColumn.getColumn().setToolTipText("Number of references to the element");
 		ReferencedChangeCountColumnLabelProvider refChangeCountColumnlabelProvider = new ReferencedChangeCountColumnLabelProvider(
 				reviewTreeViewer, Display.getCurrent().getSystemColor(SWT.COLOR_WHITE),
 				Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
@@ -253,6 +292,16 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		});
 
 		updateValues();
+	}
+
+	@PreDestroy
+	private void preDestroy() {
+		if (highlightStyler != null) {
+			highlightStyler.dispose();
+		}
+		if (styleAdvisor != null) {
+			styleAdvisor.dispose();
+		}
 	}
 
 	/**
