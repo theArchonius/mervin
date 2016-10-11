@@ -238,7 +238,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		changeCountColumn.getColumn().setToolTipText("Number of contained differences");
 		ChangeCountColumnLabelProvider changeCountColumnLabelProvider = new ChangeCountColumnLabelProvider(
 				reviewTreeViewer, Display.getCurrent().getSystemColor(SWT.COLOR_WHITE),
-				Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
+				Display.getCurrent().getSystemColor(SWT.COLOR_BLACK), diffCounter);
 		changeCountColumn.setLabelProvider(changeCountColumnLabelProvider);
 		changeCountColumn.getColumn().addSelectionListener(new ThreeWayLabelTreeViewerComparator(reviewTreeViewer,
 				changeCountColumn, changeCountColumnLabelProvider));
@@ -760,19 +760,17 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 	 */
 	private class ChangeCountColumnLabelProvider extends ModelReviewCounterColumnLabelProvider {
 
-		public ChangeCountColumnLabelProvider(ContentViewer viewer, Color fgBright, Color fgDark) {
+		private IDifferenceCounter diffCounter;
+
+		public ChangeCountColumnLabelProvider(ContentViewer viewer, Color fgBright, Color fgDark,
+				IDifferenceCounter diffCounter) {
 			super(viewer, new HSB(205.0f, 0.f, 1.0f), new HSB(205.0f, 0.59f, 0.32f), fgBright, fgDark);
+			this.diffCounter = diffCounter;
 		}
 
 		@Override
 		public float getMaxValue(Object element) {
-
-			PatchSet patchSet = findPatchSet(element);
-			if (patchSet != null) {
-				return patchSet.getMaxObjectChangeCount();
-			}
-
-			return 0;
+			return Math.max(diffCounter.getMaximumDiffCount(element), 0);
 		}
 
 		@Override
@@ -782,31 +780,12 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 
 		@Override
 		public float getValue(Object element) {
-
-			PatchSet patchSet = findPatchSet(element);
-			if (patchSet != null) {
-
-				Map<EObject, Integer> objectChangeCount = patchSet.getObjectChangeCount();
-				if (objectChangeCount.containsKey(element)) {
-					return objectChangeCount.get(element);
-				}
-
-			}
-
-			return 0;
+			return Math.max(diffCounter.getDiffCount(element), 0);
 		}
 
 		@Override
 		public boolean hasValue(Object element) {
-
-			PatchSet patchSet = findPatchSet(element);
-			if (patchSet != null) {
-
-				Map<EObject, Integer> objectChangeCount = patchSet.getObjectChangeCount();
-				return objectChangeCount.containsKey(element);
-			}
-
-			return false;
+			return diffCounter.getDiffCount(element) >= 0;
 		}
 
 	}
