@@ -41,4 +41,9 @@ public class InvolvedDiagramsTreeItem implements ITreeItemContainer {
 	public String getText() {
 		return "Involved diagrams";
 	}
+
+	@Override
+	public Object getParent() {
+		return patchSet;
+	}
 }

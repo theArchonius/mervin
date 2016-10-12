@@ -76,8 +76,8 @@ import at.bitandart.zoubek.mervin.review.HighlightMode;
 import at.bitandart.zoubek.mervin.review.HighlightSelectionListener;
 import at.bitandart.zoubek.mervin.review.IReviewHighlightProvidingPart;
 import at.bitandart.zoubek.mervin.review.ModelReviewEditorTrackingView;
-import at.bitandart.zoubek.mervin.review.explorer.content.ModelReviewContentProvider;
 import at.bitandart.zoubek.mervin.review.explorer.content.ITreeItemContainer;
+import at.bitandart.zoubek.mervin.review.explorer.content.ModelReviewContentProvider;
 import at.bitandart.zoubek.mervin.util.vis.HSB;
 import at.bitandart.zoubek.mervin.util.vis.NumericColoredColumnLabelProvider;
 import at.bitandart.zoubek.mervin.util.vis.ThreeWayLabelTreeViewerComparator;
@@ -766,7 +766,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 
 		@Override
 		public float getMaxValue(Object element) {
-			return Math.max(diffCounter.getMaximumDiffCount(element), 0);
+			return Math.max(diffCounter.getTotalDiffCount(element), 0);
 		}
 
 		@Override

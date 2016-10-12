@@ -22,17 +22,22 @@ import org.eclipse.jface.viewers.TreeViewer;
 public interface ITreeItemContainer {
 
 	/**
-	 * @return true if the container has children, false otherwise
+	 * @return true if the container has children, false otherwise.
 	 */
 	public boolean hasChildren();
 
 	/**
-	 * @return an array of all children of this container
+	 * @return an array of all children of this container.
 	 */
 	public Object[] getChildren();
 
 	/**
-	 * @return the label text for this container
+	 * @return the label text for this container.
 	 */
 	public String getText();
+
+	/**
+	 * @return the parent of the container or null, if it has no parent.
+	 */
+	public Object getParent();
 }

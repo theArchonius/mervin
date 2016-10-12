@@ -41,4 +41,9 @@ public class InvolvedModelsTreeItem implements ITreeItemContainer {
 	public String getText() {
 		return "Involved models";
 	}
+
+	@Override
+	public Object getParent() {
+		return patchSet;
+	}
 }

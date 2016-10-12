@@ -86,6 +86,10 @@ public class ModelReviewContentProvider implements ITreeContentProvider {
 
 	@Override
 	public Object getParent(Object element) {
+
+		if (element instanceof ITreeItemContainer) {
+			return ((ITreeItemContainer) element).getParent();
+		}
 		if (element instanceof ModelReview) {
 			return null;
 		}

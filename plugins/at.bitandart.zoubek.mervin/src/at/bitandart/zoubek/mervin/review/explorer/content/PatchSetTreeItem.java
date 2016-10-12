@@ -41,4 +41,9 @@ public class PatchSetTreeItem implements ITreeItemContainer {
 	public String getText() {
 		return "Patches";
 	}
+
+	@Override
+	public Object getParent() {
+		return patchSet.getReview();
+	}
 }
