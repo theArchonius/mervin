@@ -61,10 +61,24 @@ public class ThreeWayTreeViewerComparator extends ViewerComparator implements Se
 			sortDirection = SWT.UP;
 			break;
 		}
+		/*
+		 * store expanded state and re-apply it after changing the comparator
+		 * and refreshing to avoid Bug 113675
+		 * (https://bugs.eclipse.org/bugs/show_bug.cgi?id=113675)
+		 */
+		Object[] expandedElements = viewer.getExpandedElements();
+
 		tree.setSortDirection(sortDirection);
 		viewer.setComparator(this);
 		tree.setSortColumn(treeColumn.getColumn());
 		viewer.refresh();
+
+		/*
+		 * re-apply the expanded state after changing the comparator and
+		 * refreshing to avoid Bug 113675
+		 * (https://bugs.eclipse.org/bugs/show_bug.cgi?id=113675)
+		 */
+		viewer.setExpandedElements(expandedElements);
 
 	}
 
