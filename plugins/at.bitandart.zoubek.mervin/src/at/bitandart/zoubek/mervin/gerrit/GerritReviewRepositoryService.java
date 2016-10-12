@@ -478,12 +478,10 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 		for (Patch patch : patchSet.getPatches()) {
 			if (patch instanceof ModelPatch || patch instanceof DiagramPatch) {
 				org.eclipse.emf.common.util.URI newUri = org.eclipse.emf.common.util.URI
-						.createURI(GitURIParser.GIT_COMMIT_SCHEME + "://" + repoPath + "/" + commitHash + "/"
-								+ patch.getNewPath());
+						.createURI(GitURIParser.GIT_COMMIT_SCHEME + ":///" + commitHash + "/" + patch.getNewPath());
 
-				org.eclipse.emf.common.util.URI oldUri = org.eclipse.emf.common.util.URI
-						.createURI(GitURIParser.GIT_COMMIT_SCHEME + "://" + repoPath + "/" + parentCommitHash + "/"
-								+ patch.getOldPath());
+				org.eclipse.emf.common.util.URI oldUri = org.eclipse.emf.common.util.URI.createURI(
+						GitURIParser.GIT_COMMIT_SCHEME + ":///" + parentCommitHash + "/" + patch.getOldPath());
 
 				if (patch.getChangeType() != PatchChangeType.DELETE) {
 					// if the patch has been deleted no new resource exists
@@ -729,14 +727,17 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 				if (uri.scheme().equals("file")) {
 					org.eclipse.emf.common.util.URI oldPrefix = org.eclipse.emf.common.util.URI.createURI("file://");
 					org.eclipse.emf.common.util.URI newPrefix = org.eclipse.emf.common.util.URI
-							.createURI(GitURIParser.GIT_COMMIT_SCHEME + "://" + repoPath + "/" + commitHash + "/");
+							.createURI(GitURIParser.GIT_COMMIT_SCHEME + ":///" + commitHash + "/");
 					normalizedURI = normalizedURI.replacePrefix(oldPrefix, newPrefix);
 				}
 				return normalizedURI;
 			}
 		});
 		EList<URIHandler> uriHandlers = resourceSet.getURIConverter().getURIHandlers();
-		uriHandlers.add(ContextInjectionFactory.make(ReadOnlyGitCommitURIHandler.class, eclipseContext));
+		ReadOnlyGitCommitURIHandler uriHandler = ContextInjectionFactory.make(ReadOnlyGitCommitURIHandler.class,
+				eclipseContext);
+		uriHandler.setDefaultRepoPath(repoPath);
+		uriHandlers.add(uriHandler);
 		/*
 		 * make sure the Git commit URI handler is placed before the standard
 		 * URI Handler which handles by default any URI (otherwise the default
@@ -888,8 +889,8 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 			String commitHash = commentRef.getObjectId().name();
 
 			/* prepare the resource set and the resource for the comments */
-			org.eclipse.emf.common.util.URI commentsUri = org.eclipse.emf.common.util.URI.createURI(
-					GitURIParser.GIT_COMMIT_SCHEME + "://" + repoPath + "/" + commitHash + "/" + COMMENTS_FILE_URI);
+			org.eclipse.emf.common.util.URI commentsUri = org.eclipse.emf.common.util.URI
+					.createURI(GitURIParser.GIT_COMMIT_SCHEME + ":///" + commitHash + "/" + COMMENTS_FILE_URI);
 			ResourceSet resourceSet = createGitAwareResourceSet(commitHash, repoPath, modelResourceSets);
 			Resource commentsResource = resourceSet.createResource(commentsUri);
 
@@ -1178,6 +1179,13 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 		Set<EObject> objectsToCopy = new HashSet<>();
 		objectsToCopy.addAll(originalComments);
 		objectsToCopy.addAll(modelReview.getPatchSets());
+		/* copy users */
+		for (Comment originalComment : originalComments) {
+			User author = originalComment.getAuthor();
+			if (!objectsToCopy.contains(author)) {
+				objectsToCopy.add(author);
+			}
+		}
 
 		Copier copier = new Copier();
 		copier.copyAll(objectsToCopy);

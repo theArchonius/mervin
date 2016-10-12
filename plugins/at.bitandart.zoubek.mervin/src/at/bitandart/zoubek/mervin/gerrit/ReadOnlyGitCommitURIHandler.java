@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2016 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,7 +36,12 @@ public class ReadOnlyGitCommitURIHandler extends URIHandlerImpl {
 
 	@Inject
 	private IEclipseContext eclipseContext;
-	
+
+	/**
+	 * the repository path used if no repository path is given in the URI.
+	 */
+	private String defaultRepoPath = "";
+
 	public ReadOnlyGitCommitURIHandler() {
 	}
 
@@ -46,9 +51,8 @@ public class ReadOnlyGitCommitURIHandler extends URIHandlerImpl {
 	}
 
 	@Override
-	public InputStream createInputStream(org.eclipse.emf.common.util.URI uri,
-			Map<?, ?> options) throws IOException {
-		GitURIParser gitURIParser = new GitURIParser(uri);
+	public InputStream createInputStream(org.eclipse.emf.common.util.URI uri, Map<?, ?> options) throws IOException {
+		GitURIParser gitURIParser = new GitURIParser(uri, defaultRepoPath);
 		ContextInjectionFactory.inject(gitURIParser, eclipseContext);
 
 		return gitURIParser.getObjectLoader().openStream();
@@ -58,26 +62,22 @@ public class ReadOnlyGitCommitURIHandler extends URIHandlerImpl {
 	 * throws an {@link IOException} as this URIHandler is read only
 	 */
 	@Override
-	public OutputStream createOutputStream(org.eclipse.emf.common.util.URI uri,
-			Map<?, ?> options) throws IOException {
-		throw new IOException(
-				"Cannot write to an existing git object, git objects are read-only");
+	public OutputStream createOutputStream(org.eclipse.emf.common.util.URI uri, Map<?, ?> options) throws IOException {
+		throw new IOException("Cannot write to an existing git object, git objects are read-only");
 	}
 
 	/**
 	 * throws an {@link IOException} as this URIHandler is read only
 	 */
 	@Override
-	public void delete(org.eclipse.emf.common.util.URI uri, Map<?, ?> options)
-			throws IOException {
-		throw new IOException(
-				"Cannot delete an existing git object, git objects are read-only");
+	public void delete(org.eclipse.emf.common.util.URI uri, Map<?, ?> options) throws IOException {
+		throw new IOException("Cannot delete an existing git object, git objects are read-only");
 	}
 
 	@Override
 	public boolean exists(org.eclipse.emf.common.util.URI uri, Map<?, ?> options) {
 
-		GitURIParser gitURIParser = new GitURIParser(uri);
+		GitURIParser gitURIParser = new GitURIParser(uri, defaultRepoPath);
 		try {
 			return gitURIParser.getObjectId() != null;
 		} catch (IOException e) {
@@ -87,39 +87,26 @@ public class ReadOnlyGitCommitURIHandler extends URIHandlerImpl {
 	}
 
 	@Override
-	public Map<String, ?> getAttributes(org.eclipse.emf.common.util.URI uri,
-			Map<?, ?> options) {
+	public Map<String, ?> getAttributes(org.eclipse.emf.common.util.URI uri, Map<?, ?> options) {
 
 		Map<String, Object> result = new HashMap<String, Object>();
-		GitURIParser gitURIParser = new GitURIParser(uri);
+		GitURIParser gitURIParser = new GitURIParser(uri, defaultRepoPath);
 		try {
 			Set<String> requestedAttributes = getRequestedAttributes(options);
-			if (requestedAttributes == null
-					|| requestedAttributes
-							.contains(URIConverter.ATTRIBUTE_TIME_STAMP)) {
-				result.put(URIConverter.ATTRIBUTE_TIME_STAMP, gitURIParser
-						.getCommit().getCommitTime());
+			if (requestedAttributes == null || requestedAttributes.contains(URIConverter.ATTRIBUTE_TIME_STAMP)) {
+				result.put(URIConverter.ATTRIBUTE_TIME_STAMP, gitURIParser.getCommit().getCommitTime());
 			}
-			if (requestedAttributes == null
-					|| requestedAttributes
-							.contains(URIConverter.ATTRIBUTE_LENGTH)) {
-				result.put(URIConverter.ATTRIBUTE_LENGTH, gitURIParser
-						.getObjectLoader().getSize());
+			if (requestedAttributes == null || requestedAttributes.contains(URIConverter.ATTRIBUTE_LENGTH)) {
+				result.put(URIConverter.ATTRIBUTE_LENGTH, gitURIParser.getObjectLoader().getSize());
 			}
-			if (requestedAttributes == null
-					|| requestedAttributes
-							.contains(URIConverter.ATTRIBUTE_READ_ONLY)) {
+			if (requestedAttributes == null || requestedAttributes.contains(URIConverter.ATTRIBUTE_READ_ONLY)) {
 				result.put(URIConverter.ATTRIBUTE_READ_ONLY, true);
 			}
-			if (requestedAttributes == null
-					|| requestedAttributes
-							.contains(URIConverter.ATTRIBUTE_HIDDEN)) {
+			if (requestedAttributes == null || requestedAttributes.contains(URIConverter.ATTRIBUTE_HIDDEN)) {
 				// not supported by git
 				result.put(URIConverter.ATTRIBUTE_HIDDEN, false);
 			}
-			if (requestedAttributes == null
-					|| requestedAttributes
-							.contains(URIConverter.ATTRIBUTE_DIRECTORY)) {
+			if (requestedAttributes == null || requestedAttributes.contains(URIConverter.ATTRIBUTE_DIRECTORY)) {
 				// we don't support directories
 				result.put(URIConverter.ATTRIBUTE_DIRECTORY, false);
 			}
@@ -134,9 +121,20 @@ public class ReadOnlyGitCommitURIHandler extends URIHandlerImpl {
 	 * does nothing, as this URIHandler is read only.
 	 */
 	@Override
-	public void setAttributes(org.eclipse.emf.common.util.URI uri,
-			Map<String, ?> attributes, Map<?, ?> options) throws IOException {
+	public void setAttributes(org.eclipse.emf.common.util.URI uri, Map<String, ?> attributes, Map<?, ?> options)
+			throws IOException {
 		// Nothing to do here as the git object is read only
+	}
+
+	/**
+	 * sets the repository path used if no repository path is given in the URI.
+	 * 
+	 * @param defaultRepoPath
+	 *            the repository path used if no repository path is given in the
+	 *            URI.
+	 */
+	public void setDefaultRepoPath(String defaultRepoPath) {
+		this.defaultRepoPath = defaultRepoPath;
 	}
 
 }

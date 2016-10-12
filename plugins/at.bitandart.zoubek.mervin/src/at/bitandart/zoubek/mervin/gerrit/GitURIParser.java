@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2016 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,14 +41,20 @@ public class GitURIParser {
 	private org.eclipse.emf.common.util.URI uri;
 
 	private String authority = "";
-	
+
 	/**
 	 * the file path to the git repo, with leading slash.
 	 */
 	private String repoPath = "";
-	
+
 	/**
-	 * the file path to the file in the git commit, <b>without</b> a leading slash.
+	 * the repository path used if no repository path is given in the URI
+	 */
+	private String defaultRepoPath = "";
+
+	/**
+	 * the file path to the file in the git commit, <b>without</b> a leading
+	 * slash.
 	 */
 	private String filePath = "";
 	private String commitHash = "";
@@ -63,15 +69,16 @@ public class GitURIParser {
 	@SuppressWarnings("restriction")
 	@Inject
 	private org.eclipse.e4.core.services.log.Logger logger;
-	
+
 	/**
 	 * the scheme for a commit URI
 	 */
 	public static final String GIT_COMMIT_SCHEME = "git-file";
 
-	public GitURIParser(org.eclipse.emf.common.util.URI uri) {
+	public GitURIParser(org.eclipse.emf.common.util.URI uri, String defaultRepoPath) {
 		super();
 		this.uri = uri;
+		this.defaultRepoPath = defaultRepoPath;
 	}
 
 	/**
@@ -84,11 +91,16 @@ public class GitURIParser {
 	private void parse() throws IOException {
 		StringBuilder repoPathBuilder = new StringBuilder();
 		StringBuilder filePathBuilder = new StringBuilder();
-		repoPathBuilder.append("/");
-		if (uri.hasAuthority()) {
+		if (uri.hasAuthority() && !uri.authority().isEmpty()) {
+			if (repoPathBuilder.length() == 0) {
+				repoPathBuilder.append("/");
+			}
 			authority = uri.authority();
 		}
 		if (uri.hasDevice()) {
+			if (repoPathBuilder.length() == 0) {
+				repoPathBuilder.append("/");
+			}
 			repoPathBuilder.append(uri.device());
 			repoPathBuilder.append("/");
 		}
@@ -99,7 +111,10 @@ public class GitURIParser {
 		// extract repo path
 		while (segmentIt.hasNext() && !ObjectId.isId(currentSegment)) {
 			repoPathBuilder.append(currentSegment);
-			if(!currentSegment.isEmpty()){
+			if (!currentSegment.isEmpty()) {
+				if (repoPathBuilder.length() == 0) {
+					repoPathBuilder.append("/");
+				}
 				repoPathBuilder.append("/");
 			}
 			currentSegment = segmentIt.next();
@@ -121,14 +136,14 @@ public class GitURIParser {
 		}
 		filePathBuilder.append(currentSegment);
 
-		logger.debug("commit hash: "+ commitHash);
-		
+		logger.debug("commit hash: " + commitHash);
+
 		repoPath = repoPathBuilder.toString();
-		logger.debug("repo path: "+ repoPath);
-		
+		logger.debug("repo path: " + repoPath);
+
 		filePath = filePathBuilder.toString();
-		logger.debug("file path: "+ filePath);
-		
+		logger.debug("file path: " + filePath);
+
 		uriParsed = true;
 	}
 
@@ -145,16 +160,19 @@ public class GitURIParser {
 			parse();
 
 		URI repoURI;
+		String repoPath = this.repoPath;
+		if (repoPath == null || repoPath.isEmpty()) {
+			repoPath = defaultRepoPath;
+		}
 		try {
 			repoURI = new URI("file", authority, repoPath, null, null);
-			logger.debug("repo URI: "+ repoURI.toString());
+			logger.debug("repo URI: " + repoURI.toString());
 		} catch (URISyntaxException e) {
 			throw new IOException("Could not determine repository URI");
 		}
 		File repoDir = new File(repoURI);
 		if (!repoDir.isDirectory()) {
-			throw new IOException("Invalid git repository: "
-					+ repoDir.getAbsolutePath());
+			throw new IOException("Invalid git repository: " + repoDir.getAbsolutePath());
 		}
 		Git git = Git.open(repoDir);
 		repository = git.getRepository();
@@ -184,11 +202,9 @@ public class GitURIParser {
 	private void loadObject() throws IOException {
 		if (commit == null)
 			loadCommit();
-		TreeWalk treeWalk = TreeWalk.forPath(repository, filePath,
-				commit.getTree());
+		TreeWalk treeWalk = TreeWalk.forPath(repository, filePath, commit.getTree());
 		if (treeWalk == null) {
-			throw new IOException("Could not find a file at \"" + filePath
-					+ "\" in commit " + commitHash);
+			throw new IOException("Could not find a file at \"" + filePath + "\" in commit " + commitHash);
 		}
 
 		// finally we got the object in question

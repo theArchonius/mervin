@@ -54,7 +54,8 @@ public class SaveReview {
 	@SuppressWarnings("restriction")
 	@Execute
 	public void execute(final Shell shell, final IReviewRepositoryService repoService,
-			final @Named(IMervinContextConstants.ACTIVE_MODEL_REVIEW) ModelReview modelReview, final User reviewer) {
+			final @Named(IMervinContextConstants.ACTIVE_MODEL_REVIEW) ModelReview modelReview,
+			final @Named(IMervinContextConstants.CURRENT_REVIEWER) User reviewer) {
 
 		ProgressMonitorDialog progressMonitorDialog = new ProgressMonitorDialog(shell);
 		try {
