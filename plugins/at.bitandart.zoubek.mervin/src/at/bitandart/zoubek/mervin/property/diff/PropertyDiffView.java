@@ -150,42 +150,45 @@ public class PropertyDiffView extends ModelReviewEditorTrackingView {
 
 		List<SelectionEntry> modelEntries = new ArrayList<>(selection.size());
 
-		Iterator<?> selectionIterator = selection.iterator();
-		int selectionIndex = 1;
-		while (selectionIterator.hasNext()) {
+		if (comparison != null) {
+			Iterator<?> selectionIterator = selection.iterator();
+			int selectionIndex = 1;
+			while (selectionIterator.hasNext()) {
 
-			Object object = selectionIterator.next();
-			EObject selectedSemanticModelElement = diagramModelHelper.getSemanticModel(object);
-			View selectedNotationModelElement = diagramModelHelper.getNotationModel(object);
+				Object object = selectionIterator.next();
+				EObject selectedSemanticModelElement = diagramModelHelper.getSemanticModel(object);
+				View selectedNotationModelElement = diagramModelHelper.getNotationModel(object);
 
-			ModelReview currentModelReview = getCurrentModelReview();
-			if (currentModelReview != null) {
+				ModelReview currentModelReview = getCurrentModelReview();
+				if (currentModelReview != null) {
 
-				View originalNotationModelElement = (View) currentModelReview.getUnifiedModelMap().inverse()
-						.get(selectedNotationModelElement);
+					View originalNotationModelElement = (View) currentModelReview.getUnifiedModelMap().inverse()
+							.get(selectedNotationModelElement);
 
-				if (originalNotationModelElement != null) {
-					selectedNotationModelElement = originalNotationModelElement;
+					if (originalNotationModelElement != null) {
+						selectedNotationModelElement = originalNotationModelElement;
+					}
 				}
+
+				Match semanticModelMatch = comparison.getMatch(selectedSemanticModelElement);
+				Match notationModelMatch = comparison.getMatch(selectedNotationModelElement);
+
+				/*
+				 * create an entry only if the selection contains a model
+				 * element contained in the comparison
+				 */
+				if (semanticModelMatch != null || notationModelMatch != null) {
+					SelectionEntry modelEntry = new SelectionEntry("#" + selectionIndex, semanticModelMatch,
+							notationModelMatch);
+					modelEntries.add(modelEntry);
+
+					// TODO add other (referencing, context, etc...) notation
+					// models
+
+					selectionIndex++;
+				}
+
 			}
-
-			Match semanticModelMatch = comparison.getMatch(selectedSemanticModelElement);
-			Match notationModelMatch = comparison.getMatch(selectedNotationModelElement);
-
-			/*
-			 * create an entry only if the selection contains a model element
-			 * contained in the comparison
-			 */
-			if (semanticModelMatch != null || notationModelMatch != null) {
-				SelectionEntry modelEntry = new SelectionEntry("#" + selectionIndex, semanticModelMatch,
-						notationModelMatch);
-				modelEntries.add(modelEntry);
-
-				// TODO add other (referencing, context, etc...) notation models
-
-				selectionIndex++;
-			}
-
 		}
 
 		return modelEntries;
