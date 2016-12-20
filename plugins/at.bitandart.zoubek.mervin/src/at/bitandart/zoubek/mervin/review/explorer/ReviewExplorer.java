@@ -37,6 +37,7 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.util.Policy;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -178,6 +179,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 				selectionService.setSelection(selection);
 			}
 		});
+		ColumnViewerToolTipSupport.enableFor(reviewTreeViewer);
 
 		Tree reviewTree = reviewTreeViewer.getTree();
 		reviewTree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -514,6 +516,11 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 
 			super.update(cell);
 
+		}
+
+		@Override
+		public String getToolTipText(Object element) {
+			return getText(element);
 		}
 
 		/**

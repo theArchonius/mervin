@@ -10,6 +10,8 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.review.explorer;
 
+import java.util.EnumMap;
+
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -33,7 +35,8 @@ import at.bitandart.zoubek.mervin.util.vis.MathUtil;
  * uses the given {@link IChangeTypeStyleAdvisor} to obtain the colors for each
  * bar, where {@link DifferenceKind#MOVE} is considered as a
  * {@link DifferenceKind#CHANGE}. The diff count is determined by a given
- * {@link IDifferenceCounter}.
+ * {@link IDifferenceCounter}. The tooltip shows more shows the actual number of
+ * differences for each {@link ChangeType}.
  * 
  * @author Florian Zoubek
  *
@@ -119,6 +122,43 @@ public abstract class DiffTypeOverviewLabelProvider extends OwnerDrawLabelProvid
 		drawDiffTypeStackedBars(gc, element, maxCountValue, kinds, bounds);
 		gc.setBackground(previousBackgroundColor);
 
+	}
+
+	@Override
+	public String getToolTipText(Object element) {
+
+		/* show detailed type statistics in the tooltip */
+		EnumMap<ChangeType, Integer> typeCounts = new EnumMap<ChangeType, Integer>(ChangeType.class);
+
+		for (DifferenceKind kind : DifferenceKind.values()) {
+
+			ChangeType changeType = toChangeType(kind);
+			int currentCount = 0;
+			if (typeCounts.containsKey(changeType)) {
+				currentCount = typeCounts.get(changeType).intValue();
+			}
+			currentCount += Math.max(diffCounter.getDiffCount(element, kind), 0);
+			typeCounts.put(changeType, currentCount);
+
+		}
+
+		StringBuilder tooltip = new StringBuilder();
+
+		for (ChangeType changeType : ChangeType.values()) {
+
+			int currentCount = 0;
+			if (typeCounts.containsKey(changeType)) {
+				currentCount = typeCounts.get(changeType).intValue();
+			}
+			if (tooltip.length() != 0) {
+				tooltip.append("\n");
+			}
+			tooltip.append(changeType.toString());
+			tooltip.append(": ");
+			tooltip.append(currentCount);
+
+		}
+		return tooltip.toString();
 	}
 
 	/**
