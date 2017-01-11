@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,8 +24,9 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EContentAdapter;
-import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.gmf.runtime.notation.Diagram;
 
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramResource;
@@ -136,6 +137,12 @@ public class ExtendedPatchSetImpl extends PatchSetImpl {
 
 		if (objectChangeRefCount == null) {
 
+			/*
+			 * TODO Check if this map can be replaced completely with
+			 * ECrossReferenceAdapter or at least can be turned in a "map" that
+			 * uses the adapter directly to save memory
+			 */
+
 			objectChangeRefCount = new HashMap<EObject, Integer>();
 
 			// install notifier
@@ -194,25 +201,41 @@ public class ExtendedPatchSetImpl extends PatchSetImpl {
 
 			Stack<EObject> objectsToVisit = new Stack<>();
 			objectsToVisit.addAll(modelInstance.getObjects());
+			if (!objectsToVisit.isEmpty()) {
 
-			while (!objectsToVisit.isEmpty()) {
+				ResourceSet resourceSet = objectsToVisit.firstElement().eResource().getResourceSet();
 
-				EObject element = objectsToVisit.pop();
+				ECrossReferenceAdapter crossReferenceAdapter = ECrossReferenceAdapter
+						.getCrossReferenceAdapter(resourceSet);
+				if (crossReferenceAdapter == null) {
 
-				// calculate references count
-
-				Collection<Setting> references = EcoreUtil.UsageCrossReferencer.find(element,
-						element.eResource().getResourceSet());
-
-				int referenceCount = references.size();
-				if (referenceCount > maxObjectChangeRefCount) {
-					maxObjectChangeRefCount = referenceCount;
+					// install adapter if none exists
+					crossReferenceAdapter = new ECrossReferenceAdapter();
+					crossReferenceAdapter.setTarget(resourceSet);
 				}
-				objectChangeRefCount.put(element, referenceCount);
 
-				// add contained objects
+				while (!objectsToVisit.isEmpty()) {
 
-				objectsToVisit.addAll(element.eContents());
+					EObject element = objectsToVisit.pop();
+
+					/*
+					 * use the cross reference adapter to determine the
+					 * reference count
+					 */
+
+					Collection<Setting> references = crossReferenceAdapter.getInverseReferences(element, true);
+
+					int referenceCount = references.size();
+					if (referenceCount > maxObjectChangeRefCount) {
+						maxObjectChangeRefCount = referenceCount;
+					}
+					objectChangeRefCount.put(element, referenceCount);
+
+					// add contained objects
+
+					objectsToVisit.addAll(element.eContents());
+				}
+
 			}
 		}
 
