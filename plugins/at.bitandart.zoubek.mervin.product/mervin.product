@@ -888,19 +888,19 @@ This Agreement is governed by the laws of the State of New York and the intellec
    </plugins>
 
    <features>
-      <feature id="org.eclipse.egit" version="4.3.0.201602111554"/>
-      <feature id="org.eclipse.jgit" version="4.3.0.201602100504"/>
+      <feature id="org.eclipse.egit"/>
+      <feature id="org.eclipse.jgit"/>
       <feature id="org.eclipse.emf" version="2.11.2.v20160208-0841"/>
       <feature id="org.eclipse.emf.codegen" version="2.11.0.v20160208-0841"/>
       <feature id="org.eclipse.emf.codegen.ui" version="2.8.0.v20160208-0841"/>
       <feature id="org.eclipse.emf.common" version="2.11.1.v20160208-0816"/>
       <feature id="org.eclipse.emf.common.ui" version="2.10.1.v20160208-0841"/>
-      <feature id="org.eclipse.emf.compare" version="3.2.0.201602111426"/>
-      <feature id="org.eclipse.emf.compare.diagram.gmf" version="3.2.0.201602111426"/>
-      <feature id="org.eclipse.emf.compare.egit" version="1.1.0.201602111426"/>
-      <feature id="org.eclipse.emf.compare.ide.ui" version="3.2.0.201602111426"/>
-      <feature id="org.eclipse.emf.compare.diagram.papyrus" version="3.2.0.201602111426"/>
-      <feature id="org.eclipse.emf.compare.uml2" version="3.2.0.201602111426"/>
+      <feature id="org.eclipse.emf.compare" version="3.3.0.201610271310"/>
+      <feature id="org.eclipse.emf.compare.diagram.gmf" version="3.3.0.201610271310"/>
+      <feature id="org.eclipse.emf.compare.egit" version="1.2.0.201610271310"/>
+      <feature id="org.eclipse.emf.compare.ide.ui" version="3.3.0.201610271310"/>
+      <feature id="org.eclipse.emf.compare.diagram.papyrus" version="3.3.0.201610271310"/>
+      <feature id="org.eclipse.emf.compare.uml2" version="3.3.0.201610271310"/>
       <feature id="org.eclipse.emf.databinding" version="1.4.0.v20160208-0841"/>
       <feature id="org.eclipse.emf.doc" version="2.10.0.v20160208-0841"/>
       <feature id="org.eclipse.emf.ecore" version="2.11.2.v20160208-0816"/>
@@ -1008,7 +1008,7 @@ This Agreement is governed by the laws of the State of New York and the intellec
       <feature id="org.eclipse.emf.workspace"/>
       <feature id="org.eclipse.emf.validation"/>
       <feature id="org.eclipse.gmf.runtime.thirdparty"/>
-      <feature id="org.eclipse.emf.compare.rcp.ui" version="3.2.0.201602111426"/>
+      <feature id="org.eclipse.emf.compare.rcp.ui" version="3.3.0.201610271310"/>
       <feature id="org.eclipse.gmf.tooling.runtime" version="3.3.1.201509020853"/>
       <feature id="org.eclipse.ocl" version="3.5.0.v20150525-1635"/>
       <feature id="org.eclipse.m2m.qvt.oml" version="3.5.0.v20150603-1058"/>
