@@ -10,9 +10,14 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.draw2d.figures.workbench;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.Connection;
+import org.eclipse.draw2d.ConnectionRouter;
 import org.eclipse.draw2d.DelegatingLayout;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FreeformLayer;
@@ -65,6 +70,8 @@ public class DiagramContainerFigure extends LinkLFShapeCompartmentEditPart.Shape
 
 		private boolean oldActiveState = false;
 
+		private Map<Connection, Object> cachedConnectionConstraints = new HashMap<>();
+
 		@Override
 		public void preTrayUpdate(IDiffWorkbench workbench) {
 			// intentionally left empty
@@ -73,7 +80,29 @@ public class DiagramContainerFigure extends LinkLFShapeCompartmentEditPart.Shape
 		@Override
 		public void preTopContainerChanged(IDiffWorkbench workbench, IDiffWorkbenchContainer oldTopContainer,
 				IDiffWorkbenchContainer newTopContainer) {
+
 			oldActiveState = isActive();
+
+			if (newTopContainer == DiagramContainerFigure.this) {
+
+				/*
+				 * Connection constraints get lost when moving the current
+				 * container to the top, so cache and re-apply them after the
+				 * move has been done
+				 */
+				cachedConnectionConstraints.clear();
+				Layer connectionLayer = getLayer(LayerConstants.CONNECTION_LAYER);
+				List<?> children = connectionLayer.getChildren();
+				for (Object child : children) {
+					if (child instanceof Connection) {
+						Connection connection = (Connection) child;
+						ConnectionRouter connectionRouter = connection.getConnectionRouter();
+						Object constraint = connectionRouter.getConstraint(connection);
+						cachedConnectionConstraints.put(connection, constraint);
+					}
+				}
+
+			}
 		}
 
 		@Override
@@ -102,6 +131,21 @@ public class DiagramContainerFigure extends LinkLFShapeCompartmentEditPart.Shape
 		@Override
 		public void postTopContainerChanged(IDiffWorkbench workbench, IDiffWorkbenchContainer oldTopContainer,
 				IDiffWorkbenchContainer newTopContainer) {
+
+			if (newTopContainer == DiagramContainerFigure.this) {
+
+				/*
+				 * Connection constraints get lost when moving the current
+				 * container to the top, so cache and re-apply them after the
+				 * move has been done
+				 */
+				for (Connection connection : cachedConnectionConstraints.keySet()) {
+					ConnectionRouter connectionRouter = connection.getConnectionRouter();
+					connectionRouter.setConstraint(connection, cachedConnectionConstraints.get(connection));
+				}
+				cachedConnectionConstraints.clear();
+
+			}
 
 			boolean newActiveState = isActive();
 

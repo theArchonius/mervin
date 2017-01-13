@@ -37,9 +37,6 @@ import org.eclipse.gmf.tooling.runtime.linklf.LinkLFShapeCompartmentEditPart;
 import org.eclipse.swt.graphics.Image;
 
 import at.bitandart.zoubek.mervin.draw2d.figures.ComposedClickable;
-import at.bitandart.zoubek.mervin.draw2d.figures.workbench.DiffWorkbench.ContainerElementActionListener;
-import at.bitandart.zoubek.mervin.draw2d.figures.workbench.DiffWorkbench.ImageButton;
-import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbench.DisplayMode;
 
 /**
  * Default implementation of {@link IDiffWorkbench}.
