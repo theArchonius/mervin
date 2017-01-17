@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Florian Zoubek.
+ * Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,9 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.diagram.diff.parts;
 
+import java.util.Iterator;
+
+import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Layer;
@@ -20,14 +23,20 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.LayerConstants;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IEditableEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ResizableEditPolicyEx;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.gmf.tooling.runtime.linklf.LinkLFShapeCompartmentEditPart;
@@ -245,6 +254,104 @@ public class DiagramEditPart extends LinkLFShapeCompartmentEditPart {
 			refreshBounds();
 		}
 		super.handleNotificationEvent(event);
+	}
+
+	@Override
+	protected ConnectionRefreshMgr createConnectionRefreshMgr() {
+		return new ConnectionRefreshMgr() {
+
+			@Override
+			protected void refreshConnections(ShapeCompartmentEditPart scep) {
+
+				/*
+				 * modified, based on
+				 * org.eclipse.gmf.runtime.diagram.ui.editparts.
+				 * ShapeCompartmentEditPart.ConnectionRefreshMgr.
+				 * refreshConnections(ShapeCompartmentEditPart)
+				 * 
+				 * Differences to the base version are mentioned in the
+				 * comments.
+				 */
+
+				Iterator<?> connectionNodes = getConnectionNodes(scep).iterator();
+
+				while (connectionNodes.hasNext()) {
+
+					ConnectionNodeEditPart cep = (ConnectionNodeEditPart) connectionNodes.next();
+					Connection connection = (Connection) cep.getFigure();
+					View connectionView = cep.getNotationView();
+					if (connectionView != null && !connectionView.isVisible()) {
+						/*
+						 * Compartment is not responsible for refreshing a
+						 * connection, the view of which is not visible
+						 */
+						continue;
+					}
+
+					IGraphicalEditPart source = (IGraphicalEditPart) getSourceEditPart(cep);
+					IGraphicalEditPart target = (IGraphicalEditPart) getTargetEditPart(cep);
+					if (source == null || target == null) {
+						connection.setVisible(false);
+						continue;
+					}
+
+					if (!source.getFigure().isShowing() || !target.getFigure().isShowing()) {
+						connection.setVisible(false);
+						continue;
+					}
+
+					ShapeCompartmentEditPart sContainer = getOwningShapeCompartment(source);
+					ShapeCompartmentEditPart tContainer = getOwningShapeCompartment(target);
+					// only deal with items contained within a shape compartment
+					if (sContainer == null && tContainer == null) {
+						continue;
+					}
+
+					/*
+					 * the following code differs from the original: connections
+					 * inside this compartment are stored in the connection
+					 * layer of the compartment, which is automatically clipped,
+					 * so just make sure all connections are visible
+					 */
+					connection.setVisible(true);
+					refreshConnectionEnds(cep);
+				}
+			}
+
+			/*
+			 * copied from org.eclipse.gmf.runtime.diagram.ui.editparts.
+			 * ShapeCompartmentEditPart.ConnectionRefreshMgr.
+			 * refreshConnectionEnds(ConnectionEditPart)
+			 */
+			private void refreshConnectionEnds(ConnectionEditPart cEP) {
+				EditPart srcEditPart = cEP.getSource();
+				EditPart trgEditPart = cEP.getTarget();
+				Object model = cEP.getModel();
+				if (model instanceof Edge) {
+					Edge edge = (Edge) model;
+					View source = edge.getSource();
+					View target = edge.getTarget();
+					if (srcEditPart == null) {
+						refreshEditPart(cEP.getViewer(), source);
+					}
+					if (trgEditPart == null) {
+						refreshEditPart(cEP.getViewer(), target);
+					}
+				}
+			}
+
+			/*
+			 * copied from org.eclipse.gmf.runtime.diagram.ui.editparts.
+			 * ShapeCompartmentEditPart.ConnectionRefreshMgr.refreshEditPart(
+			 * EditPartViewer, View)
+			 */
+			private void refreshEditPart(EditPartViewer viewer, View view) {
+				EditPart ep = (EditPart) viewer.getEditPartRegistry().get(view);
+				if (ep != null) {
+					ep.refresh();
+				}
+			}
+		};
 	}
 
 	private final class DiagramWorkbenchListener implements IWorkbenchListener {
