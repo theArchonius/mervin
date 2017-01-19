@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Florian Zoubek.
+ * Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,6 +54,7 @@ import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.papyrus.infra.elementtypesconfigurations.registries.ElementTypeSetConfigurationRegistry;
 import org.eclipse.papyrus.infra.gmfdiag.css.helper.CSSHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -169,12 +170,21 @@ public class DiagramDiffView implements IAdaptable {
 
 		if (modelReview != null) {
 
+			/*
+			 * This call is necessary to make sure that papyrus is properly
+			 * initialized
+			 */
+			ElementTypeSetConfigurationRegistry.getInstance();
+
 			String title = MessageFormat.format("Mervin Review #{0}", modelReview.getId(),
 					modelReview.getPatchSets().size());
 			part.setLabel(title);
 
 			ResourceSet resourceSet = new ResourceSetImpl();
+
+			/* activate papyrus CSS support */
 			CSSHelper.installCSSSupport(resourceSet);
+
 			final Resource resource = resourceSet
 					.createResource(URI.createURI("mervin-model-review-resource.resource.notation"));
 			resourceSet.getResources().add(resource);
