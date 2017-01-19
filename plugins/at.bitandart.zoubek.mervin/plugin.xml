@@ -112,5 +112,12 @@
          </property>
       </product>
    </extension>
+   <extension
+         point="org.eclipse.papyrus.infra.gmfdiag.css.domElementAdapter">
+      <factory
+            factory="at.bitandart.zoubek.mervin.papyrus.css.MervinElementProviderFactory"
+            order="50">
+      </factory>
+   </extension>
 
 </plugin>
