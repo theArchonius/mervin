@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -633,7 +633,7 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 
 		} else {
 
-			children.add(new ObjectEntry(feature.getName() + ":", comparison, leftValue, rightValue));
+			children.add(new ObjectEntry(feature.getName() + " : ", comparison, leftValue, rightValue));
 
 		}
 	}
@@ -880,7 +880,8 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 			} else {
 				value = ((ObjectEntry) entry).getRight();
 			}
-			text += value != null ? value.toString() : "<null>";
+			text += value != null ? (value instanceof String) ? "\"" + value.toString() + "\"" : value.toString()
+					: "<null>";
 
 		} else if (entry instanceof MatchEntry) {
 

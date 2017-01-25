@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Florian Zoubek.
+ * Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -178,7 +178,7 @@ public class PropertyDiffView extends ModelReviewEditorTrackingView {
 				 * element contained in the comparison
 				 */
 				if (semanticModelMatch != null || notationModelMatch != null) {
-					SelectionEntry modelEntry = new SelectionEntry("#" + selectionIndex, semanticModelMatch,
+					SelectionEntry modelEntry = new SelectionEntry(selectionIndex + ". ", semanticModelMatch,
 							notationModelMatch);
 					modelEntries.add(modelEntry);
 
