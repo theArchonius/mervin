@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Florian Zoubek.
+ * Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.Shape;
+import org.eclipse.draw2d.geometry.Geometry;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
@@ -342,6 +343,16 @@ public class ConnectionChangeOutline extends Shape {
 		for (Integer index : pointsToRemove) {
 			pointList.removePoint(index);
 		}
+	}
+
+	@Override
+	public boolean containsPoint(int x, int y) {
+
+		/*
+		 * only points inside the outline are considered as inside this figure
+		 */
+		PointList outline = new PointList(calculateOutlineShape(pointsToCover, paddingWidth, 1));
+		return Geometry.polygonContainsPoint(outline, x, y);
 	}
 
 }

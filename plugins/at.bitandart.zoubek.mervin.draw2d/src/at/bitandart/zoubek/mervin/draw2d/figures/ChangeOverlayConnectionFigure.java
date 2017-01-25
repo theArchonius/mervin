@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -151,6 +151,22 @@ public class ChangeOverlayConnectionFigure extends ComposedNodeFigure implements
 	@Override
 	protected void initializeChildren() {
 		// intentionally left empty
+	}
+
+	@Override
+	public boolean containsPoint(int x, int y) {
+
+		/*
+		 * only the individual outlines can contain points - otherwise the
+		 * bounds of this figure are used for this test and this figure may
+		 * "cover" other figures that are not covered by the outlines
+		 */
+		for (ConnectionChangeOutline outline : outlines) {
+			if (outline.containsPoint(x, y)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
