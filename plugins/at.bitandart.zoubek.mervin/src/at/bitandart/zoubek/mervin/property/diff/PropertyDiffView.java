@@ -178,7 +178,7 @@ public class PropertyDiffView extends ModelReviewEditorTrackingView {
 				 * element contained in the comparison
 				 */
 				if (semanticModelMatch != null || notationModelMatch != null) {
-					SelectionEntry modelEntry = new SelectionEntry(selectionIndex + ". ", semanticModelMatch,
+					SelectionEntry modelEntry = new SelectionEntry(null, selectionIndex + ". ", semanticModelMatch,
 							notationModelMatch);
 					modelEntries.add(modelEntry);
 

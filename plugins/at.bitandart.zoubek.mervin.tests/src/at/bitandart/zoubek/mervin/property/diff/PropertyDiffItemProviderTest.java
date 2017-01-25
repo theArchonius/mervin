@@ -1,6 +1,13 @@
-/**
- * 
- */
+/*******************************************************************************
+ * Copyright (c) 2015, 2016, 2017 Florian Zoubek.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Florian Zoubek - initial API and implementation
+ *******************************************************************************/
 package at.bitandart.zoubek.mervin.property.diff;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -74,12 +81,12 @@ public class PropertyDiffItemProviderTest {
 		Comparison comparison = compare(leftTextEntry, rightTextEntry);
 		Match match = comparison.getMatches().get(0);
 
-		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry("", match, null,
+		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry(null, "", match, null,
 				new ReferencingDiffCache(match));
 
 		Object[] entries = itemProvider.getChildren(matchEntry);
 
-		assertTextEntryChildren(leftTextEntry, rightTextEntry, entries);
+		assertTextEntryChildren(leftTextEntry, rightTextEntry, matchEntry, entries);
 	}
 
 	@Test
@@ -100,12 +107,12 @@ public class PropertyDiffItemProviderTest {
 		Comparison comparison = compare(leftTextEntry, rightTextEntry);
 		Match match = comparison.getMatches().get(0);
 
-		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry("", match, null,
+		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry(null, "", match, null,
 				new ReferencingDiffCache(match));
 
 		Object[] entries = itemProvider.getChildren(matchEntry);
 
-		assertTextEntryChildren(leftTextEntry, rightTextEntry, entries);
+		assertTextEntryChildren(leftTextEntry, rightTextEntry, matchEntry, entries);
 	}
 
 	@Test
@@ -126,12 +133,12 @@ public class PropertyDiffItemProviderTest {
 		Comparison comparison = compare(leftTextEntry, rightTextEntry);
 		Match match = comparison.getMatches().get(0);
 
-		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry("", match, null,
+		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry(null, "", match, null,
 				new ReferencingDiffCache(match));
 
 		Object[] entries = itemProvider.getChildren(matchEntry);
 
-		assertTextEntryChildren(leftTextEntry, rightTextEntry, entries);
+		assertTextEntryChildren(leftTextEntry, rightTextEntry, matchEntry, entries);
 	}
 
 	@Test
@@ -152,12 +159,12 @@ public class PropertyDiffItemProviderTest {
 		Comparison comparison = compare(leftTextEntry, rightTextEntry);
 		Match match = comparison.getMatches().get(0);
 
-		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry("", match, null,
+		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry(null, "", match, null,
 				new ReferencingDiffCache(match));
 
 		Object[] entries = itemProvider.getChildren(matchEntry);
 
-		assertTextEntryChildren(leftTextEntry, rightTextEntry, entries);
+		assertTextEntryChildren(leftTextEntry, rightTextEntry, matchEntry, entries);
 	}
 
 	// TODO add tests for Multi-Valued-Attributes
@@ -184,14 +191,14 @@ public class PropertyDiffItemProviderTest {
 		Comparison comparison = compare(leftUser, rightUser);
 		Match match = comparison.getMatches().get(0);
 
-		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry("", match, null,
+		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry(null, "", match, null,
 				new ReferencingDiffCache(match));
 
 		// retrieve entries
 
 		Object[] entries = itemProvider.getChildren(matchEntry);
 		UserChildren children = assertUserChildren(leftUser, rightUser, entries, 1);
-		assertMatchEntry(children.singleAvatarEntry, leftUser.getAvatar(), rightUser.getAvatar());
+		assertMatchEntry(children.singleAvatarEntry, leftUser.getAvatar(), rightUser.getAvatar(), null);
 	}
 
 	@Test
@@ -214,14 +221,14 @@ public class PropertyDiffItemProviderTest {
 		Comparison comparison = compare(leftUser, rightUser);
 		Match match = comparison.getMatches().get(0);
 
-		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry("", match, null,
+		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry(null, "", match, null,
 				new ReferencingDiffCache(match));
 
 		// retrieve entries
 
 		Object[] entries = itemProvider.getChildren(matchEntry);
 		UserChildren children = assertUserChildren(leftUser, rightUser, entries, 1);
-		assertMatchEntry(children.singleAvatarEntry, leftUser.getAvatar(), rightUser.getAvatar());
+		assertMatchEntry(children.singleAvatarEntry, leftUser.getAvatar(), rightUser.getAvatar(), null);
 	}
 
 	@Test
@@ -245,14 +252,14 @@ public class PropertyDiffItemProviderTest {
 		Comparison comparison = compare(leftUser, rightUser);
 		Match match = comparison.getMatches().get(0);
 
-		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry("", match, null,
+		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry(null, "", match, null,
 				new ReferencingDiffCache(match));
 
 		// retrieve entries
 
 		Object[] entries = itemProvider.getChildren(matchEntry);
 		UserChildren children = assertUserChildren(leftUser, rightUser, entries, 1);
-		assertMatchEntry(children.singleAvatarEntry, leftUser.getAvatar(), rightUser.getAvatar());
+		assertMatchEntry(children.singleAvatarEntry, leftUser.getAvatar(), rightUser.getAvatar(), null);
 	}
 
 	@Test
@@ -277,14 +284,14 @@ public class PropertyDiffItemProviderTest {
 		Comparison comparison = compare(leftUser, rightUser);
 		Match match = comparison.getMatches().get(0);
 
-		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry("", match, null,
+		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry(null, "", match, null,
 				new ReferencingDiffCache(match));
 
 		// retrieve entries
 
 		Object[] entries = itemProvider.getChildren(matchEntry);
 		UserChildren children = assertUserChildren(leftUser, rightUser, entries, 1);
-		assertMatchEntry(children.singleAvatarEntry, leftUser.getAvatar(), rightUser.getAvatar());
+		assertMatchEntry(children.singleAvatarEntry, leftUser.getAvatar(), rightUser.getAvatar(), null);
 	}
 
 	@Test
@@ -324,22 +331,22 @@ public class PropertyDiffItemProviderTest {
 		Match match = comparison.getMatches().get(0);
 		Match match2 = comparison.getMatches().get(1);
 
-		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry("", match, null,
+		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry(null, "", match, null,
 				new ReferencingDiffCache(match));
-		MatchEntry matchEntry2 = new PropertyDiffItemProvider.MatchEntry("", match2, null,
+		MatchEntry matchEntry2 = new PropertyDiffItemProvider.MatchEntry(null, "", match2, null,
 				new ReferencingDiffCache(match2));
 
 		// retrieve and check entries for the first match
 
 		Object[] entries = itemProvider.getChildren(matchEntry);
 		UserChildren children = assertUserChildren(leftUser, rightUser, entries, 1);
-		assertMatchEntry(children.singleAvatarEntry, leftUser.getAvatar(), rightUser2.getAvatar());
+		assertMatchEntry(children.singleAvatarEntry, leftUser.getAvatar(), rightUser2.getAvatar(), null);
 
 		// retrieve and check entries for the second match
 
 		entries = itemProvider.getChildren(matchEntry2);
 		children = assertUserChildren(leftUser2, rightUser2, entries, 1);
-		assertMatchEntry(children.singleAvatarEntry, leftUser.getAvatar(), rightUser2.getAvatar());
+		assertMatchEntry(children.singleAvatarEntry, leftUser.getAvatar(), rightUser2.getAvatar(), null);
 
 	}
 
@@ -376,7 +383,7 @@ public class PropertyDiffItemProviderTest {
 		Comparison comparison = compare(leftTextEntry, rightTextEntry);
 		Match match = comparison.getMatches().get(0);
 
-		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry("", match, null,
+		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry(null, "", match, null,
 				new ReferencingDiffCache(match));
 
 		// retrieve entries
@@ -384,7 +391,7 @@ public class PropertyDiffItemProviderTest {
 		Object[] entries = itemProvider.getChildren(matchEntry);
 
 		// check entries
-		TextEntryChildren children = assertTextEntryChildren(leftTextEntry, rightTextEntry, entries);
+		TextEntryChildren children = assertTextEntryChildren(leftTextEntry, rightTextEntry, matchEntry, entries);
 		List<BaseEntry> elementList = children.subEntriesEntry.getElementList();
 
 		assertThat(elementList.size(), is(3));
@@ -392,7 +399,7 @@ public class PropertyDiffItemProviderTest {
 		for (int i = 0; i < 3; i++) {
 			assertThat(elementList.get(i), instanceOf(MatchEntry.class));
 			assertMatchEntry((MatchEntry) elementList.get(i), leftTextEntry.getSubentries().get(i),
-					rightTextEntry.getSubentries().get(i));
+					rightTextEntry.getSubentries().get(i), children.subEntriesEntry);
 		}
 	}
 
@@ -521,7 +528,7 @@ public class PropertyDiffItemProviderTest {
 		Comparison comparison = compare(leftTextEntry, rightTextEntry);
 		Match match = comparison.getMatches().get(0);
 
-		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry("", match, null,
+		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry(null, "", match, null,
 				new ReferencingDiffCache(match));
 
 		// retrieve entries
@@ -529,7 +536,7 @@ public class PropertyDiffItemProviderTest {
 		Object[] entries = itemProvider.getChildren(matchEntry);
 
 		// check entries
-		TextEntryChildren children = assertTextEntryChildren(leftTextEntry, rightTextEntry, entries);
+		TextEntryChildren children = assertTextEntryChildren(leftTextEntry, rightTextEntry, matchEntry, entries);
 		List<BaseEntry> elementList = children.subEntriesEntry.getElementList();
 
 		assertThat(elementList.size(), is(leftSubentries.size()));
@@ -541,14 +548,14 @@ public class PropertyDiffItemProviderTest {
 				// added left, removed right
 				assertThat(elementList.get(leftIndex), instanceOf(MatchEntry.class));
 				assertMatchEntry((MatchEntry) elementList.get(leftIndex), leftTextEntry.getSubentries().get(leftIndex),
-						null);
+						null, children.subEntriesEntry);
 
 			} else {
 
 				// equal
 				assertThat(elementList.get(leftIndex), instanceOf(MatchEntry.class));
 				assertMatchEntry((MatchEntry) elementList.get(leftIndex), leftTextEntry.getSubentries().get(leftIndex),
-						rightTextEntry.getSubentries().get(rightIndex));
+						rightTextEntry.getSubentries().get(rightIndex), children.subEntriesEntry);
 				rightIndex++;
 			}
 		}
@@ -637,7 +644,7 @@ public class PropertyDiffItemProviderTest {
 		Comparison comparison = compare(leftTextEntry, rightTextEntry);
 		Match match = comparison.getMatches().get(0);
 
-		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry("", match, null,
+		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry(null, "", match, null,
 				new ReferencingDiffCache(match));
 
 		// retrieve entries
@@ -645,7 +652,7 @@ public class PropertyDiffItemProviderTest {
 		Object[] entries = itemProvider.getChildren(matchEntry);
 
 		// check entries
-		TextEntryChildren children = assertTextEntryChildren(leftTextEntry, rightTextEntry, entries);
+		TextEntryChildren children = assertTextEntryChildren(leftTextEntry, rightTextEntry, matchEntry, entries);
 		List<BaseEntry> elementList = children.subEntriesEntry.getElementList();
 
 		assertThat(elementList.size(), is(rightTextEntry.getSubentries().size()));
@@ -657,13 +664,13 @@ public class PropertyDiffItemProviderTest {
 				// removed left, added right
 				assertThat(elementList.get(rightIndex), instanceOf(MatchEntry.class));
 				assertMatchEntry((MatchEntry) elementList.get(rightIndex), null,
-						rightTextEntry.getSubentries().get(rightIndex));
+						rightTextEntry.getSubentries().get(rightIndex), children.subEntriesEntry);
 
 			} else {
 
 				assertThat(elementList.get(rightIndex), instanceOf(MatchEntry.class));
 				assertMatchEntry((MatchEntry) elementList.get(rightIndex), leftTextEntry.getSubentries().get(leftIndex),
-						rightTextEntry.getSubentries().get(rightIndex));
+						rightTextEntry.getSubentries().get(rightIndex), children.subEntriesEntry);
 				leftIndex++;
 			}
 		}
@@ -755,7 +762,7 @@ public class PropertyDiffItemProviderTest {
 		Comparison comparison = compare(leftTextEntry, rightTextEntry);
 		Match match = comparison.getMatches().get(0);
 
-		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry("", match, null,
+		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry(null, "", match, null,
 				new ReferencingDiffCache(match));
 
 		// retrieve entries
@@ -763,7 +770,7 @@ public class PropertyDiffItemProviderTest {
 		Object[] entries = itemProvider.getChildren(matchEntry);
 
 		// check entries
-		TextEntryChildren children = assertTextEntryChildren(leftTextEntry, rightTextEntry, entries);
+		TextEntryChildren children = assertTextEntryChildren(leftTextEntry, rightTextEntry, matchEntry, entries);
 		List<BaseEntry> elementList = children.subEntriesEntry.getElementList();
 
 		assertThat(elementList.size(), is(4));
@@ -771,22 +778,22 @@ public class PropertyDiffItemProviderTest {
 		// first entry -> moved, represents old entry
 		assertThat(elementList.get(0), instanceOf(MatchEntry.class));
 		assertMatchEntry((MatchEntry) elementList.get(0), leftTextEntry.getSubentries().get(0),
-				rightTextEntry.getSubentries().get(2));
+				rightTextEntry.getSubentries().get(2), children.subEntriesEntry);
 
 		// second entry -> equal
 		assertThat(elementList.get(1), instanceOf(MatchEntry.class));
 		assertMatchEntry((MatchEntry) elementList.get(1), leftTextEntry.getSubentries().get(1),
-				rightTextEntry.getSubentries().get(0));
+				rightTextEntry.getSubentries().get(0), children.subEntriesEntry);
 
 		// third entry -> equal
 		assertThat(elementList.get(2), instanceOf(MatchEntry.class));
 		assertMatchEntry((MatchEntry) elementList.get(2), leftTextEntry.getSubentries().get(2),
-				rightTextEntry.getSubentries().get(1));
+				rightTextEntry.getSubentries().get(1), children.subEntriesEntry);
 
 		// fourth entry -> moved, represents new entry
 		assertThat(elementList.get(3), instanceOf(MatchEntry.class));
 		assertMatchEntry((MatchEntry) elementList.get(3), leftTextEntry.getSubentries().get(0),
-				rightTextEntry.getSubentries().get(2));
+				rightTextEntry.getSubentries().get(2), children.subEntriesEntry);
 	}
 
 	@Test
@@ -829,9 +836,9 @@ public class PropertyDiffItemProviderTest {
 		Match match = comparison.getMatches().get(0);
 		Match match2 = comparison.getMatches().get(1);
 
-		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry("", match, null,
+		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry(null, "", match, null,
 				new ReferencingDiffCache(match));
-		MatchEntry matchEntry2 = new PropertyDiffItemProvider.MatchEntry("", match2, null,
+		MatchEntry matchEntry2 = new PropertyDiffItemProvider.MatchEntry(null, "", match2, null,
 				new ReferencingDiffCache(match2));
 
 		// retrieve entries for the first match
@@ -839,7 +846,7 @@ public class PropertyDiffItemProviderTest {
 		Object[] entries = itemProvider.getChildren(matchEntry);
 
 		// check entries for first match
-		TextEntryChildren children = assertTextEntryChildren(leftTextEntry, rightTextEntry, entries);
+		TextEntryChildren children = assertTextEntryChildren(leftTextEntry, rightTextEntry, matchEntry, entries);
 		List<BaseEntry> elementList = children.subEntriesEntry.getElementList();
 
 		assertThat(elementList.size(), is(1));
@@ -847,14 +854,14 @@ public class PropertyDiffItemProviderTest {
 		// first entry -> moved, represents old entry
 		assertThat(elementList.get(0), instanceOf(MatchEntry.class));
 		assertMatchEntry((MatchEntry) elementList.get(0), leftTextEntry.getSubentries().get(0),
-				rightTextEntry2.getSubentries().get(0));
+				rightTextEntry2.getSubentries().get(0), children.subEntriesEntry);
 
 		// retrieve entries for the second match
 
 		entries = itemProvider.getChildren(matchEntry2);
 
 		// check entries for second match
-		children = assertTextEntryChildren(leftTextEntry2, rightTextEntry2, entries);
+		children = assertTextEntryChildren(leftTextEntry2, rightTextEntry2, matchEntry2, entries);
 		elementList = children.subEntriesEntry.getElementList();
 
 		assertThat(elementList.size(), is(1));
@@ -862,7 +869,7 @@ public class PropertyDiffItemProviderTest {
 		// first entry -> moved, represents new entry
 		assertThat(elementList.get(0), instanceOf(MatchEntry.class));
 		assertMatchEntry((MatchEntry) elementList.get(0), leftTextEntry.getSubentries().get(0),
-				rightTextEntry2.getSubentries().get(0));
+				rightTextEntry2.getSubentries().get(0), children.subEntriesEntry);
 	}
 
 	/* # getDiffItemType() - Tests # */
@@ -885,7 +892,7 @@ public class PropertyDiffItemProviderTest {
 		Comparison comparison = compare(leftTextEntry, rightTextEntry);
 		Match match = comparison.getMatches().get(0);
 
-		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry("", match, null,
+		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry(null, "", match, null,
 				new ReferencingDiffCache(match));
 
 		// check type
@@ -914,7 +921,7 @@ public class PropertyDiffItemProviderTest {
 		Comparison comparison = compare(leftResource, rightResource);
 		Match match = comparison.getMatches().get(0);
 
-		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry("", match, null,
+		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry(null, "", match, null,
 				new ReferencingDiffCache(match));
 
 		// check type
@@ -943,7 +950,7 @@ public class PropertyDiffItemProviderTest {
 		Comparison comparison = compare(leftResource, rightResource);
 		Match match = comparison.getMatches().get(0);
 
-		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry("", match, null,
+		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry(null, "", match, null,
 				new ReferencingDiffCache(match));
 
 		// check type
@@ -984,7 +991,7 @@ public class PropertyDiffItemProviderTest {
 		Comparison comparison = compare(leftTextEntry, rightTextEntry);
 		Match match = comparison.getMatches().get(0);
 
-		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry("", match, null,
+		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry(null, "", match, null,
 				new ReferencingDiffCache(match));
 
 		// retrieve entries
@@ -992,7 +999,7 @@ public class PropertyDiffItemProviderTest {
 		Object[] entries = itemProvider.getChildren(matchEntry);
 
 		// check entries
-		TextEntryChildren children = assertTextEntryChildren(leftTextEntry, rightTextEntry, entries);
+		TextEntryChildren children = assertTextEntryChildren(leftTextEntry, rightTextEntry, matchEntry, entries);
 		List<BaseEntry> elementList = children.subEntriesEntry.getElementList();
 
 		assertThat(elementList.size(), is(4));
@@ -1048,9 +1055,9 @@ public class PropertyDiffItemProviderTest {
 		Match match = comparison.getMatches().get(0);
 		Match match2 = comparison.getMatches().get(1);
 
-		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry("", match, null,
+		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry(null, "", match, null,
 				new ReferencingDiffCache(match));
-		MatchEntry matchEntry2 = new PropertyDiffItemProvider.MatchEntry("", match2, null,
+		MatchEntry matchEntry2 = new PropertyDiffItemProvider.MatchEntry(null, "", match2, null,
 				new ReferencingDiffCache(match2));
 
 		// retrieve entries for the first match
@@ -1058,7 +1065,7 @@ public class PropertyDiffItemProviderTest {
 		Object[] entries = itemProvider.getChildren(matchEntry);
 
 		// check entries for first match
-		TextEntryChildren children = assertTextEntryChildren(leftTextEntry, rightTextEntry, entries);
+		TextEntryChildren children = assertTextEntryChildren(leftTextEntry, rightTextEntry, matchEntry, entries);
 		List<BaseEntry> elementList = children.subEntriesEntry.getElementList();
 
 		assertThat(elementList.size(), is(1));
@@ -1073,7 +1080,7 @@ public class PropertyDiffItemProviderTest {
 		entries = itemProvider.getChildren(matchEntry2);
 
 		// check entries for second match
-		children = assertTextEntryChildren(leftTextEntry2, rightTextEntry2, entries);
+		children = assertTextEntryChildren(leftTextEntry2, rightTextEntry2, matchEntry2, entries);
 		elementList = children.subEntriesEntry.getElementList();
 
 		assertThat(elementList.size(), is(1));
@@ -1097,7 +1104,7 @@ public class PropertyDiffItemProviderTest {
 		// right
 		String right = left;
 
-		ObjectEntry objectEntry = new PropertyDiffItemProvider.ObjectEntry("", null, left, right);
+		ObjectEntry objectEntry = new PropertyDiffItemProvider.ObjectEntry(null, "", null, left, right);
 
 		// check type
 		assertThat(itemProvider.getTreeDiffType(objectEntry, TreeDiffSide.LEFT), is(TreeDiffType.EQUAL));
@@ -1115,7 +1122,7 @@ public class PropertyDiffItemProviderTest {
 		// right
 		String right = "Some Text";
 
-		ObjectEntry objectEntry = new PropertyDiffItemProvider.ObjectEntry("", null, left, right);
+		ObjectEntry objectEntry = new PropertyDiffItemProvider.ObjectEntry(null, "", null, left, right);
 
 		// check type
 		assertThat(itemProvider.getTreeDiffType(objectEntry, TreeDiffSide.LEFT), is(TreeDiffType.DELETE));
@@ -1133,7 +1140,7 @@ public class PropertyDiffItemProviderTest {
 		// right
 		String right = null;
 
-		ObjectEntry objectEntry = new PropertyDiffItemProvider.ObjectEntry("", null, left, right);
+		ObjectEntry objectEntry = new PropertyDiffItemProvider.ObjectEntry(null, "", null, left, right);
 
 		// check type
 		assertThat(itemProvider.getTreeDiffType(objectEntry, TreeDiffSide.LEFT), is(TreeDiffType.ADD));
@@ -1151,7 +1158,7 @@ public class PropertyDiffItemProviderTest {
 		// right
 		String right = "Other Text";
 
-		ObjectEntry objectEntry = new PropertyDiffItemProvider.ObjectEntry("", null, left, right);
+		ObjectEntry objectEntry = new PropertyDiffItemProvider.ObjectEntry(null, "", null, left, right);
 
 		// check type
 		assertThat(itemProvider.getTreeDiffType(objectEntry, TreeDiffSide.LEFT), is(TreeDiffType.MODIFY));
@@ -1178,7 +1185,7 @@ public class PropertyDiffItemProviderTest {
 		Comparison comparison = compare(leftUser, rightUser);
 		Match match = comparison.getMatches().get(0);
 
-		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry("", match,
+		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry(null, "", match,
 				TestModelPackage.Literals.TODO_LIST__OWNER, new ReferencingDiffCache(match));
 
 		// retrieve entries
@@ -1358,7 +1365,8 @@ public class PropertyDiffItemProviderTest {
 	 *            the entries to validate.
 	 * @return An helper object to access the children if the validation passes.
 	 */
-	private TextEntryChildren assertTextEntryChildren(TextEntry leftEntry, TextEntry rightEntry, Object[] entries) {
+	private TextEntryChildren assertTextEntryChildren(TextEntry leftEntry, TextEntry rightEntry, BaseEntry parent,
+			Object[] entries) {
 
 		assertThat(entries.length, is(4));
 		assertThat(entries[0], instanceOf(ObjectEntry.class));
@@ -1372,6 +1380,11 @@ public class PropertyDiffItemProviderTest {
 		children.subEntriesEntry = (ListEntry) entries[1];
 		children.titleEntry = (ObjectEntry) entries[2];
 		children.descriptionEntry = (ObjectEntry) entries[3];
+
+		assertThat(children.completedEntry.getParent(), is(parent));
+		assertThat(children.subEntriesEntry.getParent(), is(parent));
+		assertThat(children.titleEntry.getParent(), is(parent));
+		assertThat(children.descriptionEntry.getParent(), is(parent));
 
 		assertThat(children.subEntriesEntry.getLabelTextPrefix(),
 				containsString(TestModelPackage.Literals.TODO_ENTRY__SUBENTRIES.getName()));
@@ -1398,13 +1411,15 @@ public class PropertyDiffItemProviderTest {
 	 * @param matchEntry
 	 * @param leftObj
 	 * @param rightObj
+	 * @param parent
 	 */
-	private void assertMatchEntry(MatchEntry matchEntry, Object leftObj, Object rightObj) {
+	private void assertMatchEntry(MatchEntry matchEntry, Object leftObj, Object rightObj, BaseEntry parent) {
 
 		Match match = matchEntry.getMatch();
 
 		assertThat(match.getLeft(), is((Object) leftObj));
 		assertThat(match.getRight(), is((Object) rightObj));
+		assertThat(matchEntry.getParent(), is(parent));
 	}
 
 }

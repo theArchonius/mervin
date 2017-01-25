@@ -127,26 +127,27 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 
 		if (modelElementMatch != null) {
 
-			children.add(new MatchEntry(SEMANTIC_MODEL_ELEMENT_PREFIX, modelElementMatch, null,
+			children.add(new MatchEntry(entry, SEMANTIC_MODEL_ELEMENT_PREFIX, modelElementMatch, null,
 					new ReferencingDiffCache(entry.getModelElementMatch())));
 		}
 
 		if (notationElementMatch != null) {
 
-			children.add(new MatchEntry(NOTATION_MODEL_ELEMENT_PREFIX, notationElementMatch, null,
+			children.add(new MatchEntry(entry, NOTATION_MODEL_ELEMENT_PREFIX, notationElementMatch, null,
 					new ReferencingDiffCache(entry.getNotationElementMatch())));
 		}
 
 		if (!otherNotationElementMatches.isEmpty()) {
 
-			ListEntry listEntry = new ListEntry(OTHER_NOTATION_MODEL_ELEMENTS_PREFIX, comparison, null);
+			ListEntry listEntry = new ListEntry(entry, OTHER_NOTATION_MODEL_ELEMENTS_PREFIX, comparison, null);
 			children.add(listEntry);
 			List<BaseEntry> elementList = listEntry.getElementList();
 
 			int i = 0;
 			for (Match match : otherNotationElementMatches) {
 
-				elementList.add(new MatchEntry("[" + i + "] ", match, null, new ReferencingDiffCache(match)));
+				elementList
+						.add(new MatchEntry(listEntry, "[" + i + "] ", match, null, new ReferencingDiffCache(match)));
 				i++;
 			}
 		}
@@ -237,12 +238,12 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 
 					if (!structuralFeature.isMany()) {
 
-						addMonoValuedChildren(comparison, children, leftValue, rightValue, structuralFeature,
+						addMonoValuedChildren(entry, comparison, children, leftValue, rightValue, structuralFeature,
 								featureDiffCache);
 
 					} else {
 
-						addMultiValuedChildren(comparison, children, leftValue, rightValue, structuralFeature,
+						addMultiValuedChildren(entry, comparison, children, leftValue, rightValue, structuralFeature,
 								featureDiffCache);
 
 					}
@@ -259,6 +260,9 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 	 * adds the children for the given multi-valued feature and the given left
 	 * and right values to the given list of children.
 	 * 
+	 * @param parent
+	 *            the parent {@link BaseEntry} for all created child entries, or
+	 *            null if the there is no parent entry.
 	 * @param comparison
 	 *            the comparison used to retrieve the matches for the values.
 	 * @param children
@@ -273,10 +277,10 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 	 *            a {@link DiffCache} containing all diffs for the given
 	 *            feature.
 	 */
-	private void addMultiValuedChildren(Comparison comparison, List<BaseEntry> children, Object leftValue,
-			Object rightValue, EStructuralFeature feature, DiffCache featureDiffs) {
+	private void addMultiValuedChildren(BaseEntry parent, Comparison comparison, List<BaseEntry> children,
+			Object leftValue, Object rightValue, EStructuralFeature feature, DiffCache featureDiffs) {
 
-		ListEntry listEntry = new ListEntry(feature.getName(), comparison, null);
+		ListEntry listEntry = new ListEntry(parent, feature.getName(), comparison, null);
 
 		children.add(listEntry);
 
@@ -372,7 +376,8 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 						/*
 						 * CHANGE or simple match - create a single entry for it
 						 */
-						elementList.add(createMatchEntry("", leftMatch, TreeDiffSide.LEFT, feature, featureDiffs));
+						elementList.add(
+								createMatchEntry(listEntry, "", leftMatch, TreeDiffSide.LEFT, feature, featureDiffs));
 						moveLeft = true;
 						moveRight = true;
 
@@ -385,13 +390,14 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 						 */
 						if (isMoveMatch(featureDiffs, leftMatch)) {
 
-							elementList.add(createMatchEntry("", leftMatch, TreeDiffSide.LEFT, feature, featureDiffs));
+							elementList.add(createMatchEntry(listEntry, "", leftMatch, TreeDiffSide.LEFT, feature,
+									featureDiffs));
 							moveLeft = true;
 
 						} else if (isMoveMatch(featureDiffs, rightMatch)) {
 
-							elementList
-									.add(createMatchEntry("", rightMatch, TreeDiffSide.RIGHT, feature, featureDiffs));
+							elementList.add(createMatchEntry(listEntry, "", rightMatch, TreeDiffSide.RIGHT, feature,
+									featureDiffs));
 							moveRight = true;
 
 						} else {
@@ -408,8 +414,8 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 								 * the left entry has been deleted and should be
 								 * shown before the right Object
 								 */
-								elementList
-										.add(createMatchEntry("", leftMatch, TreeDiffSide.LEFT, feature, featureDiffs));
+								elementList.add(createMatchEntry(listEntry, "", leftMatch, TreeDiffSide.LEFT, feature,
+										featureDiffs));
 								moveLeft = true;
 
 							} else {
@@ -421,12 +427,12 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 									 * smaller, add it before the right object
 									 */
 									if (rightList.indexOf(rightEObj) > rightList.indexOf(leftMatchedValue)) {
-										elementList.add(createMatchEntry("", leftMatch, TreeDiffSide.LEFT, feature,
-												featureDiffs));
+										elementList.add(createMatchEntry(listEntry, "", leftMatch, TreeDiffSide.LEFT,
+												feature, featureDiffs));
 										moveLeft = true;
 									} else {
-										elementList.add(createMatchEntry("", rightMatch, TreeDiffSide.RIGHT, feature,
-												featureDiffs));
+										elementList.add(createMatchEntry(listEntry, "", rightMatch, TreeDiffSide.RIGHT,
+												feature, featureDiffs));
 										moveRight = true;
 									}
 
@@ -436,8 +442,8 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 									 * another container, so add it before the
 									 * right object
 									 */
-									elementList.add(
-											createMatchEntry("", leftMatch, TreeDiffSide.LEFT, feature, featureDiffs));
+									elementList.add(createMatchEntry(listEntry, "", leftMatch, TreeDiffSide.LEFT,
+											feature, featureDiffs));
 									moveLeft = true;
 								}
 
@@ -457,7 +463,7 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 						if (leftValue.equals(rightValue)) {
 
 							/* values are equal */
-							elementList.add(new ObjectEntry("", comparison, leftValue, rightValue));
+							elementList.add(new ObjectEntry(listEntry, "", comparison, leftValue, rightValue));
 							moveLeft = true;
 							moveRight = true;
 
@@ -466,14 +472,14 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 							/*
 							 * assume left has been deleted, so add single entry
 							 */
-							elementList.add(new ObjectEntry("", comparison, leftValue, null));
+							elementList.add(new ObjectEntry(listEntry, "", comparison, leftValue, null));
 							moveLeft = true;
 						}
 
 					} else if (leftValue == rightValue) {
 
 						/* values are both null */
-						elementList.add(new ObjectEntry("", comparison, leftValue, rightValue));
+						elementList.add(new ObjectEntry(listEntry, "", comparison, leftValue, rightValue));
 						moveLeft = true;
 						moveRight = true;
 
@@ -482,7 +488,7 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 						/*
 						 * assume left has been deleted, so add single entry
 						 */
-						elementList.add(new ObjectEntry("", comparison, leftValue, null));
+						elementList.add(new ObjectEntry(listEntry, "", comparison, leftValue, null));
 						moveLeft = true;
 					}
 				}
@@ -535,6 +541,9 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 	/**
 	 * creates a {@link MatchEntry} for the given match.
 	 * 
+	 * @param parent
+	 *            the parent {@link BaseEntry} of the created entry, or null if
+	 *            the there is no parent entry.
 	 * @param labelTextPrefix
 	 *            the label text prefix for the {@link MatchEntry}.
 	 * @param match
@@ -551,15 +560,15 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 	 *            referencing feature.
 	 * @return a {@link MatchEntry} for the given parameters.
 	 */
-	private MatchEntry createMatchEntry(String labelTextPrefix, Match match, TreeDiffSide matchSide,
+	private MatchEntry createMatchEntry(BaseEntry parent, String labelTextPrefix, Match match, TreeDiffSide matchSide,
 			EStructuralFeature referencingFeature, DiffCache featureDiffs) {
 
 		DiffCache diffCache = new ReferencingDiffCache(match);
 
 		if (diffCache.containsKind(DifferenceKind.MOVE)) {
-			return new MovedMatchEntry(labelTextPrefix, match, referencingFeature, diffCache, matchSide);
+			return new MovedMatchEntry(parent, labelTextPrefix, match, referencingFeature, diffCache, matchSide);
 		}
-		return new MatchEntry(labelTextPrefix, match, referencingFeature, diffCache);
+		return new MatchEntry(parent, labelTextPrefix, match, referencingFeature, diffCache);
 	}
 
 	/**
@@ -567,6 +576,9 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 	 * adds the children for the given mono-valued feature and the given left
 	 * and right values to the given list of children.
 	 * 
+	 * @param parent
+	 *            the parent {@link BaseEntry} for all created child entries, or
+	 *            null if the there is no parent entry.
 	 * @param comparison
 	 *            the comparison used to retrieve the matches for the values.
 	 * @param children
@@ -581,8 +593,8 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 	 *            a {@link DiffCache} containing all diffs related to the given
 	 *            feature.
 	 */
-	private void addMonoValuedChildren(Comparison comparison, List<BaseEntry> children, Object leftValue,
-			Object rightValue, EStructuralFeature feature, DiffCache featureDiffs) {
+	private void addMonoValuedChildren(BaseEntry parent, Comparison comparison, List<BaseEntry> children,
+			Object leftValue, Object rightValue, EStructuralFeature feature, DiffCache featureDiffs) {
 
 		if ((leftValue != null || rightValue != null) && (leftValue == null || leftValue instanceof EObject)
 				&& (rightValue == null || rightValue instanceof EObject)) {
@@ -593,7 +605,7 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 			if (leftMatch == null && rightMatch == null) {
 
 				/* No match, treat as non-EObject */
-				children.add(new ObjectEntry("", comparison, leftValue, rightValue));
+				children.add(new ObjectEntry(parent, "", comparison, leftValue, rightValue));
 
 			} else {
 				if (leftMatch == rightMatch) {
@@ -601,26 +613,26 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 					/*
 					 * same match, so add only one entry
 					 */
-					children.add(createMatchEntry(feature.getName() + " : ", leftMatch, TreeDiffSide.LEFT, feature,
-							featureDiffs));
+					children.add(createMatchEntry(parent, feature.getName() + " : ", leftMatch, TreeDiffSide.LEFT,
+							feature, featureDiffs));
 
 				} else {
 
 					/*
 					 * two different matches, add one list entry for each match
 					 */
-					ListEntry listEntry = new ListEntry(feature.getName(), comparison, null);
+					ListEntry listEntry = new ListEntry(parent, feature.getName(), comparison, null);
 					List<BaseEntry> elementList = listEntry.getElementList();
 					if (leftMatch != null) {
-						elementList.add(createMatchEntry(feature.getName() + " : ", leftMatch, TreeDiffSide.LEFT,
-								feature, featureDiffs));
+						elementList.add(createMatchEntry(listEntry, feature.getName() + " : ", leftMatch,
+								TreeDiffSide.LEFT, feature, featureDiffs));
 					}
 					if (rightMatch != null) {
-						elementList.add(createMatchEntry(feature.getName() + " : ", rightMatch, TreeDiffSide.RIGHT,
-								feature, featureDiffs));
+						elementList.add(createMatchEntry(listEntry, feature.getName() + " : ", rightMatch,
+								TreeDiffSide.RIGHT, feature, featureDiffs));
 					}
 					if (elementList.size() == 1) {
-
+						elementList.get(0).setParent(parent);
 						children.add(elementList.get(0));
 
 					} else {
@@ -633,7 +645,7 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 
 		} else {
 
-			children.add(new ObjectEntry(feature.getName() + " : ", comparison, leftValue, rightValue));
+			children.add(new ObjectEntry(parent, feature.getName() + " : ", comparison, leftValue, rightValue));
 
 		}
 	}
@@ -833,13 +845,13 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 			if (nextElement instanceof EObject) {
 
 				Match match = comparison.getMatch((EObject) nextElement);
-				MatchEntry matchEntry = createMatchEntry(feature.getName() + " : ", match, side, feature, featureDiffs);
+				MatchEntry matchEntry = createMatchEntry(listEntry, "", match, side, feature, featureDiffs);
 				elementList.add(matchEntry);
 
 			} else {
 
 				if (side == TreeDiffSide.LEFT) {
-					elementList.add(new ObjectEntry("", comparison, nextElement, null));
+					elementList.add(new ObjectEntry(listEntry, "", comparison, nextElement, null));
 				}
 			}
 		}
@@ -989,6 +1001,12 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 					return TreeDiffType.DELETE;
 				}
 			}
+		} else if (entry instanceof BaseEntry) {
+			BaseEntry baseEntry = (BaseEntry) entry;
+			BaseEntry parentEntry = baseEntry.getParent();
+			if (parentEntry != null) {
+				return getEntryDiffType(parentEntry);
+			}
 		}
 
 		return TreeDiffType.EQUAL;
@@ -1031,6 +1049,7 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 
 		private String labelTextPrefix;
 		private Comparison comparison;
+		private BaseEntry parent;
 
 		/**
 		 * @param labelTextPrefix
@@ -1038,8 +1057,9 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 		 * @param comparison
 		 *            the comparison used to create this entry.
 		 */
-		public BaseEntry(String labelTextPrefix, Comparison comparison) {
+		public BaseEntry(BaseEntry parent, String labelTextPrefix, Comparison comparison) {
 			super();
+			this.parent = parent;
 			this.labelTextPrefix = labelTextPrefix;
 			this.comparison = comparison;
 		}
@@ -1056,6 +1076,21 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 		 */
 		public Comparison getComparison() {
 			return comparison;
+		}
+
+		/**
+		 * @return the parent
+		 */
+		public BaseEntry getParent() {
+			return parent;
+		}
+
+		/**
+		 * @param parent
+		 *            the parent to set
+		 */
+		public void setParent(BaseEntry parent) {
+			this.parent = parent;
 		}
 
 	}
@@ -1076,8 +1111,9 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 
 		private List<Match> otherNotationElementMatches = new ArrayList<>();
 
-		public SelectionEntry(String labelTextPrefix, Match modelElementMatch, Match notationElementMatch) {
-			super(labelTextPrefix, modelElementMatch != null ? modelElementMatch.getComparison()
+		public SelectionEntry(BaseEntry parent, String labelTextPrefix, Match modelElementMatch,
+				Match notationElementMatch) {
+			super(parent, labelTextPrefix, modelElementMatch != null ? modelElementMatch.getComparison()
 					: notationElementMatch.getComparison());
 			this.modelElementMatch = modelElementMatch;
 			this.notationElementMatch = notationElementMatch;
@@ -1120,9 +1156,10 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 
 		private DiffCache diffs;
 
-		public MatchEntry(String labelTextPrefix, Match match, EStructuralFeature referencingFeature, DiffCache diffs) {
+		public MatchEntry(BaseEntry parent, String labelTextPrefix, Match match, EStructuralFeature referencingFeature,
+				DiffCache diffs) {
 
-			super(labelTextPrefix, match.getComparison());
+			super(parent, labelTextPrefix, match.getComparison());
 			this.match = match;
 			this.referencingFeature = referencingFeature;
 			this.diffs = diffs;
@@ -1160,10 +1197,10 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 
 		private TreeDiffSide side;
 
-		public MovedMatchEntry(String labelTextPrefix, Match match, EStructuralFeature referencingFeature,
-				DiffCache diffs, TreeDiffSide side) {
+		public MovedMatchEntry(BaseEntry parent, String labelTextPrefix, Match match,
+				EStructuralFeature referencingFeature, DiffCache diffs, TreeDiffSide side) {
 
-			super(labelTextPrefix, match, referencingFeature, diffs);
+			super(parent, labelTextPrefix, match, referencingFeature, diffs);
 			this.side = side;
 
 		}
@@ -1186,8 +1223,8 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 		private Object left;
 		private Object right;
 
-		public ObjectEntry(String labelTextPrefix, Comparison comparison, Object left, Object right) {
-			super(labelTextPrefix, comparison);
+		public ObjectEntry(BaseEntry parent, String labelTextPrefix, Comparison comparison, Object left, Object right) {
+			super(parent, labelTextPrefix, comparison);
 			this.left = left;
 			this.right = right;
 		}
@@ -1219,8 +1256,8 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 		private Image image;
 		private List<BaseEntry> elementList = new ArrayList<>();
 
-		public ListEntry(String labelTextPrefix, Comparison comparison, Image image) {
-			super(labelTextPrefix, comparison);
+		public ListEntry(BaseEntry parent, String labelTextPrefix, Comparison comparison, Image image) {
+			super(parent, labelTextPrefix, comparison);
 			this.image = image;
 		}
 
