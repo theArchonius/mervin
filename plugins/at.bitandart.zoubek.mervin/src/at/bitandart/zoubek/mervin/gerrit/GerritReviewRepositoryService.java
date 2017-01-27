@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Florian Zoubek.
+ * Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -909,15 +909,20 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 
 					User reviewer = modelReview.getCurrentReviewer();
 
-					for (EObject object : content) {
+					/*
+					 * create a copy to avoid transaction problems - note that
+					 * we cannot copy each comment one by one in the following
+					 * loop due to the bidirectional non-containment
+					 * reply/replyto relation. The related comment would not be
+					 * copied and the relation is lost.
+					 */
+					Collection<EObject> contentCopy = EcoreUtil.copyAll(content);
+
+					for (EObject object : contentCopy) {
 
 						if (object instanceof Comment) {
 
 							Comment comment = (Comment) object;
-
-							/* create a copy to avoid transaction problems */
-							EcoreUtil.resolveAll(comment);
-							comment = EcoreUtil.copy(comment);
 
 							comment.resolvePatchSet(modelReview);
 							User author = comment.getAuthor();
