@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import org.eclipse.draw2d.LayoutManager;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
 
 /**
@@ -32,7 +33,7 @@ public class ViewportFillingLayout extends AbstractLayout {
 		Viewport viewport = findParentViewport(container);
 		Dimension preferredSize = new Dimension(0, 0);
 
-		Point location = viewport.getLocation();
+		Point location = new PrecisionPoint(0, 0);
 		viewport.translateToAbsolute(location);
 
 		if (viewport != null) {
@@ -40,7 +41,6 @@ public class ViewportFillingLayout extends AbstractLayout {
 			for (Object child : container.getChildren()) {
 				if (child instanceof IFigure) {
 					IFigure childFigure = (IFigure) child;
-					childFigure.translateToRelative(location);
 					childFigure.setBounds(Rectangle.SINGLETON.setLocation(location).setSize(preferredSize));
 					break;
 				}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,9 +14,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.draw2d.FigureCanvas;
+import org.eclipse.draw2d.FreeformFigure;
 import org.eclipse.draw2d.FreeformViewport;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Color;
 
@@ -61,6 +64,13 @@ public class FocusFreeformViewport extends FreeformViewport {
 	private float outlineWidth;
 
 	/**
+	 * determines if scrolling should be enabled or not. Note that the scrollbar
+	 * visibility should be set to {@link FigureCanvas#NEVER} if this viewport
+	 * is used by a {@link FigureCanvas} and scrolling is disabled.
+	 */
+	private boolean scrollingEnabled = true;
+
+	/**
 	 * creates a new {@link FocusFreeformViewport} with the given values and
 	 * disabled focus mode.
 	 * 
@@ -76,14 +86,21 @@ public class FocusFreeformViewport extends FreeformViewport {
 	 *            the width of the outline around each focused figure. The
 	 *            outline will be considered as disabled if this value is less
 	 *            or equal 0.0.
+	 * @param scrollingEnabled
+	 *            determines if scrolling should be enabled or not. Note that
+	 *            the scrollbar visibility should be set to
+	 *            {@link FigureCanvas#NEVER} if this viewport is used by a
+	 *            {@link FigureCanvas} and scrolling is disabled.
 	 */
-	public FocusFreeformViewport(Color blendLayerColor, int blendLayerAlpha, float outlineWidth) {
+	public FocusFreeformViewport(Color blendLayerColor, int blendLayerAlpha, float outlineWidth,
+			boolean scrollingEnabled) {
 
 		focusedFigures = new ArrayList<IFigure>();
 		focusEnabled = false;
 		this.blendLayerColor = blendLayerColor;
 		this.blendLayerAlpha = blendLayerAlpha;
 		this.outlineWidth = outlineWidth;
+		this.scrollingEnabled = scrollingEnabled;
 
 	}
 
@@ -101,6 +118,8 @@ public class FocusFreeformViewport extends FreeformViewport {
 			graphics.fillRectangle(bounds);
 			graphics.restoreState();
 
+			Point viewLocation = getViewLocation();
+
 			/*
 			 * redraw each focused figure
 			 */
@@ -110,6 +129,7 @@ public class FocusFreeformViewport extends FreeformViewport {
 				Rectangle focusedBounds = getVisibleBounds(focusedFigure);
 				this.translateToRelative(focusedBounds);
 				this.translateFromParent(focusedBounds);
+				focusedBounds.translate(-viewLocation.x, -viewLocation.y);
 
 				if (outlineWidth > 0.0) {
 					graphics.setAlpha(Math.min(blendLayerAlpha + 10, 255));
@@ -130,6 +150,32 @@ public class FocusFreeformViewport extends FreeformViewport {
 
 	}
 
+	@Override
+	protected void readjustScrollBars() {
+
+		if (scrollingEnabled) {
+			super.readjustScrollBars();
+		} else {
+			/*
+			 * crop the freeform bounds to the client area to prevent
+			 * "automatic" scrolling (e.g. using {@link
+			 * EditPartViewer#reveal(EditPart)}) out of the client area
+			 */
+			if (getContents() == null)
+				return;
+			if (!(getContents() instanceof FreeformFigure))
+				return;
+			FreeformFigure ff = (FreeformFigure) getContents();
+			Rectangle clientArea = getClientArea();
+			Rectangle bounds = ff.getFreeformExtent().getCopy();
+			bounds.intersect(new Rectangle(0, 0, clientArea.width, clientArea.height));
+			ff.setFreeformBounds(bounds);
+
+			getVerticalRangeModel().setAll(bounds.y, clientArea.height, bounds.bottom());
+			getHorizontalRangeModel().setAll(bounds.x, clientArea.width, bounds.right());
+		}
+	}
+
 	/**
 	 * determines the actual visible bounds of the given figure based on their
 	 * ancestors. This method does not take figures into account that are not
@@ -138,8 +184,7 @@ public class FocusFreeformViewport extends FreeformViewport {
 	 * given figure.
 	 * 
 	 * @param figure
-	 * @return the visible bounds of the figure within the bounds of it's parent
-	 *         figures
+	 * @return the visible absolute bounds of the figure
 	 */
 	private Rectangle getVisibleBounds(IFigure figure) {
 
@@ -163,14 +208,12 @@ public class FocusFreeformViewport extends FreeformViewport {
 			child = parent;
 			parent = parent.getParent();
 		}
-		if (parent != null) {
-			/*
-			 * visibleBounds is in the coordinate system of the child's parent,
-			 * but the absolute coordinates are needed, so translate them to
-			 * absolute.
-			 */
-			child.translateToAbsolute(visibleBounds);
-		}
+
+		/*
+		 * visibleBounds is in the coordinate system of the child's parent, but
+		 * the absolute coordinates are needed, so translate them to absolute.
+		 */
+		child.translateToAbsolute(visibleBounds);
 
 		return visibleBounds;
 

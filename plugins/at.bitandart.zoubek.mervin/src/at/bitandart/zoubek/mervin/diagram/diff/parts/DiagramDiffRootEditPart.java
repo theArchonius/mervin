@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -61,7 +61,7 @@ public class DiagramDiffRootEditPart extends DiagramRootEditPart implements IFoc
 		 * viewport content
 		 */
 		FreeformViewport oldViewport = (FreeformViewport) super.createFigure();
-		FreeformViewport viewport = new FocusFreeformViewport(ColorConstants.black, 128, 0.0f);
+		FreeformViewport viewport = new FocusFreeformViewport(ColorConstants.black, 128, 0.0f, false);
 		viewport.setContents(oldViewport.getContents());
 
 		return viewport;
