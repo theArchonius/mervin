@@ -19,6 +19,7 @@ import javax.inject.Inject;
 
 import org.eclipse.core.commands.operations.OperationHistoryFactory;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.di.Focus;
@@ -198,6 +199,15 @@ public class DiagramDiffView implements IAdaptable {
 			viewer = new DiagramDiffViewer();
 			viewerControl = viewer.createControl(mainPanel);
 			viewerControl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+			if (viewerControl instanceof FigureCanvas) {
+				/*
+				 * for some reason the scrollbars also appear even if no
+				 * scrolling is possible/necessary, so deactivate them for the
+				 * figure canvas
+				 */
+				((FigureCanvas) viewerControl).setScrollBarVisibility(FigureCanvas.NEVER);
+			}
 
 			viewer.setKeyHandler(new GraphicalViewerKeyHandler(viewer));
 			viewer.setEditPartFactory(EditPartService.getInstance());
