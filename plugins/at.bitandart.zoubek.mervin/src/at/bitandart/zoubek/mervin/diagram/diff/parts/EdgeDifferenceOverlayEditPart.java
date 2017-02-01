@@ -56,6 +56,19 @@ public class EdgeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 			changeOverlayConnectionFigure.setShowCommentHint(differenceOverlay.isCommented());
 
 			EList<Difference> differences = differenceOverlay.getDifferences();
+
+			/*
+			 * assume a comment only overlay by default if the overlayed element
+			 * has comments, this will be overridden if state difference are
+			 * found.
+			 */
+			if (differences.isEmpty() && differenceOverlay.isCommented()) {
+				changeOverlayConnectionFigure.setChangeType(ChangeType.COMMENT);
+				if (offScreenChangeIndicator != null) {
+					offScreenChangeIndicator.setChangeType(ChangeType.COMMENT);
+				}
+			}
+
 			for (Difference difference : differences) {
 
 				if (difference instanceof StateDifference) {

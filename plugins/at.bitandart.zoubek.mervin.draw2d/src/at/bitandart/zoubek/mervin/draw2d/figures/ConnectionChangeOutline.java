@@ -102,6 +102,38 @@ public class ConnectionChangeOutline extends Shape {
 
 	}
 
+	@Override
+	public void paintFigure(Graphics graphics) {
+		super.paintFigure(graphics);
+
+		if (showCommentHint) {
+			paintCommentHint(graphics);
+		}
+	}
+
+	/**
+	 * paints the comment hint outline.
+	 * 
+	 * @param graphics
+	 *            the graphics context used to draw the comment hint outline.
+	 */
+	protected void paintCommentHint(Graphics graphics) {
+
+		int[] outlineShape = calculateOutlineShape(pointsToCover, paddingWidth, 1);
+
+		graphics.pushState();
+
+		graphics.setLineWidthFloat(getLineWidthFloat());
+
+		graphics.setAlpha(255);
+		graphics.setLineStyle(SWT.LINE_CUSTOM);
+		graphics.setLineDash(new float[] { 15.0f, 15.0f });
+		graphics.setForegroundColor(commentHintColor);
+		graphics.drawPolygon(outlineShape);
+
+		graphics.popState();
+	}
+
 	/**
 	 * creates coordinates array for a outline shape which completely covers the
 	 * given list of points that make up a connection.

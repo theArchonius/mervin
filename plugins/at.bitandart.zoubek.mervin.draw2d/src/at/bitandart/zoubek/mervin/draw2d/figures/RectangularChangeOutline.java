@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,29 +50,61 @@ public class RectangularChangeOutline extends Shape {
 
 	@Override
 	protected void outlineShape(Graphics graphics) {
+
+		graphics.pushState();
+
+		graphics.setAlpha(255);
+		graphics.drawRectangle(getOutlineRectangle());
+
+		graphics.popState();
+	}
+
+	@Override
+	public void paintFigure(Graphics graphics) {
+		super.paintFigure(graphics);
+
+		if (showCommentHint) {
+			paintCommentHint(graphics);
+		}
+	}
+
+	/**
+	 * paints the comment hint outline.
+	 * 
+	 * @param graphics
+	 *            the graphics context used to draw the comment hint outline.
+	 */
+	protected void paintCommentHint(Graphics graphics) {
+
+		graphics.pushState();
+
+		graphics.setLineWidthFloat(getLineWidthFloat());
+
+		graphics.setAlpha(255);
+		graphics.setLineStyle(SWT.LINE_CUSTOM);
+		graphics.setLineDash(new float[] { 15.0f, 15.0f });
+		graphics.setForegroundColor(commentHintColor);
+		graphics.drawRectangle(getOutlineRectangle());
+
+		graphics.popState();
+	}
+
+	/**
+	 * @return the rectangle used to draw the outline.
+	 */
+	protected Rectangle getOutlineRectangle() {
+
 		float lineInset = Math.max(1.0f, getLineWidthFloat()) / 2.0f;
 		int inset1 = (int) Math.floor(lineInset);
 		int inset2 = (int) Math.ceil(lineInset);
 
-		Rectangle r = Rectangle.SINGLETON.setBounds(getBounds());
+		Rectangle r = new Rectangle(getBounds());
 		r.x += inset1;
 		r.y += inset1;
 		r.width -= inset1 + inset2;
 		r.height -= inset1 + inset2;
 
-		graphics.pushState();
-		graphics.setAlpha(255);
-		graphics.drawRectangle(r);
-
-		if (showCommentHint) {
-			graphics.setLineStyle(SWT.LINE_CUSTOM);
-			graphics.setLineDash(new float[] { 15.0f, 15.0f });
-			graphics.setForegroundColor(commentHintColor);
-			graphics.drawRectangle(r);
-		}
-
-		graphics.popState();
-
+		return r;
 	}
 
 	/**

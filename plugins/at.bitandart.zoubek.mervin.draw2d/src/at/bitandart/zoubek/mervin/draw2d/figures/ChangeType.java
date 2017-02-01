@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,5 +17,13 @@ package at.bitandart.zoubek.mervin.draw2d.figures;
  *
  */
 public enum ChangeType {
-	ADDITION, DELETION, MODIFICATION, LAYOUT
+	/*
+	 * TODO Rename this enum and its referencing classes as overlays are not
+	 * necessarily linked to changed figures any more
+	 */
+	ADDITION, DELETION, MODIFICATION, LAYOUT,
+	/**
+	 * Pseudo change type for overlays
+	 */
+	COMMENT
 }

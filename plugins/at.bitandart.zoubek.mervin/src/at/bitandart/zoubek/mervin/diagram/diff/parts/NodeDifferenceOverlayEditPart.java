@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Florian Zoubek.
+ * Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -80,10 +80,22 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 			changeOverlayNodeFigure.setShowCommentHint(differenceOverlay.isCommented());
 
 			EList<Difference> differences = differenceOverlay.getDifferences();
-			boolean noStateDifference = true;
+			boolean hasLayoutDifference = false;
 
 			Vector originalLocation = null;
 			Dimension originalDimension = null;
+
+			/*
+			 * assume a comment only overlay by default if the overlayed element
+			 * has comments, this will be overridden if state difference are
+			 * found.
+			 */
+			if (differences.isEmpty() && differenceOverlay.isCommented()) {
+				changeOverlayNodeFigure.setChangeType(ChangeType.COMMENT);
+				if (offScreenChangeIndicator != null) {
+					offScreenChangeIndicator.setChangeType(ChangeType.COMMENT);
+				}
+			}
 
 			for (Difference difference : differences) {
 
@@ -95,21 +107,18 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 						if (offScreenChangeIndicator != null) {
 							offScreenChangeIndicator.setChangeType(ChangeType.ADDITION);
 						}
-						noStateDifference = false;
 						break;
 					case DELETED:
 						changeOverlayNodeFigure.setChangeType(ChangeType.DELETION);
 						if (offScreenChangeIndicator != null) {
 							offScreenChangeIndicator.setChangeType(ChangeType.DELETION);
 						}
-						noStateDifference = false;
 						break;
 					case MODIFIED:
 						changeOverlayNodeFigure.setChangeType(ChangeType.MODIFICATION);
 						if (offScreenChangeIndicator != null) {
 							offScreenChangeIndicator.setChangeType(ChangeType.MODIFICATION);
 						}
-						noStateDifference = false;
 						break;
 					default:
 						// do nothing
@@ -125,15 +134,19 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 							.setBoundsWidthChangeType(toDimensionPropertyChangeType(sizeDifference.getWidthChange()));
 					originalDimension = sizeDifference.getOriginalDimension();
 
+					hasLayoutDifference = true;
+
 				} else if (difference instanceof LocationDifference) {
 
 					LocationDifference locationDifference = (LocationDifference) difference;
 					changeOverlayNodeFigure.setMoveDirection(locationDifference.getMoveDirection());
 					originalLocation = locationDifference.getOriginalLocation();
+
+					hasLayoutDifference = true;
 				}
 
 			}
-			if (noStateDifference) {
+			if (hasLayoutDifference) {
 				changeOverlayNodeFigure.setChangeType(ChangeType.LAYOUT);
 				if (offScreenChangeIndicator != null) {
 					offScreenChangeIndicator.setChangeType(ChangeType.LAYOUT);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,12 +26,14 @@ public class DefaultChangeTypeStyleAdvisor implements IChangeTypeStyleAdvisor {
 	private Color deletionForegroundColor;
 	private Color modificationForegroundColor;
 	private Color layoutForegroundColor;
+	private Color commentsForegroundColor;
 	private Color defaultForegroundColor;
 
 	private Color additionBackgroundColor;
 	private Color deletionBackgroundColor;
 	private Color modificationBackgroundColor;
 	private Color layoutBackgroundColor;
+	private Color commentsBackgroundColor;
 	private Color defaultBackgroundColor;
 
 	private Color commentsColor;
@@ -51,6 +53,8 @@ public class DefaultChangeTypeStyleAdvisor implements IChangeTypeStyleAdvisor {
 		layoutBackgroundColor = new Color(Display.getDefault(), 178, 223, 138);
 
 		commentsColor = new Color(Display.getDefault(), 247, 177, 0);
+		commentsForegroundColor = commentsColor;
+		commentsBackgroundColor = commentsColor;
 
 		defaultForegroundColor = ColorConstants.black;
 		defaultBackgroundColor = ColorConstants.white;
@@ -67,6 +71,7 @@ public class DefaultChangeTypeStyleAdvisor implements IChangeTypeStyleAdvisor {
 
 		modificationForegroundColor.dispose();
 		modificationBackgroundColor.dispose();
+
 		commentsColor.dispose();
 	}
 
@@ -82,6 +87,8 @@ public class DefaultChangeTypeStyleAdvisor implements IChangeTypeStyleAdvisor {
 			return modificationForegroundColor;
 		case LAYOUT:
 			return layoutForegroundColor;
+		case COMMENT:
+			return commentsForegroundColor;
 		}
 		return defaultForegroundColor;
 
@@ -99,6 +106,8 @@ public class DefaultChangeTypeStyleAdvisor implements IChangeTypeStyleAdvisor {
 			return modificationBackgroundColor;
 		case LAYOUT:
 			return layoutBackgroundColor;
+		case COMMENT:
+			return commentsBackgroundColor;
 		}
 		return defaultBackgroundColor;
 

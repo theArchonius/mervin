@@ -182,7 +182,8 @@ public class ChangeOverlayConnectionFigure extends ComposedNodeFigure implements
 			outline.setBackgroundColor(backgroundColor);
 			outline.setForegroundColor(foregroundColor);
 
-			outline.setFill(changeType != ChangeType.LAYOUT);
+			outline.setFill(!(changeType == ChangeType.LAYOUT || changeType == ChangeType.COMMENT));
+			outline.setOutline(changeType != ChangeType.COMMENT);
 		}
 	}
 
