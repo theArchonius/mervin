@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -49,7 +49,6 @@ public class OffScreenIndicatorLayout extends AbstractLayout {
 
 				IOffScreenIndicator offScreenIndicator = (IOffScreenIndicator) child;
 				IFigure linkedContainer = offScreenIndicator.getContainerFigure();
-				Rectangle linkedFigureBounds = offScreenIndicator.getLinkedFiguresBounds();
 				Dimension childDimension = ((IOffScreenIndicator) child).getPreferredSize().getCopy();
 
 				Rectangle shrinkedBounds = linkedContainer.getBounds().getShrinked(childDimension.preciseWidth() / 2.0,
@@ -68,7 +67,7 @@ public class OffScreenIndicatorLayout extends AbstractLayout {
 
 				PrecisionPoint center = new PrecisionPoint(linkedContainer.getBounds().getCenter());
 				linkedContainer.translateToAbsolute(center);
-				PrecisionPoint figureLocation = new PrecisionPoint(linkedFigureBounds.getCenter());
+				PrecisionPoint figureLocation = offScreenIndicator.getReferencePoint();
 
 				DoublePrecisionVector centerToFigureDir = new DoublePrecisionVector(center, figureLocation);
 				DoublePrecisionVector centerToFigureDirPerpLeft = centerToFigureDir.getLeftPerpendicularVectorScreen();

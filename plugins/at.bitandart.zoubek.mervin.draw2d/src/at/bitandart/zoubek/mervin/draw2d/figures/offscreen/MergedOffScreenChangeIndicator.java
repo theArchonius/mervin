@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.draw2d.geometry.Vector;
 import org.eclipse.swt.graphics.Font;
 
 import at.bitandart.zoubek.mervin.draw2d.DoublePrecisionVector;
@@ -187,7 +188,7 @@ public class MergedOffScreenChangeIndicator extends AbstractOffScreenChangeIndic
 		Point absoluteCenter = center.getCopy();
 		translateToAbsolute(absoluteCenter);
 
-		Point linkedFigureCenter = new PrecisionPoint(getLinkedFiguresBounds().getCenter());
+		Point linkedFigureCenter = getReferencePoint();
 
 		// opposite direction of the arrow
 		DoublePrecisionVector indicatorCenter = new DoublePrecisionVector(new PrecisionPoint(absoluteCenter),
@@ -242,6 +243,45 @@ public class MergedOffScreenChangeIndicator extends AbstractOffScreenChangeIndic
 
 		return changeTypes;
 
+	}
+
+	@Override
+	public boolean areLinkedFiguresVisible() {
+
+		for (OffScreenChangeIndicator indicator : mergedIndicators) {
+			if (!indicator.areLinkedFiguresVisible()) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	@Override
+	public PrecisionPoint getReferencePoint() {
+
+		DoublePrecisionVector refPointVector = new DoublePrecisionVector(0, 0);
+		int numRefPoints = 0;
+		Vector cache = new Vector(0, 0);
+
+		for (OffScreenChangeIndicator indicator : mergedIndicators) {
+
+			if (!indicator.areLinkedFiguresVisible()) {
+
+				PrecisionPoint inidcatorReferencePoint = indicator.getReferencePoint();
+				cache.x = inidcatorReferencePoint.preciseX();
+				cache.y = inidcatorReferencePoint.preciseY();
+				refPointVector.add(cache);
+
+				numRefPoints++;
+			}
+		}
+
+		if (numRefPoints > 0) {
+			refPointVector.divide(numRefPoints);
+		}
+
+		return refPointVector.toPrecisionPoint();
 	}
 
 }

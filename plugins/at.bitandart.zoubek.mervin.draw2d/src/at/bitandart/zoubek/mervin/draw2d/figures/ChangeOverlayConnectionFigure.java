@@ -12,6 +12,7 @@ package at.bitandart.zoubek.mervin.draw2d.figures;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -219,6 +220,14 @@ public class ChangeOverlayConnectionFigure extends ComposedNodeFigure implements
 	 */
 	public ChangeType getChangeType() {
 		return changeType;
+	}
+
+	/**
+	 * @return an unmodifiable list of the current connection outline of this
+	 *         figure.
+	 */
+	public Collection<ConnectionChangeOutline> getCurrentOutlines() {
+		return Collections.unmodifiableCollection(outlines);
 	}
 
 }
