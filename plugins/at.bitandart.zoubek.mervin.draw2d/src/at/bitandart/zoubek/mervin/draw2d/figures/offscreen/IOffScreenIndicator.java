@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package at.bitandart.zoubek.mervin.draw2d.figures.offscreen;
 import java.util.Set;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
 
 /**
@@ -87,5 +88,12 @@ public interface IOffScreenIndicator extends IFigure {
 	 * Should be called when this figure is not used any more.
 	 */
 	public void cleanUp();
+
+	/**
+	 * @return the reference point that this indicator points to in absolute
+	 *         coordinates. This point must lie outside the containers bounds if
+	 *         the linked figures are not visible.
+	 */
+	public PrecisionPoint getReferencePoint();
 
 }

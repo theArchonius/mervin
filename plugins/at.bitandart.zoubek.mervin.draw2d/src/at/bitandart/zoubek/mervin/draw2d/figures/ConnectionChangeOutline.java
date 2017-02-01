@@ -355,4 +355,74 @@ public class ConnectionChangeOutline extends Shape {
 		return Geometry.polygonContainsPoint(outline, x, y);
 	}
 
+	/**
+	 * checks if the given rectangle in absolute coordinates intersects with the
+	 * outline point list. Note that this method do not support intersection of
+	 * outlines which enclose the whole rectangle.
+	 * 
+	 * @param rect
+	 *            the rectangle to check for intersection.
+	 * @return false if the rectangle does not intersect with this outline or if
+	 *         the rectangle is enclosed by the outline. Returns true otherwise.
+	 */
+	public boolean intersectsWith(Rectangle rect) {
+		PointList outline = new PointList(calculateOutlineShape(pointsToCover, paddingWidth, 1));
+		this.translateToAbsolute(outline);
+		return outline.intersects(rect);
+	}
+
+	/**
+	 * @param relPosition
+	 *            the relative position on the line. The given value must be
+	 *            within the interval [0,1], otherwise it will be clamped to
+	 *            this interval.
+	 * @return the point on the line covered by this outline, specified by its
+	 *         relative position on the line.
+	 */
+	public PrecisionPoint getPointOnLine(double relPosition) {
+
+		PrecisionPoint point = new PrecisionPoint();
+		double walkedDistance = 0;
+		double normalizedPosition = Math.max(Math.min(relPosition, 1.0), 0.0);
+
+		for (int i = 0; i < pointsToCover.size() - 1; i++) {
+			Point firstPoint = pointsToCover.getPoint(i);
+			Point secondPoint = pointsToCover.getPoint(i + 1);
+			walkedDistance += new DoublePrecisionVector(firstPoint, secondPoint).getLength();
+		}
+
+		double totalDistance = walkedDistance;
+
+		if (totalDistance > 0) {
+
+			double posLength = walkedDistance * normalizedPosition;
+			walkedDistance = 0;
+
+			for (int i = 0; i < pointsToCover.size() - 1; i++) {
+
+				Point firstPoint = pointsToCover.getPoint(i);
+				Point secondPoint = pointsToCover.getPoint(i + 1);
+				DoublePrecisionVector stepVector = new DoublePrecisionVector(firstPoint, secondPoint);
+
+				double stepDistance = stepVector.getLength();
+				walkedDistance += stepDistance;
+
+				if (walkedDistance >= posLength) {
+
+					double relStepDistance = stepDistance / totalDistance;
+					double relDistance = walkedDistance / totalDistance;
+					double stepScale = normalizedPosition - (relDistance - relStepDistance);
+					DoublePrecisionVector positionOffset = stepVector.getMultipliedDoublePrecision(stepScale);
+					point.setPreciseX(firstPoint.preciseX() + positionOffset.x);
+					point.setPreciseY(firstPoint.preciseY() + positionOffset.y);
+					break;
+				}
+			}
+		}
+
+		translateToAbsolute(point);
+
+		return point;
+	}
+
 }

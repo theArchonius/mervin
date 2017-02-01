@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.draw2d;
 
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Vector;
 
@@ -42,6 +43,18 @@ public class DoublePrecisionVector extends Vector {
 	 */
 	public DoublePrecisionVector(double x, double y) {
 		super(x, y);
+	}
+
+	/**
+	 * Convenience constructor that converts the given {@link Point} to
+	 * {@link PrecisionPoint}s and passes them to
+	 * {@link DoublePrecisionVector#DoublePrecisionVector(PrecisionPoint, PrecisionPoint)}
+	 * .
+	 * 
+	 * @see Vector#Vector(PrecisionPoint, PrecisionPoint)
+	 */
+	public DoublePrecisionVector(Point from, Point to) {
+		super(new PrecisionPoint(from), new PrecisionPoint(to));
 	}
 
 	/**

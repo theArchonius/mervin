@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Florian Zoubek.
+ * Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import org.eclipse.gmf.runtime.notation.View;
 
 import at.bitandart.zoubek.mervin.draw2d.figures.ChangeOverlayConnectionFigure;
 import at.bitandart.zoubek.mervin.draw2d.figures.ChangeType;
+import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.ConnectionOverlayOffScreenChangeIndicator;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.IOffScreenIndicator;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenChangeIndicator;
 import at.bitandart.zoubek.mervin.model.modelreview.BendpointsDifference;
@@ -113,7 +114,7 @@ public class EdgeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 
 	@Override
 	protected IOffScreenIndicator createOffScreenIndicator() {
-		return new OffScreenChangeIndicator(getStyleAdvisor());
+		return new ConnectionOverlayOffScreenChangeIndicator(getStyleAdvisor());
 	}
 
 	protected ChangeOverlayConnectionFigure getChangeOverlayConnectionFigure() {
