@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,13 +31,13 @@ import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScalableFreeformLayer
 import org.eclipse.gmf.runtime.notation.MeasurementUnit;
 
 import at.bitandart.zoubek.mervin.draw2d.MervinLayerConstants;
-import at.bitandart.zoubek.mervin.draw2d.figures.ChangeType;
-import at.bitandart.zoubek.mervin.draw2d.figures.DefaultChangeTypeStyleAdvisor;
-import at.bitandart.zoubek.mervin.draw2d.figures.IChangeTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.DefaultOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.IOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.OverlayType;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.IOffScreenIndicator;
-import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenChangeIndicator;
-import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenChangeIndicatorMerger;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenIndicatorLayout;
+import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenOverlayIndicator;
+import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenOverlayIndicatorMerger;
 
 /**
  * Demonstrates the usage of {@link IOffScreenIndicator}s.
@@ -46,7 +46,7 @@ import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenIndicatorLay
  *
  */
 public class OffScreenChangeIndicatorExample extends BaseExample {
-	private IChangeTypeStyleAdvisor styleAdvisor;
+	private IOverlayTypeStyleAdvisor styleAdvisor;
 
 	public static void main(String[] args) {
 		new OffScreenChangeIndicatorExample().run();
@@ -105,56 +105,56 @@ public class OffScreenChangeIndicatorExample extends BaseExample {
 		Layer contentLayer = getContentLayer(contentScrollPane);
 		Layer indicatorLayer = getIndicatorLayer(contentScrollPane);
 
-		styleAdvisor = new DefaultChangeTypeStyleAdvisor();
+		styleAdvisor = new DefaultOverlayTypeStyleAdvisor();
 
 		if (contentLayer != null && indicatorLayer != null) {
 
-			OffScreenChangeIndicatorMerger merger = new OffScreenChangeIndicatorMerger(indicatorLayer, styleAdvisor);
+			OffScreenOverlayIndicatorMerger merger = new OffScreenOverlayIndicatorMerger(indicatorLayer, styleAdvisor);
 			indicatorLayer.addLayoutListener(merger);
 
 			// left
 
-			IFigure leftFigure = createFigureFor(ChangeType.ADDITION, contentScrollPane, contentLayer, indicatorLayer,
+			IFigure leftFigure = createFigureFor(OverlayType.ADDITION, contentScrollPane, contentLayer, indicatorLayer,
 					styleAdvisor, merger);
 			contentLayer.setConstraint(leftFigure, new Rectangle(0 - getCanvasWidth(), getCanvasHeight() / 2, 150, 50));
 
-			IFigure leftFigure2 = createFigureFor(ChangeType.ADDITION, contentScrollPane, contentLayer, indicatorLayer,
+			IFigure leftFigure2 = createFigureFor(OverlayType.ADDITION, contentScrollPane, contentLayer, indicatorLayer,
 					styleAdvisor, merger);
 			contentLayer.setConstraint(leftFigure2,
 					new Rectangle(0 - getCanvasWidth() + 150, getCanvasHeight() / 2, 150, 50));
 
 			// right
 
-			IFigure rightFigure = createFigureFor(ChangeType.DELETION, contentScrollPane, contentLayer, indicatorLayer,
+			IFigure rightFigure = createFigureFor(OverlayType.DELETION, contentScrollPane, contentLayer, indicatorLayer,
 					styleAdvisor, merger);
 			contentLayer.setConstraint(rightFigure,
 					new Rectangle(getCanvasWidth() * 2 - 150, (getCanvasHeight()) / 2, 150, 50));
 
-			IFigure rightFigure2 = createFigureFor(ChangeType.ADDITION, contentScrollPane, contentLayer, indicatorLayer,
-					styleAdvisor, merger);
+			IFigure rightFigure2 = createFigureFor(OverlayType.ADDITION, contentScrollPane, contentLayer,
+					indicatorLayer, styleAdvisor, merger);
 			contentLayer.setConstraint(rightFigure2,
 					new Rectangle(getCanvasWidth() * 2 - 150 * 2, (getCanvasHeight()) / 2, 150, 50));
 
-			IFigure rightFigure3 = createFigureFor(ChangeType.MODIFICATION, contentScrollPane, contentLayer,
+			IFigure rightFigure3 = createFigureFor(OverlayType.MODIFICATION, contentScrollPane, contentLayer,
 					indicatorLayer, styleAdvisor, merger);
 			contentLayer.setConstraint(rightFigure3,
 					new Rectangle(getCanvasWidth() * 2 - 150 * 3, (getCanvasHeight()) / 2, 150, 50));
 
-			IFigure rightFigure4 = createFigureFor(ChangeType.LAYOUT, contentScrollPane, contentLayer, indicatorLayer,
+			IFigure rightFigure4 = createFigureFor(OverlayType.LAYOUT, contentScrollPane, contentLayer, indicatorLayer,
 					styleAdvisor, merger);
 			contentLayer.setConstraint(rightFigure4,
 					new Rectangle(getCanvasWidth() * 2 - 150 * 4, (getCanvasHeight()) / 2, 150, 50));
 
 			// top
 
-			IFigure topFigure = createFigureFor(ChangeType.MODIFICATION, contentScrollPane, contentLayer,
+			IFigure topFigure = createFigureFor(OverlayType.MODIFICATION, contentScrollPane, contentLayer,
 					indicatorLayer, styleAdvisor, merger);
 			contentLayer.setConstraint(topFigure,
 					new Rectangle((getCanvasWidth() - 100) / 2, 0 - getCanvasHeight(), 150, 50));
 
 			// bottom
 
-			IFigure bottomFigure = createFigureFor(ChangeType.LAYOUT, contentScrollPane, contentLayer, indicatorLayer,
+			IFigure bottomFigure = createFigureFor(OverlayType.LAYOUT, contentScrollPane, contentLayer, indicatorLayer,
 					styleAdvisor, merger);
 			contentLayer.setConstraint(bottomFigure,
 					new Rectangle((getCanvasWidth() - 100) / 2, getCanvasHeight() * 2 - 50, 150, 50));
@@ -164,11 +164,11 @@ public class OffScreenChangeIndicatorExample extends BaseExample {
 	}
 
 	/**
-	 * creates a figure and associates an {@link OffScreenChangeIndicator} with
-	 * the given change type to it.
+	 * creates a figure and associates an {@link OffScreenOverlayIndicator} with
+	 * the given overlay type to it.
 	 * 
-	 * @param changeType
-	 *            the change type of the {@link OffScreenChangeIndicator}.
+	 * @param overlayType
+	 *            the overlay type of the {@link OffScreenOverlayIndicator}.
 	 * @param contentScrollPane
 	 *            the {@link ScrollPane} containing the content.
 	 * @param contentLayer
@@ -176,23 +176,23 @@ public class OffScreenChangeIndicatorExample extends BaseExample {
 	 * @param indicatorLayer
 	 *            the indicator layer to add the indicator to.
 	 * @param styleAdvisor
-	 *            the {@link IChangeTypeStyleAdvisor} to use.
+	 *            the {@link IOverlayTypeStyleAdvisor} to use.
 	 * @param merger
 	 *            the indicator merger instance to use.
 	 * @return the created figure.
 	 */
-	private IFigure createFigureFor(ChangeType changeType, ScrollPane contentScrollPane, Layer contentLayer,
-			Layer indicatorLayer, IChangeTypeStyleAdvisor styleAdvisor, OffScreenChangeIndicatorMerger merger) {
+	private IFigure createFigureFor(OverlayType overlayType, ScrollPane contentScrollPane, Layer contentLayer,
+			Layer indicatorLayer, IOverlayTypeStyleAdvisor styleAdvisor, OffScreenOverlayIndicatorMerger merger) {
 
-		Label figure = new Label(changeType.name());
+		Label figure = new Label(overlayType.name());
 		figure.setTextAlignment(PositionConstants.CENTER);
 		figure.setBorder(new LineBorder());
 		contentLayer.add(figure);
 
-		OffScreenChangeIndicator indicator = new OffScreenChangeIndicator(styleAdvisor);
+		OffScreenOverlayIndicator indicator = new OffScreenOverlayIndicator(styleAdvisor);
 		indicator.addLinkedFigure(figure);
 		indicator.setContainerFigure(contentScrollPane.getViewport());
-		indicator.setChangeType(changeType);
+		indicator.setOverlayType(overlayType);
 		merger.registerIndicator(indicator);
 		indicatorLayer.add(indicator);
 

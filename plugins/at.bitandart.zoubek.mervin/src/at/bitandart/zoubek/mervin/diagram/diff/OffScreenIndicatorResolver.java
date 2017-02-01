@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Florian Zoubek.
+ * Copyright (c) 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,14 +21,14 @@ import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Vector;
 
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.IOffScreenIndicator;
-import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.MergedOffScreenChangeIndicator;
-import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenChangeIndicator;
+import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.MergedOffScreenOverlayIndicator;
+import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenOverlayIndicator;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.DiagramContainerFigure;
 
 /**
  * A {@link MouseListener} that scrolls to linked figures bounds of an
  * IOffScreenIndicator or to nearest the linked figures bounds of an
- * {@link MergedOffScreenChangeIndicator} when a mouse click is performed. The
+ * {@link MergedOffScreenOverlayIndicator} when a mouse click is performed. The
  * mouse event is consumed by this {@link MouseListener} if the source is an
  * {@link IOffScreenIndicator}.
  * 
@@ -62,17 +62,17 @@ public class OffScreenIndicatorResolver implements MouseListener {
 
 		Point figureLocation = null;
 
-		if (source instanceof MergedOffScreenChangeIndicator) {
+		if (source instanceof MergedOffScreenOverlayIndicator) {
 
-			MergedOffScreenChangeIndicator mergedIndicator = (MergedOffScreenChangeIndicator) source;
+			MergedOffScreenOverlayIndicator mergedIndicator = (MergedOffScreenOverlayIndicator) source;
 
 			PrecisionPoint mergedIndicatorLocation = new PrecisionPoint(mergedIndicator.getLocation());
 			mergedIndicator.getParent().translateToAbsolute(mergedIndicatorLocation);
 
 			double closestDistance = -1;
 
-			Set<OffScreenChangeIndicator> mergedIndicators = mergedIndicator.getMergedIndicators();
-			for (OffScreenChangeIndicator indicator : mergedIndicators) {
+			Set<OffScreenOverlayIndicator> mergedIndicators = mergedIndicator.getMergedIndicators();
+			for (OffScreenOverlayIndicator indicator : mergedIndicators) {
 
 				Point location = indicator.getLinkedFiguresBounds().getLocation();
 				if (closestDistance < 0) {

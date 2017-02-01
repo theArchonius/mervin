@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Florian Zoubek.
+ * Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,8 +18,8 @@ import org.eclipse.e4.core.contexts.IEclipseContext;
 import at.bitandart.zoubek.mervin.comments.ICommonTargetResolver;
 import at.bitandart.zoubek.mervin.comments.MervinCommentProvider;
 import at.bitandart.zoubek.mervin.comments.MervinCommonTargetResolver;
-import at.bitandart.zoubek.mervin.draw2d.figures.DefaultChangeTypeStyleAdvisor;
-import at.bitandart.zoubek.mervin.draw2d.figures.IChangeTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.DefaultOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.IOverlayTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.gerrit.GerritReviewRepositoryService;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
 import at.bitandart.zoubek.mervin.model.modelreview.User;
@@ -49,10 +49,10 @@ public class MervinServicesAddon {
 		context.set(User.class, defaultUser);
 		context.set(IMervinContextConstants.CURRENT_REVIEWER, defaultUser);
 
-		// add default style advisor for change types
-		DefaultChangeTypeStyleAdvisor styleAdvisor = ContextInjectionFactory.make(DefaultChangeTypeStyleAdvisor.class,
+		// add default style advisor for overlay types
+		DefaultOverlayTypeStyleAdvisor styleAdvisor = ContextInjectionFactory.make(DefaultOverlayTypeStyleAdvisor.class,
 				context);
-		context.set(IChangeTypeStyleAdvisor.class, styleAdvisor);
+		context.set(IOverlayTypeStyleAdvisor.class, styleAdvisor);
 
 		// add highlight service
 		MervinReviewHighlightService highlightService = ContextInjectionFactory.make(MervinReviewHighlightService.class,

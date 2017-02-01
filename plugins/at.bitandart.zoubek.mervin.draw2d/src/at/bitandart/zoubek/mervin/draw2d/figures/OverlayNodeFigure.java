@@ -27,17 +27,17 @@ import at.bitandart.zoubek.mervin.draw2d.figures.DimensionPropertyChangeIndicato
 
 /**
  * An {@link IOverlayFigure} with a rectangular outline and indicators for
- * layout changes. A {@link IChangeTypeStyleAdvisor} can be used to control the
+ * layout changes. A {@link IOverlayTypeStyleAdvisor} can be used to control the
  * colors for this figure.
  * 
  * @author Florian Zoubek
  *
  */
-public class ChangeOverlayNodeFigure extends ComposedNodeFigure implements IOverlayFigure {
+public class OverlayNodeFigure extends ComposedNodeFigure implements IOverlayFigure {
 
 	/**
 	 * The dimension property change types supported by
-	 * {@link ChangeOverlayNodeFigure}.
+	 * {@link OverlayNodeFigure}.
 	 * 
 	 * @author Florian Zoubek
 	 *
@@ -48,7 +48,7 @@ public class ChangeOverlayNodeFigure extends ComposedNodeFigure implements IOver
 
 	// child figures
 
-	private RectangularChangeOutline outline;
+	private RectangularOutline outline;
 	private DirectionIndicator directionIndicator;
 	private DimensionPropertyChangeIndicator boundsWidthSizeChangeIndicator;
 	private DimensionPropertyChangeIndicator boundsHeightSizeChangeIndicator;
@@ -60,12 +60,12 @@ public class ChangeOverlayNodeFigure extends ComposedNodeFigure implements IOver
 	private Dimension defaultBoundsWidthSizeChangeIndicatorSize = new Dimension(50, 20);
 	private Dimension defaultBoundsHeightChangeIndicatorSize = new Dimension(20, 50);
 
-	private IChangeTypeStyleAdvisor styleAdvisor;
+	private IOverlayTypeStyleAdvisor styleAdvisor;
 
 	// change properties
 
 	private Vector moveDirection = null;
-	private ChangeType changeType = ChangeType.ADDITION;
+	private OverlayType overlayType = OverlayType.ADDITION;
 	private boolean showCommentHint = false;
 	private DimensionPropertyChangeType boundsWidthChangeType = DimensionPropertyChangeType.NONE;
 	private DimensionPropertyChangeType boundsHeightChangeType = DimensionPropertyChangeType.NONE;
@@ -73,19 +73,19 @@ public class ChangeOverlayNodeFigure extends ComposedNodeFigure implements IOver
 	/**
 	 * @param styleAdivsor
 	 *            the style advisor used to obtain the styles for the different
-	 *            change types. Null values are not permitted.
-	 * @param changeType
-	 *            the change type that this figure represents
+	 *            overlay types. Null values are not permitted.
+	 * @param overlayType
+	 *            the overlay type that this figure represents
 	 * @throws IllegalArgumentException
 	 *             if null is passed as a style advisor
 	 */
-	public ChangeOverlayNodeFigure(IChangeTypeStyleAdvisor styleAdivsor, ChangeType changeType)
+	public OverlayNodeFigure(IOverlayTypeStyleAdvisor styleAdivsor, OverlayType overlayType)
 			throws IllegalArgumentException {
 		if (styleAdivsor == null) {
 			throw new IllegalArgumentException("A valid style advisor must be specified");
 		}
 		this.styleAdvisor = styleAdivsor;
-		this.changeType = changeType;
+		this.overlayType = overlayType;
 	}
 
 	/*
@@ -108,7 +108,7 @@ public class ChangeOverlayNodeFigure extends ComposedNodeFigure implements IOver
 	@Override
 	protected void initializeChildren() {
 
-		outline = new RectangularChangeOutline(styleAdvisor.getCommentColorForChangeType(changeType));
+		outline = new RectangularOutline(styleAdvisor.getCommentColorForOverlayType(overlayType));
 		outline.setAlpha(128);
 		outline.setLineWidthFloat(2f);
 		outline.setBounds(new Rectangle(0, 0, 20, 20));
@@ -120,7 +120,7 @@ public class ChangeOverlayNodeFigure extends ComposedNodeFigure implements IOver
 			directionIndicator.setVisible(false);
 		}
 		directionIndicator.setOpaque(true);
-		directionIndicator.setBorder(new LineBorder(styleAdvisor.getForegroundColorForChangeType(changeType), 5));
+		directionIndicator.setBorder(new LineBorder(styleAdvisor.getForegroundColorForOverlayType(overlayType), 5));
 		directionIndicator.setBounds(Rectangle.SINGLETON.setBounds(20, 0, defaultDirectionIndicatorSize.width,
 				defaultDirectionIndicatorSize.height));
 		add(directionIndicator);
@@ -129,14 +129,14 @@ public class ChangeOverlayNodeFigure extends ComposedNodeFigure implements IOver
 				DimensionChange.BIGGER);
 		boundsWidthSizeChangeIndicator.setOpaque(true);
 		boundsWidthSizeChangeIndicator
-				.setBorder(new LineBorder(styleAdvisor.getForegroundColorForChangeType(changeType), 5));
+				.setBorder(new LineBorder(styleAdvisor.getForegroundColorForOverlayType(overlayType), 5));
 		add(boundsWidthSizeChangeIndicator);
 
 		boundsHeightSizeChangeIndicator = new DimensionPropertyChangeIndicator(DimensionProperty.HEIGHT,
 				DimensionChange.BIGGER);
 		boundsHeightSizeChangeIndicator.setOpaque(true);
 		boundsHeightSizeChangeIndicator
-				.setBorder(new LineBorder(styleAdvisor.getForegroundColorForChangeType(changeType), 5));
+				.setBorder(new LineBorder(styleAdvisor.getForegroundColorForOverlayType(overlayType), 5));
 		add(boundsHeightSizeChangeIndicator);
 
 	}
@@ -153,31 +153,31 @@ public class ChangeOverlayNodeFigure extends ComposedNodeFigure implements IOver
 	 */
 	private void applyChangeStyles() {
 
-		Color foregroundColor = styleAdvisor.getForegroundColorForChangeType(changeType);
-		Color backgroundColor = styleAdvisor.getBackgroundColorForChangeType(changeType);
+		Color foregroundColor = styleAdvisor.getForegroundColorForOverlayType(overlayType);
+		Color backgroundColor = styleAdvisor.getBackgroundColorForOverlayType(overlayType);
 
 		outline.setForegroundColor(foregroundColor);
 		outline.setBackgroundColor(backgroundColor);
-		outline.setFill(!(changeType == ChangeType.LAYOUT || changeType == ChangeType.COMMENT));
-		outline.setOutline(changeType != ChangeType.COMMENT);
+		outline.setFill(!(overlayType == OverlayType.LAYOUT || overlayType == OverlayType.COMMENT));
+		outline.setOutline(overlayType != OverlayType.COMMENT);
 		outline.setShowCommentHint(showCommentHint);
 
 		directionIndicator.setBackgroundColor(foregroundColor);
-		directionIndicator.setForegroundColor(styleAdvisor.getIndicatorColorForChangeType(changeType));
+		directionIndicator.setForegroundColor(styleAdvisor.getIndicatorColorForOverlayType(overlayType));
 		Border indicatorBorder = directionIndicator.getBorder();
 		if (indicatorBorder instanceof LineBorder) {
 			((LineBorder) indicatorBorder).setColor(foregroundColor);
 		}
 
 		boundsHeightSizeChangeIndicator.setBackgroundColor(foregroundColor);
-		boundsHeightSizeChangeIndicator.setForegroundColor(styleAdvisor.getIndicatorColorForChangeType(changeType));
+		boundsHeightSizeChangeIndicator.setForegroundColor(styleAdvisor.getIndicatorColorForOverlayType(overlayType));
 		indicatorBorder = boundsHeightSizeChangeIndicator.getBorder();
 		if (indicatorBorder instanceof LineBorder) {
 			((LineBorder) indicatorBorder).setColor(foregroundColor);
 		}
 
 		boundsWidthSizeChangeIndicator.setBackgroundColor(foregroundColor);
-		boundsWidthSizeChangeIndicator.setForegroundColor(styleAdvisor.getIndicatorColorForChangeType(changeType));
+		boundsWidthSizeChangeIndicator.setForegroundColor(styleAdvisor.getIndicatorColorForOverlayType(overlayType));
 		indicatorBorder = boundsWidthSizeChangeIndicator.getBorder();
 		if (indicatorBorder instanceof LineBorder) {
 			((LineBorder) indicatorBorder).setColor(foregroundColor);
@@ -352,11 +352,11 @@ public class ChangeOverlayNodeFigure extends ComposedNodeFigure implements IOver
 	}
 
 	/**
-	 * @param changeType
-	 *            the change type which this overlay represents.
+	 * @param overlayType
+	 *            the overlay type which this overlay represents.
 	 */
-	public void setChangeType(ChangeType changeType) {
-		this.changeType = changeType;
+	public void setOverlayType(OverlayType overlayType) {
+		this.overlayType = overlayType;
 		applyChangeStyles();
 	}
 
@@ -380,10 +380,10 @@ public class ChangeOverlayNodeFigure extends ComposedNodeFigure implements IOver
 	}
 
 	/**
-	 * @return the change type which this overlay represents.
+	 * @return the overlay type which this overlay represents.
 	 */
-	public ChangeType getChangeType() {
-		return changeType;
+	public OverlayType getOverlayType() {
+		return overlayType;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Florian Zoubek.
+ * Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,10 +38,10 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.tooling.runtime.linklf.LinkLFShapeCompartmentEditPart;
 
 import at.bitandart.zoubek.mervin.draw2d.MervinLayerConstants;
-import at.bitandart.zoubek.mervin.draw2d.figures.IChangeTypeStyleAdvisor;
-import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenChangeIndicator;
-import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenChangeIndicatorMerger;
+import at.bitandart.zoubek.mervin.draw2d.figures.IOverlayTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenIndicatorLayout;
+import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenOverlayIndicator;
+import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenOverlayIndicatorMerger;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbench.DisplayMode;
 
 /**
@@ -58,9 +58,9 @@ public class DiagramContainerFigure extends LinkLFShapeCompartmentEditPart.Shape
 
 	private IDiffWorkbenchWindowTitleFigure windowTitleFigure;
 
-	private IChangeTypeStyleAdvisor styleAdvisor;
+	private IOverlayTypeStyleAdvisor styleAdvisor;
 
-	private OffScreenChangeIndicatorMerger offScreenChangeIndicatorMerger;
+	private OffScreenOverlayIndicatorMerger offScreenOverlayIndicatorMerger;
 
 	private IFigure toolbarFigure;
 
@@ -173,7 +173,7 @@ public class DiagramContainerFigure extends LinkLFShapeCompartmentEditPart.Shape
 		}
 	};
 
-	public DiagramContainerFigure(String compartmentTitle, IChangeTypeStyleAdvisor styleAdvisor, IMapMode mm) {
+	public DiagramContainerFigure(String compartmentTitle, IOverlayTypeStyleAdvisor styleAdvisor, IMapMode mm) {
 		super(compartmentTitle, mm);
 		remove(getTextPane());
 
@@ -222,8 +222,8 @@ public class DiagramContainerFigure extends LinkLFShapeCompartmentEditPart.Shape
 
 		FreeformLayer indicatorLayer = new FreeformLayer();
 		indicatorLayer.setLayoutManager(new OffScreenIndicatorLayout());
-		offScreenChangeIndicatorMerger = createOffScreenChangeIndicatorMerger(styleAdvisor, indicatorLayer);
-		indicatorLayer.addLayoutListener(offScreenChangeIndicatorMerger);
+		offScreenOverlayIndicatorMerger = createOffScreenChangeIndicatorMerger(styleAdvisor, indicatorLayer);
+		indicatorLayer.addLayoutListener(offScreenOverlayIndicatorMerger);
 		layeredPane.add(indicatorLayer, MervinLayerConstants.DIFF_INDICATOR_LAYER);
 		scrollPane.setContents(layeredPane);
 
@@ -234,12 +234,12 @@ public class DiagramContainerFigure extends LinkLFShapeCompartmentEditPart.Shape
 	/**
 	 * @param styleAdvisor
 	 * @param indicatorLayer
-	 * @return a new {@link OffScreenChangeIndicatorMerger} that should be used
-	 *         to merge {@link OffScreenChangeIndicator}s.
+	 * @return a new {@link OffScreenOverlayIndicatorMerger} that should be used
+	 *         to merge {@link OffScreenOverlayIndicator}s.
 	 */
-	protected OffScreenChangeIndicatorMerger createOffScreenChangeIndicatorMerger(IChangeTypeStyleAdvisor styleAdvisor,
-			FreeformLayer indicatorLayer) {
-		return new OffScreenChangeIndicatorMerger(indicatorLayer, styleAdvisor);
+	protected OffScreenOverlayIndicatorMerger createOffScreenChangeIndicatorMerger(
+			IOverlayTypeStyleAdvisor styleAdvisor, FreeformLayer indicatorLayer) {
+		return new OffScreenOverlayIndicatorMerger(indicatorLayer, styleAdvisor);
 	}
 
 	@Override
@@ -247,11 +247,11 @@ public class DiagramContainerFigure extends LinkLFShapeCompartmentEditPart.Shape
 		return super.getTextPane();
 	}
 
-	public OffScreenChangeIndicatorMerger getOffScreenChangeIndicatorMerger() {
-		return offScreenChangeIndicatorMerger;
+	public OffScreenOverlayIndicatorMerger getOffScreenOverlayIndicatorMerger() {
+		return offScreenOverlayIndicatorMerger;
 	}
 
-	public IChangeTypeStyleAdvisor getStyleAdvisor() {
+	public IOverlayTypeStyleAdvisor getStyleAdvisor() {
 		return styleAdvisor;
 	}
 

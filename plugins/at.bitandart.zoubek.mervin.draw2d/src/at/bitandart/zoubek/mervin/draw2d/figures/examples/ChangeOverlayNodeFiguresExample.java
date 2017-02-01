@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,15 +21,15 @@ import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.geometry.Vector;
 
-import at.bitandart.zoubek.mervin.draw2d.figures.ChangeOverlayNodeFigure;
-import at.bitandart.zoubek.mervin.draw2d.figures.ChangeOverlayNodeFigure.DimensionPropertyChangeType;
-import at.bitandart.zoubek.mervin.draw2d.figures.ChangeType;
-import at.bitandart.zoubek.mervin.draw2d.figures.DefaultChangeTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.DefaultOverlayLocator;
+import at.bitandart.zoubek.mervin.draw2d.figures.DefaultOverlayTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.OverlayLinkedFigureListener;
+import at.bitandart.zoubek.mervin.draw2d.figures.OverlayNodeFigure;
+import at.bitandart.zoubek.mervin.draw2d.figures.OverlayNodeFigure.DimensionPropertyChangeType;
+import at.bitandart.zoubek.mervin.draw2d.figures.OverlayType;
 
 /**
- * Demonstrates the usage of {@link ChangeOverlayNodeFigure}.
+ * Demonstrates the usage of {@link OverlayNodeFigure}.
  * 
  * @author Florian Zoubek
  *
@@ -38,7 +38,7 @@ public class ChangeOverlayNodeFiguresExample extends BaseExample {
 
 	private static final String PRIMARY_LAYER = "primary layer";
 	private static final String OVERLAY_LAYER = "overlay layer";
-	private DefaultChangeTypeStyleAdvisor styleAdvisor;
+	private DefaultOverlayTypeStyleAdvisor styleAdvisor;
 
 	public static void main(String[] args) {
 		new ChangeOverlayNodeFiguresExample().run();
@@ -86,11 +86,11 @@ public class ChangeOverlayNodeFiguresExample extends BaseExample {
 			Layer primaryLayer = layeredPane.getLayer(PRIMARY_LAYER);
 			Layer overlayLayer = layeredPane.getLayer(OVERLAY_LAYER);
 
-			styleAdvisor = new DefaultChangeTypeStyleAdvisor();
+			styleAdvisor = new DefaultOverlayTypeStyleAdvisor();
 
 			OverlayLinkedFigureListener overlayLinkedFigureListener = new OverlayLinkedFigureListener(overlayLayer);
 
-			for (ChangeType changeType : ChangeType.values()) {
+			for (OverlayType overlayType : OverlayType.values()) {
 
 				/* add the linked figures to the primary layer */
 
@@ -154,50 +154,48 @@ public class ChangeOverlayNodeFiguresExample extends BaseExample {
 				 * represent all possible variations.
 				 */
 
-				ChangeOverlayNodeFigure simpleOverlay = new ChangeOverlayNodeFigure(styleAdvisor, changeType);
+				OverlayNodeFigure simpleOverlay = new OverlayNodeFigure(styleAdvisor, overlayType);
 				overlayLayer.add(simpleOverlay, new DefaultOverlayLocator(label));
 
-				ChangeOverlayNodeFigure overlayWithComments = new ChangeOverlayNodeFigure(styleAdvisor, changeType);
+				OverlayNodeFigure overlayWithComments = new OverlayNodeFigure(styleAdvisor, overlayType);
 				overlayWithComments.setShowCommentHint(true);
 				overlayLayer.add(overlayWithComments, new DefaultOverlayLocator(labelWithComments));
 
-				ChangeOverlayNodeFigure overlayWithWidthResize = new ChangeOverlayNodeFigure(styleAdvisor, changeType);
+				OverlayNodeFigure overlayWithWidthResize = new OverlayNodeFigure(styleAdvisor, overlayType);
 				overlayWithWidthResize.setBoundsWidthChangeType(DimensionPropertyChangeType.SMALLER);
 				overlayLayer.add(overlayWithWidthResize, new DefaultOverlayLocator(widthResizedLabel));
 
-				ChangeOverlayNodeFigure overlayWithHeightResize = new ChangeOverlayNodeFigure(styleAdvisor, changeType);
+				OverlayNodeFigure overlayWithHeightResize = new OverlayNodeFigure(styleAdvisor, overlayType);
 				overlayWithHeightResize.setBoundsHeightChangeType(DimensionPropertyChangeType.SMALLER);
 				overlayLayer.add(overlayWithHeightResize, new DefaultOverlayLocator(heightResizedLabel));
 
-				ChangeOverlayNodeFigure overlayWithResize = new ChangeOverlayNodeFigure(styleAdvisor, changeType);
+				OverlayNodeFigure overlayWithResize = new OverlayNodeFigure(styleAdvisor, overlayType);
 				overlayWithResize.setBoundsHeightChangeType(DimensionPropertyChangeType.SMALLER);
 				overlayWithResize.setBoundsWidthChangeType(DimensionPropertyChangeType.BIGGER);
 				overlayLayer.add(overlayWithResize, new DefaultOverlayLocator(resizedLabel));
 
-				ChangeOverlayNodeFigure overlayWithCommentsResize = new ChangeOverlayNodeFigure(styleAdvisor,
-						changeType);
+				OverlayNodeFigure overlayWithCommentsResize = new OverlayNodeFigure(styleAdvisor, overlayType);
 				overlayWithCommentsResize.setBoundsHeightChangeType(DimensionPropertyChangeType.SMALLER);
 				overlayWithCommentsResize.setBoundsWidthChangeType(DimensionPropertyChangeType.SMALLER);
 				overlayWithCommentsResize.setShowCommentHint(true);
 				overlayLayer.add(overlayWithCommentsResize, new DefaultOverlayLocator(resizedLabelWithComments));
 
-				ChangeOverlayNodeFigure overlayWithMove = new ChangeOverlayNodeFigure(styleAdvisor, changeType);
+				OverlayNodeFigure overlayWithMove = new OverlayNodeFigure(styleAdvisor, overlayType);
 				overlayWithMove.setMoveDirection(new Vector(0, 1));
 				overlayLayer.add(overlayWithMove, new DefaultOverlayLocator(movedLabel));
 
-				ChangeOverlayNodeFigure overlayWithMoveResize = new ChangeOverlayNodeFigure(styleAdvisor, changeType);
+				OverlayNodeFigure overlayWithMoveResize = new OverlayNodeFigure(styleAdvisor, overlayType);
 				overlayWithMoveResize.setBoundsHeightChangeType(DimensionPropertyChangeType.BIGGER);
 				overlayWithMoveResize.setBoundsWidthChangeType(DimensionPropertyChangeType.SMALLER);
 				overlayWithMoveResize.setMoveDirection(new Vector(1, 1));
 				overlayLayer.add(overlayWithMoveResize, new DefaultOverlayLocator(movedResizedLabel));
 
-				ChangeOverlayNodeFigure overlayWithCommentsMove = new ChangeOverlayNodeFigure(styleAdvisor, changeType);
+				OverlayNodeFigure overlayWithCommentsMove = new OverlayNodeFigure(styleAdvisor, overlayType);
 				overlayWithCommentsMove.setShowCommentHint(true);
 				overlayWithCommentsMove.setMoveDirection(new Vector(-1, 0.5));
 				overlayLayer.add(overlayWithCommentsMove, new DefaultOverlayLocator(movedLabelWithComments));
 
-				ChangeOverlayNodeFigure overlayWithCommentsMoveResize = new ChangeOverlayNodeFigure(styleAdvisor,
-						changeType);
+				OverlayNodeFigure overlayWithCommentsMoveResize = new OverlayNodeFigure(styleAdvisor, overlayType);
 				overlayWithCommentsMoveResize.setShowCommentHint(true);
 				overlayWithCommentsMoveResize.setBoundsHeightChangeType(DimensionPropertyChangeType.SMALLER);
 				overlayWithCommentsMoveResize.setBoundsWidthChangeType(DimensionPropertyChangeType.BIGGER);

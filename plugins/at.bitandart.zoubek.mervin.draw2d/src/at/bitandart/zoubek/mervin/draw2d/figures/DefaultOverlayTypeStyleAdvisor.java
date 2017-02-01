@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Display;
  * @author Florian Zoubek
  *
  */
-public class DefaultChangeTypeStyleAdvisor implements IChangeTypeStyleAdvisor {
+public class DefaultOverlayTypeStyleAdvisor implements IOverlayTypeStyleAdvisor {
 
 	private Color additionForegroundColor;
 	private Color deletionForegroundColor;
@@ -38,7 +38,7 @@ public class DefaultChangeTypeStyleAdvisor implements IChangeTypeStyleAdvisor {
 
 	private Color commentsColor;
 
-	public DefaultChangeTypeStyleAdvisor() {
+	public DefaultOverlayTypeStyleAdvisor() {
 
 		additionForegroundColor = new Color(Display.getDefault(), 82, 145, 102);
 		additionBackgroundColor = new Color(Display.getDefault(), 82, 145, 102);
@@ -76,9 +76,9 @@ public class DefaultChangeTypeStyleAdvisor implements IChangeTypeStyleAdvisor {
 	}
 
 	@Override
-	public Color getForegroundColorForChangeType(ChangeType changeType) {
+	public Color getForegroundColorForOverlayType(OverlayType overlayType) {
 
-		switch (changeType) {
+		switch (overlayType) {
 		case ADDITION:
 			return additionForegroundColor;
 		case DELETION:
@@ -95,9 +95,9 @@ public class DefaultChangeTypeStyleAdvisor implements IChangeTypeStyleAdvisor {
 	}
 
 	@Override
-	public Color getBackgroundColorForChangeType(ChangeType changeType) {
+	public Color getBackgroundColorForOverlayType(OverlayType overlayType) {
 
-		switch (changeType) {
+		switch (overlayType) {
 		case ADDITION:
 			return additionBackgroundColor;
 		case DELETION:
@@ -114,12 +114,12 @@ public class DefaultChangeTypeStyleAdvisor implements IChangeTypeStyleAdvisor {
 	}
 
 	@Override
-	public Color getCommentColorForChangeType(ChangeType changeType) {
+	public Color getCommentColorForOverlayType(OverlayType overlayType) {
 		return commentsColor;
 	}
 
 	@Override
-	public Color getIndicatorColorForChangeType(ChangeType changeType) {
+	public Color getIndicatorColorForOverlayType(OverlayType overlayType) {
 		return ColorConstants.black;
 	}
 

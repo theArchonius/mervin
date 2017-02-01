@@ -10,20 +10,24 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.draw2d.figures;
 
+import org.eclipse.gef.Disposable;
+import org.eclipse.swt.graphics.Color;
+
 /**
- * The change types supported by {@link IOverlayFigure}s.
+ * Base interface for style advisors used to obtain a style for a given
+ * {@link OverlayType}.
  * 
  * @author Florian Zoubek
  *
  */
-public enum ChangeType {
-	/*
-	 * TODO Rename this enum and its referencing classes as overlays are not
-	 * necessarily linked to changed figures any more
-	 */
-	ADDITION, DELETION, MODIFICATION, LAYOUT,
-	/**
-	 * Pseudo change type for overlays
-	 */
-	COMMENT
+public interface IOverlayTypeStyleAdvisor extends Disposable {
+
+	public Color getForegroundColorForOverlayType(OverlayType overlayType);
+
+	public Color getBackgroundColorForOverlayType(OverlayType overlayType);
+
+	public Color getIndicatorColorForOverlayType(OverlayType overlayType);
+
+	public Color getCommentColorForOverlayType(OverlayType overlayType);
+
 }

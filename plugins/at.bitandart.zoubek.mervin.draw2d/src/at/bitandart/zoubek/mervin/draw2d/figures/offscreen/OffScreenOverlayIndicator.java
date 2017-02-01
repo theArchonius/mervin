@@ -17,34 +17,35 @@ import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Font;
 
-import at.bitandart.zoubek.mervin.draw2d.figures.ChangeType;
-import at.bitandart.zoubek.mervin.draw2d.figures.IChangeTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.IOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.OverlayType;
 
 /**
- * A {@link IOffScreenIndicator} that indicates the change type of an off-screen
- * {@link IFigure}. It draws a single character representing the change type in
- * the center, surrounded by a circle. Additionally an arrow points towards the
- * invisible figure. The visibility of this figure depends on the visibility of
- * the combined bounds of the linked figures - if the they intersect the
- * containers bounds the indicator is invisible, otherwise it is visible.
+ * A {@link IOffScreenIndicator} that indicates the overlay type of an
+ * off-screen {@link IFigure}. It draws a single character representing the
+ * overlay type in the center, surrounded by a circle. Additionally an arrow
+ * points towards the invisible figure. The visibility of this figure depends on
+ * the visibility of the combined bounds of the linked figures - if the they
+ * intersect the containers bounds the indicator is invisible, otherwise it is
+ * visible.
  * 
  * @author Florian Zoubek
  *
  */
-public class OffScreenChangeIndicator extends AbstractOffScreenChangeIndicator {
+public class OffScreenOverlayIndicator extends AbstractOffScreenOverlayIndicator {
 
 	/**
-	 * the change type to indicate.
+	 * the overlay type to indicate.
 	 */
-	private ChangeType changeType = ChangeType.ADDITION;
+	private OverlayType overlayType = OverlayType.ADDITION;
 
 	/**
-	 * creates a new {@link OffScreenChangeIndicator} that uses the given
-	 * {@link IChangeTypeStyleAdvisor} for drawing.
+	 * creates a new {@link OffScreenOverlayIndicator} that uses the given
+	 * {@link IOverlayTypeStyleAdvisor} for drawing.
 	 * 
 	 * @param styleAdvisor
 	 */
-	public OffScreenChangeIndicator(IChangeTypeStyleAdvisor styleAdvisor) {
+	public OffScreenOverlayIndicator(IOverlayTypeStyleAdvisor styleAdvisor) {
 		super(styleAdvisor);
 	}
 
@@ -53,14 +54,14 @@ public class OffScreenChangeIndicator extends AbstractOffScreenChangeIndicator {
 		super.paintFigure(graphics);
 
 		PrecisionRectangle bounds = new PrecisionRectangle(getBounds());
-		ChangeType changeType = getChangeType();
+		OverlayType overlayType = getOverlayType();
 
-		graphics.setBackgroundColor(styleAdvisor.getForegroundColorForChangeType(changeType));
+		graphics.setBackgroundColor(styleAdvisor.getForegroundColorForOverlayType(overlayType));
 		Rectangle shrinked = getSymbolBounds(bounds);
 
 		if (linkedFigures != null) {
 
-			drawArrow(graphics, bounds, changeType);
+			drawArrow(graphics, bounds, overlayType);
 
 		}
 
@@ -69,7 +70,7 @@ public class OffScreenChangeIndicator extends AbstractOffScreenChangeIndicator {
 		drawSymbolBorder(graphics, shrinked);
 
 		Font symbolFont = createSymbolFont();
-		String symbol = getSymbolFor(changeType);
+		String symbol = getSymbolFor(overlayType);
 
 		graphics.setForegroundColor(ColorConstants.white);
 		drawSymbol(symbol, graphics, shrinked, symbolFont);
@@ -83,15 +84,15 @@ public class OffScreenChangeIndicator extends AbstractOffScreenChangeIndicator {
 	 */
 	@Override
 	protected String getSymbol() {
-		return getSymbolFor(getChangeType());
+		return getSymbolFor(getOverlayType());
 	}
 
 	/**
-	 * @param changeType
-	 * @return the corresponding symbol to the given change type
+	 * @param overlayType
+	 * @return the corresponding symbol to the given overlay type
 	 */
-	protected String getSymbolFor(ChangeType changeType) {
-		switch (changeType) {
+	protected String getSymbolFor(OverlayType overlayType) {
+		switch (overlayType) {
 		case ADDITION:
 			return "A";
 		case DELETION:
@@ -107,20 +108,20 @@ public class OffScreenChangeIndicator extends AbstractOffScreenChangeIndicator {
 	}
 
 	/**
-	 * sets the change type of this indicator.
+	 * sets the overlay type of this indicator.
 	 * 
-	 * @param changeType
+	 * @param overlayType
 	 */
-	public void setChangeType(ChangeType changeType) {
-		this.changeType = changeType;
+	public void setOverlayType(OverlayType overlayType) {
+		this.overlayType = overlayType;
 	}
 
 	/**
 	 * 
-	 * @return the change type of this indicator.
+	 * @return the overlay type of this indicator.
 	 */
-	public ChangeType getChangeType() {
-		return changeType;
+	public OverlayType getOverlayType() {
+		return overlayType;
 	}
 
 }

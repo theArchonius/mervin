@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,14 +29,14 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
 
-import at.bitandart.zoubek.mervin.draw2d.figures.ChangeOverlayConnectionFigure;
-import at.bitandart.zoubek.mervin.draw2d.figures.ChangeType;
-import at.bitandart.zoubek.mervin.draw2d.figures.DefaultChangeTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.DefaultOverlayLocator;
+import at.bitandart.zoubek.mervin.draw2d.figures.DefaultOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.OverlayConnectionFigure;
 import at.bitandart.zoubek.mervin.draw2d.figures.OverlayLinkedFigureListener;
+import at.bitandart.zoubek.mervin.draw2d.figures.OverlayType;
 
 /**
- * Demonstrates the usage of {@link ChangeOverlayConnectionFigure}.
+ * Demonstrates the usage of {@link OverlayConnectionFigure}.
  * 
  * @author Florian Zoubek
  *
@@ -46,7 +46,7 @@ public class ChangeOverlayConnectionFiguresExample extends BaseExample {
 	private static final String PRIMARY_LAYER = "primary layer";
 	private static final String CONNECTION_LAYER = "connection layer";
 	private static final String OVERLAY_LAYER = "overlay layer";
-	private DefaultChangeTypeStyleAdvisor styleAdvisor;
+	private DefaultOverlayTypeStyleAdvisor styleAdvisor;
 
 	public static void main(String[] args) {
 		new ChangeOverlayConnectionFiguresExample().run();
@@ -94,7 +94,7 @@ public class ChangeOverlayConnectionFiguresExample extends BaseExample {
 			Layer connectionLayer = layeredPane.getLayer(CONNECTION_LAYER);
 			Layer overlayLayer = layeredPane.getLayer(OVERLAY_LAYER);
 
-			styleAdvisor = new DefaultChangeTypeStyleAdvisor();
+			styleAdvisor = new DefaultOverlayTypeStyleAdvisor();
 
 			OverlayLinkedFigureListener overlayLinkedFigureListener = new OverlayLinkedFigureListener(overlayLayer);
 
@@ -102,29 +102,29 @@ public class ChangeOverlayConnectionFiguresExample extends BaseExample {
 			Rectangle drawingArea = new Rectangle();
 			drawingArea.setLocation(offsets);
 			drawingArea.setSize(100, 100);
-			for (ChangeType changeType : ChangeType.values()) {
+			for (OverlayType overlayType : OverlayType.values()) {
 
-				addSimpleConnection(changeType, drawingArea, primaryLayer, connectionLayer, overlayLayer,
+				addSimpleConnection(overlayType, drawingArea, primaryLayer, connectionLayer, overlayLayer,
 						overlayLinkedFigureListener, false);
 				drawingArea.translate(drawingArea.width + offsets.x, 0);
 
-				addRectRoutedConnection(changeType, drawingArea, primaryLayer, connectionLayer, overlayLayer,
+				addRectRoutedConnection(overlayType, drawingArea, primaryLayer, connectionLayer, overlayLayer,
 						overlayLinkedFigureListener, false);
 				drawingArea.translate(drawingArea.width + offsets.x, 0);
 
-				addCustomRoutedConnection(changeType, drawingArea, primaryLayer, connectionLayer, overlayLayer,
+				addCustomRoutedConnection(overlayType, drawingArea, primaryLayer, connectionLayer, overlayLayer,
 						overlayLinkedFigureListener, false);
 				drawingArea.translate(drawingArea.width + offsets.x, 0);
 
-				addSimpleConnection(changeType, drawingArea, primaryLayer, connectionLayer, overlayLayer,
+				addSimpleConnection(overlayType, drawingArea, primaryLayer, connectionLayer, overlayLayer,
 						overlayLinkedFigureListener, true);
 				drawingArea.translate(drawingArea.width + offsets.x, 0);
 
-				addRectRoutedConnection(changeType, drawingArea, primaryLayer, connectionLayer, overlayLayer,
+				addRectRoutedConnection(overlayType, drawingArea, primaryLayer, connectionLayer, overlayLayer,
 						overlayLinkedFigureListener, true);
 				drawingArea.translate(drawingArea.width + offsets.x, 0);
 
-				addCustomRoutedConnection(changeType, drawingArea, primaryLayer, connectionLayer, overlayLayer,
+				addCustomRoutedConnection(overlayType, drawingArea, primaryLayer, connectionLayer, overlayLayer,
 						overlayLinkedFigureListener, true);
 				drawingArea.translate(drawingArea.width + offsets.x, 0);
 
@@ -135,7 +135,7 @@ public class ChangeOverlayConnectionFiguresExample extends BaseExample {
 		}
 	}
 
-	private void addSimpleConnection(ChangeType changeType, Rectangle drawingArea, Layer primaryLayer,
+	private void addSimpleConnection(OverlayType overlayType, Rectangle drawingArea, Layer primaryLayer,
 			Layer connectionLayer, Layer overlayLayer, OverlayLinkedFigureListener overlayLinkedFigureListener,
 			boolean withComments) {
 		/* add the linked figures to the primary layer */
@@ -163,12 +163,12 @@ public class ChangeOverlayConnectionFiguresExample extends BaseExample {
 		 * represent all possible variations.
 		 */
 
-		ChangeOverlayConnectionFigure overlay = new ChangeOverlayConnectionFigure(styleAdvisor, changeType);
+		OverlayConnectionFigure overlay = new OverlayConnectionFigure(styleAdvisor, overlayType);
 		overlayLayer.add(overlay, new DefaultOverlayLocator(connection));
 		overlay.setShowCommentHint(withComments);
 	}
 
-	private void addRectRoutedConnection(ChangeType changeType, Rectangle drawingArea, Layer primaryLayer,
+	private void addRectRoutedConnection(OverlayType overlayType, Rectangle drawingArea, Layer primaryLayer,
 			Layer connectionLayer, Layer overlayLayer, OverlayLinkedFigureListener overlayLinkedFigureListener,
 			boolean withComments) {
 		/* add the linked figures to the primary layer */
@@ -199,12 +199,12 @@ public class ChangeOverlayConnectionFiguresExample extends BaseExample {
 		 * represent all possible variations.
 		 */
 
-		ChangeOverlayConnectionFigure overlay = new ChangeOverlayConnectionFigure(styleAdvisor, changeType);
+		OverlayConnectionFigure overlay = new OverlayConnectionFigure(styleAdvisor, overlayType);
 		overlayLayer.add(overlay, new DefaultOverlayLocator(connection));
 		overlay.setShowCommentHint(withComments);
 	}
 
-	private void addCustomRoutedConnection(ChangeType changeType, Rectangle drawingArea, Layer primaryLayer,
+	private void addCustomRoutedConnection(OverlayType overlayType, Rectangle drawingArea, Layer primaryLayer,
 			Layer connectionLayer, Layer overlayLayer, OverlayLinkedFigureListener overlayLinkedFigureListener,
 			boolean withComments) {
 
@@ -246,7 +246,7 @@ public class ChangeOverlayConnectionFiguresExample extends BaseExample {
 		 * represent all possible variations.
 		 */
 
-		ChangeOverlayConnectionFigure overlay = new ChangeOverlayConnectionFigure(styleAdvisor, changeType);
+		OverlayConnectionFigure overlay = new OverlayConnectionFigure(styleAdvisor, overlayType);
 		overlayLayer.add(overlay, new DefaultOverlayLocator(connection));
 		overlay.setShowCommentHint(withComments);
 	}

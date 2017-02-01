@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Florian Zoubek.
+ * Copyright (c) 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,18 +25,18 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
 
-import at.bitandart.zoubek.mervin.draw2d.figures.ChangeType;
-import at.bitandart.zoubek.mervin.draw2d.figures.IChangeTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.IOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.OverlayType;
 import at.bitandart.zoubek.mervin.util.vis.MathUtil;
 
 /**
  * An abstract{@link OwnerDrawLabelProvider} that draws stacked bars for each
  * {@link DifferenceKind} based on the number of differences for each kind. It
- * uses the given {@link IChangeTypeStyleAdvisor} to obtain the colors for each
+ * uses the given {@link IOverlayTypeStyleAdvisor} to obtain the colors for each
  * bar, where {@link DifferenceKind#MOVE} is considered as a
  * {@link DifferenceKind#CHANGE}. The diff count is determined by a given
  * {@link IDifferenceCounter}. The tooltip shows more shows the actual number of
- * differences for each {@link ChangeType}.
+ * differences for a subset of all {@link OverlayType}s.
  * 
  * @author Florian Zoubek
  *
@@ -45,8 +45,10 @@ public abstract class DiffTypeOverviewLabelProvider extends OwnerDrawLabelProvid
 
 	private ColumnViewer viewer;
 	private ViewerColumn column;
-	private IChangeTypeStyleAdvisor styleAdvisor;
+	private IOverlayTypeStyleAdvisor styleAdvisor;
 	private IDifferenceCounter diffCounter;
+	private OverlayType[] tooltipChangeTypes = new OverlayType[] { OverlayType.ADDITION,
+			OverlayType.DELETION, OverlayType.MODIFICATION };
 
 	/**
 	 * @param styleAdvisor
@@ -55,7 +57,7 @@ public abstract class DiffTypeOverviewLabelProvider extends OwnerDrawLabelProvid
 	 *            the {@link IDifferenceCounter} that is used to obtain the
 	 *            count values for the stacked bars.
 	 */
-	public DiffTypeOverviewLabelProvider(IChangeTypeStyleAdvisor styleAdvisor, IDifferenceCounter diffCounter) {
+	public DiffTypeOverviewLabelProvider(IOverlayTypeStyleAdvisor styleAdvisor, IDifferenceCounter diffCounter) {
 		this.styleAdvisor = styleAdvisor;
 		this.diffCounter = diffCounter;
 	}
@@ -128,11 +130,12 @@ public abstract class DiffTypeOverviewLabelProvider extends OwnerDrawLabelProvid
 	public String getToolTipText(Object element) {
 
 		/* show detailed type statistics in the tooltip */
-		EnumMap<ChangeType, Integer> typeCounts = new EnumMap<ChangeType, Integer>(ChangeType.class);
+		EnumMap<OverlayType, Integer> typeCounts = new EnumMap<OverlayType, Integer>(
+				OverlayType.class);
 
 		for (DifferenceKind kind : DifferenceKind.values()) {
 
-			ChangeType changeType = toChangeType(kind);
+			OverlayType changeType = toChangeType(kind);
 			int currentCount = 0;
 			if (typeCounts.containsKey(changeType)) {
 				currentCount = typeCounts.get(changeType).intValue();
@@ -144,7 +147,7 @@ public abstract class DiffTypeOverviewLabelProvider extends OwnerDrawLabelProvid
 
 		StringBuilder tooltip = new StringBuilder();
 
-		for (ChangeType changeType : ChangeType.values()) {
+		for (OverlayType changeType : tooltipChangeTypes) {
 
 			int currentCount = 0;
 			if (typeCounts.containsKey(changeType)) {
@@ -196,7 +199,7 @@ public abstract class DiffTypeOverviewLabelProvider extends OwnerDrawLabelProvid
 						bounds.y + bounds.height);
 			}
 
-			gc.setBackground(styleAdvisor.getBackgroundColorForChangeType(toChangeType(kind)));
+			gc.setBackground(styleAdvisor.getBackgroundColorForOverlayType(toChangeType(kind)));
 			gc.fillRectangle(bounds.x + xOffset, Math.round(bounds.y + bounds.height * 0.4f), width,
 					Math.round(bounds.height * 0.6f));
 			xOffset += width;
@@ -223,26 +226,26 @@ public abstract class DiffTypeOverviewLabelProvider extends OwnerDrawLabelProvid
 	}
 
 	/**
-	 * converts {@link DifferenceKind}s to {@link ChangeType}s.
+	 * converts {@link DifferenceKind}s to {@link OverlayType}s.
 	 * {@link DifferenceKind#MOVE} and {@link DifferenceKind#CHANGE} will both
-	 * be mapped to {@link ChangeType#MODIFICATION}.
+	 * be mapped to {@link OverlayType#MODIFICATION}.
 	 * 
 	 * @param kind
 	 *            the {@link DifferenceKind} to convert.
-	 * @return the corresponding {@link ChangeType}.
+	 * @return the corresponding {@link OverlayType}.
 	 */
-	protected ChangeType toChangeType(DifferenceKind kind) {
+	protected OverlayType toChangeType(DifferenceKind kind) {
 		switch (kind) {
 		case ADD:
-			return ChangeType.ADDITION;
+			return OverlayType.ADDITION;
 		case DELETE:
-			return ChangeType.DELETION;
+			return OverlayType.DELETION;
 		case MOVE:
-			return ChangeType.MODIFICATION;
+			return OverlayType.MODIFICATION;
 		case CHANGE:
-			return ChangeType.MODIFICATION;
+			return OverlayType.MODIFICATION;
 		default:
-			return ChangeType.MODIFICATION;
+			return OverlayType.MODIFICATION;
 		}
 	}
 

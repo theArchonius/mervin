@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Florian Zoubek.
+ * Copyright (c) 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.review.explorer;
 
-import at.bitandart.zoubek.mervin.draw2d.figures.IChangeTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.IOverlayTypeStyleAdvisor;
 
 /**
  * A {@link DiffTypeOverviewLabelProvider} for the range from 0 to
@@ -27,7 +27,7 @@ public class ElementDiffTypeLabelProvider extends DiffTypeOverviewLabelProvider 
 	 * @param diffCounter
 	 * @see DiffTypeOverviewLabelProvider
 	 */
-	public ElementDiffTypeLabelProvider(IChangeTypeStyleAdvisor styleAdvisor, IDifferenceCounter diffCounter) {
+	public ElementDiffTypeLabelProvider(IOverlayTypeStyleAdvisor styleAdvisor, IDifferenceCounter diffCounter) {
 		super(styleAdvisor, diffCounter);
 	}
 

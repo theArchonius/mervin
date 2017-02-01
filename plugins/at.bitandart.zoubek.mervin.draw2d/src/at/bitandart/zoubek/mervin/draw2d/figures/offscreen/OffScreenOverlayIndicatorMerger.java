@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Florian Zoubek.
+ * Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,47 +22,47 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LayoutListener;
 import org.eclipse.draw2d.geometry.Rectangle;
 
-import at.bitandart.zoubek.mervin.draw2d.figures.IChangeTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.IOverlayTypeStyleAdvisor;
 
 /**
  * A {@link FigureListener} that automatically replaces close
- * {@link OffScreenChangeIndicator}s by a single
- * {@link MergedOffScreenChangeIndicator}. Replaced indicators are not removed
+ * {@link OffScreenOverlayIndicator}s by a single
+ * {@link MergedOffScreenOverlayIndicator}. Replaced indicators are not removed
  * form the figure tree, but their visibility is managed by this merger.
  * Therefore, changing the visibility of an indicator that is managed by this
  * merger is discouraged and may lead to unexpected behavior. To use this merger
  * add it to the indicator container as a layout listener and register the
  * indicators to merge to this merger by calling
- * {@link #registerIndicator(OffScreenChangeIndicator)}. Afterwards the merger
- * adds and removes {@link MergedOffScreenChangeIndicator}s after each layout
+ * {@link #registerIndicator(OffScreenOverlayIndicator)}. Afterwards the merger
+ * adds and removes {@link MergedOffScreenOverlayIndicator}s after each layout
  * call of the indicator container or if {@link #updateMergedIndicators()} is
  * called.
  * 
  * @author Florian Zoubek
  *
  */
-public class OffScreenChangeIndicatorMerger implements LayoutListener {
+public class OffScreenOverlayIndicatorMerger implements LayoutListener {
 
 	/**
 	 * the style advisor used to obtain the colors for merged indicators.
 	 */
-	private IChangeTypeStyleAdvisor styleAdvisor;
+	private IOverlayTypeStyleAdvisor styleAdvisor;
 
 	/**
-	 * the set of managed {@link OffScreenChangeIndicator}s.
+	 * the set of managed {@link OffScreenOverlayIndicator}s.
 	 */
-	private Set<OffScreenChangeIndicator> managedIndicators = new LinkedHashSet<OffScreenChangeIndicator>();
+	private Set<OffScreenOverlayIndicator> managedIndicators = new LinkedHashSet<OffScreenOverlayIndicator>();
 
 	/**
 	 * the current set of merged indicators.
 	 */
-	private Set<MergedOffScreenChangeIndicator> mergedIndicators = new LinkedHashSet<MergedOffScreenChangeIndicator>();
+	private Set<MergedOffScreenOverlayIndicator> mergedIndicators = new LinkedHashSet<MergedOffScreenOverlayIndicator>();
 
 	/**
 	 * the current mapping of change indicators to their containing merge
 	 * indicators
 	 */
-	private Map<OffScreenChangeIndicator, MergedOffScreenChangeIndicator> mergedIndicatorMap = new HashMap<OffScreenChangeIndicator, MergedOffScreenChangeIndicator>();
+	private Map<OffScreenOverlayIndicator, MergedOffScreenOverlayIndicator> mergedIndicatorMap = new HashMap<OffScreenOverlayIndicator, MergedOffScreenOverlayIndicator>();
 
 	/**
 	 * the container to add the merge indicators to.
@@ -76,7 +76,7 @@ public class OffScreenChangeIndicatorMerger implements LayoutListener {
 	 * @param styleAdvisor
 	 *            the style advisor used by the merge indicators.
 	 */
-	public OffScreenChangeIndicatorMerger(IFigure indicatorContainer, IChangeTypeStyleAdvisor styleAdvisor) {
+	public OffScreenOverlayIndicatorMerger(IFigure indicatorContainer, IOverlayTypeStyleAdvisor styleAdvisor) {
 		super();
 		this.indicatorContainer = indicatorContainer;
 		this.styleAdvisor = styleAdvisor;
@@ -84,11 +84,11 @@ public class OffScreenChangeIndicatorMerger implements LayoutListener {
 
 	public void updateMergedIndicators() {
 
-		Set<OffScreenChangeIndicator> alreadyMerged = new HashSet<OffScreenChangeIndicator>();
+		Set<OffScreenOverlayIndicator> alreadyMerged = new HashSet<OffScreenOverlayIndicator>();
 
 		// TODO clean up code
 
-		for (OffScreenChangeIndicator indicator : managedIndicators) {
+		for (OffScreenOverlayIndicator indicator : managedIndicators) {
 
 			if (!alreadyMerged.contains(indicator)) {
 
@@ -96,9 +96,9 @@ public class OffScreenChangeIndicatorMerger implements LayoutListener {
 
 					Rectangle indicatorBounds = indicator.getBounds().getCopy();
 					indicator.translateToAbsolute(indicatorBounds);
-					MergedOffScreenChangeIndicator mergedOffScreenChangeIndicator = mergedIndicatorMap.get(indicator);
+					MergedOffScreenOverlayIndicator mergedOffScreenChangeIndicator = mergedIndicatorMap.get(indicator);
 
-					for (OffScreenChangeIndicator otherIndicator : managedIndicators) {
+					for (OffScreenOverlayIndicator otherIndicator : managedIndicators) {
 
 						if (!alreadyMerged.contains(otherIndicator) && otherIndicator != indicator
 								&& !otherIndicator.areLinkedFiguresVisible()) {
@@ -113,7 +113,7 @@ public class OffScreenChangeIndicatorMerger implements LayoutListener {
 							if (otherBounds.intersects(indicatorBounds)
 									&& otherIndicator.getContainerFigure() == indicator.getContainerFigure()) {
 
-								MergedOffScreenChangeIndicator otherMergedIndicator = mergedIndicatorMap
+								MergedOffScreenOverlayIndicator otherMergedIndicator = mergedIndicatorMap
 										.get(otherIndicator);
 
 								if (mergedOffScreenChangeIndicator != null) {
@@ -165,10 +165,10 @@ public class OffScreenChangeIndicatorMerger implements LayoutListener {
 
 		// remove empty merged indicators
 
-		Iterator<MergedOffScreenChangeIndicator> iterator = mergedIndicators.iterator();
+		Iterator<MergedOffScreenOverlayIndicator> iterator = mergedIndicators.iterator();
 		while (iterator.hasNext()) {
 
-			MergedOffScreenChangeIndicator indicator = iterator.next();
+			MergedOffScreenOverlayIndicator indicator = iterator.next();
 			if (indicator.getMergedIndicators().isEmpty()) {
 				indicatorContainer.remove(indicator);
 				indicator.cleanUp();
@@ -180,11 +180,11 @@ public class OffScreenChangeIndicatorMerger implements LayoutListener {
 	}
 
 	/**
-	 * @return a new {@link MergedOffScreenChangeIndicator} that should be used
-	 *         to merge {@link OffScreenChangeIndicator}s.
+	 * @return a new {@link MergedOffScreenOverlayIndicator} that should be used
+	 *         to merge {@link OffScreenOverlayIndicator}s.
 	 */
-	protected MergedOffScreenChangeIndicator createMergedOffScreenChangeIndicator() {
-		return new MergedOffScreenChangeIndicator(styleAdvisor);
+	protected MergedOffScreenOverlayIndicator createMergedOffScreenChangeIndicator() {
+		return new MergedOffScreenOverlayIndicator(styleAdvisor);
 	}
 
 	/**
@@ -200,10 +200,10 @@ public class OffScreenChangeIndicatorMerger implements LayoutListener {
 	 * @param alreadyMerged
 	 *            the set of already merged indicators to update.
 	 */
-	private void addIndicator(MergedOffScreenChangeIndicator newMergedIndicator, OffScreenChangeIndicator indicator,
-			Set<OffScreenChangeIndicator> alreadyMerged) {
+	private void addIndicator(MergedOffScreenOverlayIndicator newMergedIndicator, OffScreenOverlayIndicator indicator,
+			Set<OffScreenOverlayIndicator> alreadyMerged) {
 
-		MergedOffScreenChangeIndicator oldMergedIndicator = mergedIndicatorMap.get(indicator);
+		MergedOffScreenOverlayIndicator oldMergedIndicator = mergedIndicatorMap.get(indicator);
 
 		if (oldMergedIndicator != null && newMergedIndicator != oldMergedIndicator) {
 			removeIndicator(indicator);
@@ -226,9 +226,9 @@ public class OffScreenChangeIndicatorMerger implements LayoutListener {
 	 * 
 	 * @param indicator
 	 */
-	private void removeIndicator(OffScreenChangeIndicator indicator) {
+	private void removeIndicator(OffScreenOverlayIndicator indicator) {
 
-		MergedOffScreenChangeIndicator oldMergedIndicator = mergedIndicatorMap.remove(indicator);
+		MergedOffScreenOverlayIndicator oldMergedIndicator = mergedIndicatorMap.remove(indicator);
 		if (oldMergedIndicator != null) {
 			oldMergedIndicator.removeIndicator(indicator);
 		}
@@ -242,7 +242,7 @@ public class OffScreenChangeIndicatorMerger implements LayoutListener {
 	 * 
 	 * @param indicator
 	 */
-	public void registerIndicator(OffScreenChangeIndicator indicator) {
+	public void registerIndicator(OffScreenOverlayIndicator indicator) {
 		managedIndicators.add(indicator);
 	}
 
@@ -252,7 +252,7 @@ public class OffScreenChangeIndicatorMerger implements LayoutListener {
 	 * 
 	 * @param indicator
 	 */
-	public void unregisterIndicator(OffScreenChangeIndicator indicator) {
+	public void unregisterIndicator(OffScreenOverlayIndicator indicator) {
 		managedIndicators.remove(indicator);
 		removeIndicator(indicator);
 	}

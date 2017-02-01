@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Florian Zoubek.
+ * Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,7 +23,7 @@ import org.eclipse.swt.graphics.Image;
 import at.bitandart.zoubek.mervin.draw2d.MervinResourceRegistry;
 import at.bitandart.zoubek.mervin.draw2d.RegistryResourceManager;
 import at.bitandart.zoubek.mervin.draw2d.ViewportFillingLayout;
-import at.bitandart.zoubek.mervin.draw2d.figures.DefaultChangeTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.DefaultOverlayTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.DiagramContainerFigure;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.DiffWorkbench;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbench;
@@ -121,7 +121,7 @@ public class WorkbenchExample extends GMFExample {
 	}
 
 	private DiagramContainerFigure createWorkbenchChild(String title) {
-		DiagramContainerFigure figure = new DiagramContainerFigure(title, new DefaultChangeTypeStyleAdvisor(),
+		DiagramContainerFigure figure = new DiagramContainerFigure(title, new DefaultOverlayTypeStyleAdvisor(),
 				getMapMode());
 		figure.setBackgroundColor(ColorConstants.white);
 		figure.setOpaque(true);

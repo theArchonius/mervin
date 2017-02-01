@@ -17,13 +17,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 
 /**
- * An rectangular outline for changes which also to encode comment information
+ * An rectangular outline for overlays which also to encode comment information
  * with a dashed outline in the specified color.
  * 
  * @author Florian Zoubek
  *
  */
-public class RectangularChangeOutline extends Shape {
+public class RectangularOutline extends Shape {
 
 	/**
 	 * the color of the comment hint.
@@ -39,7 +39,7 @@ public class RectangularChangeOutline extends Shape {
 	 * @param commentHintColor
 	 *            the color that is used to show the comment hint.
 	 */
-	public RectangularChangeOutline(Color commentHintColor) {
+	public RectangularOutline(Color commentHintColor) {
 		this.commentHintColor = commentHintColor;
 	}
 

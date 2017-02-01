@@ -27,11 +27,11 @@ import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.SWT;
 
-import at.bitandart.zoubek.mervin.draw2d.figures.ChangeOverlayNodeFigure;
-import at.bitandart.zoubek.mervin.draw2d.figures.ChangeOverlayNodeFigure.DimensionPropertyChangeType;
-import at.bitandart.zoubek.mervin.draw2d.figures.ChangeType;
+import at.bitandart.zoubek.mervin.draw2d.figures.OverlayNodeFigure;
+import at.bitandart.zoubek.mervin.draw2d.figures.OverlayNodeFigure.DimensionPropertyChangeType;
+import at.bitandart.zoubek.mervin.draw2d.figures.OverlayType;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.IOffScreenIndicator;
-import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenChangeIndicator;
+import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenOverlayIndicator;
 import at.bitandart.zoubek.mervin.model.modelreview.Difference;
 import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
 import at.bitandart.zoubek.mervin.model.modelreview.DimensionChange;
@@ -72,8 +72,8 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 		super.refreshVisuals();
 
 		DifferenceOverlay differenceOverlay = getDifferenceOverlay();
-		ChangeOverlayNodeFigure changeOverlayNodeFigure = getChangeOverlayNodeFigure();
-		OffScreenChangeIndicator offScreenChangeIndicator = getOffScreenChangeIndicator();
+		OverlayNodeFigure changeOverlayNodeFigure = getChangeOverlayNodeFigure();
+		OffScreenOverlayIndicator offScreenChangeIndicator = getOffScreenChangeIndicator();
 
 		if (differenceOverlay != null && changeOverlayNodeFigure != null) {
 
@@ -91,9 +91,9 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 			 * found.
 			 */
 			if (differences.isEmpty() && differenceOverlay.isCommented()) {
-				changeOverlayNodeFigure.setChangeType(ChangeType.COMMENT);
+				changeOverlayNodeFigure.setOverlayType(OverlayType.COMMENT);
 				if (offScreenChangeIndicator != null) {
-					offScreenChangeIndicator.setChangeType(ChangeType.COMMENT);
+					offScreenChangeIndicator.setOverlayType(OverlayType.COMMENT);
 				}
 			}
 
@@ -103,21 +103,21 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 
 					switch (((StateDifference) difference).getType()) {
 					case ADDED:
-						changeOverlayNodeFigure.setChangeType(ChangeType.ADDITION);
+						changeOverlayNodeFigure.setOverlayType(OverlayType.ADDITION);
 						if (offScreenChangeIndicator != null) {
-							offScreenChangeIndicator.setChangeType(ChangeType.ADDITION);
+							offScreenChangeIndicator.setOverlayType(OverlayType.ADDITION);
 						}
 						break;
 					case DELETED:
-						changeOverlayNodeFigure.setChangeType(ChangeType.DELETION);
+						changeOverlayNodeFigure.setOverlayType(OverlayType.DELETION);
 						if (offScreenChangeIndicator != null) {
-							offScreenChangeIndicator.setChangeType(ChangeType.DELETION);
+							offScreenChangeIndicator.setOverlayType(OverlayType.DELETION);
 						}
 						break;
 					case MODIFIED:
-						changeOverlayNodeFigure.setChangeType(ChangeType.MODIFICATION);
+						changeOverlayNodeFigure.setOverlayType(OverlayType.MODIFICATION);
 						if (offScreenChangeIndicator != null) {
-							offScreenChangeIndicator.setChangeType(ChangeType.MODIFICATION);
+							offScreenChangeIndicator.setOverlayType(OverlayType.MODIFICATION);
 						}
 						break;
 					default:
@@ -147,9 +147,9 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 
 			}
 			if (hasLayoutDifference) {
-				changeOverlayNodeFigure.setChangeType(ChangeType.LAYOUT);
+				changeOverlayNodeFigure.setOverlayType(OverlayType.LAYOUT);
 				if (offScreenChangeIndicator != null) {
-					offScreenChangeIndicator.setChangeType(ChangeType.LAYOUT);
+					offScreenChangeIndicator.setOverlayType(OverlayType.LAYOUT);
 				}
 
 				IFigure linkedFigure = getLinkedEditPart().getFigure();
@@ -412,26 +412,26 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 	 */
 	@Override
 	protected NodeFigure createNodeFigure() {
-		return new ChangeOverlayNodeFigure(getStyleAdvisor(), ChangeType.ADDITION);
+		return new OverlayNodeFigure(getStyleAdvisor(), OverlayType.ADDITION);
 	}
 
 	@Override
 	protected IOffScreenIndicator createOffScreenIndicator() {
-		return new OffScreenChangeIndicator(getStyleAdvisor());
+		return new OffScreenOverlayIndicator(getStyleAdvisor());
 	}
 
-	protected ChangeOverlayNodeFigure getChangeOverlayNodeFigure() {
+	protected OverlayNodeFigure getChangeOverlayNodeFigure() {
 		IFigure figure = getFigure();
-		if (figure instanceof ChangeOverlayNodeFigure) {
-			return (ChangeOverlayNodeFigure) figure;
+		if (figure instanceof OverlayNodeFigure) {
+			return (OverlayNodeFigure) figure;
 		}
 		return null;
 	}
 
-	protected OffScreenChangeIndicator getOffScreenChangeIndicator() {
+	protected OffScreenOverlayIndicator getOffScreenChangeIndicator() {
 		IOffScreenIndicator offScreenIndicator = getOffScreenIndicator();
-		if (offScreenIndicator instanceof OffScreenChangeIndicator) {
-			return (OffScreenChangeIndicator) offScreenIndicator;
+		if (offScreenIndicator instanceof OffScreenOverlayIndicator) {
+			return (OffScreenOverlayIndicator) offScreenIndicator;
 		}
 		return null;
 	}
