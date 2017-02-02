@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 
 import org.eclipse.core.commands.ExecutionException;
@@ -248,7 +249,11 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 
 				StateDifferenceType stateDifferenceType = toStateDifferenceType(viewReferenceChange.getKind());
 
-				if (!hasSameStateDifferenceType(parentOverlays, stateDifferenceType)) {
+				/*
+				 * do not create a state difference if it is visually inherited
+				 * by an overlay of a parent view (the 'parent' overlay)
+				 */
+				if (!hasParentSameStateDifferenceType(parentOverlays, stateDifferenceType)) {
 
 					StateDifference stateDifference = reviewFactory.createStateDifference();
 					stateDifference.getRawDiffs().add(viewReferenceChange);
@@ -287,15 +292,35 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 		parentOverlays.remove(differenceOverlay);
 	}
 
-	private boolean hasSameStateDifferenceType(List<DifferenceOverlay> differenceOverlays,
+	/**
+	 * determines if the parent overlay has the same state difference type as
+	 * the given state difference type.
+	 * 
+	 * @param parentOverlays
+	 *            a list of the parent overlays, ordered from the top to the
+	 *            bottom (meaning the direct parent overlay is at the last
+	 *            index).
+	 * @param stateDifferenceType
+	 *            the difference type to check.
+	 * @return true if the the parent overlay has the same state difference
+	 *         type, false otherwise.
+	 */
+	private boolean hasParentSameStateDifferenceType(List<DifferenceOverlay> parentOverlays,
 			StateDifferenceType stateDifferenceType) {
 
-		for (DifferenceOverlay overlay : differenceOverlays) {
+		ListIterator<DifferenceOverlay> overlayIterator = parentOverlays.listIterator(parentOverlays.size());
+		/*
+		 * An overlay without state difference has the same state difference as
+		 * its parent, so walk the parent overlay list from the bottom to the
+		 * top. The first state difference found this way is then checked with
+		 * the given state difference.
+		 */
+		while (overlayIterator.hasPrevious()) {
+			DifferenceOverlay overlay = overlayIterator.previous();
 			EList<Difference> differences = overlay.getDifferences();
 			for (Difference difference : differences) {
-				if (difference instanceof StateDifference
-						&& ((StateDifference) difference).getType() == stateDifferenceType) {
-					return true;
+				if (difference instanceof StateDifference) {
+					return ((StateDifference) difference).getType() == stateDifferenceType;
 				}
 			}
 		}
