@@ -26,12 +26,12 @@ import org.eclipse.gmf.runtime.notation.View;
 
 import at.bitandart.zoubek.mervin.diagram.diff.OffScreenIndicatorResolver;
 import at.bitandart.zoubek.mervin.draw2d.MervinLayerConstants;
-import at.bitandart.zoubek.mervin.draw2d.figures.DefaultChangeTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.DefaultOverlayTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.DefaultOverlayLocator;
-import at.bitandart.zoubek.mervin.draw2d.figures.IChangeTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.IOverlayTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.OverlayLinkedFigureListener;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.IOffScreenIndicator;
-import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenChangeIndicator;
+import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenOverlayIndicator;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.DiagramContainerFigure;
 import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
 
@@ -43,7 +43,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
  */
 public abstract class AbstractDifferenceOverlayEditPart extends ShapeNodeEditPart implements IOverlayEditPart {
 
-	private DefaultChangeTypeStyleAdvisor styleAdvisor;
+	private DefaultOverlayTypeStyleAdvisor styleAdvisor;
 	protected IFigure prevLinkedFigure = null;
 	private IOffScreenIndicator offScreenIndicator;
 
@@ -125,17 +125,17 @@ public abstract class AbstractDifferenceOverlayEditPart extends ShapeNodeEditPar
 		return null;
 	}
 
-	public IChangeTypeStyleAdvisor getStyleAdvisor() {
+	public IOverlayTypeStyleAdvisor getStyleAdvisor() {
 		DiagramContainerFigure containerFigure = getContainerFigure();
 		if (containerFigure != null) {
-			IChangeTypeStyleAdvisor styleAdvisor = containerFigure.getStyleAdvisor();
+			IOverlayTypeStyleAdvisor styleAdvisor = containerFigure.getStyleAdvisor();
 			if (styleAdvisor != null) {
 				return styleAdvisor;
 			}
 		}
 		// Cannot derive style advisor, so use own instance
 		if (this.styleAdvisor == null) {
-			this.styleAdvisor = new DefaultChangeTypeStyleAdvisor();
+			this.styleAdvisor = new DefaultOverlayTypeStyleAdvisor();
 		}
 		return this.styleAdvisor;
 
@@ -152,9 +152,9 @@ public abstract class AbstractDifferenceOverlayEditPart extends ShapeNodeEditPar
 		offScreenIndicator.setContainerFigure(containerFigure.getScrollPane().getViewport());
 		offScreenIndicator.addMouseListener(new OffScreenIndicatorResolver(getContainerFigure()));
 
-		if (offScreenIndicator instanceof OffScreenChangeIndicator) {
-			containerFigure.getOffScreenChangeIndicatorMerger()
-					.registerIndicator((OffScreenChangeIndicator) offScreenIndicator);
+		if (offScreenIndicator instanceof OffScreenOverlayIndicator) {
+			containerFigure.getOffScreenOverlayIndicatorMerger()
+					.registerIndicator((OffScreenOverlayIndicator) offScreenIndicator);
 		}
 
 		indicatorLayer.add(offScreenIndicator);
@@ -179,9 +179,9 @@ public abstract class AbstractDifferenceOverlayEditPart extends ShapeNodeEditPar
 		DiagramContainerFigure containerFigure = getContainerFigure();
 		Layer indicatorLayer = getIndicatorLayer();
 		if (offScreenIndicator != null) {
-			if (offScreenIndicator instanceof OffScreenChangeIndicator) {
-				containerFigure.getOffScreenChangeIndicatorMerger()
-						.unregisterIndicator((OffScreenChangeIndicator) offScreenIndicator);
+			if (offScreenIndicator instanceof OffScreenOverlayIndicator) {
+				containerFigure.getOffScreenOverlayIndicatorMerger()
+						.unregisterIndicator((OffScreenOverlayIndicator) offScreenIndicator);
 			}
 			indicatorLayer.remove(offScreenIndicator);
 		}

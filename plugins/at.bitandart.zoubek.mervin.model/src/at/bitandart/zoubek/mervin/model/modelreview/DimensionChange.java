@@ -1,6 +1,6 @@
 /**
  * ******************************************************************************
- *  Copyright (c) 2015 Florian Zoubek.
+ *  Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -47,6 +47,7 @@ public enum DimensionChange implements Enumerator {
 	 * @ordered
 	 */
 	BIGGER(1, "BIGGER", "BIGGER"),
+
 	/**
 	 * The '<em><b>UNKNOWN</b></em>' literal object. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -56,6 +57,7 @@ public enum DimensionChange implements Enumerator {
 	 * @ordered
 	 */
 	UNKNOWN(3, "UNKNOWN", "UNKNOWN"),
+
 	/**
 	 * The '<em><b>EQUAL</b></em>' literal object. <!-- begin-user-doc --> <!--
 	 * end-user-doc -->

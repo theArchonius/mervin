@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Florian Zoubek.
+ * Copyright (c) 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
  * <li>{@link IOverlayTypeDescriptor#TYPE_DESCRIPTOR_DELETION}</li>
  * <li>{@link IOverlayTypeDescriptor#TYPE_DESCRIPTOR_MODIFICATION}</li>
  * <li>{@link IOverlayTypeDescriptor#TYPE_DESCRIPTOR_LAYOUT}</li>
+ * <li>{@link IOverlayTypeDescriptor#TYPE_DESCRIPTOR_COMMENTS}</li>
  * </ul>
  * 
  * It also returns true for
@@ -55,6 +56,7 @@ public class ModelReviewVisibilityState implements IOverlayVisibilityState {
 		visibilityStates.put(IOverlayTypeDescriptor.TYPE_DESCRIPTOR_DELETION, review.isShowDeletions());
 		visibilityStates.put(IOverlayTypeDescriptor.TYPE_DESCRIPTOR_MODIFICATION, review.isShowModifications());
 		visibilityStates.put(IOverlayTypeDescriptor.TYPE_DESCRIPTOR_LAYOUT, review.isShowLayoutChanges());
+		visibilityStates.put(IOverlayTypeDescriptor.TYPE_DESCRIPTOR_COMMENTS, review.isShowComments());
 		this.defaultVisibilty = defaultVisibility;
 	}
 

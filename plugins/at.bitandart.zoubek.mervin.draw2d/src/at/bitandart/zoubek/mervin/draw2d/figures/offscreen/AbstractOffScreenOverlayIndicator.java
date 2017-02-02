@@ -25,23 +25,23 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Display;
 
 import at.bitandart.zoubek.mervin.draw2d.DoublePrecisionVector;
-import at.bitandart.zoubek.mervin.draw2d.figures.ChangeType;
-import at.bitandart.zoubek.mervin.draw2d.figures.IChangeTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.IOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.OverlayType;
 
 /**
  * 
  * Abstract {@link IOffScreenIndicator} based on {@link Figure} that provides
- * common implementations and methods for off-screen change indicators.
+ * common implementations and methods for off-screen overlay indicators.
  * 
  * @author Florian Zoubek
  *
  */
-public abstract class AbstractOffScreenChangeIndicator extends AbstractOffScreenIndicator {
+public abstract class AbstractOffScreenOverlayIndicator extends AbstractOffScreenIndicator {
 
 	/**
 	 * the style advisor used to obtain the colors for this indicator
 	 */
-	protected IChangeTypeStyleAdvisor styleAdvisor;
+	protected IOverlayTypeStyleAdvisor styleAdvisor;
 
 	/**
 	 * the line width used to draw the circle of this indicator
@@ -56,12 +56,12 @@ public abstract class AbstractOffScreenChangeIndicator extends AbstractOffScreen
 
 	/**
 	 * 
-	 * creates a new {@link AbstractOffScreenChangeIndicator} that uses the
-	 * given {@link IChangeTypeStyleAdvisor} for drawing.
+	 * creates a new {@link AbstractOffScreenOverlayIndicator} that uses the
+	 * given {@link IOverlayTypeStyleAdvisor} for drawing.
 	 * 
 	 * @param styleAdvisor
 	 */
-	public AbstractOffScreenChangeIndicator(IChangeTypeStyleAdvisor styleAdvisor) {
+	public AbstractOffScreenOverlayIndicator(IOverlayTypeStyleAdvisor styleAdvisor) {
 		super();
 		this.styleAdvisor = styleAdvisor;
 	}
@@ -117,7 +117,7 @@ public abstract class AbstractOffScreenChangeIndicator extends AbstractOffScreen
 		Point textPosition = bounds.getCenter().translate(-symbolExtents.preciseWidth() / 2.0,
 				-symbolExtents.preciseHeight() / 2.0);
 
-		// draw the change type symbol
+		// draw the overlay type symbol
 
 		graphics.drawText(symbol, (int) Math.round(textPosition.preciseX()), (int) Math.round(textPosition.preciseY()));
 		graphics.popState();
@@ -132,10 +132,10 @@ public abstract class AbstractOffScreenChangeIndicator extends AbstractOffScreen
 	 *            the graphics context used to draw the arrow.
 	 * @param bounds
 	 *            the bounds to draw the the arrow within.
-	 * @param changeType
-	 *            the change type of the figure that the arrow points at.
+	 * @param overlayType
+	 *            the overlay type of the figure that the arrow points at.
 	 */
-	protected void drawArrow(Graphics graphics, PrecisionRectangle bounds, ChangeType changeType) {
+	protected void drawArrow(Graphics graphics, PrecisionRectangle bounds, OverlayType overlayType) {
 
 		Point center = new PrecisionPoint(bounds.getCenter());
 		Point absoluteCenter = center.getCopy();
@@ -163,7 +163,7 @@ public abstract class AbstractOffScreenChangeIndicator extends AbstractOffScreen
 		int[] arrowshape = new int[] { arrowTip.x, arrowTip.y, arrowRight.x, arrowRight.y, arrowLeft.x, arrowLeft.y };
 
 		graphics.pushState();
-		graphics.setBackgroundColor(styleAdvisor.getForegroundColorForChangeType(changeType));
+		graphics.setBackgroundColor(styleAdvisor.getForegroundColorForOverlayType(overlayType));
 		graphics.fillPolygon(arrowshape);
 		graphics.popState();
 

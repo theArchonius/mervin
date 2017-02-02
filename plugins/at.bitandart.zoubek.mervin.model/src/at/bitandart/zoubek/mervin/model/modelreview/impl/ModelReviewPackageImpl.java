@@ -1,6 +1,6 @@
 /**
  * ******************************************************************************
- *  Copyright (c) 2015, 2016 Florian Zoubek.
+ *  Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -39,6 +39,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.StateDifferenceType;
 import at.bitandart.zoubek.mervin.model.modelreview.User;
 
 import com.google.common.collect.HashBiMap;
+
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Vector;
 
@@ -450,6 +451,15 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 */
 	public EReference getModelReview_CurrentReviewer() {
 		return (EReference) modelReviewEClass.getEStructuralFeatures().get(13);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EAttribute getModelReview_ShowComments() {
+		return (EAttribute) modelReviewEClass.getEStructuralFeatures().get(14);
 	}
 
 	/**
@@ -1207,6 +1217,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		createEAttribute(modelReviewEClass, MODEL_REVIEW__SHOW_LAYOUT_CHANGES);
 		createEAttribute(modelReviewEClass, MODEL_REVIEW__UNIFIED_MODEL_MAP);
 		createEReference(modelReviewEClass, MODEL_REVIEW__CURRENT_REVIEWER);
+		createEAttribute(modelReviewEClass, MODEL_REVIEW__SHOW_COMMENTS);
 
 		patchSetEClass = createEClass(PATCH_SET);
 		createEAttribute(patchSetEClass, PATCH_SET__ID);
@@ -1409,6 +1420,9 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		initEReference(getModelReview_CurrentReviewer(), this.getUser(), null, "currentReviewer", null, 0, 1,
 				ModelReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getModelReview_ShowComments(), theEcorePackage.getEBoolean(), "showComments", "true", 0, 1,
+				ModelReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 
 		initEClass(patchSetEClass, PatchSet.class, "PatchSet", !IS_ABSTRACT, !IS_INTERFACE,
 				IS_GENERATED_INSTANCE_CLASS);

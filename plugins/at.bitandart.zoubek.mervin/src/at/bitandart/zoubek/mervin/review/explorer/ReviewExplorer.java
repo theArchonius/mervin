@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Florian Zoubek.
+ * Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -61,8 +61,8 @@ import org.eclipse.swt.widgets.TreeColumn;
 
 import at.bitandart.zoubek.mervin.IReviewHighlightService;
 import at.bitandart.zoubek.mervin.IReviewHighlightServiceListener;
-import at.bitandart.zoubek.mervin.draw2d.figures.DefaultChangeTypeStyleAdvisor;
-import at.bitandart.zoubek.mervin.draw2d.figures.IChangeTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.DefaultOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.IOverlayTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelPatch;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelResource;
@@ -119,7 +119,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 
 	private HighlightStyler highlightStyler;
 
-	private IChangeTypeStyleAdvisor styleAdvisor;
+	private IOverlayTypeStyleAdvisor styleAdvisor;
 
 	/**
 	 * the complete list of filtered and derived elements to highlight in this
@@ -159,7 +159,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		syncMenuAndToolbarItemState(modelService, part);
 
 		highlightStyler = new HighlightStyler(display);
-		styleAdvisor = new DefaultChangeTypeStyleAdvisor();
+		styleAdvisor = new DefaultOverlayTypeStyleAdvisor();
 
 		mainPanel = new Composite(parent, SWT.NONE);
 		mainPanel.setLayout(new GridLayout());

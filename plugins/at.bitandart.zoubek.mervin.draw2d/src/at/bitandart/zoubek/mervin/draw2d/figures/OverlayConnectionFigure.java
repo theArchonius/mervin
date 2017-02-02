@@ -23,38 +23,38 @@ import org.eclipse.swt.graphics.Color;
 
 /**
  * An {@link IOverlayFigure} that is able to outline one or more connection
- * figures. An {@link IChangeTypeStyleAdvisor} can be used to control the colors
- * for this figure.
+ * figures. An {@link IOverlayTypeStyleAdvisor} can be used to control the
+ * colors for this figure.
  * 
  * @author Florian Zoubek
  *
  */
-public class ChangeOverlayConnectionFigure extends ComposedNodeFigure implements IOverlayFigure {
+public class OverlayConnectionFigure extends ComposedNodeFigure implements IOverlayFigure {
 
-	private IChangeTypeStyleAdvisor styleAdvisor;
+	private IOverlayTypeStyleAdvisor styleAdvisor;
 
 	// child figures
-	private List<ConnectionChangeOutline> outlines = new ArrayList<ConnectionChangeOutline>();
+	private List<ConnectionOutline> outlines = new ArrayList<ConnectionOutline>();
 
 	// change properties
-	private ChangeType changeType = ChangeType.ADDITION;
+	private OverlayType overlayType = OverlayType.ADDITION;
 	private boolean showCommentHint = false;
 
 	/**
 	 * @param styleAdivsor
 	 *            the style advisor used to obtain the styles for the different
-	 *            change types. Null values are not permitted.
-	 * @param changeType
-	 *            the change type that this figure represents
+	 *            overlay types. Null values are not permitted.
+	 * @param overlayType
+	 *            the overlay type that this figure represents
 	 * @throws IllegalArgumentException
 	 *             if null is passed as a style advisor
 	 */
-	public ChangeOverlayConnectionFigure(IChangeTypeStyleAdvisor styleAdvisor, ChangeType changeType) {
+	public OverlayConnectionFigure(IOverlayTypeStyleAdvisor styleAdvisor, OverlayType overlayType) {
 		if (styleAdvisor == null) {
 			throw new IllegalArgumentException("A valid style advisor must be specified");
 		}
 		this.styleAdvisor = styleAdvisor;
-		this.changeType = changeType;
+		this.overlayType = overlayType;
 	}
 
 	/*
@@ -73,19 +73,19 @@ public class ChangeOverlayConnectionFigure extends ComposedNodeFigure implements
 
 		// update outlines
 
-		ListIterator<ConnectionChangeOutline> outlineIterator = outlines.listIterator();
+		ListIterator<ConnectionOutline> outlineIterator = outlines.listIterator();
 		for (IFigure figure : linkedFigures) {
 
 			if (figure instanceof Connection) {
 
 				Connection connection = (Connection) figure;
-				ConnectionChangeOutline outline;
+				ConnectionOutline outline;
 
 				// reuse existing outlines if possible
 				if (outlineIterator.hasNext()) {
 					outline = outlineIterator.next();
 				} else {
-					outline = new ConnectionChangeOutline(styleAdvisor.getCommentColorForChangeType(changeType));
+					outline = new ConnectionOutline(styleAdvisor.getCommentColorForOverlayType(overlayType));
 					outline.setShowCommentHint(showCommentHint);
 					outline.setAlpha(128);
 					outline.setLineWidthFloat(2f);
@@ -162,7 +162,7 @@ public class ChangeOverlayConnectionFigure extends ComposedNodeFigure implements
 		 * bounds of this figure are used for this test and this figure may
 		 * "cover" other figures that are not covered by the outlines
 		 */
-		for (ConnectionChangeOutline outline : outlines) {
+		for (ConnectionOutline outline : outlines) {
 			if (outline.containsPoint(x, y)) {
 				return true;
 			}
@@ -175,14 +175,15 @@ public class ChangeOverlayConnectionFigure extends ComposedNodeFigure implements
 	 */
 	private void applyChangeStyles() {
 
-		Color foregroundColor = styleAdvisor.getForegroundColorForChangeType(changeType);
-		Color backgroundColor = styleAdvisor.getBackgroundColorForChangeType(changeType);
+		Color foregroundColor = styleAdvisor.getForegroundColorForOverlayType(overlayType);
+		Color backgroundColor = styleAdvisor.getBackgroundColorForOverlayType(overlayType);
 
-		for (ConnectionChangeOutline outline : outlines) {
+		for (ConnectionOutline outline : outlines) {
 			outline.setBackgroundColor(backgroundColor);
 			outline.setForegroundColor(foregroundColor);
 
-			outline.setFill(changeType != ChangeType.LAYOUT);
+			outline.setFill(!(overlayType == OverlayType.LAYOUT || overlayType == OverlayType.COMMENT));
+			outline.setOutline(overlayType != OverlayType.COMMENT);
 		}
 	}
 
@@ -191,18 +192,18 @@ public class ChangeOverlayConnectionFigure extends ComposedNodeFigure implements
 	 */
 	protected void updateOutline() {
 		if (isInitialized()) {
-			for (ConnectionChangeOutline outline : outlines) {
+			for (ConnectionOutline outline : outlines) {
 				outline.setShowCommentHint(showCommentHint);
 			}
 		}
 	}
 
 	/**
-	 * @param changeType
-	 *            the change type which this overlay represents.
+	 * @param overlayType
+	 *            the overlay type which this overlay represents.
 	 */
-	public void setChangeType(ChangeType changeType) {
-		this.changeType = changeType;
+	public void setOverlayType(OverlayType overlayType) {
+		this.overlayType = overlayType;
 		applyChangeStyles();
 	}
 
@@ -216,17 +217,17 @@ public class ChangeOverlayConnectionFigure extends ComposedNodeFigure implements
 	}
 
 	/**
-	 * @return the change type which this overlay represents.
+	 * @return the overlay type which this overlay represents.
 	 */
-	public ChangeType getChangeType() {
-		return changeType;
+	public OverlayType getOverlayType() {
+		return overlayType;
 	}
 
 	/**
 	 * @return an unmodifiable list of the current connection outline of this
 	 *         figure.
 	 */
-	public Collection<ConnectionChangeOutline> getCurrentOutlines() {
+	public Collection<ConnectionOutline> getCurrentOutlines() {
 		return Collections.unmodifiableCollection(outlines);
 	}
 

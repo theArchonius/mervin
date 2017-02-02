@@ -31,8 +31,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 import at.bitandart.zoubek.mervin.IDiagramModelHelper;
-import at.bitandart.zoubek.mervin.draw2d.figures.ChangeType;
-import at.bitandart.zoubek.mervin.draw2d.figures.IChangeTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.OverlayType;
+import at.bitandart.zoubek.mervin.draw2d.figures.IOverlayTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.property.diff.PropertyDiffItemProvider.SelectionEntry;
 import at.bitandart.zoubek.mervin.review.ModelReviewEditorTrackingView;
@@ -79,11 +79,11 @@ public class PropertyDiffView extends ModelReviewEditorTrackingView {
 	private boolean viewInitialized = false;
 
 	/**
-	 * the {@link IChangeTypeStyleAdvisor} to use for the colors of the property
+	 * the {@link IOverlayTypeStyleAdvisor} to use for the colors of the property
 	 * diff viewer
 	 */
 	@Inject
-	private IChangeTypeStyleAdvisor styleAdvisor;
+	private IOverlayTypeStyleAdvisor styleAdvisor;
 
 	@Inject
 	public PropertyDiffView() {
@@ -104,10 +104,10 @@ public class PropertyDiffView extends ModelReviewEditorTrackingView {
 		treeDiff.setChangedSide(TreeDiffSide.LEFT);
 
 		/* assign the colors of the style advisor */
-		treeDiff.setDiffColor(TreeDiffType.ADD, styleAdvisor.getForegroundColorForChangeType(ChangeType.ADDITION));
-		treeDiff.setDiffColor(TreeDiffType.DELETE, styleAdvisor.getForegroundColorForChangeType(ChangeType.DELETION));
+		treeDiff.setDiffColor(TreeDiffType.ADD, styleAdvisor.getForegroundColorForOverlayType(OverlayType.ADDITION));
+		treeDiff.setDiffColor(TreeDiffType.DELETE, styleAdvisor.getForegroundColorForOverlayType(OverlayType.DELETION));
 		treeDiff.setDiffColor(TreeDiffType.MODIFY,
-				styleAdvisor.getForegroundColorForChangeType(ChangeType.MODIFICATION));
+				styleAdvisor.getForegroundColorForOverlayType(OverlayType.MODIFICATION));
 
 		viewInitialized = true;
 

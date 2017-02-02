@@ -1,6 +1,6 @@
 /**
  * ******************************************************************************
- *  Copyright (c) 2015, 2016 Florian Zoubek.
+ *  Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -80,6 +80,7 @@ public class ModelReviewItemProvider extends ItemProviderAdapter implements IEdi
 			addShowLayoutChangesPropertyDescriptor(object);
 			addUnifiedModelMapPropertyDescriptor(object);
 			addCurrentReviewerPropertyDescriptor(object);
+			addShowCommentsPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -291,6 +292,22 @@ public class ModelReviewItemProvider extends ItemProviderAdapter implements IEdi
 	}
 
 	/**
+	 * This adds a property descriptor for the Show Comments feature. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addShowCommentsPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_ModelReview_showComments_feature"),
+						getString("_UI_PropertyDescriptor_description", "_UI_ModelReview_showComments_feature",
+								"_UI_ModelReview_type"),
+						ModelReviewPackage.Literals.MODEL_REVIEW__SHOW_COMMENTS, true, false, false,
+						ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE, null, null));
+	}
+
+	/**
 	 * This specifies how to implement {@link #getChildren} and is used to
 	 * deduce an appropriate feature for an
 	 * {@link org.eclipse.emf.edit.command.AddCommand},
@@ -367,6 +384,7 @@ public class ModelReviewItemProvider extends ItemProviderAdapter implements IEdi
 		case ModelReviewPackage.MODEL_REVIEW__SHOW_DELETIONS:
 		case ModelReviewPackage.MODEL_REVIEW__SHOW_LAYOUT_CHANGES:
 		case ModelReviewPackage.MODEL_REVIEW__UNIFIED_MODEL_MAP:
+		case ModelReviewPackage.MODEL_REVIEW__SHOW_COMMENTS:
 			fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 			return;
 		case ModelReviewPackage.MODEL_REVIEW__PATCH_SETS:

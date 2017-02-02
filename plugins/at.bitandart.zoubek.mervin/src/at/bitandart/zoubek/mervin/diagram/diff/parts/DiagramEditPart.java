@@ -43,11 +43,11 @@ import org.eclipse.gmf.tooling.runtime.linklf.LinkLFShapeCompartmentEditPart;
 
 import at.bitandart.zoubek.mervin.diagram.diff.OffScreenIndicatorResolver;
 import at.bitandart.zoubek.mervin.draw2d.MervinLayerConstants;
-import at.bitandart.zoubek.mervin.draw2d.figures.DefaultChangeTypeStyleAdvisor;
-import at.bitandart.zoubek.mervin.draw2d.figures.IChangeTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.DefaultOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.IOverlayTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.IOffScreenIndicator;
-import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.MergedOffScreenChangeIndicator;
-import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenChangeIndicatorMerger;
+import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.MergedOffScreenOverlayIndicator;
+import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenOverlayIndicatorMerger;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.DiagramContainerFigure;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbench;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbench.DisplayMode;
@@ -64,11 +64,11 @@ public class DiagramEditPart extends LinkLFShapeCompartmentEditPart {
 
 	IWorkbenchListener workbenchListener;
 
-	private IChangeTypeStyleAdvisor styleAdvisor;
+	private IOverlayTypeStyleAdvisor styleAdvisor;
 
 	public DiagramEditPart(View model) {
 		super(model);
-		styleAdvisor = new DefaultChangeTypeStyleAdvisor();
+		styleAdvisor = new DefaultOverlayTypeStyleAdvisor();
 	}
 
 	@Override
@@ -90,20 +90,20 @@ public class DiagramEditPart extends LinkLFShapeCompartmentEditPart {
 	 */
 	private static class InternalDiagramContainerFigure extends DiagramContainerFigure {
 
-		public InternalDiagramContainerFigure(String compartmentTitle, IChangeTypeStyleAdvisor styleAdvisor,
+		public InternalDiagramContainerFigure(String compartmentTitle, IOverlayTypeStyleAdvisor styleAdvisor,
 				IMapMode mm) {
 			super(compartmentTitle, styleAdvisor, mm);
 		}
 
 		@Override
-		protected OffScreenChangeIndicatorMerger createOffScreenChangeIndicatorMerger(
-				IChangeTypeStyleAdvisor styleAdvisor, FreeformLayer indicatorLayer) {
+		protected OffScreenOverlayIndicatorMerger createOffScreenChangeIndicatorMerger(
+				IOverlayTypeStyleAdvisor styleAdvisor, FreeformLayer indicatorLayer) {
 
-			return new OffScreenChangeIndicatorMerger(indicatorLayer, styleAdvisor) {
+			return new OffScreenOverlayIndicatorMerger(indicatorLayer, styleAdvisor) {
 
 				@Override
-				protected MergedOffScreenChangeIndicator createMergedOffScreenChangeIndicator() {
-					MergedOffScreenChangeIndicator mergedIndicator = super.createMergedOffScreenChangeIndicator();
+				protected MergedOffScreenOverlayIndicator createMergedOffScreenChangeIndicator() {
+					MergedOffScreenOverlayIndicator mergedIndicator = super.createMergedOffScreenChangeIndicator();
 					mergedIndicator
 							.addMouseListener(new OffScreenIndicatorResolver(InternalDiagramContainerFigure.this));
 					return mergedIndicator;

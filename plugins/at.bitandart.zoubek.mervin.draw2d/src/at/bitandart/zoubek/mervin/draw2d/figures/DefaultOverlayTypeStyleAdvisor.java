@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,23 +20,25 @@ import org.eclipse.swt.widgets.Display;
  * @author Florian Zoubek
  *
  */
-public class DefaultChangeTypeStyleAdvisor implements IChangeTypeStyleAdvisor {
+public class DefaultOverlayTypeStyleAdvisor implements IOverlayTypeStyleAdvisor {
 
 	private Color additionForegroundColor;
 	private Color deletionForegroundColor;
 	private Color modificationForegroundColor;
 	private Color layoutForegroundColor;
+	private Color commentsForegroundColor;
 	private Color defaultForegroundColor;
 
 	private Color additionBackgroundColor;
 	private Color deletionBackgroundColor;
 	private Color modificationBackgroundColor;
 	private Color layoutBackgroundColor;
+	private Color commentsBackgroundColor;
 	private Color defaultBackgroundColor;
 
 	private Color commentsColor;
 
-	public DefaultChangeTypeStyleAdvisor() {
+	public DefaultOverlayTypeStyleAdvisor() {
 
 		additionForegroundColor = new Color(Display.getDefault(), 82, 145, 102);
 		additionBackgroundColor = new Color(Display.getDefault(), 82, 145, 102);
@@ -51,6 +53,8 @@ public class DefaultChangeTypeStyleAdvisor implements IChangeTypeStyleAdvisor {
 		layoutBackgroundColor = new Color(Display.getDefault(), 178, 223, 138);
 
 		commentsColor = new Color(Display.getDefault(), 247, 177, 0);
+		commentsForegroundColor = commentsColor;
+		commentsBackgroundColor = commentsColor;
 
 		defaultForegroundColor = ColorConstants.black;
 		defaultBackgroundColor = ColorConstants.white;
@@ -67,13 +71,14 @@ public class DefaultChangeTypeStyleAdvisor implements IChangeTypeStyleAdvisor {
 
 		modificationForegroundColor.dispose();
 		modificationBackgroundColor.dispose();
+
 		commentsColor.dispose();
 	}
 
 	@Override
-	public Color getForegroundColorForChangeType(ChangeType changeType) {
+	public Color getForegroundColorForOverlayType(OverlayType overlayType) {
 
-		switch (changeType) {
+		switch (overlayType) {
 		case ADDITION:
 			return additionForegroundColor;
 		case DELETION:
@@ -82,15 +87,17 @@ public class DefaultChangeTypeStyleAdvisor implements IChangeTypeStyleAdvisor {
 			return modificationForegroundColor;
 		case LAYOUT:
 			return layoutForegroundColor;
+		case COMMENT:
+			return commentsForegroundColor;
 		}
 		return defaultForegroundColor;
 
 	}
 
 	@Override
-	public Color getBackgroundColorForChangeType(ChangeType changeType) {
+	public Color getBackgroundColorForOverlayType(OverlayType overlayType) {
 
-		switch (changeType) {
+		switch (overlayType) {
 		case ADDITION:
 			return additionBackgroundColor;
 		case DELETION:
@@ -99,18 +106,20 @@ public class DefaultChangeTypeStyleAdvisor implements IChangeTypeStyleAdvisor {
 			return modificationBackgroundColor;
 		case LAYOUT:
 			return layoutBackgroundColor;
+		case COMMENT:
+			return commentsBackgroundColor;
 		}
 		return defaultBackgroundColor;
 
 	}
 
 	@Override
-	public Color getCommentColorForChangeType(ChangeType changeType) {
+	public Color getCommentColorForOverlayType(OverlayType overlayType) {
 		return commentsColor;
 	}
 
 	@Override
-	public Color getIndicatorColorForChangeType(ChangeType changeType) {
+	public Color getIndicatorColorForOverlayType(OverlayType overlayType) {
 		return ColorConstants.black;
 	}
 

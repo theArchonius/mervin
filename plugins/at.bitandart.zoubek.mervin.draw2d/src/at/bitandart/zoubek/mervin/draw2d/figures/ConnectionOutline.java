@@ -27,13 +27,13 @@ import org.eclipse.swt.graphics.Color;
 import at.bitandart.zoubek.mervin.draw2d.DoublePrecisionVector;
 
 /**
- * An arbitrary shaped outline for changes of {@link Connection}s which also
+ * An arbitrary shaped outline for overlays of {@link Connection}s which also
  * encode comment information with a dashed outline in the specified color.
  * 
  * @author Florian Zoubek
  *
  */
-public class ConnectionChangeOutline extends Shape {
+public class ConnectionOutline extends Shape {
 
 	/**
 	 * a list of points that should be covered by this outline.
@@ -59,7 +59,7 @@ public class ConnectionChangeOutline extends Shape {
 	 * @param commentHintColor
 	 *            the color that is used to show the comment hint.
 	 */
-	public ConnectionChangeOutline(Color commentHintColor) {
+	public ConnectionOutline(Color commentHintColor) {
 		this.commentHintColor = commentHintColor;
 	}
 
@@ -100,6 +100,38 @@ public class ConnectionChangeOutline extends Shape {
 
 		graphics.popState();
 
+	}
+
+	@Override
+	public void paintFigure(Graphics graphics) {
+		super.paintFigure(graphics);
+
+		if (showCommentHint) {
+			paintCommentHint(graphics);
+		}
+	}
+
+	/**
+	 * paints the comment hint outline.
+	 * 
+	 * @param graphics
+	 *            the graphics context used to draw the comment hint outline.
+	 */
+	protected void paintCommentHint(Graphics graphics) {
+
+		int[] outlineShape = calculateOutlineShape(pointsToCover, paddingWidth, 1);
+
+		graphics.pushState();
+
+		graphics.setLineWidthFloat(getLineWidthFloat());
+
+		graphics.setAlpha(255);
+		graphics.setLineStyle(SWT.LINE_CUSTOM);
+		graphics.setLineDash(new float[] { 15.0f, 15.0f });
+		graphics.setForegroundColor(commentHintColor);
+		graphics.drawPolygon(outlineShape);
+
+		graphics.popState();
 	}
 
 	/**

@@ -28,15 +28,15 @@ import org.eclipse.draw2d.geometry.Vector;
 import org.eclipse.swt.graphics.Font;
 
 import at.bitandart.zoubek.mervin.draw2d.DoublePrecisionVector;
-import at.bitandart.zoubek.mervin.draw2d.figures.ChangeType;
-import at.bitandart.zoubek.mervin.draw2d.figures.IChangeTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.IOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.OverlayType;
 
 /**
  * Represents an {@link IOffScreenIndicator} that replaces a set of
- * {@link OffScreenChangeIndicator}s. Each merged
- * {@link OffScreenChangeIndicator} must be present in the same figure tree as
+ * {@link OffScreenOverlayIndicator}s. Each merged
+ * {@link OffScreenOverlayIndicator} must be present in the same figure tree as
  * this indicator (ideally in the same layer) and the container figures of each
- * merged {@link OffScreenChangeIndicator} must be the same. Violation of these
+ * merged {@link OffScreenOverlayIndicator} must be the same. Violation of these
  * constraints may result in unexpected behavior. This class does not update the
  * visibility of the merged indicators, so each class that utilizes this type of
  * indicators must handle the visibility management on their own.
@@ -44,20 +44,20 @@ import at.bitandart.zoubek.mervin.draw2d.figures.IChangeTypeStyleAdvisor;
  * @author Florian Zoubek
  *
  */
-public class MergedOffScreenChangeIndicator extends AbstractOffScreenChangeIndicator {
+public class MergedOffScreenOverlayIndicator extends AbstractOffScreenOverlayIndicator {
 
 	/**
 	 * the set of merged indicators.
 	 */
-	private Set<OffScreenChangeIndicator> mergedIndicators = new LinkedHashSet<OffScreenChangeIndicator>();
+	private Set<OffScreenOverlayIndicator> mergedIndicators = new LinkedHashSet<OffScreenOverlayIndicator>();
 
 	/**
-	 * creates a new {@link MergedOffScreenChangeIndicator} that uses the given
-	 * {@link IChangeTypeStyleAdvisor} for drawing.
+	 * creates a new {@link MergedOffScreenOverlayIndicator} that uses the given
+	 * {@link IOverlayTypeStyleAdvisor} for drawing.
 	 * 
 	 * @param styleAdvisor
 	 */
-	public MergedOffScreenChangeIndicator(IChangeTypeStyleAdvisor styleAdvisor) {
+	public MergedOffScreenOverlayIndicator(IOverlayTypeStyleAdvisor styleAdvisor) {
 		super(styleAdvisor);
 	}
 
@@ -67,7 +67,7 @@ public class MergedOffScreenChangeIndicator extends AbstractOffScreenChangeIndic
 	 * @param indicator
 	 *            the indicator to add.
 	 */
-	public void addIndicator(OffScreenChangeIndicator indicator) {
+	public void addIndicator(OffScreenOverlayIndicator indicator) {
 		if (mergedIndicators.add(indicator)) {
 			for (IFigure linkedFigure : indicator.getLinkedFigures()) {
 				addLinkedFigure(linkedFigure);
@@ -81,7 +81,7 @@ public class MergedOffScreenChangeIndicator extends AbstractOffScreenChangeIndic
 	 * 
 	 * @param indicator
 	 */
-	public void removeIndicator(OffScreenChangeIndicator indicator) {
+	public void removeIndicator(OffScreenOverlayIndicator indicator) {
 
 		if (mergedIndicators.remove(indicator)) {
 			for (IFigure linkedFigure : indicator.getLinkedFigures()) {
@@ -94,7 +94,7 @@ public class MergedOffScreenChangeIndicator extends AbstractOffScreenChangeIndic
 	/**
 	 * @return an unmodifiable copy of the set of merged indicators.
 	 */
-	public Set<OffScreenChangeIndicator> getMergedIndicators() {
+	public Set<OffScreenOverlayIndicator> getMergedIndicators() {
 		return Collections.unmodifiableSet(mergedIndicators);
 	}
 
@@ -104,30 +104,30 @@ public class MergedOffScreenChangeIndicator extends AbstractOffScreenChangeIndic
 		super.paintFigure(graphics);
 
 		PrecisionRectangle bounds = new PrecisionRectangle(getBounds());
-		Collection<ChangeType> changeTypes = getChangeTypes();
+		Collection<OverlayType> overlayTypes = getOverlayTypes();
 		Font symbolFont = createSymbolFont();
 		String symbol = getSymbol();
-		int changeTypeIndex = 0;
+		int overlayTypeIndex = 0;
 		double slotAngleRange = 180.0;
-		double slotAngle = slotAngleRange / (changeTypes.size() + 1);
+		double slotAngle = slotAngleRange / (overlayTypes.size() + 1);
 
-		for (ChangeType changeType : changeTypes) {
+		for (OverlayType overlayType : overlayTypes) {
 
 			graphics.pushState();
 
-			graphics.setBackgroundColor(styleAdvisor.getForegroundColorForChangeType(changeType));
+			graphics.setBackgroundColor(styleAdvisor.getForegroundColorForOverlayType(overlayType));
 
-			drawChangeTypeIndicator(graphics, bounds, changeTypeIndex, slotAngleRange, slotAngle);
+			drawOverlayTypeIndicator(graphics, bounds, overlayTypeIndex, slotAngleRange, slotAngle);
 
 			/*
-			 * use clipping to partially draw the indicator in the change type's
-			 * color
+			 * use clipping to partially draw the indicator in the overlay
+			 * type's color
 			 */
 
 			PrecisionRectangle clip = new PrecisionRectangle(bounds);
-			double height = bounds.preciseHeight() / changeTypes.size();
+			double height = bounds.preciseHeight() / overlayTypes.size();
 			clip.setPreciseHeight(height);
-			clip.translate(0.0, changeTypeIndex * height);
+			clip.translate(0.0, overlayTypeIndex * height);
 			graphics.clipRect(clip);
 
 			// draw the indicator similar to normal off-screen change indicators
@@ -135,7 +135,7 @@ public class MergedOffScreenChangeIndicator extends AbstractOffScreenChangeIndic
 			Rectangle shrinked = getSymbolBounds(bounds);
 
 			if (linkedFigures != null) {
-				drawArrow(graphics, bounds, changeType);
+				drawArrow(graphics, bounds, overlayType);
 			}
 
 			drawSymbolBorder(graphics, shrinked);
@@ -146,7 +146,7 @@ public class MergedOffScreenChangeIndicator extends AbstractOffScreenChangeIndic
 
 			graphics.popState();
 
-			changeTypeIndex++;
+			overlayTypeIndex++;
 		}
 
 		symbolFont.dispose();
@@ -154,7 +154,7 @@ public class MergedOffScreenChangeIndicator extends AbstractOffScreenChangeIndic
 	}
 
 	/**
-	 * draws a change type indicator in the given slot opposite of the arrow.
+	 * draws a overlay type indicator in the given slot opposite of the arrow.
 	 * Each slot is placed around the symbol border in clockwise order and
 	 * occupies at least the given angle. The number of slots is derived from
 	 * the given {@code angle} and {@code angleRange} by @{code
@@ -172,7 +172,7 @@ public class MergedOffScreenChangeIndicator extends AbstractOffScreenChangeIndic
 	 * @param angle
 	 *            the angle each slot occupies.
 	 */
-	protected void drawChangeTypeIndicator(Graphics graphics, PrecisionRectangle bounds, int slot, double angleRange,
+	protected void drawOverlayTypeIndicator(Graphics graphics, PrecisionRectangle bounds, int slot, double angleRange,
 			double angle) {
 
 		/*
@@ -214,7 +214,7 @@ public class MergedOffScreenChangeIndicator extends AbstractOffScreenChangeIndic
 		// the symbol is the number of visible merged indicators
 
 		int visibleIndicators = 0;
-		for (OffScreenChangeIndicator indicator : mergedIndicators) {
+		for (OffScreenOverlayIndicator indicator : mergedIndicators) {
 			if (!indicator.areLinkedFiguresVisible()) {
 				visibleIndicators++;
 			}
@@ -225,30 +225,30 @@ public class MergedOffScreenChangeIndicator extends AbstractOffScreenChangeIndic
 	}
 
 	/**
-	 * @return a list of change types that occur in the set of merged
-	 *         {@link OffScreenChangeIndicator}s without duplicates.
+	 * @return a list of overlay types that occur in the set of merged
+	 *         {@link OffScreenOverlayIndicator}s without duplicates.
 	 */
-	private List<ChangeType> getChangeTypes() {
+	private List<OverlayType> getOverlayTypes() {
 
-		List<ChangeType> changeTypes = new ArrayList<ChangeType>(ChangeType.values().length);
+		List<OverlayType> overlayTypes = new ArrayList<OverlayType>(OverlayType.values().length);
 
-		for (OffScreenChangeIndicator indicator : mergedIndicators) {
+		for (OffScreenOverlayIndicator indicator : mergedIndicators) {
 			if (!indicator.areLinkedFiguresVisible()) {
-				ChangeType changeType = indicator.getChangeType();
-				if (!changeTypes.contains(changeType)) {
-					changeTypes.add(changeType);
+				OverlayType overlayType = indicator.getOverlayType();
+				if (!overlayTypes.contains(overlayType)) {
+					overlayTypes.add(overlayType);
 				}
 			}
 		}
 
-		return changeTypes;
+		return overlayTypes;
 
 	}
 
 	@Override
 	public boolean areLinkedFiguresVisible() {
 
-		for (OffScreenChangeIndicator indicator : mergedIndicators) {
+		for (OffScreenOverlayIndicator indicator : mergedIndicators) {
 			if (!indicator.areLinkedFiguresVisible()) {
 				return false;
 			}
@@ -264,7 +264,7 @@ public class MergedOffScreenChangeIndicator extends AbstractOffScreenChangeIndic
 		int numRefPoints = 0;
 		Vector cache = new Vector(0, 0);
 
-		for (OffScreenChangeIndicator indicator : mergedIndicators) {
+		for (OffScreenOverlayIndicator indicator : mergedIndicators) {
 
 			if (!indicator.areLinkedFiguresVisible()) {
 

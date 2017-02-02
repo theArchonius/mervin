@@ -16,11 +16,11 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
 
-import at.bitandart.zoubek.mervin.draw2d.figures.ChangeOverlayConnectionFigure;
-import at.bitandart.zoubek.mervin.draw2d.figures.ChangeType;
-import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.ConnectionOverlayOffScreenChangeIndicator;
+import at.bitandart.zoubek.mervin.draw2d.figures.OverlayConnectionFigure;
+import at.bitandart.zoubek.mervin.draw2d.figures.OverlayType;
+import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.ConnectionOffScreenOverlayIndicator;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.IOffScreenIndicator;
-import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenChangeIndicator;
+import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenOverlayIndicator;
 import at.bitandart.zoubek.mervin.model.modelreview.BendpointsDifference;
 import at.bitandart.zoubek.mervin.model.modelreview.Difference;
 import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
@@ -45,8 +45,8 @@ public class EdgeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 		super.refreshVisuals();
 
 		DifferenceOverlay differenceOverlay = getDifferenceOverlay();
-		ChangeOverlayConnectionFigure changeOverlayConnectionFigure = getChangeOverlayConnectionFigure();
-		OffScreenChangeIndicator offScreenChangeIndicator = getOffScreenChangeIndicator();
+		OverlayConnectionFigure changeOverlayConnectionFigure = getChangeOverlayConnectionFigure();
+		OffScreenOverlayIndicator offScreenChangeIndicator = getOffScreenChangeIndicator();
 
 		if (differenceOverlay != null && changeOverlayConnectionFigure != null) {
 
@@ -56,27 +56,40 @@ public class EdgeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 			changeOverlayConnectionFigure.setShowCommentHint(differenceOverlay.isCommented());
 
 			EList<Difference> differences = differenceOverlay.getDifferences();
+
+			/*
+			 * assume a comment only overlay by default if the overlayed element
+			 * has comments, this will be overridden if state difference are
+			 * found.
+			 */
+			if (differences.isEmpty() && differenceOverlay.isCommented()) {
+				changeOverlayConnectionFigure.setOverlayType(OverlayType.COMMENT);
+				if (offScreenChangeIndicator != null) {
+					offScreenChangeIndicator.setOverlayType(OverlayType.COMMENT);
+				}
+			}
+
 			for (Difference difference : differences) {
 
 				if (difference instanceof StateDifference) {
 
 					switch (((StateDifference) difference).getType()) {
 					case ADDED:
-						changeOverlayConnectionFigure.setChangeType(ChangeType.ADDITION);
+						changeOverlayConnectionFigure.setOverlayType(OverlayType.ADDITION);
 						if (offScreenChangeIndicator != null) {
-							offScreenChangeIndicator.setChangeType(ChangeType.ADDITION);
+							offScreenChangeIndicator.setOverlayType(OverlayType.ADDITION);
 						}
 						break;
 					case DELETED:
-						changeOverlayConnectionFigure.setChangeType(ChangeType.DELETION);
+						changeOverlayConnectionFigure.setOverlayType(OverlayType.DELETION);
 						if (offScreenChangeIndicator != null) {
-							offScreenChangeIndicator.setChangeType(ChangeType.DELETION);
+							offScreenChangeIndicator.setOverlayType(OverlayType.DELETION);
 						}
 						break;
 					case MODIFIED:
-						changeOverlayConnectionFigure.setChangeType(ChangeType.MODIFICATION);
+						changeOverlayConnectionFigure.setOverlayType(OverlayType.MODIFICATION);
 						if (offScreenChangeIndicator != null) {
-							offScreenChangeIndicator.setChangeType(ChangeType.MODIFICATION);
+							offScreenChangeIndicator.setOverlayType(OverlayType.MODIFICATION);
 						}
 						break;
 					default:
@@ -91,9 +104,9 @@ public class EdgeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 			}
 
 			if (bendpointsChanged && !stateChanged) {
-				changeOverlayConnectionFigure.setChangeType(ChangeType.LAYOUT);
+				changeOverlayConnectionFigure.setOverlayType(OverlayType.LAYOUT);
 				if (offScreenChangeIndicator != null) {
-					offScreenChangeIndicator.setChangeType(ChangeType.LAYOUT);
+					offScreenChangeIndicator.setOverlayType(OverlayType.LAYOUT);
 				}
 			}
 
@@ -109,26 +122,26 @@ public class EdgeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 	 */
 	@Override
 	protected NodeFigure createNodeFigure() {
-		return new ChangeOverlayConnectionFigure(getStyleAdvisor(), ChangeType.ADDITION);
+		return new OverlayConnectionFigure(getStyleAdvisor(), OverlayType.ADDITION);
 	}
 
 	@Override
 	protected IOffScreenIndicator createOffScreenIndicator() {
-		return new ConnectionOverlayOffScreenChangeIndicator(getStyleAdvisor());
+		return new ConnectionOffScreenOverlayIndicator(getStyleAdvisor());
 	}
 
-	protected ChangeOverlayConnectionFigure getChangeOverlayConnectionFigure() {
+	protected OverlayConnectionFigure getChangeOverlayConnectionFigure() {
 		IFigure figure = getFigure();
-		if (figure instanceof ChangeOverlayConnectionFigure) {
-			return (ChangeOverlayConnectionFigure) figure;
+		if (figure instanceof OverlayConnectionFigure) {
+			return (OverlayConnectionFigure) figure;
 		}
 		return null;
 	}
 
-	protected OffScreenChangeIndicator getOffScreenChangeIndicator() {
+	protected OffScreenOverlayIndicator getOffScreenChangeIndicator() {
 		IOffScreenIndicator offScreenIndicator = getOffScreenIndicator();
-		if (offScreenIndicator instanceof OffScreenChangeIndicator) {
-			return (OffScreenChangeIndicator) offScreenIndicator;
+		if (offScreenIndicator instanceof OffScreenOverlayIndicator) {
+			return (OffScreenOverlayIndicator) offScreenIndicator;
 		}
 		return null;
 	}

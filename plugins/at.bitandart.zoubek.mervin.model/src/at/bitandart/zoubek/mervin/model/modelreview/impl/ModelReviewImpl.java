@@ -1,6 +1,6 @@
 /**
  * ******************************************************************************
- *  Copyright (c) 2015, 2016 Florian Zoubek.
+ *  Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -17,17 +17,25 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.model.modelreview.User;
+
 import com.google.common.collect.HashBiMap;
+
 import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
 import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.compare.Comparison;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -81,6 +89,9 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewImpl#getCurrentReviewer
  * <em>Current Reviewer</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewImpl#isShowComments
+ * <em>Show Comments</em>}</li>
  * </ul>
  *
  * @generated
@@ -301,6 +312,26 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 	 * @ordered
 	 */
 	protected User currentReviewer;
+
+	/**
+	 * The default value of the '{@link #isShowComments() <em>Show Comments</em>
+	 * }' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #isShowComments()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean SHOW_COMMENTS_EDEFAULT = true;
+
+	/**
+	 * The cached value of the '{@link #isShowComments() <em>Show Comments</em>}
+	 * ' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #isShowComments()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean showComments = SHOW_COMMENTS_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -709,6 +740,28 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 	 * 
 	 * @generated
 	 */
+	public boolean isShowComments() {
+		return showComments;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public void setShowComments(boolean newShowComments) {
+		boolean oldShowComments = showComments;
+		showComments = newShowComments;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, ModelReviewPackage.MODEL_REVIEW__SHOW_COMMENTS,
+					oldShowComments, showComments));
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
@@ -779,6 +832,8 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 			if (resolve)
 				return getCurrentReviewer();
 			return basicGetCurrentReviewer();
+		case ModelReviewPackage.MODEL_REVIEW__SHOW_COMMENTS:
+			return isShowComments();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -836,6 +891,9 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 		case ModelReviewPackage.MODEL_REVIEW__CURRENT_REVIEWER:
 			setCurrentReviewer((User) newValue);
 			return;
+		case ModelReviewPackage.MODEL_REVIEW__SHOW_COMMENTS:
+			setShowComments((Boolean) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -890,6 +948,9 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 		case ModelReviewPackage.MODEL_REVIEW__CURRENT_REVIEWER:
 			setCurrentReviewer((User) null);
 			return;
+		case ModelReviewPackage.MODEL_REVIEW__SHOW_COMMENTS:
+			setShowComments(SHOW_COMMENTS_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -931,6 +992,8 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 			return unifiedModelMap != null;
 		case ModelReviewPackage.MODEL_REVIEW__CURRENT_REVIEWER:
 			return currentReviewer != null;
+		case ModelReviewPackage.MODEL_REVIEW__SHOW_COMMENTS:
+			return showComments != SHOW_COMMENTS_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -960,6 +1023,8 @@ public class ModelReviewImpl extends MinimalEObjectImpl.Container implements Mod
 		result.append(showLayoutChanges);
 		result.append(", unifiedModelMap: ");
 		result.append(unifiedModelMap);
+		result.append(", showComments: ");
+		result.append(showComments);
 		result.append(')');
 		return result.toString();
 	}

@@ -1,6 +1,6 @@
 /**
  * ******************************************************************************
- *  Copyright (c) 2015 Florian Zoubek.
+ *  Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -41,7 +41,6 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface Patch extends EObject {
-
 	/**
 	 * Returns the value of the '<em><b>New Path</b></em>' attribute. <!--
 	 * begin-user-doc -->
@@ -229,4 +228,5 @@ public interface Patch extends EObject {
 	 * @generated
 	 */
 	void setPatchSet(PatchSet value);
+
 } // Patch

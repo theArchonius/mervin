@@ -1,6 +1,6 @@
 /**
  * ******************************************************************************
- *  Copyright (c) 2015, 2016 Florian Zoubek.
+ *  Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -205,13 +205,22 @@ public interface ModelReviewPackage extends EPackage {
 	int MODEL_REVIEW__CURRENT_REVIEWER = 13;
 
 	/**
+	 * The feature id for the '<em><b>Show Comments</b></em>' attribute. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int MODEL_REVIEW__SHOW_COMMENTS = 14;
+
+	/**
 	 * The number of structural features of the '<em>Model Review</em>' class.
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int MODEL_REVIEW_FEATURE_COUNT = 14;
+	int MODEL_REVIEW_FEATURE_COUNT = 15;
 
 	/**
 	 * The number of operations of the '<em>Model Review</em>' class. <!--
@@ -1570,7 +1579,7 @@ public interface ModelReviewPackage extends EPackage {
 	 * The meta object id for the '<em>Dimension</em>' data type. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @see org.eclipse.draw2d.geometry.Vector
+	 * @see org.eclipse.draw2d.geometry.Dimension
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDimension()
 	 * @generated
 	 */
@@ -1763,6 +1772,18 @@ public interface ModelReviewPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getModelReview_CurrentReviewer();
+
+	/**
+	 * Returns the meta object for the attribute '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#isShowComments
+	 * <em>Show Comments</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the attribute '<em>Show Comments</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReview#isShowComments()
+	 * @see #getModelReview()
+	 * @generated
+	 */
+	EAttribute getModelReview_ShowComments();
 
 	/**
 	 * Returns the meta object for class '
@@ -2717,21 +2738,20 @@ public interface ModelReviewPackage extends EPackage {
 	 * 
 	 * @return the meta object for data type '<em>Hash Bi Map</em>'.
 	 * @see com.google.common.collect.HashBiMap
-	 * @model instanceClass=
-	 *        "com.google.common.collect.HashBiMap<java.lang.Object, java.lang.Object>"
-	 *        serializeable="false"
+	 * @model instanceClass="com.google.common.collect.HashBiMap"
+	 *        serializeable="false" typeParameters="T U"
 	 * @generated
 	 */
 	EDataType getHashBiMap();
 
 	/**
 	 * Returns the meta object for data type '
-	 * {@link org.eclipse.draw2d.geometry.Vector <em>Dimension</em>}'. <!--
+	 * {@link org.eclipse.draw2d.geometry.Dimension <em>Dimension</em>}'. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @return the meta object for data type '<em>Dimension</em>'.
-	 * @see org.eclipse.draw2d.geometry.Vector
-	 * @model instanceClass="org.eclipse.draw2d.geometry.Vector"
+	 * @see org.eclipse.draw2d.geometry.Dimension
+	 * @model instanceClass="org.eclipse.draw2d.geometry.Dimension"
 	 * @generated
 	 */
 	EDataType getDimension();
@@ -2886,6 +2906,14 @@ public interface ModelReviewPackage extends EPackage {
 		 * @generated
 		 */
 		EReference MODEL_REVIEW__CURRENT_REVIEWER = eINSTANCE.getModelReview_CurrentReviewer();
+
+		/**
+		 * The meta object literal for the '<em><b>Show Comments</b></em>'
+		 * attribute feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EAttribute MODEL_REVIEW__SHOW_COMMENTS = eINSTANCE.getModelReview_ShowComments();
 
 		/**
 		 * The meta object literal for the '
@@ -3614,7 +3642,7 @@ public interface ModelReviewPackage extends EPackage {
 		 * The meta object literal for the '<em>Dimension</em>' data type. <!--
 		 * begin-user-doc --> <!-- end-user-doc -->
 		 * 
-		 * @see org.eclipse.draw2d.geometry.Vector
+		 * @see org.eclipse.draw2d.geometry.Dimension
 		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getDimension()
 		 * @generated
 		 */

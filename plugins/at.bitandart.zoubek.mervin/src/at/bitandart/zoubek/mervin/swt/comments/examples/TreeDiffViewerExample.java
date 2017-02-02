@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Florian Zoubek.
+ * Copyright (c) 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,9 +19,9 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-import at.bitandart.zoubek.mervin.draw2d.figures.ChangeType;
-import at.bitandart.zoubek.mervin.draw2d.figures.DefaultChangeTypeStyleAdvisor;
-import at.bitandart.zoubek.mervin.draw2d.figures.IChangeTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.DefaultOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.IOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.OverlayType;
 import at.bitandart.zoubek.mervin.swt.diff.tree.ITreeDiffItemProvider;
 import at.bitandart.zoubek.mervin.swt.diff.tree.TreeDiff;
 import at.bitandart.zoubek.mervin.swt.diff.tree.TreeDiffSide;
@@ -114,10 +114,10 @@ public class TreeDiffViewerExample {
 		});
 
 		/*
-		 * create the default change type style advisor that is used later to
+		 * create the default overlay type style advisor that is used later to
 		 * get the colors for the viewer
 		 */
-		IChangeTypeStyleAdvisor styleAdvisor = new DefaultChangeTypeStyleAdvisor();
+		IOverlayTypeStyleAdvisor styleAdvisor = new DefaultOverlayTypeStyleAdvisor();
 
 		/* apply the colors for the different diff relations */
 		TreeDiff treeDiff = treeDiffViewer.getTreeDiff();
@@ -128,10 +128,10 @@ public class TreeDiffViewerExample {
 		 * consider them as "deleted".
 		 */
 		// treeDiff.setChangedSide(TreeDiffSide.LEFT);
-		treeDiff.setDiffColor(TreeDiffType.ADD, styleAdvisor.getForegroundColorForChangeType(ChangeType.ADDITION));
-		treeDiff.setDiffColor(TreeDiffType.DELETE, styleAdvisor.getForegroundColorForChangeType(ChangeType.DELETION));
+		treeDiff.setDiffColor(TreeDiffType.ADD, styleAdvisor.getForegroundColorForOverlayType(OverlayType.ADDITION));
+		treeDiff.setDiffColor(TreeDiffType.DELETE, styleAdvisor.getForegroundColorForOverlayType(OverlayType.DELETION));
 		treeDiff.setDiffColor(TreeDiffType.MODIFY,
-				styleAdvisor.getForegroundColorForChangeType(ChangeType.MODIFICATION));
+				styleAdvisor.getForegroundColorForOverlayType(OverlayType.MODIFICATION));
 
 		/* apply the input data */
 		treeDiffViewer.setInput(input);

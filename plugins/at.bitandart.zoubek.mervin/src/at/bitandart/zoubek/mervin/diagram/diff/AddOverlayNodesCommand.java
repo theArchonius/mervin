@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Florian Zoubek.
+ * Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package at.bitandart.zoubek.mervin.diagram.diff;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -101,7 +102,7 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 
 			if (child instanceof View) {
 				View childView = (View) child;
-				createOverlayForView(childView, true);
+				createOverlayForView(childView, true, new LinkedList<DifferenceOverlay>());
 			}
 		}
 
@@ -119,7 +120,7 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 	 *            true if overlays should be created also for child views, if
 	 *            the view has not been added or deleted.
 	 */
-	private void createOverlayForView(View view, boolean includeChildren) {
+	private void createOverlayForView(View view, boolean includeChildren, List<DifferenceOverlay> parentOverlays) {
 
 		View originalView = (View) inverseCopyMap.get(view);
 		if (originalView == null) {
@@ -130,6 +131,8 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 			 */
 			return;
 		}
+
+		DifferenceOverlay differenceOverlay = null;
 
 		/*
 		 * find referencing differences and search for the ReferenceChange that
@@ -181,20 +184,28 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 		if (layoutConstraintMatch != null) {
 			layoutConstraintDifferences = layoutConstraintMatch.getDifferences();
 		}
+
 		if (bendpointsMatch != null) {
 			bendpointDifferences = bendpointsMatch.getDifferences();
 		}
+
 		boolean hasComments = false;
-		boolean hasChildComments = false;
+
 		if (elementMatch != null) {
+
 			viewElementDifferences = elementMatch.getDifferences();
 			hasComments = containsTargetsOfCommentLinks(elementMatch);
-			/*
-			 * use the view match to determine the child comments as the
-			 * notation model does not have to resemble the same containment
-			 * hierarchy as the referencing model
-			 */
-			hasChildComments = hasChildComments(viewMatch);
+			EObject parent = view.eContainer();
+
+			if (parent instanceof View) {
+				/*
+				 * the same element may be referenced by multiple views - to
+				 * improve the readability of the overlays, only report comments
+				 * if the parent overlay does not already show them.
+				 */
+				Match parentViewMatch = diagramComparison.getMatch(((View) parent).getElement());
+				hasComments = hasComments && parentViewMatch != elementMatch;
+			}
 		}
 
 		boolean hasViewReferenceDifferences = viewReferenceChange != null;
@@ -205,10 +216,9 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 		boolean ignoreChildren = false;
 
 		if (hasViewReferenceDifferences || hasLayoutConstraintDifferences || hasBendpointsDifferences
-				|| hasViewElementDifferences || hasComments || hasChildComments) {
+				|| hasViewElementDifferences || hasComments) {
 
 			// create an overlay depending on the view type
-			DifferenceOverlay differenceOverlay = null;
 			String type = null;
 			if (view instanceof Edge) {
 				differenceOverlay = reviewFactory.createEdgeDifferenceOverlay();
@@ -236,36 +246,31 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 
 			if (hasViewReferenceDifferences) {
 
-				StateDifference stateDifference = reviewFactory.createStateDifference();
-				stateDifference.getRawDiffs().add(viewReferenceChange);
 				StateDifferenceType stateDifferenceType = toStateDifferenceType(viewReferenceChange.getKind());
-				stateDifference.setType(stateDifferenceType);
-				differenceOverlay.getDifferences().add(stateDifference);
-				/*
-				 * all child views must have the same difference type or are
-				 * unchanged if the type is an addition or deletion - this done
-				 * to avoid distracting multiple overlays for a addition or
-				 * deletion of a view containing nested views
-				 */
-				ignoreChildren = stateDifferenceType == StateDifferenceType.ADDED
-						|| stateDifferenceType == StateDifferenceType.DELETED;
+
+				if (!hasSameStateDifferenceType(parentOverlays, stateDifferenceType)) {
+
+					StateDifference stateDifference = reviewFactory.createStateDifference();
+					stateDifference.getRawDiffs().add(viewReferenceChange);
+					stateDifference.setType(stateDifferenceType);
+					differenceOverlay.getDifferences().add(stateDifference);
+				}
 
 			}
 
 			differenceOverlay.setCommented(hasComments);
 
-			if (!hasComments && ignoreChildren && hasChildComments) {
-				differenceOverlay.setCommented(hasChildComments);
-			}
-
-			if (!differenceOverlay.getDifferences().isEmpty()) {
+			if (!differenceOverlay.getDifferences().isEmpty() || differenceOverlay.isCommented()) {
 
 				/*
 				 * found review relevant differences, so add the overlay into
 				 * the view model
 				 */
 				ViewService.createNode(container, differenceOverlay, type, preferencesHint);
+				parentOverlays.add(differenceOverlay);
 
+			} else {
+				differenceOverlay = null;
 			}
 
 		}
@@ -274,10 +279,27 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 			for (Object child : view.getChildren()) {
 				if (child instanceof View) {
 					View childView = (View) child;
-					createOverlayForView(childView, true);
+					createOverlayForView(childView, true, parentOverlays);
 				}
 			}
 		}
+
+		parentOverlays.remove(differenceOverlay);
+	}
+
+	private boolean hasSameStateDifferenceType(List<DifferenceOverlay> differenceOverlays,
+			StateDifferenceType stateDifferenceType) {
+
+		for (DifferenceOverlay overlay : differenceOverlays) {
+			EList<Difference> differences = overlay.getDifferences();
+			for (Difference difference : differences) {
+				if (difference instanceof StateDifference
+						&& ((StateDifference) difference).getType() == stateDifferenceType) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**

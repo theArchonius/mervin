@@ -17,13 +17,13 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
 
-import at.bitandart.zoubek.mervin.draw2d.figures.ChangeOverlayConnectionFigure;
-import at.bitandart.zoubek.mervin.draw2d.figures.ConnectionChangeOutline;
-import at.bitandart.zoubek.mervin.draw2d.figures.IChangeTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.OverlayConnectionFigure;
+import at.bitandart.zoubek.mervin.draw2d.figures.ConnectionOutline;
+import at.bitandart.zoubek.mervin.draw2d.figures.IOverlayTypeStyleAdvisor;
 
 /**
- * An {@link OffScreenChangeIndicator} that supports more precise visibility and
- * reference point calculations for {@link ChangeOverlayConnectionFigure}s. The
+ * An {@link OffScreenOverlayIndicator} that supports more precise visibility and
+ * reference point calculations for {@link OverlayConnectionFigure}s. The
  * visibility check is based on the intersection of each outline point list with
  * the containers bounds. The assumption is made that outlines are not big
  * enough that they enclose the whole containers bounds which should work for
@@ -33,9 +33,9 @@ import at.bitandart.zoubek.mervin.draw2d.figures.IChangeTypeStyleAdvisor;
  * @author Florian Zoubek
  *
  */
-public class ConnectionOverlayOffScreenChangeIndicator extends OffScreenChangeIndicator {
+public class ConnectionOffScreenOverlayIndicator extends OffScreenOverlayIndicator {
 
-	public ConnectionOverlayOffScreenChangeIndicator(IChangeTypeStyleAdvisor styleAdvisor) {
+	public ConnectionOffScreenOverlayIndicator(IOverlayTypeStyleAdvisor styleAdvisor) {
 		super(styleAdvisor);
 	}
 
@@ -50,12 +50,12 @@ public class ConnectionOverlayOffScreenChangeIndicator extends OffScreenChangeIn
 
 		for (IFigure linkedFigure : linkedFigures) {
 
-			if (linkedFigure instanceof ChangeOverlayConnectionFigure) {
+			if (linkedFigure instanceof OverlayConnectionFigure) {
 
-				Collection<ConnectionChangeOutline> outlines = ((ChangeOverlayConnectionFigure) linkedFigure)
+				Collection<ConnectionOutline> outlines = ((OverlayConnectionFigure) linkedFigure)
 						.getCurrentOutlines();
 
-				for (ConnectionChangeOutline outline : outlines) {
+				for (ConnectionOutline outline : outlines) {
 					if (outline.intersectsWith(containerBounds)) {
 						return true;
 					}
@@ -76,9 +76,9 @@ public class ConnectionOverlayOffScreenChangeIndicator extends OffScreenChangeIn
 
 		for (IFigure linkedFigure : linkedFigures) {
 
-			if (linkedFigure instanceof ChangeOverlayConnectionFigure) {
+			if (linkedFigure instanceof OverlayConnectionFigure) {
 
-				Collection<ConnectionChangeOutline> outlines = ((ChangeOverlayConnectionFigure) linkedFigure)
+				Collection<ConnectionOutline> outlines = ((OverlayConnectionFigure) linkedFigure)
 						.getCurrentOutlines();
 
 				if (!outlines.isEmpty()) {
