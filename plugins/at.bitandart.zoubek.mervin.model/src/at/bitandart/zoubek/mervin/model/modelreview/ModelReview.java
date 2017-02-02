@@ -1,6 +1,6 @@
 /**
  * ******************************************************************************
- *  Copyright (c) 2015, 2016 Florian Zoubek.
+ *  Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -13,9 +13,11 @@
 package at.bitandart.zoubek.mervin.model.modelreview;
 
 import com.google.common.collect.HashBiMap;
+
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.compare.Comparison;
+
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -67,6 +69,9 @@ import org.eclipse.emf.ecore.EObject;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#getCurrentReviewer
  * <em>Current Reviewer</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#isShowComments
+ * <em>Show Comments</em>}</li>
  * </ul>
  *
  * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelReview()
@@ -477,5 +482,35 @@ public interface ModelReview extends EObject {
 	 * @generated
 	 */
 	void setCurrentReviewer(User value);
+
+	/**
+	 * Returns the value of the '<em><b>Show Comments</b></em>' attribute. <!--
+	 * begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Show Comments</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Show Comments</em>' attribute.
+	 * @see #setShowComments(boolean)
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelReview_ShowComments()
+	 * @model
+	 * @generated
+	 */
+	boolean isShowComments();
+
+	/**
+	 * Sets the value of the '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.ModelReview#isShowComments
+	 * <em>Show Comments</em>}' attribute. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Show Comments</em>' attribute.
+	 * @see #isShowComments()
+	 * @generated
+	 */
+	void setShowComments(boolean value);
 
 } // ModelReview

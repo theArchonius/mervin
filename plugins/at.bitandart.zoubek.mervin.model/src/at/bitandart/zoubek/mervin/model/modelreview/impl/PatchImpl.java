@@ -1,6 +1,6 @@
 /**
  * ******************************************************************************
- *  Copyright (c) 2015 Florian Zoubek.
+ *  Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -14,14 +14,15 @@ package at.bitandart.zoubek.mervin.model.modelreview.impl;
 
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 import at.bitandart.zoubek.mervin.model.modelreview.Patch;
-
 import at.bitandart.zoubek.mervin.model.modelreview.PatchChangeType;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
@@ -64,6 +65,7 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 	 * @ordered
 	 */
 	protected static final String NEW_PATH_EDEFAULT = null;
+
 	/**
 	 * The cached value of the '{@link #getNewPath() <em>New Path</em>}'
 	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -73,6 +75,7 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 	 * @ordered
 	 */
 	protected String newPath = NEW_PATH_EDEFAULT;
+
 	/**
 	 * The default value of the '{@link #getOldPath() <em>Old Path</em>}'
 	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -82,6 +85,7 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 	 * @ordered
 	 */
 	protected static final String OLD_PATH_EDEFAULT = null;
+
 	/**
 	 * The cached value of the '{@link #getOldPath() <em>Old Path</em>}'
 	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -91,6 +95,7 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 	 * @ordered
 	 */
 	protected String oldPath = OLD_PATH_EDEFAULT;
+
 	/**
 	 * The default value of the '{@link #getNewContent() <em>New Content</em>}'
 	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -100,6 +105,7 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 	 * @ordered
 	 */
 	protected static final byte[] NEW_CONTENT_EDEFAULT = null;
+
 	/**
 	 * The cached value of the '{@link #getNewContent() <em>New Content</em>}'
 	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -109,6 +115,7 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 	 * @ordered
 	 */
 	protected byte[] newContent = NEW_CONTENT_EDEFAULT;
+
 	/**
 	 * The default value of the '{@link #getOldContent() <em>Old Content</em>}'
 	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -118,6 +125,7 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 	 * @ordered
 	 */
 	protected static final byte[] OLD_CONTENT_EDEFAULT = null;
+
 	/**
 	 * The cached value of the '{@link #getOldContent() <em>Old Content</em>}'
 	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -137,6 +145,7 @@ public class PatchImpl extends MinimalEObjectImpl.Container implements Patch {
 	 * @ordered
 	 */
 	protected static final PatchChangeType CHANGE_TYPE_EDEFAULT = PatchChangeType.ADD;
+
 	/**
 	 * The cached value of the '{@link #getChangeType() <em>Change Type</em>}'
 	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->

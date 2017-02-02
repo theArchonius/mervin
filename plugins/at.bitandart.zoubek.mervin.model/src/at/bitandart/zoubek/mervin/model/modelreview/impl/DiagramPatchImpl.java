@@ -1,6 +1,6 @@
 /**
  * ******************************************************************************
- *  Copyright (c) 2015 Florian Zoubek.
+ *  Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -15,9 +15,12 @@ package at.bitandart.zoubek.mervin.model.modelreview.impl;
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch;
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramResource;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
+
 import org.eclipse.emf.common.notify.Notification;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
+
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
@@ -48,6 +51,7 @@ public class DiagramPatchImpl extends PatchImpl implements DiagramPatch {
 	 * @ordered
 	 */
 	protected DiagramResource newDiagramResource;
+
 	/**
 	 * The cached value of the '{@link #getOldDiagramResource()
 	 * <em>Old Diagram Resource</em>}' reference. <!-- begin-user-doc --> <!--
