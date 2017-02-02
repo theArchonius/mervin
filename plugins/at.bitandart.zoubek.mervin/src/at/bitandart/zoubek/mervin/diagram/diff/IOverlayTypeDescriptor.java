@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Florian Zoubek.
+ * Copyright (c) 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -89,6 +89,28 @@ public interface IOverlayTypeDescriptor {
 			EObject element = diagram.getElement();
 			if (element instanceof ModelReview) {
 				((ModelReview) element).setShowLayoutChanges(visibility);
+			}
+
+		}
+
+	};
+
+	/**
+	 * {@link IOverlayTypeDescriptor} that selects overlays with comments.
+	 */
+	public static final IOverlayTypeDescriptor TYPE_DESCRIPTOR_COMMENTS = new IOverlayTypeDescriptor() {
+
+		@Override
+		public boolean isType(DifferenceOverlay overlay) {
+			return overlay.isCommented();
+		}
+
+		@Override
+		public void storeTypeVisibility(Diagram diagram, boolean visibility) {
+
+			EObject element = diagram.getElement();
+			if (element instanceof ModelReview) {
+				((ModelReview) element).setShowComments(visibility);
 			}
 
 		}
