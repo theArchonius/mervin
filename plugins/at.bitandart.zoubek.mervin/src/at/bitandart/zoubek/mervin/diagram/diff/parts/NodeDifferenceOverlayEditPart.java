@@ -80,6 +80,7 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 			changeOverlayNodeFigure.setShowCommentHint(differenceOverlay.isCommented());
 
 			EList<Difference> differences = differenceOverlay.getDifferences();
+			boolean hasStateDifference = false;
 			boolean hasLayoutDifference = false;
 
 			Vector originalLocation = null;
@@ -107,18 +108,21 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 						if (offScreenChangeIndicator != null) {
 							offScreenChangeIndicator.setOverlayType(OverlayType.ADDITION);
 						}
+						hasStateDifference = true;
 						break;
 					case DELETED:
 						changeOverlayNodeFigure.setOverlayType(OverlayType.DELETION);
 						if (offScreenChangeIndicator != null) {
 							offScreenChangeIndicator.setOverlayType(OverlayType.DELETION);
 						}
+						hasStateDifference = true;
 						break;
 					case MODIFIED:
 						changeOverlayNodeFigure.setOverlayType(OverlayType.MODIFICATION);
 						if (offScreenChangeIndicator != null) {
 							offScreenChangeIndicator.setOverlayType(OverlayType.MODIFICATION);
 						}
+						hasStateDifference = true;
 						break;
 					default:
 						// do nothing
@@ -133,7 +137,6 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 					changeOverlayNodeFigure
 							.setBoundsWidthChangeType(toDimensionPropertyChangeType(sizeDifference.getWidthChange()));
 					originalDimension = sizeDifference.getOriginalDimension();
-
 					hasLayoutDifference = true;
 
 				} else if (difference instanceof LocationDifference) {
@@ -141,15 +144,17 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 					LocationDifference locationDifference = (LocationDifference) difference;
 					changeOverlayNodeFigure.setMoveDirection(locationDifference.getMoveDirection());
 					originalLocation = locationDifference.getOriginalLocation();
-
 					hasLayoutDifference = true;
 				}
 
 			}
 			if (hasLayoutDifference) {
-				changeOverlayNodeFigure.setOverlayType(OverlayType.LAYOUT);
-				if (offScreenChangeIndicator != null) {
-					offScreenChangeIndicator.setOverlayType(OverlayType.LAYOUT);
+
+				if (!hasStateDifference) {
+					changeOverlayNodeFigure.setOverlayType(OverlayType.LAYOUT);
+					if (offScreenChangeIndicator != null) {
+						offScreenChangeIndicator.setOverlayType(OverlayType.LAYOUT);
+					}
 				}
 
 				IFigure linkedFigure = getLinkedEditPart().getFigure();
