@@ -11,6 +11,7 @@
 package at.bitandart.zoubek.mervin.diagram.diff;
 
 import java.text.MessageFormat;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -119,6 +120,8 @@ public class DiagramDiffView implements IAdaptable {
 	private GMFDiagramDiffViewService diagramDiffViewService;
 
 	private DiffHighlightListener highlightListener = new DiffHighlightListener();
+
+	private boolean ignoreHighlights = false;
 
 	/**
 	 * the default part descriptor id associated with this view
@@ -231,8 +234,59 @@ public class DiagramDiffView implements IAdaptable {
 
 				@Override
 				public void selectionChanged(SelectionChangedEvent event) {
+
 					IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 					selectionService.setSelection(selection);
+					highlightSelectionInOtherViews(selection);
+				}
+
+				/**
+				 * highlights the given selection using the current highlight
+				 * service. Currently, only the element of views contained in
+				 * selected edit parts are passed to the service. Highlighting
+				 * in this view is disabled while the highlight service is
+				 * called.
+				 * 
+				 * @param selection
+				 *            the selection containing the elements to
+				 *            highlight.
+				 */
+				private void highlightSelectionInOtherViews(IStructuredSelection selection) {
+
+					if (!selection.isEmpty()) {
+						Iterator<?> iterator = selection.iterator();
+						boolean highlightsCleared = false;
+						ModelReview modelReview = getModelReview();
+
+						IFocusHighlightEditPart focusHighlightEditPart = getFocusHighlightEditPart();
+						ignoreHighlights = true;
+
+						while (iterator.hasNext()) {
+
+							Object object = iterator.next();
+
+							if (object instanceof EditPart) {
+
+								Object model = ((EditPart) object).getModel();
+
+								if (model instanceof View) {
+
+									EObject element = ((View) model).getElement();
+
+									if (element != null) {
+
+										if (!highlightsCleared) {
+											highlightService.clearHighlights(modelReview);
+											highlightsCleared = true;
+										}
+										highlightService.addHighlightFor(modelReview, element);
+									}
+								}
+							}
+						}
+
+						ignoreHighlights = false;
+					}
 				}
 
 			});
@@ -396,13 +450,15 @@ public class DiagramDiffView implements IAdaptable {
 		@Override
 		public void elementAdded(ModelReview review, Object element) {
 
-			IFocusHighlightEditPart focusableEditPart = getFocusHighlightEditPart();
-			if (focusableEditPart != null) {
+			if (!ignoreHighlights) {
+				IFocusHighlightEditPart focusableEditPart = getFocusHighlightEditPart();
+				if (focusableEditPart != null) {
 
-				IFigure focusFigure = findFigureFor(review, element, focusableEditPart);
+					IFigure focusFigure = findFigureFor(review, element, focusableEditPart);
 
-				if (focusFigure != null) {
-					focusableEditPart.addFocusHighlightFigure(focusFigure);
+					if (focusFigure != null) {
+						focusableEditPart.addFocusHighlightFigure(focusFigure);
+					}
 				}
 			}
 
