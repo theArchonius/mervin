@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Florian Zoubek.
+ * Copyright (c) 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,8 +22,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ControlAdapter;
@@ -351,17 +353,20 @@ public class CommentList extends ScrolledComposite {
 			InternalCommentGroup internalCommentGroup = new InternalCommentGroup(commentGroup);
 
 			// create the group title
-			Label groupTitle = toolkit.createLabel(mainBody, internalCommentGroup.getGroupTitle(), SWT.CENTER);
+
+			CLabel groupTitle = new CLabel(mainBody, SWT.CENTER);
+			toolkit.adapt(groupTitle);
+			groupTitle.setText(internalCommentGroup.getGroupTitle());
 			groupTitle.setBackground(titleBackground);
 			groupTitle.setForeground(titleForeground);
 			groupTitle.setFont(titleFont);
-			groupTitle.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+			groupTitle.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 			internalCommentGroup.setGroupTitleControl(groupTitle);
 
 			// create the group composite
 			Composite groupComposite = toolkit.createComposite(mainBody);
 			groupComposite.setLayout(createColumnLayout());
-			groupComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+			groupComposite.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 
 			internalCommentGroup.setComposite(groupComposite);
 

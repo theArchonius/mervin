@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Florian Zoubek.
+ * Copyright (c) 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -283,7 +283,12 @@ public class CommentListViewerExample {
 			groups.add("New Comments");
 
 			for (int i = 0; i < numPredefinedGroups; i++) {
-				groups.add("Group " + i);
+				if (i == 0) {
+					groups.add("Group " + i + " with a long title to demostrate overflow behavior: "
+							+ BlindtextUtil.getLoremIpsumSentences(0, 2));
+				} else {
+					groups.add("Group " + i);
+				}
 			}
 
 			Random randomGenerator = new Random(1);
