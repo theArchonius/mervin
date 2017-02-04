@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Florian Zoubek.
+ * Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,6 +30,8 @@ import org.eclipse.e4.ui.workbench.modeling.ElementMatcher;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.utils.MatchUtil;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -52,7 +54,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 
 import at.bitandart.zoubek.mervin.IReviewHighlightService;
@@ -144,9 +145,6 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 	private TreeViewerColumn labelColumn;
 
 	@Inject
-	private Shell shell;
-
-	@Inject
 	private Display display;
 
 	// Colors
@@ -195,9 +193,10 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 
 		// initialize tree viewer
 
+		PatchSetHistoryContentProvider patchSetHistoryContentProvider = new PatchSetHistoryContentProvider();
 		historyTreeViewer = new TreeViewer(mainPanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
 		historyTreeViewer.setComparator(new ViewerComparator());
-		historyTreeViewer.setContentProvider(new PatchSetHistoryContentProvider());
+		historyTreeViewer.setContentProvider(patchSetHistoryContentProvider);
 		historyTreeViewer.addSelectionChangedListener(new HighlightSelectionListener(this));
 		Tree histroryTree = historyTreeViewer.getTree();
 		histroryTree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -213,7 +212,8 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 		labelColumn.getColumn().setText("Diff");
 		labelColumn.getColumn().setWidth(400);
 
-		DiffNameColumnLabelProvider labelColumnLabelProvider = new DiffNameColumnLabelProvider();
+		DiffNameColumnLabelProvider labelColumnLabelProvider = new DiffNameColumnLabelProvider(
+				patchSetHistoryContentProvider);
 		labelColumn.setLabelProvider(labelColumnLabelProvider);
 		labelColumn.getColumn().addSelectionListener(
 				new ThreeWayObjectTreeViewerComparator(historyTreeViewer, labelColumn, labelColumnLabelProvider));
@@ -510,10 +510,12 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 	private class DiffNameColumnLabelProvider extends StyledCellLabelProvider implements Comparator<Object> {
 
 		private AdapterFactoryLabelProvider adapterFactoryLabelProvider;
+		private ITreeContentProvider contentProvider;
 
-		public DiffNameColumnLabelProvider() {
+		public DiffNameColumnLabelProvider(ITreeContentProvider contentProvider) {
 			adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(
 					new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
+			this.contentProvider = contentProvider;
 		}
 
 		@Override
@@ -572,6 +574,10 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 		 */
 		private boolean isHighlighted(Object element, List<Object> highlightedElements) {
 
+			if (element == null) {
+				return false;
+			}
+
 			if (highlightedElements.contains(element)) {
 				return true;
 			}
@@ -590,10 +596,18 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 			}
 
 			if (element instanceof Diff) {
-				Match match = ((Diff) element).getMatch();
-				if (isHighlighted(match.getLeft(), highlightedElements)
-						|| isHighlighted(match.getRight(), highlightedElements)) {
-					return true;
+				Diff diff = (Diff) element;
+				Object value = MatchUtil.getValue(diff);
+				if (value != null && value instanceof EObject) {
+					Match match = diff.getMatch().getComparison().getMatch((EObject) value);
+					if (match != null && //
+							(isHighlighted(match.getLeft(), highlightedElements)
+									|| isHighlighted(match.getRight(), highlightedElements))) {
+						return true;
+
+					} else if (isHighlighted(value, highlightedElements)) {
+						return true;
+					}
 				}
 			}
 
@@ -602,6 +616,14 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 					if (isHighlighted(entry, highlightedElements)) {
 						return true;
 					}
+				}
+			}
+
+			Object[] children = contentProvider.getChildren(element);
+
+			for (Object child : children) {
+				if (isHighlighted(child, highlightedElements)) {
+					return true;
 				}
 			}
 
