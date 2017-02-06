@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -118,7 +118,7 @@ public class MervinCommentProviderTest {
 		expectedTargetSets.add(new HashSet<EObject>());
 
 		// test
-		List<ICommentColumn> commentColumns = commentProvider.getCommentColumns(review);
+		List<ICommentColumn> commentColumns = commentProvider.getVisibleCommentColumns(review);
 		assertColumns(patchSets, commentColumns);
 
 		List<ICommentGroup> commentGroups = commentProvider.getCommentGroups(review);
@@ -157,7 +157,7 @@ public class MervinCommentProviderTest {
 		expectedTargetSets.add(new HashSet<EObject>());
 
 		// test
-		List<ICommentColumn> commentColumns = commentProvider.getCommentColumns(review);
+		List<ICommentColumn> commentColumns = commentProvider.getVisibleCommentColumns(review);
 		assertColumns(patchSets, commentColumns);
 
 		List<ICommentGroup> commentGroups = commentProvider.getCommentGroups(review);
@@ -202,7 +202,7 @@ public class MervinCommentProviderTest {
 		expectedTargetSets.add(group2Targets);
 
 		// test
-		List<ICommentColumn> commentColumns = commentProvider.getCommentColumns(review);
+		List<ICommentColumn> commentColumns = commentProvider.getVisibleCommentColumns(review);
 		assertColumns(patchSets, commentColumns);
 
 		List<ICommentGroup> commentGroups = commentProvider.getCommentGroups(review);
@@ -247,7 +247,7 @@ public class MervinCommentProviderTest {
 		expectedTargetSets.add(group2Targets);
 
 		// test
-		List<ICommentColumn> commentColumns = commentProvider.getCommentColumns(review);
+		List<ICommentColumn> commentColumns = commentProvider.getVisibleCommentColumns(review);
 		assertColumns(patchSets, commentColumns);
 
 		List<ICommentGroup> commentGroups = commentProvider.getCommentGroups(review);
@@ -305,7 +305,7 @@ public class MervinCommentProviderTest {
 		expectedTargetSets.add(group2Targets);
 
 		// test
-		List<ICommentColumn> commentColumns = commentProvider.getCommentColumns(review);
+		List<ICommentColumn> commentColumns = commentProvider.getVisibleCommentColumns(review);
 		assertColumns(patchSets, commentColumns);
 
 		List<ICommentGroup> commentGroups = commentProvider.getCommentGroups(review);
@@ -373,7 +373,7 @@ public class MervinCommentProviderTest {
 		expectedTargetSets.add(group2Targets);
 
 		// test
-		List<ICommentColumn> commentColumns = commentProvider.getCommentColumns(review);
+		List<ICommentColumn> commentColumns = commentProvider.getVisibleCommentColumns(review);
 		assertColumns(patchSets, commentColumns);
 
 		List<ICommentGroup> commentGroups = commentProvider.getCommentGroups(review);
@@ -408,7 +408,7 @@ public class MervinCommentProviderTest {
 		expectedTargetSets.add(new HashSet<EObject>());
 
 		// test
-		List<ICommentColumn> commentColumns = commentProvider.getCommentColumns(review);
+		List<ICommentColumn> commentColumns = commentProvider.getVisibleCommentColumns(review);
 		assertColumns(patchSets, commentColumns);
 
 		List<ICommentGroup> commentGroups = commentProvider.getCommentGroups(review);
@@ -437,7 +437,7 @@ public class MervinCommentProviderTest {
 		expectedTargetSets.add(new HashSet<EObject>());
 
 		// test
-		List<ICommentColumn> commentColumns = commentProvider.getCommentColumns(review);
+		List<ICommentColumn> commentColumns = commentProvider.getVisibleCommentColumns(review);
 		assertColumns(patchSets, commentColumns);
 
 		List<ICommentGroup> commentGroups = commentProvider.getCommentGroups(review);
@@ -472,7 +472,7 @@ public class MervinCommentProviderTest {
 		expectedTargetSets.add(new HashSet<EObject>());
 
 		// test
-		List<ICommentColumn> commentColumns = commentProvider.getCommentColumns(review);
+		List<ICommentColumn> commentColumns = commentProvider.getVisibleCommentColumns(review);
 
 		assertColumns(patchSets, commentColumns);
 
@@ -504,7 +504,7 @@ public class MervinCommentProviderTest {
 		expectedTargetSets.add(new HashSet<EObject>());
 
 		// test
-		List<ICommentColumn> commentColumns = commentProvider.getCommentColumns(review);
+		List<ICommentColumn> commentColumns = commentProvider.getVisibleCommentColumns(review);
 		assertColumns(new PatchSet[] { expectedLeftPatchSet }, commentColumns);
 
 		List<ICommentGroup> commentGroups = commentProvider.getCommentGroups(review);
@@ -586,7 +586,7 @@ public class MervinCommentProviderTest {
 		expectedTargetSets.add(group2Targets);
 
 		// test
-		List<ICommentColumn> commentColumns = commentProvider.getCommentColumns(review);
+		List<ICommentColumn> commentColumns = commentProvider.getVisibleCommentColumns(review);
 		assertColumns(patchSets, commentColumns);
 
 		List<ICommentGroup> commentGroups = commentProvider.getCommentGroups(review);
@@ -659,7 +659,7 @@ public class MervinCommentProviderTest {
 		expectedTargetSets.add(group2Targets);
 
 		// test
-		List<ICommentColumn> commentColumns = commentProvider.getCommentColumns(review);
+		List<ICommentColumn> commentColumns = commentProvider.getVisibleCommentColumns(review);
 		assertColumns(patchSets, commentColumns);
 
 		List<ICommentGroup> commentGroups = commentProvider.getCommentGroups(review);
@@ -706,7 +706,7 @@ public class MervinCommentProviderTest {
 		expectedTargetSets.add(group1Targets);
 
 		// test
-		List<ICommentColumn> commentColumns = commentProvider.getCommentColumns(review);
+		List<ICommentColumn> commentColumns = commentProvider.getVisibleCommentColumns(review);
 		assertColumns(patchSets, commentColumns);
 
 		List<ICommentGroup> commentGroups = commentProvider.getCommentGroups(review);

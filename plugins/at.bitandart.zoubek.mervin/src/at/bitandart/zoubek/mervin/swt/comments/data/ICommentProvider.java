@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Florian Zoubek.
+ * Copyright (c) 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,12 +32,20 @@ public interface ICommentProvider {
 	public List<ICommentGroup> getCommentGroups(Object input);
 
 	/**
-	 * returns the list of comment columns
+	 * returns the list of visible comment columns
 	 * 
-	 * @return an ordered list of comment columns containing the actual
-	 *         comments. Comments must always reside in a group and a column.
+	 * @return an ordered list of comment columns containing the actual comments
+	 *         to view. Comments must always reside in a group and a column.
 	 */
-	public List<ICommentColumn> getCommentColumns(Object input);
+	public List<ICommentColumn> getVisibleCommentColumns(Object input);
+
+	/**
+	 * returns the list of all comment columns
+	 * 
+	 * @return an ordered list of all comment columns used by the column
+	 *         overview.
+	 */
+	public List<ICommentColumn> getAllCommentColumns(Object input);
 
 	/**
 	 * returns the comments for a given group.

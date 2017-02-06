@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Florian Zoubek.
+ * Copyright (c) 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
 import com.google.common.collect.Ordering;
@@ -305,7 +306,7 @@ public class MervinCommentProvider implements ICommentProvider {
 	 * getCommentColumns(java.lang.Object)
 	 */
 	@Override
-	public List<ICommentColumn> getCommentColumns(Object input) {
+	public List<ICommentColumn> getVisibleCommentColumns(Object input) {
 
 		List<ICommentColumn> columns = new ArrayList<>(2);
 
@@ -321,6 +322,24 @@ public class MervinCommentProvider implements ICommentProvider {
 			if (rightPatchSet != null) {
 				PatchSetColumn rightPatchSetColumn = new PatchSetColumn(rightPatchSet);
 				columns.add(rightPatchSetColumn);
+			}
+		}
+
+		return columns;
+	}
+
+	@Override
+	public List<ICommentColumn> getAllCommentColumns(Object input) {
+
+		List<ICommentColumn> columns = new ArrayList<>();
+
+		if (input instanceof ModelReview) {
+
+			ModelReview review = (ModelReview) input;
+			EList<PatchSet> patchSets = review.getPatchSets();
+
+			for (PatchSet patchSet : patchSets) {
+				columns.add(new PatchSetColumn(patchSet));
 			}
 		}
 
