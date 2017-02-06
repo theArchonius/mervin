@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Florian Zoubek.
+ * Copyright (c) 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,12 +21,15 @@ package at.bitandart.zoubek.mervin.swt.comments.data;
 public class CommentColumn implements ICommentColumn {
 
 	private String title;
+	private int commentCount;
 
 	/**
 	 * @see ICommentColumn#getTitle()
+	 * @see ICommentColumn#getCommentCount()
 	 */
-	public CommentColumn(String title) {
+	public CommentColumn(String title, int commentCount) {
 		this.title = title;
+		this.commentCount = commentCount;
 	}
 
 	/**
@@ -34,6 +37,13 @@ public class CommentColumn implements ICommentColumn {
 	 */
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	/**
+	 * @see ICommentColumn#getCommentCount()
+	 */
+	public void setCommentCount(int commentCount) {
+		this.commentCount = commentCount;
 	}
 
 	/*
@@ -45,6 +55,11 @@ public class CommentColumn implements ICommentColumn {
 	@Override
 	public String getTitle() {
 		return title;
+	}
+
+	@Override
+	public int getCommentCount() {
+		return commentCount;
 	}
 
 	/*

@@ -82,6 +82,7 @@ public class CommentList extends ScrolledComposite {
 	// SWT controls
 	private Composite mainBody;
 
+	private ColumnOverview columnOverview;
 	private Composite columnHeaderArea;
 	private Map<ICommentColumn, Control> columnHeaders = new HashMap<>();
 	private Map<ICommentColumn, CommentEditor> columnHeaderEditors = new HashMap<>();
@@ -99,6 +100,13 @@ public class CommentList extends ScrolledComposite {
 		this.toolkit = toolkit;
 		toolkit.adapt(this);
 
+		titleFont = FontDescriptor.createFrom(getFont()).setStyle(SWT.BOLD).increaseHeight(1)
+				.createFont(Display.getDefault());
+
+		// the title colors are system colors, so do not dispose them later
+		titleForeground = getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND);
+		titleBackground = getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND);
+
 		/*
 		 * initialize as a scrolled composite that allows wrapping (based on SWT
 		 * Snippet 166)
@@ -115,13 +123,25 @@ public class CommentList extends ScrolledComposite {
 			}
 		});
 
+		// create comment column overview
+
+		columnOverview = new ColumnOverview(toolkit, mainBody, SWT.NONE);
+		columnOverview.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+
+		Label separator = toolkit.createSeparator(mainBody, SWT.HORIZONTAL);
+		separator.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+
+		CLabel commentsHeaderLabel = new CLabel(mainBody, SWT.CENTER);
+		commentsHeaderLabel.setText("Comments");
+		commentsHeaderLabel.setBackground(titleBackground);
+		commentsHeaderLabel.setForeground(titleForeground);
+		commentsHeaderLabel.setFont(titleFont);
+		commentsHeaderLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
+
 		// create the composite that contains the column headers
 		columnHeaderArea = toolkit.createComposite(mainBody);
 		columnHeaderArea.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		columnHeaderArea.setLayout(new GridLayout());
-
-		titleFont = FontDescriptor.createFrom(getFont()).setStyle(SWT.BOLD).increaseHeight(1)
-				.createFont(Display.getDefault());
 
 		addDisposeListener(new DisposeListener() {
 
@@ -131,9 +151,6 @@ public class CommentList extends ScrolledComposite {
 			}
 		});
 
-		// the title colors are system colors, so do not dispose them later
-		titleForeground = getDisplay().getSystemColor(SWT.COLOR_TITLE_FOREGROUND);
-		titleBackground = getDisplay().getSystemColor(SWT.COLOR_TITLE_BACKGROUND);
 	}
 
 	@Override
@@ -154,6 +171,19 @@ public class CommentList extends ScrolledComposite {
 	}
 
 	/**
+	 * sets the list of {@link ICommentColumn}s that should be shown in the
+	 * column overview. Any changes to this list after calling this method will
+	 * not be reflected in the control.
+	 * 
+	 * @param overviewColumns
+	 *            the list of {@link ICommentColumn} that should be shown in the
+	 *            comment overview.
+	 */
+	public void setOverviewColumns(List<ICommentColumn> overviewColumns) {
+		this.columnOverview.setOverviewColumns(overviewColumns);
+	}
+
+	/**
 	 * adds the given comment column. Does nothing if the column already exists
 	 * in this widget.
 	 * 
@@ -171,7 +201,8 @@ public class CommentList extends ScrolledComposite {
 			headerContainerLayout.marginWidth = 0;
 			columnHeaderContainer.setLayout(headerContainerLayout);
 
-			Label columnHeaderLabel = toolkit.createLabel(columnHeaderContainer, commentColumn.getTitle(), SWT.CENTER);
+			CLabel columnHeaderLabel = new CLabel(columnHeaderContainer, SWT.CENTER);
+			columnHeaderLabel.setText(commentColumn.getTitle());
 			columnHeaderLabel.setBackground(titleBackground);
 			columnHeaderLabel.setForeground(titleForeground);
 			columnHeaderLabel.setFont(titleFont);
@@ -238,6 +269,7 @@ public class CommentList extends ScrolledComposite {
 			// update the column header layout
 			GridLayout gridLayout = new GridLayout(baseColumns.size(), true);
 			gridLayout.marginWidth = 0;
+			gridLayout.marginHeight = 0;
 			columnHeaderArea.setLayout(gridLayout);
 			columnHeaderArea.layout();
 
@@ -956,6 +988,11 @@ public class CommentList extends ScrolledComposite {
 		@Override
 		public String getTitle() {
 			return realCommentColumn.getTitle();
+		}
+
+		@Override
+		public int getCommentCount() {
+			return comments.size();
 		}
 
 		public Composite getComposite() {

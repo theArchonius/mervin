@@ -17,7 +17,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -430,12 +432,58 @@ public class CommentListViewerExample {
 	private static class ExampleCommentProvider implements ICommentProvider {
 
 		@Override
-		public List<ICommentColumn> getCommentColumns(Object input) {
+		public List<ICommentColumn> getVisibleCommentColumns(Object input) {
 
 			ExampleInputData data = (ExampleInputData) input;
 			List<ICommentColumn> commentColumns = new LinkedList<ICommentColumn>();
-			commentColumns.add(new CommentColumn(data.column1));
-			commentColumns.add(new CommentColumn(data.column2));
+			commentColumns.add(new CommentColumn(data.column1, countComments(data.column1, data)));
+			commentColumns.add(new CommentColumn(data.column2, countComments(data.column1, data)));
+
+			return commentColumns;
+		}
+
+		/**
+		 * @param column
+		 *            the column to count the comments for.
+		 * @param data
+		 *            the data containing the comment information.
+		 * @return the comment count for the specified column
+		 */
+		private int countComments(String column, ExampleInputData data) {
+
+			int count = 0;
+			Set<Entry<Cell, List<ExampleCommentEntry>>> cellEntries = data.comments.entrySet();
+
+			for (Entry<Cell, List<ExampleCommentEntry>> entry : cellEntries) {
+				if (entry.getKey().column.equals(column)) {
+					count += entry.getValue().size();
+				}
+			}
+			return count;
+		}
+
+		@Override
+		public List<ICommentColumn> getAllCommentColumns(Object input) {
+
+			ExampleInputData data = (ExampleInputData) input;
+			List<ICommentColumn> commentColumns = new LinkedList<ICommentColumn>();
+
+			/*
+			 * add some artificial columns before and after the real columns for
+			 * demonstration
+			 */
+
+			commentColumns.add(new CommentColumn("Column 0", 34));
+
+			/* real columns */
+
+			commentColumns.add(new CommentColumn(data.column1, countComments(data.column1, data)));
+			commentColumns.add(new CommentColumn(data.column2, countComments(data.column1, data)));
+
+			/* again some artificial columns */
+
+			commentColumns.add(new CommentColumn("Column 3", 42));
+			commentColumns.add(new CommentColumn("Column 4", 7));
 
 			return commentColumns;
 		}
