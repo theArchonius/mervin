@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Florian Zoubek.
+ * Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -48,7 +48,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import at.bitandart.zoubek.mervin.IMervinContextConstants;
-import at.bitandart.zoubek.mervin.IReviewHighlightService;
 import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
@@ -61,7 +60,6 @@ import at.bitandart.zoubek.mervin.swt.comments.CommentListViewer;
 import at.bitandart.zoubek.mervin.swt.comments.data.IComment;
 import at.bitandart.zoubek.mervin.swt.comments.data.ICommentColumn;
 import at.bitandart.zoubek.mervin.swt.comments.data.ICommentLink;
-import at.bitandart.zoubek.mervin.swt.comments.data.ICommentLinkTarget;
 import at.bitandart.zoubek.mervin.swt.comments.data.ICommentProvider;
 
 /**
@@ -93,7 +91,7 @@ public class CommentsView extends ModelReviewEditorTrackingView implements IAdap
 	private ModelReviewFactory modelFactory;
 
 	@Inject
-	private IReviewHighlightService reviewHighlightService;
+	private CommentLinkListener commentLinkListener;
 
 	@Inject
 	@Named(IMervinContextConstants.CURRENT_REVIEWER)
@@ -145,46 +143,7 @@ public class CommentsView extends ModelReviewEditorTrackingView implements IAdap
 		commentListViewer = new CommentListViewer(parent, toolkit, SWT.V_SCROLL);
 		commentListViewer.setCommentProvider(commentProvider);
 		CommentList control = commentListViewer.getCommentListControl();
-		control.addCommentLinkListener(new CommentLinkListener() {
-
-			@Override
-			public void commentLinkClicked(ICommentLink commentLink) {
-				// Intentionally left empty
-			}
-
-			@Override
-			public void commentLinkEnter(ICommentLink commentLink) {
-
-				ICommentLinkTarget commentLinkTarget = commentLink.getCommentLinkTarget();
-				ModelReview modelReview = getCurrentModelReview();
-
-				if (modelReview != null && commentLinkTarget instanceof MervinCommentLinkTarget) {
-					List<EObject> targets = ((MervinCommentLinkTarget) commentLinkTarget).getTargets();
-
-					for (EObject target : targets) {
-						reviewHighlightService.addHighlightFor(modelReview, target);
-					}
-				}
-
-			}
-
-			@Override
-			public void commentLinkExit(ICommentLink commentLink) {
-
-				ICommentLinkTarget commentLinkTarget = commentLink.getCommentLinkTarget();
-				ModelReview modelReview = getCurrentModelReview();
-
-				if (modelReview != null && commentLinkTarget instanceof MervinCommentLinkTarget) {
-					List<EObject> targets = ((MervinCommentLinkTarget) commentLinkTarget).getTargets();
-
-					for (EObject target : targets) {
-						reviewHighlightService.removeHighlightFor(modelReview, target);
-					}
-				}
-
-			}
-
-		});
+		control.addCommentLinkListener(commentLinkListener);
 		control.addCommentModifyListener(new CommentModifyListener() {
 
 			@Override

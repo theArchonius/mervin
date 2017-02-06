@@ -16,6 +16,7 @@ import org.eclipse.e4.core.contexts.ContextInjectionFactory;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 
 import at.bitandart.zoubek.mervin.comments.ICommonTargetResolver;
+import at.bitandart.zoubek.mervin.comments.MervinCommentLinkListener;
 import at.bitandart.zoubek.mervin.comments.MervinCommentProvider;
 import at.bitandart.zoubek.mervin.comments.MervinCommonTargetResolver;
 import at.bitandart.zoubek.mervin.draw2d.figures.DefaultOverlayTypeStyleAdvisor;
@@ -28,6 +29,7 @@ import at.bitandart.zoubek.mervin.patchset.history.ChangeSimilarityHistoryServic
 import at.bitandart.zoubek.mervin.patchset.history.DependencyDiffOrganizer;
 import at.bitandart.zoubek.mervin.patchset.history.IPatchSetHistoryEntryOrganizer;
 import at.bitandart.zoubek.mervin.patchset.history.ISimilarityHistoryService;
+import at.bitandart.zoubek.mervin.swt.comments.CommentList.CommentLinkListener;
 import at.bitandart.zoubek.mervin.swt.comments.data.ICommentProvider;
 
 /**
@@ -91,6 +93,10 @@ public class MervinServicesAddon {
 		MervinCommentProvider mervinCommentProvider = ContextInjectionFactory.make(MervinCommentProvider.class,
 				context);
 		context.set(ICommentProvider.class, mervinCommentProvider);
+
+		MervinCommentLinkListener mervinCommentLinkListener = ContextInjectionFactory
+				.make(MervinCommentLinkListener.class, context);
+		context.set(CommentLinkListener.class, mervinCommentLinkListener);
 
 		context.declareModifiable(IMervinContextConstants.ACTIVE_MODEL_REVIEW);
 		context.declareModifiable(IMervinContextConstants.CURRENT_REVIEWER);
