@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Florian Zoubek.
+ * Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -31,8 +33,10 @@ import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EAnnotation;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
@@ -288,11 +292,12 @@ public class GMFDiagramDiffViewService {
 						Copier viewCopier = new Copier();
 						Iterable<Diff> allDifferences = diagramMatch.getAllDifferences();
 						for (Diff diff : allDifferences) {
-							if (needsCopy(diff, copyMap)) {
-								copyDiff(diagramComparison, childrenAndEdgesCopy, copyMap, viewCopier, diff);
+							if (isDeletionCopyNecessary(diff, copyMap)) {
+								copyDeletedViewDiff(diagramComparison, childrenAndEdgesCopy, copyMap, viewCopier, diff);
 							}
 						}
 						viewCopier.copyReferences();
+						updateDeletionMatchedReferences(viewCopier, copyMap, diagramComparison);
 					}
 				}
 
@@ -349,17 +354,17 @@ public class GMFDiagramDiffViewService {
 	 * @return true if the value of the given diff must be copied into the given
 	 *         copy map, false otherwise.
 	 */
-	private boolean needsCopy(Diff diff, HashBiMap<EObject, EObject> copyMap) {
+	private boolean isDeletionCopyNecessary(Diff diff, HashBiMap<EObject, EObject> copyMap) {
 		Object value = MatchUtil.getValue(diff);
 		return diff.getKind() == DifferenceKind.DELETE && !copyMap.containsKey(value);
 	}
 
 	/**
-	 * copies the value of the given diff into the given copy map and view
-	 * collection if it is a view. Any Views in {@link Diff}s that require the
-	 * given {@link Diff} will also be copied if necessary. The copied view will
-	 * also placed into the corresponding copy of the matched new container at
-	 * the nearest insertion point. The new container of the view must be a
+	 * copies the value of the given deletion diff into the given copy map and
+	 * view collection if it is a view. Any Views in {@link Diff}s that require
+	 * the given {@link Diff} will also be copied if necessary. The copied view
+	 * will also placed into the corresponding copy of the matched new container
+	 * at the nearest insertion point. The new container of the view must be a
 	 * diagram or part of the copied objects, otherwise the value will not be
 	 * copied.
 	 * 
@@ -377,14 +382,14 @@ public class GMFDiagramDiffViewService {
 	 * @param diff
 	 *            the {@link Diff} whose value should be copied.
 	 */
-	private void copyDiff(Comparison diagramComparison, Collection<Object> childrenAndEdgesCopy,
+	private void copyDeletedViewDiff(Comparison diagramComparison, Collection<Object> childrenAndEdgesCopy,
 			HashBiMap<EObject, EObject> copyMap, Copier viewCopier, Diff diff) {
 
 		/* copy diffs that require the given diff */
 		EList<Diff> requiredByDiffs = diff.getRequiredBy();
 		for (Diff requiredDiff : requiredByDiffs) {
-			if (needsCopy(requiredDiff, copyMap)) {
-				copyDiff(diagramComparison, childrenAndEdgesCopy, copyMap, viewCopier, requiredDiff);
+			if (isDeletionCopyNecessary(requiredDiff, copyMap)) {
+				copyDeletedViewDiff(diagramComparison, childrenAndEdgesCopy, copyMap, viewCopier, requiredDiff);
 			}
 		}
 
@@ -395,7 +400,6 @@ public class GMFDiagramDiffViewService {
 			View node = (View) value;
 			EObject oldContainer = node.eContainer();
 			Match containerMatch = diagramComparison.getMatch(oldContainer);
-			EReference containmentFeature = node.eContainmentFeature();
 
 			/*
 			 * the copy must be contained in a known (and copied) container, if
@@ -408,69 +412,198 @@ public class GMFDiagramDiffViewService {
 				/* the diagram is not part of the copy map */
 				if (newContainer instanceof Diagram || copyMap.containsKey(newContainer)) {
 
-					EObject containerCopy = copyMap.get(newContainer);
-					View copiedView = (View) viewCopier.copy(node);
+					EObject copy = viewCopier.copy(node);
 
-					if (containerCopy != null && containerCopy.eClass().getEReferences().contains(containmentFeature)) {
-
-						/*
-						 * Insert the copied element into the copy of the
-						 * matched container
-						 */
-
-						if (containmentFeature.isMany()) {
-
-							/*
-							 * Multi-valued feature, insert at the closest
-							 * original index
-							 */
-
-							@SuppressWarnings("unchecked")
-							EList<EObject> oldContainerContent = (EList<EObject>) oldContainer.eGet(containmentFeature);
-							int oldIndex = oldContainerContent.indexOf(node);
-							int newIndex = 0;
-							@SuppressWarnings("unchecked")
-							EList<EObject> newContainerContent = (EList<EObject>) newContainer.eGet(containmentFeature);
-
-							/*
-							 * determine the new index by finding the index of
-							 * the first previous unchanged element.
-							 */
-							ListIterator<EObject> listIterator = oldContainerContent.listIterator(oldIndex);
-							while (listIterator.hasPrevious()) {
-								EObject previous = listIterator.previous();
-								Match match = diagramComparison.getMatch(previous);
-								EObject newValue = getNewValue(match);
-								if (newValue != null) {
-									newIndex = newContainerContent.indexOf(newValue) + 1;
-									break;
-								}
-							}
-
-							@SuppressWarnings("unchecked")
-							EList<EObject> copiedContainerContent = (EList<EObject>) containerCopy
-									.eGet(containmentFeature);
-
-							copiedContainerContent.add(newIndex, copiedView);
-
-						} else {
-
-							/*
-							 * single-valued feature, simply set it
-							 */
-							containerCopy.eSet(containmentFeature, copiedView);
-						}
-					}
 					if (newContainer instanceof Diagram) {
 						/*
 						 * if the container is a diagram, add it to the
 						 * collection instead of the container
 						 */
-						childrenAndEdgesCopy.add(copiedView);
+						childrenAndEdgesCopy.add(copy);
 					}
-					copyMap.putAll(viewCopier);
+				}
+				copyMap.putAll(viewCopier);
+
+			}
+		}
+	}
+
+	/**
+	 * updates the references of the copied deleted elements with their matched
+	 * values copy if possible.
+	 * 
+	 * @param copier
+	 *            the {@link Copier} that contains the copied deleted elements
+	 *            to update.
+	 * @param copyMap
+	 *            the bidirectional map that links the original model elements
+	 *            to the copied elements.
+	 * @param comparison
+	 *            the comparison used to determine the match for a copied
+	 *            element.
+	 */
+	private void updateDeletionMatchedReferences(Copier copier, HashBiMap<EObject, EObject> copyMap,
+			Comparison comparison) {
+		Set<Entry<EObject, EObject>> entries = copier.entrySet();
+		for (Entry<EObject, EObject> entry : entries) {
+
+			EObject original = entry.getKey();
+			EObject copy = entry.getValue();
+			EClass eClass = original.eClass();
+
+			EList<EStructuralFeature> allStructuralFeatures = eClass.getEAllStructuralFeatures();
+
+			for (EStructuralFeature feature : allStructuralFeatures) {
+				if (feature.isChangeable() && !feature.isDerived()) {
+					if (feature instanceof EReference) {
+						EReference eReference = (EReference) feature;
+						if (!eReference.isContainment() && !eReference.isContainer()) {
+							updateDeletionReference(eReference, original, copy, copyMap, comparison);
+						}
+					}
+				}
+			}
+			updateDeletionContainment(original, copy, copyMap, comparison);
+		}
+	}
+
+	/**
+	 * @param oldObject
+	 *            the old object to find the matching copy for.
+	 * @param copyMap
+	 *            the bidirectional map that links the original model elements
+	 *            to the copied elements.
+	 * @param comparison
+	 *            the comparison used to determine the match for a copied
+	 *            element.
+	 * @return the copy of the matched new object for the given old object.
+	 */
+	private EObject getNewValueCopy(EObject oldObject, HashBiMap<EObject, EObject> copyMap, Comparison comparison) {
+		Match match = comparison.getMatch(oldObject);
+		EObject newValue = getNewValue(match);
+		return copyMap.get(newValue);
+	}
+
+	/**
+	 * updates the given reference of the copy the represents a deleted EObject
+	 * with their matched value copy, if possible.
+	 * 
+	 * @param eReference
+	 *            the {@link EReference} of the given deleted EObject to update.
+	 * @param original
+	 *            the original "deleted" EObject.
+	 * @param copy
+	 *            the copy of the deleted EObject to update.
+	 * @param copyMap
+	 *            the bidirectional map that links the original model elements
+	 *            to the copied elements.
+	 * @param comparison
+	 *            the comparison used to determine the match for a copied
+	 *            element.
+	 */
+	private void updateDeletionReference(EReference eReference, EObject original, EObject copy,
+			HashBiMap<EObject, EObject> copyMap, Comparison comparison) {
+
+		if (eReference.isMany()) {
+
+			@SuppressWarnings("unchecked")
+			EList<EObject> copyList = (EList<EObject>) copy.eGet(eReference);
+			@SuppressWarnings("unchecked")
+			EList<EObject> originalList = (EList<EObject>) original.eGet(eReference);
+
+			int index = 0;
+			for (EObject originalValue : originalList) {
+				EObject newValueCopy = getNewValueCopy((EObject) originalValue, copyMap, comparison);
+				if (newValueCopy != null && !copyList.contains(newValueCopy)) {
+					copyList.add(index, newValueCopy);
+				}
+				index++;
+			}
+
+		} else {
+
+			Object originalValue = original.eGet(eReference);
+
+			if (originalValue instanceof EObject) {
+
+				EObject newValueCopy = getNewValueCopy((EObject) originalValue, copyMap, comparison);
+				if (newValueCopy != null) {
+					copy.eSet(eReference, newValueCopy);
 				}
 
+			}
+		}
+	}
+
+	/**
+	 * updates the containment reference of the copy the represents a deleted
+	 * EObject using their matched value copy, if possible.
+	 * 
+	 * @param original
+	 *            the original "deleted" EObject.
+	 * @param copy
+	 *            the copy of the deleted EObject to update.
+	 * @param copyMap
+	 *            the bidirectional map that links the original model elements
+	 *            to the copied elements.
+	 * @param comparison
+	 *            the comparison used to determine the match for a copied
+	 *            element.
+	 */
+	private void updateDeletionContainment(EObject original, EObject copy, HashBiMap<EObject, EObject> copyMap,
+			Comparison comparison) {
+
+		EObject oldContainer = original.eContainer();
+		Match containerMatch = comparison.getMatch(oldContainer);
+		EObject newContainer = getNewValue(containerMatch);
+		EObject containerCopy = copyMap.get(newContainer);
+		EReference containmentFeature = original.eContainmentFeature();
+
+		if (containerCopy != null && containerCopy.eClass().getEAllReferences().contains(containmentFeature)) {
+
+			/*
+			 * Insert the copied element into the copy of the matched container
+			 */
+
+			if (containmentFeature.isMany()) {
+
+				/*
+				 * Multi-valued feature, insert at the closest original index
+				 */
+
+				@SuppressWarnings("unchecked")
+				EList<EObject> oldContainerContent = (EList<EObject>) oldContainer.eGet(containmentFeature);
+				int oldIndex = oldContainerContent.indexOf(original);
+				int newIndex = 0;
+				@SuppressWarnings("unchecked")
+				EList<EObject> newContainerContent = (EList<EObject>) newContainer.eGet(containmentFeature);
+
+				/*
+				 * determine the new index by finding the index of the first
+				 * previous unchanged element.
+				 */
+				ListIterator<EObject> listIterator = oldContainerContent.listIterator(oldIndex);
+				while (listIterator.hasPrevious()) {
+					EObject previous = listIterator.previous();
+					Match match = comparison.getMatch(previous);
+					EObject newValue = getNewValue(match);
+					if (newValue != null) {
+						newIndex = newContainerContent.indexOf(newValue) + 1;
+						break;
+					}
+				}
+
+				@SuppressWarnings("unchecked")
+				EList<EObject> copiedContainerContent = (EList<EObject>) containerCopy.eGet(containmentFeature);
+
+				copiedContainerContent.add(newIndex, copy);
+
+			} else {
+
+				/*
+				 * single-valued feature, simply set it
+				 */
+				containerCopy.eSet(containmentFeature, copy);
 			}
 		}
 	}

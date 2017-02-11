@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,5 +26,11 @@ public interface IOverlayEditPart extends EditPart {
 	 *         part is linked.
 	 */
 	public GraphicalEditPart getLinkedEditPart();
+
+	/**
+	 * @return the linked edit part's parent to this overlay edit part or null if
+	 *         no linked edit part parent could be determined.
+	 */
+	public GraphicalEditPart getLinkedParentEditPart();
 
 }
