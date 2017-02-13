@@ -45,8 +45,6 @@ import org.eclipse.gmf.runtime.notation.RelativeBendpoints;
 import org.eclipse.gmf.runtime.notation.Size;
 import org.eclipse.gmf.runtime.notation.View;
 
-import com.google.common.collect.BiMap;
-
 import at.bitandart.zoubek.mervin.diagram.diff.gmf.ModelReviewElementTypes;
 import at.bitandart.zoubek.mervin.draw2d.DoublePrecisionVector;
 import at.bitandart.zoubek.mervin.model.modelreview.BendpointsDifference;
@@ -61,6 +59,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
 import at.bitandart.zoubek.mervin.model.modelreview.SizeDifference;
 import at.bitandart.zoubek.mervin.model.modelreview.StateDifference;
 import at.bitandart.zoubek.mervin.model.modelreview.StateDifferenceType;
+import at.bitandart.zoubek.mervin.util.UnifiedModelMap;
 
 /**
  * An {@link AbstractTransactionalCommand} that adds overlays based on the
@@ -74,7 +73,7 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 
 	private Comparison diagramComparison;
 	private View container;
-	private BiMap<EObject, EObject> inverseCopyMap;
+	private UnifiedModelMap unifiedModelMap;
 	private PreferencesHint preferencesHint;
 	private ModelReviewFactory reviewFactory;
 	private Collection<Object> overlayedViews;
@@ -82,12 +81,12 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 	private Set<EObject> cachedLinkTargets;
 
 	public AddOverlayNodesCommand(TransactionalEditingDomain domain, Comparison diagramComparison,
-			BiMap<EObject, EObject> copyMap, View container, Collection<Object> overlayedViews,
+			UnifiedModelMap unifiedModelMap, View container, Collection<Object> overlayedViews,
 			PreferencesHint preferencesHint, ModelReviewFactory reviewFactory, ModelReview modelReview) {
 		super(domain, "", null);
 		this.diagramComparison = diagramComparison;
 		this.container = container;
-		this.inverseCopyMap = copyMap.inverse();
+		this.unifiedModelMap = unifiedModelMap;
 		this.preferencesHint = preferencesHint;
 		this.reviewFactory = reviewFactory;
 		this.overlayedViews = overlayedViews;
@@ -123,7 +122,7 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 	 */
 	private void createOverlayForView(View view, boolean includeChildren, List<DifferenceOverlay> parentOverlays) {
 
-		View originalView = (View) inverseCopyMap.get(view);
+		View originalView = (View) unifiedModelMap.getOriginal(view);
 		if (originalView == null) {
 			/*
 			 * FIXME quick fix to avoid NPE - needs further investigation this

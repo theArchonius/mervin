@@ -1566,14 +1566,14 @@ public interface ModelReviewPackage extends EPackage {
 	int VECTOR = 23;
 
 	/**
-	 * The meta object id for the '<em>Hash Bi Map</em>' data type. <!--
+	 * The meta object id for the '<em>Unified Model Map</em>' data type. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
-	 * @see com.google.common.collect.HashBiMap
-	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getHashBiMap()
+	 * @see at.bitandart.zoubek.util.UnifiedModelMap
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getUnifiedModelMap()
 	 * @generated
 	 */
-	int HASH_BI_MAP = 24;
+	int UNIFIED_MODEL_MAP = 24;
 
 	/**
 	 * The meta object id for the '<em>Dimension</em>' data type. <!--
@@ -2733,16 +2733,17 @@ public interface ModelReviewPackage extends EPackage {
 
 	/**
 	 * Returns the meta object for data type '
-	 * {@link com.google.common.collect.HashBiMap <em>Hash Bi Map</em>}'. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
+	 * {@link at.bitandart.zoubek.util.UnifiedModelMap
+	 * <em>Unified Model Map</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
 	 * 
-	 * @return the meta object for data type '<em>Hash Bi Map</em>'.
-	 * @see com.google.common.collect.HashBiMap
-	 * @model instanceClass="com.google.common.collect.HashBiMap"
+	 * @return the meta object for data type '<em>Unified Model Map</em>'.
+	 * @see at.bitandart.zoubek.util.UnifiedModelMap
+	 * @model instanceClass="at.bitandart.zoubek.util.UnifiedModelMap"
 	 *        serializeable="false" typeParameters="T U"
 	 * @generated
 	 */
-	EDataType getHashBiMap();
+	EDataType getUnifiedModelMap();
 
 	/**
 	 * Returns the meta object for data type '
@@ -3629,14 +3630,14 @@ public interface ModelReviewPackage extends EPackage {
 		EDataType VECTOR = eINSTANCE.getVector();
 
 		/**
-		 * The meta object literal for the '<em>Hash Bi Map</em>' data type.
-		 * <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * The meta object literal for the '<em>Unified Model Map</em>' data
+		 * type. <!-- begin-user-doc --> <!-- end-user-doc -->
 		 * 
-		 * @see com.google.common.collect.HashBiMap
-		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getHashBiMap()
+		 * @see at.bitandart.zoubek.mervin.util.UnifiedModelMap
+		 * @see at.bitandart.zoubek.mervin.model.modelreview.impl.ModelReviewPackageImpl#getUnifiedModelMap()
 		 * @generated
 		 */
-		EDataType HASH_BI_MAP = eINSTANCE.getHashBiMap();
+		EDataType UNIFIED_MODEL_MAP = eINSTANCE.getUnifiedModelMap();
 
 		/**
 		 * The meta object literal for the '<em>Dimension</em>' data type. <!--

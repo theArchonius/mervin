@@ -31,8 +31,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 import at.bitandart.zoubek.mervin.IDiagramModelHelper;
-import at.bitandart.zoubek.mervin.draw2d.figures.OverlayType;
 import at.bitandart.zoubek.mervin.draw2d.figures.IOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.OverlayType;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.property.diff.PropertyDiffItemProvider.SelectionEntry;
 import at.bitandart.zoubek.mervin.review.ModelReviewEditorTrackingView;
@@ -79,8 +79,8 @@ public class PropertyDiffView extends ModelReviewEditorTrackingView {
 	private boolean viewInitialized = false;
 
 	/**
-	 * the {@link IOverlayTypeStyleAdvisor} to use for the colors of the property
-	 * diff viewer
+	 * the {@link IOverlayTypeStyleAdvisor} to use for the colors of the
+	 * property diff viewer
 	 */
 	@Inject
 	private IOverlayTypeStyleAdvisor styleAdvisor;
@@ -162,8 +162,8 @@ public class PropertyDiffView extends ModelReviewEditorTrackingView {
 				ModelReview currentModelReview = getCurrentModelReview();
 				if (currentModelReview != null) {
 
-					View originalNotationModelElement = (View) currentModelReview.getUnifiedModelMap().inverse()
-							.get(selectedNotationModelElement);
+					View originalNotationModelElement = (View) currentModelReview.getUnifiedModelMap()
+							.getOriginal(selectedNotationModelElement);
 
 					if (originalNotationModelElement != null) {
 						selectedNotationModelElement = originalNotationModelElement;

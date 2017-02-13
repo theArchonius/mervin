@@ -17,6 +17,7 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Layer;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPartListener;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -26,8 +27,8 @@ import org.eclipse.gmf.runtime.notation.View;
 
 import at.bitandart.zoubek.mervin.diagram.diff.OffScreenIndicatorResolver;
 import at.bitandart.zoubek.mervin.draw2d.MervinLayerConstants;
-import at.bitandart.zoubek.mervin.draw2d.figures.DefaultOverlayTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.DefaultOverlayLocator;
+import at.bitandart.zoubek.mervin.draw2d.figures.DefaultOverlayTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.IOverlayTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.OverlayLinkedFigureListener;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.IOffScreenIndicator;
@@ -46,6 +47,38 @@ public abstract class AbstractDifferenceOverlayEditPart extends ShapeNodeEditPar
 	private DefaultOverlayTypeStyleAdvisor styleAdvisor;
 	protected IFigure prevLinkedFigure = null;
 	private IOffScreenIndicator offScreenIndicator;
+	private GraphicalEditPart previousLinkedParentEditPart = null;
+
+	/**
+	 * An {@link EditPartListener} that will be attached to the edit part of the
+	 * linked views parent view. It is used to trigger an update of the bounds
+	 * constraint information once the children of the edit part change. This is
+	 * necessary as the linked view edit part may not (yet) exist at the time
+	 * the bounds constraints are set in {@link #refreshBounds()}.
+	 */
+	private EditPartListener linkedParentEditPartListener = new EditPartListener() {
+
+		@Override
+		public void selectedStateChanged(EditPart editpart) {
+		}
+
+		@Override
+		public void removingChild(EditPart child, int index) {
+		}
+
+		@Override
+		public void partDeactivated(EditPart editpart) {
+		}
+
+		@Override
+		public void partActivated(EditPart editpart) {
+		}
+
+		@Override
+		public void childAdded(EditPart child, int index) {
+			refreshBounds();
+		}
+	};
 
 	public AbstractDifferenceOverlayEditPart(View view) {
 		super(view);
@@ -125,6 +158,22 @@ public abstract class AbstractDifferenceOverlayEditPart extends ShapeNodeEditPar
 		return null;
 	}
 
+	@Override
+	public GraphicalEditPart getLinkedParentEditPart() {
+
+		DifferenceOverlay changeOverlay = getDifferenceOverlay();
+		if (changeOverlay != null) {
+
+			Object editPart = getViewer().getEditPartRegistry().get(changeOverlay.getLinkedView().eContainer());
+			if (editPart instanceof GraphicalEditPart) {
+				return (GraphicalEditPart) editPart;
+			}
+
+		}
+
+		return null;
+	}
+
 	public IOverlayTypeStyleAdvisor getStyleAdvisor() {
 		DiagramContainerFigure containerFigure = getContainerFigure();
 		if (containerFigure != null) {
@@ -185,6 +234,16 @@ public abstract class AbstractDifferenceOverlayEditPart extends ShapeNodeEditPar
 			}
 			indicatorLayer.remove(offScreenIndicator);
 		}
+
+		/*
+		 * clean up the assigned editor part listener on the edit part of the
+		 * linked view's parent
+		 */
+		if (previousLinkedParentEditPart != null) {
+			previousLinkedParentEditPart.removeEditPartListener(linkedParentEditPartListener);
+			previousLinkedParentEditPart = null;
+		}
+
 		if (styleAdvisor != null) {
 			styleAdvisor.dispose();
 		}
@@ -194,6 +253,23 @@ public abstract class AbstractDifferenceOverlayEditPart extends ShapeNodeEditPar
 	protected void refreshBounds() {
 		// apply the constraint
 		EditPart parent = getParent();
+
+		/*
+		 * listen to changes to the children of the linked view's parent view
+		 * edit part to keep track when the linked view's edit part is created
+		 * and destroyed.
+		 */
+		GraphicalEditPart linkedParentEditPart = getLinkedParentEditPart();
+		if (linkedParentEditPart != previousLinkedParentEditPart) {
+			if (previousLinkedParentEditPart != null) {
+				previousLinkedParentEditPart.removeEditPartListener(linkedParentEditPartListener);
+			}
+			previousLinkedParentEditPart = linkedParentEditPart;
+			if (linkedParentEditPart != null) {
+				linkedParentEditPart.addEditPartListener(linkedParentEditPartListener);
+			}
+		}
+
 		GraphicalEditPart linkedEditPart = getLinkedEditPart();
 
 		IFigure linkedFigure = null;

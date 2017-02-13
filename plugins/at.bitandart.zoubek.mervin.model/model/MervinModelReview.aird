@@ -1367,7 +1367,7 @@
         <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
         <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
         <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
-        <ownedStyle xmi:type="diagram:FlatContainerStyle" xmi:id="_ZUiAcOlOEeaJTucP7fzELA" borderSize="1" borderSizeComputationExpression="1" backgroundStyle="Liquid" foregroundColor="255,252,216">
+        <ownedStyle xmi:type="diagram:FlatContainerStyle" xmi:id="_OMXDoPEZEeajLP8IsNTTNg" borderSize="1" borderSizeComputationExpression="1" backgroundStyle="Liquid" foregroundColor="255,252,216">
           <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']"/>
@@ -1419,10 +1419,10 @@
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']"/>
         </ownedElements>
-        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_yqI3MDLKEea_XKWHiGEewg" name="unifiedModelMap : HashBiMap" tooltipText="">
+        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_yqI3MDLKEea_XKWHiGEewg" name="unifiedModelMap : UnifiedModelMap" tooltipText="">
           <target xmi:type="ecore:EAttribute" href="MervinModelReview.ecore#//ModelReview/unifiedModelMap"/>
           <semanticElements xmi:type="ecore:EAttribute" href="MervinModelReview.ecore#//ModelReview/unifiedModelMap"/>
-          <ownedStyle xmi:type="diagram:BundledImage" xmi:id="_2BX4wDLKEea_XKWHiGEewg" labelAlignment="LEFT">
+          <ownedStyle xmi:type="diagram:BundledImage" xmi:id="_OMe_cPEZEeajLP8IsNTTNg" labelAlignment="LEFT">
             <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']/@style"/>
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EClass']/@subNodeMappings[name='EC%20EAttribute']"/>
@@ -2935,16 +2935,16 @@
         </ownedStyle>
         <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@edgeMappings[name='EC%20ESupertypes']"/>
       </ownedDiagramElements>
-      <ownedDiagramElements xmi:type="diagram:DNodeList" xmi:id="_LwZmcDLKEea_XKWHiGEewg" name="HashBiMap" tooltipText="" width="14" height="5">
-        <target xmi:type="ecore:EDataType" href="MervinModelReview.ecore#//HashBiMap"/>
-        <semanticElements xmi:type="ecore:EDataType" href="MervinModelReview.ecore#//HashBiMap"/>
+      <ownedDiagramElements xmi:type="diagram:DNodeList" xmi:id="_LwZmcDLKEea_XKWHiGEewg" name="UnifiedModelMap" tooltipText="" width="14" height="5">
+        <target xmi:type="ecore:EDataType" href="MervinModelReview.ecore#//UnifiedModelMap"/>
+        <semanticElements xmi:type="ecore:EDataType" href="MervinModelReview.ecore#//UnifiedModelMap"/>
         <ownedStyle xmi:type="diagram:FlatContainerStyle" xmi:id="_LwaNgDLKEea_XKWHiGEewg" borderSize="1" borderSizeComputationExpression="1" borderColor="125,125,125" backgroundStyle="Liquid" foregroundColor="255,250,191">
           <description xmi:type="style:FlatContainerStyleDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EDataType']/@style"/>
         </ownedStyle>
         <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EDataType']"/>
-        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_LxJNUDLKEea_XKWHiGEewg" name="com.google.common.collect.HashBiMap" tooltipText="">
-          <target xmi:type="ecore:EDataType" href="MervinModelReview.ecore#//HashBiMap"/>
-          <semanticElements xmi:type="ecore:EDataType" href="MervinModelReview.ecore#//HashBiMap"/>
+        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_LxJNUDLKEea_XKWHiGEewg" name="at.bitandart.zoubek.mervin.util.UnifiedModelMap" tooltipText="">
+          <target xmi:type="ecore:EDataType" href="MervinModelReview.ecore#//UnifiedModelMap"/>
+          <semanticElements xmi:type="ecore:EDataType" href="MervinModelReview.ecore#//UnifiedModelMap"/>
           <decorations xmi:type="viewpoint:Decoration" xmi:id="_LxLCgDLKEea_XKWHiGEewg">
             <description xmi:type="description:SemanticBasedDecoration" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@decorationDescriptionsSet/@decorationDescriptions[name='External']"/>
           </decorations>

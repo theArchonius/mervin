@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Florian Zoubek.
+ * Copyright (c) 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,8 +30,9 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 public class ToggleDeletionOverlays {
 
 	@Execute
-	public void execute(MHandledToolItem item, ModelReview modelReview, Diagram diagram, EditDomain editDomain,
-			TransactionalEditingDomain transactionalEditingDomain, GMFDiagramDiffViewService diagramDiffViewService) {
+	public void execute(final MHandledToolItem item, final ModelReview modelReview, final Diagram diagram,
+			final EditDomain editDomain, final TransactionalEditingDomain transactionalEditingDomain,
+			final GMFDiagramDiffViewService diagramDiffViewService) {
 
 		ModelReviewVisibilityState visibilityState = new ModelReviewVisibilityState(modelReview, true);
 		visibilityState.setVisibility(IOverlayTypeDescriptor.TYPE_DESCRIPTOR_DELETION, item.isSelected());

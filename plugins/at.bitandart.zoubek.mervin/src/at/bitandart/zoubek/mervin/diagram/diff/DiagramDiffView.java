@@ -11,8 +11,11 @@
 package at.bitandart.zoubek.mervin.diagram.diff;
 
 import java.text.MessageFormat;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -454,10 +457,12 @@ public class DiagramDiffView implements IAdaptable {
 				IFocusHighlightEditPart focusableEditPart = getFocusHighlightEditPart();
 				if (focusableEditPart != null) {
 
-					IFigure focusFigure = findFigureFor(review, element, focusableEditPart);
+					Set<IFigure> figures = new HashSet<>();
 
-					if (focusFigure != null) {
-						focusableEditPart.addFocusHighlightFigure(focusFigure);
+					collectFiguresFor(review, element, focusableEditPart, figures);
+
+					for (IFigure figure : figures) {
+						focusableEditPart.addFocusHighlightFigure(figure);
 					}
 				}
 			}
@@ -470,17 +475,18 @@ public class DiagramDiffView implements IAdaptable {
 			IFocusHighlightEditPart focusableEditPart = getFocusHighlightEditPart();
 			if (focusableEditPart != null) {
 
-				IFigure focusFigure = findFigureFor(review, element, focusableEditPart);
+				Set<IFigure> figures = new HashSet<>();
+				collectFiguresFor(review, element, focusableEditPart, figures);
 
-				if (focusFigure != null) {
-					focusableEditPart.removeFocusHighlightFigure(focusFigure);
+				for (IFigure figure : figures) {
+					focusableEditPart.removeFocusHighlightFigure(figure);
 				}
 			}
 
 		}
 
 		/**
-		 * finds the corresponding figure for the given review and element,
+		 * collects the corresponding figures for the given review and element,
 		 * contained in the given root {@link EditPart}.
 		 * 
 		 * @param review
@@ -489,32 +495,36 @@ public class DiagramDiffView implements IAdaptable {
 		 *            the element to find the figure for.
 		 * @param rootEditPart
 		 *            the root edit part to start the search at (inclusive).
-		 * @return the figure representing the given element or null if none
-		 *         could be found.
+		 * @param figureSet
+		 *            the set to store the collected figures into.
 		 */
-		private IFigure findFigureFor(ModelReview review, Object element, EditPart rootEditPart) {
+		private void collectFiguresFor(ModelReview review, Object element, EditPart rootEditPart,
+				Set<IFigure> figureSet) {
+
+			int previousFigureSetSize = figureSet.size();
 
 			if (element instanceof IPatchSetHistoryEntry<?, ?>) {
 
 				IPatchSetHistoryEntry<?, ?> historyEntry = (IPatchSetHistoryEntry<?, ?>) element;
 
-				IFigure figure = findFigureFor(review, historyEntry.getEntryObject(), rootEditPart);
-				if (figure != null) {
-					return figure;
+				collectFiguresFor(review, historyEntry.getEntryObject(), rootEditPart, figureSet);
+				if (previousFigureSetSize != figureSet.size()) {
+					return;
 				}
+
 				Object value = historyEntry.getValue(review.getLeftPatchSet());
 				if (value != null) {
-					figure = findFigureFor(review, value, rootEditPart);
-					if (figure != null) {
-						return figure;
+					collectFiguresFor(review, value, rootEditPart, figureSet);
+					if (previousFigureSetSize != figureSet.size()) {
+						return;
 					}
 				}
 
 				value = historyEntry.getValue(review.getRightPatchSet());
 				if (value != null) {
-					figure = findFigureFor(review, value, rootEditPart);
-					if (figure != null) {
-						return figure;
+					collectFiguresFor(review, value, rootEditPart, figureSet);
+					if (previousFigureSetSize != figureSet.size()) {
+						return;
 					}
 				}
 			}
@@ -522,69 +532,75 @@ public class DiagramDiffView implements IAdaptable {
 			if (element instanceof DiffWithSimilarity) {
 				Diff diff = ((DiffWithSimilarity) element).getDiff();
 				if (diff != null) {
-					return findFigureFor(review, diff, rootEditPart);
+					collectFiguresFor(review, diff, rootEditPart, figureSet);
+					if (previousFigureSetSize != figureSet.size()) {
+						return;
+					}
 				}
 			}
 
 			if (element instanceof Diff) {
 				Object value = MatchUtil.getValue((Diff) element);
 				if (value != null) {
-					return findFigureFor(review, value, rootEditPart);
+					collectFiguresFor(review, value, rootEditPart, figureSet);
+					if (previousFigureSetSize != figureSet.size()) {
+						return;
+					}
 				}
 			}
 
 			if (element instanceof EObject) {
 				EObject eObject = (EObject) element;
 
-				IFigure figure = findFigureInSelectedComparison(review, eObject, rootEditPart);
-				if (figure != null) {
-					return figure;
+				collectFiguresOfSelectedComparison(review, eObject, rootEditPart, figureSet);
+				if (previousFigureSetSize != figureSet.size()) {
+					return;
 				}
-				return findFigureNotContainedInSelectedComparison(review, eObject, rootEditPart);
+				collectFiguresNotContainedInSelectedComparison(review, eObject, rootEditPart, figureSet);
 			}
-
-			return null;
 
 		}
 
 		/**
-		 * finds the figure for a given eObject that has been extracted out of a
-		 * match.
+		 * collects the figures for a given eObject that has been extracted out
+		 * of a match.
 		 * 
 		 * @param review
 		 *            the model review associated with the given object.
 		 * @param eObject
 		 *            the object to search the figure for.
 		 * @param rootEditPart
-		 * @return the corresponding figure or null if none could be found.
+		 * @param figureSet
+		 *            the set to store the collected figures into.
 		 */
-		private IFigure findFigureOfMatchedObject(ModelReview review, EObject eObject, EditPart rootEditPart) {
+		private void collectFiguresOfMatchedObject(ModelReview review, EObject eObject, EditPart rootEditPart,
+				Set<IFigure> figureSet) {
 
 			/*
 			 * A view has been very likely copied in the unified diagram
 			 * model,therefore check if there is also a figure for this model
 			 */
 			if (eObject instanceof View) {
-				EObject unifiedCopy = review.getUnifiedModelMap().get(eObject);
-				if (unifiedCopy != null) {
-					IFigure figure = findFigureInEditPartTree(unifiedCopy, rootEditPart);
-					if (figure != null) {
-						return figure;
+				Collection<EObject> unifiedCopies = review.getUnifiedModelMap().getCopies(eObject);
+				for (EObject unifiedCopy : unifiedCopies) {
+					if (unifiedCopy != null) {
+						IFigure figure = findFigureInEditPartTree(unifiedCopy, rootEditPart);
+						if (figure != null) {
+							figureSet.add(figure);
+						}
 					}
 				}
 			}
 
 			IFigure figure = findFigureInEditPartTree(eObject, rootEditPart);
 			if (figure != null) {
-				return figure;
+				figureSet.add(figure);
 			}
-
-			return null;
 		}
 
 		/**
-		 * finds the corresponding figure for the given review and element which
-		 * is known not to be contained in the selected comparison of the
+		 * collects the corresponding figures for the given review and element
+		 * which are known not to be contained in the selected comparison of the
 		 * review.
 		 * 
 		 * @param review
@@ -593,10 +609,11 @@ public class DiagramDiffView implements IAdaptable {
 		 *            the object to search for.
 		 * @param rootEditPart
 		 *            the root edit part to start the search at (inclusive).
-		 * @return the corresponding figure or null if none could be found.
+		 * @param figureSet
+		 *            the set to store the collected figures into.
 		 */
-		private IFigure findFigureNotContainedInSelectedComparison(ModelReview review, EObject eObject,
-				EditPart rootEditPart) {
+		private void collectFiguresNotContainedInSelectedComparison(ModelReview review, EObject eObject,
+				EditPart rootEditPart, Set<IFigure> figureSet) {
 
 			EObject baseEObject = findMatchingEObject(review, eObject);
 
@@ -608,20 +625,12 @@ public class DiagramDiffView implements IAdaptable {
 				 * sets. If this changes in the future, add the lookup here
 				 * before canceling the search.
 				 */
-				return null;
+				return;
 			}
 
-			IFigure figure = findFigureInPatchSetMatch(review, baseEObject, review.getRightPatchSet(), rootEditPart);
-			if (figure != null) {
-				return figure;
-			}
+			collectFiguresOfPatchSetMatch(review, baseEObject, review.getRightPatchSet(), rootEditPart, figureSet);
 
-			figure = findFigureInPatchSetMatch(review, baseEObject, review.getLeftPatchSet(), rootEditPart);
-			if (figure != null) {
-				return figure;
-			}
-
-			return null;
+			collectFiguresOfPatchSetMatch(review, baseEObject, review.getLeftPatchSet(), rootEditPart, figureSet);
 		}
 
 		/**
@@ -695,9 +704,9 @@ public class DiagramDiffView implements IAdaptable {
 		}
 
 		/**
-		 * finds the corresponding figure for the given review and element based
-		 * on the matching information of the comparisons in the given patch
-		 * set.
+		 * collects the corresponding figures for the given review and element
+		 * based on the matching information of the comparisons in the given
+		 * patch set.
 		 * 
 		 * @param review
 		 *            the model review associated with the given object.
@@ -707,31 +716,25 @@ public class DiagramDiffView implements IAdaptable {
 		 *            the patch set to search for the match.
 		 * @param rootEditPart
 		 *            the root edit part to start the search at (inclusive).
-		 * @return the corresponding figure or null if none could be found.
+		 * @param figureSet
+		 *            the set to store the collected figures into.
 		 */
-		private IFigure findFigureInPatchSetMatch(ModelReview review, EObject eObject, PatchSet patchSet,
-				EditPart rootEditPart) {
+		private void collectFiguresOfPatchSetMatch(ModelReview review, EObject eObject, PatchSet patchSet,
+				EditPart rootEditPart, Set<IFigure> figureSet) {
 
 			if (patchSet != null) {
 
-				IFigure figure = findFigureInComparison(review, eObject, patchSet.getModelComparison(), rootEditPart);
-				if (figure != null) {
-					return figure;
-				}
+				collectFiguresOfComparison(review, eObject, patchSet.getModelComparison(), rootEditPart, figureSet);
 
-				figure = findFigureInComparison(review, eObject, patchSet.getDiagramComparison(), rootEditPart);
-				if (figure != null) {
-					return figure;
-				}
+				collectFiguresOfComparison(review, eObject, patchSet.getDiagramComparison(), rootEditPart, figureSet);
 			}
-			return null;
 
 		}
 
 		/**
-		 * finds the corresponding figure for the given review and element based
-		 * on the matching information of the selected comparison of the given
-		 * model review.
+		 * collects the corresponding figures for the given review and element
+		 * based on the matching information of the selected comparison of the
+		 * given model review.
 		 * 
 		 * @param review
 		 *            the model review associated with the given object.
@@ -739,26 +742,21 @@ public class DiagramDiffView implements IAdaptable {
 		 *            the object to find the match for.
 		 * @param rootEditPart
 		 *            the root edit part to start the search at (inclusive).
-		 * @return the corresponding figure or null if none could be found.
+		 * @param figureSet
+		 *            the set to store the collected figures into.
 		 */
-		private IFigure findFigureInSelectedComparison(ModelReview review, EObject eObject, EditPart rootEditPart) {
+		private void collectFiguresOfSelectedComparison(ModelReview review, EObject eObject, EditPart rootEditPart,
+				Set<IFigure> figureSet) {
 
-			IFigure figure = findFigureInComparison(review, eObject, review.getSelectedModelComparison(), rootEditPart);
-			if (figure != null) {
-				return figure;
-			}
+			collectFiguresOfComparison(review, eObject, review.getSelectedModelComparison(), rootEditPart, figureSet);
 
-			figure = findFigureInComparison(review, eObject, review.getSelectedDiagramComparison(), rootEditPart);
-			if (figure != null) {
-				return figure;
-			}
+			collectFiguresOfComparison(review, eObject, review.getSelectedDiagramComparison(), rootEditPart, figureSet);
 
-			return null;
 		}
 
 		/**
-		 * finds the corresponding figure for the given review and element based
-		 * on the matching information in the given comparison.
+		 * collects the corresponding figures for the given review and element
+		 * based on the matching information in the given comparison.
 		 * 
 		 * @param review
 		 *            the model review associated with the given object.
@@ -768,26 +766,22 @@ public class DiagramDiffView implements IAdaptable {
 		 *            the comparison to get the match for the given object.
 		 * @param rootEditPart
 		 *            the root edit part to start the search at (inclusive).
-		 * @return the corresponding figure or null if none could be found.
+		 * @param figureSet
+		 *            the set to store the collected figures into.
 		 */
-		private IFigure findFigureInComparison(ModelReview review, EObject eObject, Comparison comparison,
-				EditPart rootEditPart) {
+		private void collectFiguresOfComparison(ModelReview review, EObject eObject, Comparison comparison,
+				EditPart rootEditPart, Set<IFigure> figureSet) {
 
 			Match match = comparison.getMatch(eObject);
 			if (match != null) {
 
-				IFigure figure = findFigureInMatch(review, match, rootEditPart);
-				if (figure != null) {
-					return figure;
-				}
+				collectFiguresOfMatch(review, match, rootEditPart, figureSet);
 			}
-
-			return null;
 		}
 
 		/**
-		 * finds the corresponding figure for the given review and element based
-		 * on the matching information in the given match.
+		 * finds the corresponding figures for the given review and element
+		 * based on the matching information in the given match.
 		 * 
 		 * @param review
 		 *            the model review associated with the given object.
@@ -795,27 +789,22 @@ public class DiagramDiffView implements IAdaptable {
 		 *            the match used to get the matching eObject from.
 		 * @param rootEditPart
 		 *            the root edit part to start the search at (inclusive).
-		 * @return the corresponding figure or null if none could be found.
+		 * @param figureSet
+		 *            the set to store the collected figures into.
 		 */
-		private IFigure findFigureInMatch(ModelReview review, Match match, EditPart rootEditPart) {
+		private void collectFiguresOfMatch(ModelReview review, Match match, EditPart rootEditPart,
+				Set<IFigure> figureSet) {
 
 			EObject left = match.getLeft();
 			EObject right = match.getRight();
 
 			if (left != null) {
-				IFigure figure = findFigureOfMatchedObject(review, left, rootEditPart);
-				if (figure != null) {
-					return figure;
-				}
+				collectFiguresOfMatchedObject(review, left, rootEditPart, figureSet);
 			}
 
 			if (right != null) {
-				IFigure figure = findFigureOfMatchedObject(review, right, rootEditPart);
-				if (figure != null) {
-					return figure;
-				}
+				collectFiguresOfMatchedObject(review, right, rootEditPart, figureSet);
 			}
-			return null;
 		}
 
 		/**
