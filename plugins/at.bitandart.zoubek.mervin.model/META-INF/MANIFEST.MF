@@ -10,7 +10,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: at.bitandart.zoubek.mervin.model.modelreview,
  at.bitandart.zoubek.mervin.model.modelreview.impl,
  at.bitandart.zoubek.mervin.model.modelreview.impl.extended,
- at.bitandart.zoubek.mervin.model.modelreview.util
+ at.bitandart.zoubek.mervin.model.modelreview.util,
+ at.bitandart.zoubek.mervin.util
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.gmf.runtime.notation;visibility:=reexport,

@@ -37,9 +37,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.SizeDifference;
 import at.bitandart.zoubek.mervin.model.modelreview.StateDifference;
 import at.bitandart.zoubek.mervin.model.modelreview.StateDifferenceType;
 import at.bitandart.zoubek.mervin.model.modelreview.User;
-
-import com.google.common.collect.HashBiMap;
-
+import at.bitandart.zoubek.mervin.util.UnifiedModelMap;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Vector;
 
@@ -239,7 +237,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	private EDataType hashBiMapEDataType = null;
+	private EDataType unifiedModelMapEDataType = null;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -1160,8 +1158,8 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
-	public EDataType getHashBiMap() {
-		return hashBiMapEDataType;
+	public EDataType getUnifiedModelMap() {
+		return unifiedModelMapEDataType;
 	}
 
 	/**
@@ -1318,7 +1316,7 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 
 		// Create data types
 		vectorEDataType = createEDataType(VECTOR);
-		hashBiMapEDataType = createEDataType(HASH_BI_MAP);
+		unifiedModelMapEDataType = createEDataType(UNIFIED_MODEL_MAP);
 		dimensionEDataType = createEDataType(DIMENSION);
 	}
 
@@ -1354,8 +1352,6 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 				.getEPackage(NotationPackage.eNS_URI);
 
 		// Create type parameters
-		addETypeParameter(hashBiMapEDataType, "T");
-		addETypeParameter(hashBiMapEDataType, "U");
 
 		// Set bounds for type parameters
 
@@ -1410,13 +1406,9 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		initEAttribute(getModelReview_ShowLayoutChanges(), ecorePackage.getEBoolean(), "showLayoutChanges", "true", 0,
 				1, ModelReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
 				!IS_DERIVED, IS_ORDERED);
-		EGenericType g1 = createEGenericType(this.getHashBiMap());
-		EGenericType g2 = createEGenericType(ecorePackage.getEObject());
-		g1.getETypeArguments().add(g2);
-		g2 = createEGenericType(ecorePackage.getEObject());
-		g1.getETypeArguments().add(g2);
-		initEAttribute(getModelReview_UnifiedModelMap(), g1, "unifiedModelMap", null, 0, 1, ModelReview.class,
-				IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getModelReview_UnifiedModelMap(), this.getUnifiedModelMap(), "unifiedModelMap", null, 0, 1,
+				ModelReview.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+				!IS_DERIVED, IS_ORDERED);
 		initEReference(getModelReview_CurrentReviewer(), this.getUser(), null, "currentReviewer", null, 0, 1,
 				ModelReview.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES,
 				!IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1452,8 +1444,8 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		initEReference(getPatchSet_DiagramComparison(), theComparePackage.getComparison(), null, "diagramComparison",
 				null, 0, 1, PatchSet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE,
 				IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		g1 = createEGenericType(ecorePackage.getEMap());
-		g2 = createEGenericType(theEcorePackage.getEObject());
+		EGenericType g1 = createEGenericType(ecorePackage.getEMap());
+		EGenericType g2 = createEGenericType(theEcorePackage.getEObject());
 		g1.getETypeArguments().add(g2);
 		g2 = createEGenericType(ecorePackage.getEIntegerObject());
 		g1.getETypeArguments().add(g2);
@@ -1659,7 +1651,8 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 
 		// Initialize data types
 		initEDataType(vectorEDataType, Vector.class, "Vector", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
-		initEDataType(hashBiMapEDataType, HashBiMap.class, "HashBiMap", !IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
+		initEDataType(unifiedModelMapEDataType, UnifiedModelMap.class, "UnifiedModelMap", !IS_SERIALIZABLE,
+				!IS_GENERATED_INSTANCE_CLASS);
 		initEDataType(dimensionEDataType, Dimension.class, "Dimension", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource

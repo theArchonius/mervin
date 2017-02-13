@@ -10,6 +10,7 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.diagram.diff;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -60,13 +61,12 @@ import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.View;
 
-import com.google.common.collect.HashBiMap;
-
 import at.bitandart.zoubek.mervin.diagram.diff.gmf.ModelReviewElementTypes;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
+import at.bitandart.zoubek.mervin.util.UnifiedModelMap;
 
 // TODO remove Createable annotation and move creation in addon
 /**
@@ -214,10 +214,10 @@ public class GMFDiagramDiffViewService {
 			TransactionalEditingDomain transactionalEditingDomain, PreferencesHint preferencesHint) {
 
 		// create/clear old unified model map
-		HashBiMap<EObject, EObject> unifiedModelMap = modelReview.getUnifiedModelMap();
+		UnifiedModelMap unifiedModelMap = modelReview.getUnifiedModelMap();
 		if (unifiedModelMap == null) {
 
-			unifiedModelMap = HashBiMap.create();
+			unifiedModelMap = new UnifiedModelMap();
 			SetValueCommand setUnifiedMapCommand = new SetValueCommand(new SetRequest(transactionalEditingDomain,
 					modelReview, ModelReviewPackage.Literals.MODEL_REVIEW__UNIFIED_MODEL_MAP, unifiedModelMap));
 			executeCommand(setUnifiedMapCommand, editDomain);
@@ -279,7 +279,7 @@ public class GMFDiagramDiffViewService {
 				Collection<Object> childrenAndEdgesCopy = copier.copyAll(childrenAndEdges);
 				copier.copyReferences();
 
-				HashBiMap<EObject, EObject> copyMap = HashBiMap.create(copier);
+				unifiedModelMap.putAll(copier);
 
 				/*
 				 * create copies of the deleted elements and merge them into one
@@ -292,12 +292,13 @@ public class GMFDiagramDiffViewService {
 						Copier viewCopier = new Copier();
 						Iterable<Diff> allDifferences = diagramMatch.getAllDifferences();
 						for (Diff diff : allDifferences) {
-							if (isDeletionCopyNecessary(diff, copyMap)) {
-								copyDeletedViewDiff(diagramComparison, childrenAndEdgesCopy, copyMap, viewCopier, diff);
+							if (isDeletionCopyNecessary(diff, unifiedModelMap)) {
+								copyDeletedViewDiff(diagramComparison, childrenAndEdgesCopy, unifiedModelMap,
+										viewCopier, diff);
 							}
 						}
 						viewCopier.copyReferences();
-						updateDeletionMatchedReferences(viewCopier, copyMap, diagramComparison);
+						updateDeletionReferences(viewCopier, unifiedModelMap, diagramComparison);
 					}
 				}
 
@@ -306,12 +307,11 @@ public class GMFDiagramDiffViewService {
 						(View) childView, filterEdges(childrenCopy), filterNonEdges(childrenCopy), diagram.getType()));
 
 				compositeCommand.add(new AddOverlayNodesCommand(transactionalEditingDomain,
-						modelReview.getSelectedDiagramComparison(), copyMap, childView, childrenCopy, preferencesHint,
-						reviewFactory, modelReview));
+						modelReview.getSelectedDiagramComparison(), unifiedModelMap, childView, childrenCopy,
+						preferencesHint, reviewFactory, modelReview));
 
 				executeCommand(compositeCommand.reduce(), editDomain);
 
-				modelReview.getUnifiedModelMap().putAll(copyMap);
 			}
 		}
 
@@ -349,14 +349,16 @@ public class GMFDiagramDiffViewService {
 	 * 
 	 * @param diff
 	 *            the diff to check.
-	 * @param copyMap
-	 *            the copy map that may contain the value of the diff.
+	 * @param unifiedModelMap
+	 *            the unified model map that may contain the value of the diff.
 	 * @return true if the value of the given diff must be copied into the given
 	 *         copy map, false otherwise.
 	 */
-	private boolean isDeletionCopyNecessary(Diff diff, HashBiMap<EObject, EObject> copyMap) {
+	private boolean isDeletionCopyNecessary(Diff diff, UnifiedModelMap unifiedModelMap) {
+
 		Object value = MatchUtil.getValue(diff);
-		return diff.getKind() == DifferenceKind.DELETE && !copyMap.containsKey(value);
+		return diff.getKind() == DifferenceKind.DELETE && value instanceof EObject
+				&& !unifiedModelMap.containsOriginal((EObject) value);
 	}
 
 	/**
@@ -370,11 +372,11 @@ public class GMFDiagramDiffViewService {
 	 * 
 	 * @param diagramComparison
 	 *            the comparison containing the {@link Diff}
-	 * @param childrenAndEdgesCopy
-	 *            the collection of copied views.
-	 * @param copyMap
-	 *            the bidirectional map that links the original model elements
-	 *            to the copied elements.
+	 * @param topLevelViewCopies
+	 *            the collection of copied top-level views.
+	 * @param unifiedModelMap
+	 *            the map that links the original model elements to the copied
+	 *            elements.
 	 * @param viewCopier
 	 *            the copier used to copy the object,
 	 *            {@link Copier#copyReferences()} must be invoked by the caller
@@ -382,14 +384,14 @@ public class GMFDiagramDiffViewService {
 	 * @param diff
 	 *            the {@link Diff} whose value should be copied.
 	 */
-	private void copyDeletedViewDiff(Comparison diagramComparison, Collection<Object> childrenAndEdgesCopy,
-			HashBiMap<EObject, EObject> copyMap, Copier viewCopier, Diff diff) {
+	private void copyDeletedViewDiff(Comparison diagramComparison, Collection<Object> topLevelViewCopies,
+			UnifiedModelMap unifiedModelMap, Copier viewCopier, Diff diff) {
 
 		/* copy diffs that require the given diff */
 		EList<Diff> requiredByDiffs = diff.getRequiredBy();
 		for (Diff requiredDiff : requiredByDiffs) {
-			if (isDeletionCopyNecessary(requiredDiff, copyMap)) {
-				copyDeletedViewDiff(diagramComparison, childrenAndEdgesCopy, copyMap, viewCopier, requiredDiff);
+			if (isDeletionCopyNecessary(requiredDiff, unifiedModelMap)) {
+				copyDeletedViewDiff(diagramComparison, topLevelViewCopies, unifiedModelMap, viewCopier, requiredDiff);
 			}
 		}
 
@@ -410,40 +412,134 @@ public class GMFDiagramDiffViewService {
 				EObject newContainer = getNewValue(containerMatch);
 
 				/* the diagram is not part of the copy map */
-				if (newContainer instanceof Diagram || copyMap.containsKey(newContainer)) {
+				if (newContainer instanceof Diagram || unifiedModelMap.containsOriginal(newContainer)) {
 
 					EObject copy = viewCopier.copy(node);
+
+					copyNonUnifieableDeletionReferences(node, diff.getMatch().getComparison(), viewCopier,
+							unifiedModelMap, topLevelViewCopies);
 
 					if (newContainer instanceof Diagram) {
 						/*
 						 * if the container is a diagram, add it to the
 						 * collection instead of the container
 						 */
-						childrenAndEdgesCopy.add(copy);
+						topLevelViewCopies.add(copy);
 					}
 				}
-				copyMap.putAll(viewCopier);
+				unifiedModelMap.putAll(viewCopier);
 
 			}
 		}
 	}
 
 	/**
-	 * updates the references of the copied deleted elements with their matched
-	 * values copy if possible.
+	 * copies referenced {@link EObject}s of the given deleted {@link EObject}
+	 * if they cannot be unified without loosing information for the unified
+	 * model.
+	 * 
+	 * @param eObject
+	 *            the {@link EObject} whose reference should be copied.
+	 * @param comparison
+	 *            the comparison used to determine the {@link Diff}s and
+	 *            {@link Match}es used for the decision.
+	 * @param copier
+	 *            the copier used to copy the actual value of a reference.
+	 * @param unifiedModelMap
+	 *            the map that links the original model elements to the copied
+	 *            elements.
+	 * @param topLevelViewCopies
+	 *            the collection of copied top-level views.
+	 */
+	@SuppressWarnings("unchecked")
+	private void copyNonUnifieableDeletionReferences(EObject eObject, Comparison comparison, Copier copier,
+			UnifiedModelMap unifiedModelMap, Collection<Object> topLevelViewCopies) {
+
+		for (EReference reference : eObject.eClass().getEAllReferences()) {
+			if (reference.getEOpposite() != null && !reference.getEOpposite().isContainer()
+					&& !reference.getEOpposite().isMany() && !reference.isContainer() && !reference.isDerived()
+					&& reference.isChangeable()) {
+				/*
+				 * references with an mono valued opposite contain values that
+				 * cannot be unified without loosing one reference - so check if
+				 * we have to copy them
+				 */
+
+				List<EObject> objList = null;
+
+				if (reference.isMany()) {
+
+					objList = (List<EObject>) eObject.eGet(reference);
+				} else {
+
+					objList = new ArrayList<EObject>(1);
+					Object value = eObject.eGet(reference);
+
+					if (value instanceof EObject) {
+						objList.add((EObject) value);
+					}
+				}
+
+				for (EObject refValue : objList) {
+
+					boolean copyNecessary = true;
+
+					EList<Diff> valueDiffs = comparison.getDifferences(refValue);
+					for (Diff valueDiff : valueDiffs) {
+						if (valueDiff.getKind() == DifferenceKind.DELETE) {
+							/*
+							 * It is not necessary to copy deleted objects, they
+							 * will be copied anyway
+							 */
+							copyNecessary = false;
+						}
+					}
+
+					EObject oldContainer = refValue.eContainer();
+					Match containerMatch = comparison.getMatch(oldContainer);
+					/*
+					 * the copy must be contained in a known (and copied)
+					 * container, if the container is unknown, ignore it.
+					 */
+					if (containerMatch != null && copyNecessary) {
+
+						EObject newContainer = getNewValue(containerMatch);
+
+						if (!copier.containsKey(refValue) && (newContainer instanceof Diagram
+								|| unifiedModelMap.containsOriginal(newContainer))) {
+
+							EObject valueCopy = copier.copy(refValue);
+
+							if (newContainer instanceof Diagram) {
+								/*
+								 * if the container is a diagram, add it to the
+								 * collection instead of the container
+								 */
+								topLevelViewCopies.add(valueCopy);
+							}
+						}
+					}
+
+				}
+			}
+		}
+	}
+
+	/**
+	 * updates the references of the copied deleted elements with their value
+	 * copies if possible.
 	 * 
 	 * @param copier
 	 *            the {@link Copier} that contains the copied deleted elements
 	 *            to update.
-	 * @param copyMap
-	 *            the bidirectional map that links the original model elements
-	 *            to the copied elements.
+	 * @param unifiedModelMap
+	 *            the map that links the original model elements to the copied
+	 *            elements.
 	 * @param comparison
 	 *            the comparison used to determine the match for a copied
 	 *            element.
 	 */
-	private void updateDeletionMatchedReferences(Copier copier, HashBiMap<EObject, EObject> copyMap,
-			Comparison comparison) {
+	private void updateDeletionReferences(Copier copier, UnifiedModelMap unifiedModelMap, Comparison comparison) {
 		Set<Entry<EObject, EObject>> entries = copier.entrySet();
 		for (Entry<EObject, EObject> entry : entries) {
 
@@ -458,35 +554,36 @@ public class GMFDiagramDiffViewService {
 					if (feature instanceof EReference) {
 						EReference eReference = (EReference) feature;
 						if (!eReference.isContainment() && !eReference.isContainer()) {
-							updateDeletionReference(eReference, original, copy, copyMap, comparison);
+							updateDeletionReference(eReference, original, copy, unifiedModelMap, comparison);
 						}
 					}
 				}
 			}
-			updateDeletionContainment(original, copy, copyMap, comparison);
+			updateDeletionContainment(original, copy, unifiedModelMap, comparison);
 		}
 	}
 
 	/**
 	 * @param oldObject
 	 *            the old object to find the matching copy for.
-	 * @param copyMap
-	 *            the bidirectional map that links the original model elements
-	 *            to the copied elements.
+	 * @param unifiedModelMap
+	 *            the map that links the original model elements to the copied
+	 *            elements.
 	 * @param comparison
 	 *            the comparison used to determine the match for a copied
 	 *            element.
-	 * @return the copy of the matched new object for the given old object.
+	 * @return the copies of the matched new object for the given old object.
 	 */
-	private EObject getNewValueCopy(EObject oldObject, HashBiMap<EObject, EObject> copyMap, Comparison comparison) {
+	private Collection<EObject> getNewValueCopies(EObject oldObject, UnifiedModelMap unifiedModelMap,
+			Comparison comparison) {
 		Match match = comparison.getMatch(oldObject);
 		EObject newValue = getNewValue(match);
-		return copyMap.get(newValue);
+		return unifiedModelMap.getCopies(newValue);
 	}
 
 	/**
 	 * updates the given reference of the copy the represents a deleted EObject
-	 * with their matched value copy, if possible.
+	 * with their value copy, if possible.
 	 * 
 	 * @param eReference
 	 *            the {@link EReference} of the given deleted EObject to update.
@@ -494,15 +591,15 @@ public class GMFDiagramDiffViewService {
 	 *            the original "deleted" EObject.
 	 * @param copy
 	 *            the copy of the deleted EObject to update.
-	 * @param copyMap
-	 *            the bidirectional map that links the original model elements
-	 *            to the copied elements.
+	 * @param unifiedModelMap
+	 *            the map that links the original model elements to the copied
+	 *            elements.
 	 * @param comparison
 	 *            the comparison used to determine the match for a copied
 	 *            element.
 	 */
 	private void updateDeletionReference(EReference eReference, EObject original, EObject copy,
-			HashBiMap<EObject, EObject> copyMap, Comparison comparison) {
+			UnifiedModelMap unifiedModelMap, Comparison comparison) {
 
 		if (eReference.isMany()) {
 
@@ -513,26 +610,108 @@ public class GMFDiagramDiffViewService {
 
 			int index = 0;
 			for (EObject originalValue : originalList) {
-				EObject newValueCopy = getNewValueCopy((EObject) originalValue, copyMap, comparison);
-				if (newValueCopy != null && !copyList.contains(newValueCopy)) {
-					copyList.add(index, newValueCopy);
+
+				if (unifiedModelMap.containsOriginal(originalValue)) {
+					/*
+					 * A copy exists for this value, so replace it with its
+					 * value
+					 */
+					Collection<EObject> valueCopies = unifiedModelMap.getCopies(originalValue);
+					if (!valueCopies.isEmpty()) {
+						copyList.remove(originalValue);
+					}
+					for (EObject valueCopy : valueCopies) {
+						if (valueCopy != null && !copyList.contains(valueCopy)) {
+							copyList.add(index, valueCopy);
+						}
+						index++;
+					}
+
+				} else {
+					/*
+					 * No known copy for this value, so search for a copy of the
+					 * matched value
+					 */
+					Collection<EObject> newValueCopies = getNewValueCopies((EObject) originalValue, unifiedModelMap,
+							comparison);
+					if (!newValueCopies.isEmpty()) {
+						copyList.remove(originalValue);
+					}
+					for (EObject newValueCopy : newValueCopies) {
+						if (newValueCopy != null && !copyList.contains(newValueCopy)) {
+							copyList.add(index, newValueCopy);
+						}
+						index++;
+					}
+					if (newValueCopies.isEmpty()) {
+						/*
+						 * keep the value as is, but the index must be
+						 * incremented to keep the correct order
+						 */
+						index++;
+					}
+
 				}
-				index++;
 			}
 
 		} else {
 
 			Object originalValue = original.eGet(eReference);
+			Object copyValue = copy.eGet(eReference);
+			EObject objValue = null;
 
-			if (originalValue instanceof EObject) {
+			if (copyValue instanceof EObject) {
 
-				EObject newValueCopy = getNewValueCopy((EObject) originalValue, copyMap, comparison);
-				if (newValueCopy != null) {
-					copy.eSet(eReference, newValueCopy);
-				}
+				objValue = (EObject) copyValue;
 
+			} else if (originalValue instanceof EObject) {
+
+				objValue = (EObject) originalValue;
 			}
+
+			if (objValue != null && !unifiedModelMap.containsCopy(objValue)) {
+				/*
+				 * the value is not a copy so check if it is an original object
+				 * with copies
+				 */
+				Collection<EObject> valueCopies = unifiedModelMap.getCopies(objValue);
+				if (!valueCopies.isEmpty()) {
+
+					if (valueCopies.size() > 1) {
+						throw new IllegalStateException(MessageFormat.format(
+								"Could not update reference: Multiple value copy candidates for mono-valued reference {0} found",
+								eReference.toString()));
+					}
+
+					/* copy found, now replace the old value with it */
+					copy.eSet(eReference, valueCopies.iterator().next());
+
+				} else {
+					/*
+					 * the value is neither a copy nor an original so try to
+					 * find the copy of the matched object
+					 */
+					Collection<EObject> newValueCopies = getNewValueCopies(objValue, unifiedModelMap, comparison);
+
+					if (!newValueCopies.isEmpty()) {
+
+						/*
+						 * copies found, now replace the old value with them
+						 */
+						if (newValueCopies.size() > 1) {
+							throw new IllegalStateException(MessageFormat.format(
+									"Could not update reference: Multiple value copy candidates for mono-valued reference {0} found",
+									eReference.toString()));
+						}
+
+						/* copy found, now replace the old value with it */
+						copy.eSet(eReference, newValueCopies.iterator().next());
+					}
+				}
+			}
+
 		}
+
 	}
 
 	/**
@@ -543,21 +722,38 @@ public class GMFDiagramDiffViewService {
 	 *            the original "deleted" EObject.
 	 * @param copy
 	 *            the copy of the deleted EObject to update.
-	 * @param copyMap
-	 *            the bidirectional map that links the original model elements
-	 *            to the copied elements.
+	 * @param unifiedModelMap
+	 *            the map that links the original model elements to the copied
+	 *            elements.
 	 * @param comparison
 	 *            the comparison used to determine the match for a copied
 	 *            element.
 	 */
-	private void updateDeletionContainment(EObject original, EObject copy, HashBiMap<EObject, EObject> copyMap,
+	private void updateDeletionContainment(EObject original, EObject copy, UnifiedModelMap unifiedModelMap,
 			Comparison comparison) {
+
+		if (copy.eContainer() != null) {
+			/* do not update container if it has been set already */
+			return;
+		}
 
 		EObject oldContainer = original.eContainer();
 		Match containerMatch = comparison.getMatch(oldContainer);
 		EObject newContainer = getNewValue(containerMatch);
-		EObject containerCopy = copyMap.get(newContainer);
 		EReference containmentFeature = original.eContainmentFeature();
+		EObject containerCopy = null;
+
+		Collection<EObject> newContainerCopies = unifiedModelMap.getCopies(newContainer);
+
+		if (newContainerCopies.size() > 1) {
+			throw new IllegalStateException(MessageFormat.format(
+					"Could not update containment reference: Multiple value copy candidates for mono-valued reference {0} found",
+					containmentFeature.toString()));
+		}
+
+		if (!newContainerCopies.isEmpty()) {
+			containerCopy = newContainerCopies.iterator().next();
+		}
 
 		if (containerCopy != null && containerCopy.eClass().getEAllReferences().contains(containmentFeature)) {
 

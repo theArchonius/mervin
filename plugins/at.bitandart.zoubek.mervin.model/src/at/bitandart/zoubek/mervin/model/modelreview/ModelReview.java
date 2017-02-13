@@ -12,8 +12,7 @@
  */
 package at.bitandart.zoubek.mervin.model.modelreview;
 
-import com.google.common.collect.HashBiMap;
-
+import at.bitandart.zoubek.mervin.util.UnifiedModelMap;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.compare.Comparison;
@@ -431,14 +430,14 @@ public interface ModelReview extends EObject {
 	 * <!-- end-user-doc -->
 	 * 
 	 * @return the value of the '<em>Unified Model Map</em>' attribute.
-	 * @see #setUnifiedModelMap(HashBiMap)
+	 * @see #setUnifiedModelMap(UnifiedModelMap)
 	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getModelReview_UnifiedModelMap()
 	 * @model dataType=
-	 *        "at.bitandart.zoubek.mervin.model.modelreview.HashBiMap<org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject>"
+	 *        "at.bitandart.zoubek.mervin.model.modelreview.UnifiedModelMap"
 	 *        transient="true"
 	 * @generated
 	 */
-	HashBiMap<EObject, EObject> getUnifiedModelMap();
+	UnifiedModelMap getUnifiedModelMap();
 
 	/**
 	 * Sets the value of the '
@@ -451,7 +450,7 @@ public interface ModelReview extends EObject {
 	 * @see #getUnifiedModelMap()
 	 * @generated
 	 */
-	void setUnifiedModelMap(HashBiMap<EObject, EObject> value);
+	void setUnifiedModelMap(UnifiedModelMap value);
 
 	/**
 	 * Returns the value of the '<em><b>Current Reviewer</b></em>' reference.
