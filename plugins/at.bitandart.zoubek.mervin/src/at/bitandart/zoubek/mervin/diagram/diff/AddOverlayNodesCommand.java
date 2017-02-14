@@ -495,7 +495,7 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 						 * two way comparison is assumed, so left is new, right
 						 * is old
 						 */
-						oldLocation = locationConstraintToVector(layoutConstraintMatch.getRight(), 0.0);
+						oldLocation = locationConstraintToVector(layoutConstraintMatch.getRight(), null);
 					}
 
 					if (newLocation == null) {
@@ -504,7 +504,7 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 						 * two way comparison is assumed, so left is new, right
 						 * is old
 						 */
-						newLocation = locationConstraintToVector(layoutConstraintMatch.getLeft(), -1.0);
+						newLocation = locationConstraintToVector(layoutConstraintMatch.getLeft(), null);
 					}
 
 				} else if (attributeChange.getAttribute() == NotationPackage.Literals.SIZE__HEIGHT
@@ -533,23 +533,24 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 			}
 		}
 
-		if (oldLocation != null && newLocation != null) {
+		if (oldLocation != null || newLocation != null) {
 
 			// determine move direction
 
-			DoublePrecisionVector moveDirection = newLocation.getSubtractedDoublePrecisicon(oldLocation);
-
-			if (moveDirection.getLength() != 0) {
-
-				moveDirection.normalize();
-				LocationDifference locationDifference = reviewFactory.createLocationDifference();
-				locationDifference.getRawDiffs().addAll(locationRawDiffs);
-				locationDifference.setMoveDirection(moveDirection);
-				locationDifference.setOriginalLocation(oldLocation);
-
-				differenceOverlay.getDifferences().add(locationDifference);
-
+			DoublePrecisionVector moveDirection = null;
+			if (oldLocation != null && newLocation != null) {
+				moveDirection = newLocation.getSubtractedDoublePrecisicon(oldLocation);
+				if (moveDirection.getLength() != 0) {
+					moveDirection.normalize();
+				}
 			}
+
+			LocationDifference locationDifference = reviewFactory.createLocationDifference();
+			locationDifference.getRawDiffs().addAll(locationRawDiffs);
+			locationDifference.setMoveDirection(moveDirection);
+			locationDifference.setOriginalLocation(oldLocation);
+
+			differenceOverlay.getDifferences().add(locationDifference);
 
 		}
 
@@ -605,7 +606,7 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 	 * @return the converted double value or the default value if the conversion
 	 *         was not possible.
 	 */
-	private static double toDouble(Object value, double defaultValue) {
+	private static Double toDouble(Object value, Double defaultValue) {
 
 		if (value instanceof Number) {
 			return ((Number) value).doubleValue();
@@ -622,11 +623,16 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 	 * @param defaultValue
 	 *            the default value to use for the width and height if the
 	 *            size's values could not be converted to a number.
-	 * @return the extracted dimension.
+	 * @return the extracted dimension or null if the double conversion yields
+	 *         null for the width or height attribute.
 	 */
-	private static PrecisionDimension sizeConstraintToDimension(EObject object, double defaultValue) {
-		return new PrecisionDimension(toDouble(object.eGet(NotationPackage.Literals.SIZE__WIDTH), defaultValue),
-				toDouble(object.eGet(NotationPackage.Literals.SIZE__HEIGHT), defaultValue));
+	private static PrecisionDimension sizeConstraintToDimension(EObject object, Double defaultValue) {
+		Double width = toDouble(object.eGet(NotationPackage.Literals.SIZE__WIDTH), defaultValue);
+		Double height = toDouble(object.eGet(NotationPackage.Literals.SIZE__HEIGHT), defaultValue);
+		if (width != null && height != null) {
+			return new PrecisionDimension(width, height);
+		}
+		return null;
 	}
 
 	/**
@@ -638,11 +644,16 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 	 * @param defaultValue
 	 *            the default value to use for the x and y if the location's
 	 *            values could not be converted to a number.
-	 * @return the extracted vector.
+	 * @return the extracted vector or null if the double conversion yields null
+	 *         for the x or y attribute.
 	 */
-	private static DoublePrecisionVector locationConstraintToVector(EObject object, double defaultValue) {
-		return new DoublePrecisionVector(toDouble(object.eGet(NotationPackage.Literals.LOCATION__X), defaultValue),
-				toDouble(object.eGet(NotationPackage.Literals.LOCATION__Y), defaultValue));
+	private static DoublePrecisionVector locationConstraintToVector(EObject object, Double defaultValue) {
+		Double x = toDouble(object.eGet(NotationPackage.Literals.LOCATION__X), defaultValue);
+		Double y = toDouble(object.eGet(NotationPackage.Literals.LOCATION__Y), defaultValue);
+		if (x != null && y != null) {
+			return new DoublePrecisionVector(x, y);
+		}
+		return null;
 	}
 
 	/**
