@@ -16,6 +16,7 @@ import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.draw2d.Polyline;
 import org.eclipse.draw2d.RectangleFigure;
+import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
@@ -98,6 +99,8 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 				}
 			}
 
+			IFigure linkedFigure = getLinkedEditPart().getFigure();
+
 			for (Difference difference : differences) {
 
 				if (difference instanceof StateDifference) {
@@ -141,9 +144,11 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 
 				} else if (difference instanceof LocationDifference) {
 
-					LocationDifference locationDifference = (LocationDifference) difference;
-					changeOverlayNodeFigure.setMoveDirection(locationDifference.getMoveDirection());
-					originalLocation = locationDifference.getOriginalLocation();
+					if (!ignoreOldLocation(linkedFigure)) {
+						LocationDifference locationDifference = (LocationDifference) difference;
+						changeOverlayNodeFigure.setMoveDirection(locationDifference.getMoveDirection());
+						originalLocation = locationDifference.getOriginalLocation();
+					}
 					hasLayoutDifference = true;
 				}
 
@@ -156,8 +161,6 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 						offScreenChangeIndicator.setOverlayType(OverlayType.LAYOUT);
 					}
 				}
-
-				IFigure linkedFigure = getLinkedEditPart().getFigure();
 
 				if (oldBoundsOutline == null) {
 
@@ -205,6 +208,20 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 			}
 		}
 
+	}
+
+	/**
+	 * determine if the old location constraint should can be ignored or not. It
+	 * depends on the layout manager of the parent figure whose location has
+	 * changed. This is necessary as some views have constraints assigned that
+	 * will be ignored by the layout manager.
+	 * 
+	 * @param changedFigure
+	 *            the figure whose bounds have been changed.
+	 * @return true if the old location can be ignored, false otherwise.
+	 */
+	private boolean ignoreOldLocation(IFigure changedFigure) {
+		return !(changedFigure.getParent().getLayoutManager() instanceof XYLayout);
 	}
 
 	/**
