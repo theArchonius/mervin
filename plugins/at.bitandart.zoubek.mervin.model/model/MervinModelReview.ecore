@@ -135,6 +135,10 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="differences" upperBound="-1"
         eType="#//Difference" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="commented" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dependentOverlays" upperBound="-1"
+        eType="#//DifferenceOverlay" eOpposite="#//DifferenceOverlay/dependencies"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dependencies" upperBound="-1"
+        eType="#//DifferenceOverlay" eOpposite="#//DifferenceOverlay/dependentOverlays"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NodeDifferenceOverlay" eSuperTypes="#//DifferenceOverlay"/>
   <eClassifiers xsi:type="ecore:EClass" name="EdgeDifferenceOverlay" eSuperTypes="#//DifferenceOverlay"/>

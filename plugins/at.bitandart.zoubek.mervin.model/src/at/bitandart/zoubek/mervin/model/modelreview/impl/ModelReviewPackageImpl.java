@@ -915,6 +915,24 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 	 * 
 	 * @generated
 	 */
+	public EReference getDifferenceOverlay_DependentOverlays() {
+		return (EReference) differenceOverlayEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EReference getDifferenceOverlay_Dependencies() {
+		return (EReference) differenceOverlayEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	public EClass getNodeDifferenceOverlay() {
 		return nodeDifferenceOverlayEClass;
 	}
@@ -1274,6 +1292,8 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		createEReference(differenceOverlayEClass, DIFFERENCE_OVERLAY__LINKED_VIEW);
 		createEReference(differenceOverlayEClass, DIFFERENCE_OVERLAY__DIFFERENCES);
 		createEAttribute(differenceOverlayEClass, DIFFERENCE_OVERLAY__COMMENTED);
+		createEReference(differenceOverlayEClass, DIFFERENCE_OVERLAY__DEPENDENT_OVERLAYS);
+		createEReference(differenceOverlayEClass, DIFFERENCE_OVERLAY__DEPENDENCIES);
 
 		nodeDifferenceOverlayEClass = createEClass(NODE_DIFFERENCE_OVERLAY);
 
@@ -1563,6 +1583,14 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		initEAttribute(getDifferenceOverlay_Commented(), ecorePackage.getEBoolean(), "commented", null, 0, 1,
 				DifferenceOverlay.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
 				!IS_DERIVED, IS_ORDERED);
+		initEReference(getDifferenceOverlay_DependentOverlays(), this.getDifferenceOverlay(),
+				this.getDifferenceOverlay_Dependencies(), "dependentOverlays", null, 0, -1, DifferenceOverlay.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDifferenceOverlay_Dependencies(), this.getDifferenceOverlay(),
+				this.getDifferenceOverlay_DependentOverlays(), "dependencies", null, 0, -1, DifferenceOverlay.class,
+				!IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+				IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(nodeDifferenceOverlayEClass, NodeDifferenceOverlay.class, "NodeDifferenceOverlay", !IS_ABSTRACT,
 				!IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
