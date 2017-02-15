@@ -81,6 +81,16 @@ public class DiagramEditPart extends LinkLFShapeCompartmentEditPart {
 	}
 
 	/**
+	 * convenience method to retrieve the associated
+	 * {@link DiagramContainerFigure}.
+	 * 
+	 * @return the {@link DiagramContainerFigure} of this edit part.
+	 */
+	public DiagramContainerFigure getDiagramContainerFigure() {
+		return (DiagramContainerFigure) getFigure();
+	}
+
+	/**
 	 * A {@link DiagramContainerFigure} that allows scrolling to merged
 	 * {@link IOffScreenIndicator}s if a mouse button click is detected on a
 	 * merged off-screen indicator.
