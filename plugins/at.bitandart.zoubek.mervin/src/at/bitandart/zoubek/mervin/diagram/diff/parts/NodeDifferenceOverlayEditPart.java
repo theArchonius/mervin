@@ -29,11 +29,11 @@ import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.SWT;
 
-import at.bitandart.zoubek.mervin.draw2d.figures.OverlayNodeFigure;
-import at.bitandart.zoubek.mervin.draw2d.figures.OverlayNodeFigure.DimensionPropertyChangeType;
-import at.bitandart.zoubek.mervin.draw2d.figures.OverlayType;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.IOffScreenIndicator;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenOverlayIndicator;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayNodeFigure;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayType;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayNodeFigure.DimensionPropertyChangeType;
 import at.bitandart.zoubek.mervin.model.modelreview.Difference;
 import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
 import at.bitandart.zoubek.mervin.model.modelreview.DimensionChange;

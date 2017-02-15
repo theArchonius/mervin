@@ -21,12 +21,12 @@ import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.geometry.Vector;
 
-import at.bitandart.zoubek.mervin.draw2d.figures.DefaultOverlayLocator;
-import at.bitandart.zoubek.mervin.draw2d.figures.DefaultOverlayTypeStyleAdvisor;
-import at.bitandart.zoubek.mervin.draw2d.figures.OverlayLinkedFigureListener;
-import at.bitandart.zoubek.mervin.draw2d.figures.OverlayNodeFigure;
-import at.bitandart.zoubek.mervin.draw2d.figures.OverlayNodeFigure.DimensionPropertyChangeType;
-import at.bitandart.zoubek.mervin.draw2d.figures.OverlayType;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.DefaultOverlayLocator;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.DefaultOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayLinkedFigureListener;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayNodeFigure;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayType;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayNodeFigure.DimensionPropertyChangeType;
 
 /**
  * Demonstrates the usage of {@link OverlayNodeFigure}.

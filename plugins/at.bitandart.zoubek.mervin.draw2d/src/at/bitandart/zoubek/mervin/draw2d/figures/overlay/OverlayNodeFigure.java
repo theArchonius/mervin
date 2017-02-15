@@ -8,7 +8,7 @@
  * Contributors:
  *    Florian Zoubek - initial API and implementation
  *******************************************************************************/
-package at.bitandart.zoubek.mervin.draw2d.figures;
+package at.bitandart.zoubek.mervin.draw2d.figures.overlay;
 
 import java.util.Collection;
 
@@ -22,6 +22,9 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.geometry.Vector;
 import org.eclipse.swt.graphics.Color;
 
+import at.bitandart.zoubek.mervin.draw2d.figures.ComposedNodeFigure;
+import at.bitandart.zoubek.mervin.draw2d.figures.DimensionPropertyChangeIndicator;
+import at.bitandart.zoubek.mervin.draw2d.figures.DirectionIndicator;
 import at.bitandart.zoubek.mervin.draw2d.figures.DimensionPropertyChangeIndicator.DimensionChange;
 import at.bitandart.zoubek.mervin.draw2d.figures.DimensionPropertyChangeIndicator.DimensionProperty;
 

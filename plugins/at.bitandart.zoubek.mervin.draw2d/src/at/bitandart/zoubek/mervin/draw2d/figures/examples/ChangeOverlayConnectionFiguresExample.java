@@ -29,11 +29,11 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.ConnectionLayerEx;
 
-import at.bitandart.zoubek.mervin.draw2d.figures.DefaultOverlayLocator;
-import at.bitandart.zoubek.mervin.draw2d.figures.DefaultOverlayTypeStyleAdvisor;
-import at.bitandart.zoubek.mervin.draw2d.figures.OverlayConnectionFigure;
-import at.bitandart.zoubek.mervin.draw2d.figures.OverlayLinkedFigureListener;
-import at.bitandart.zoubek.mervin.draw2d.figures.OverlayType;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.DefaultOverlayLocator;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.DefaultOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayConnectionFigure;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayLinkedFigureListener;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayType;
 
 /**
  * Demonstrates the usage of {@link OverlayConnectionFigure}.

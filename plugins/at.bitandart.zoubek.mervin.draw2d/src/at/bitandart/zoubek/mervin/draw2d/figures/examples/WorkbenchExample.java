@@ -23,7 +23,7 @@ import org.eclipse.swt.graphics.Image;
 import at.bitandart.zoubek.mervin.draw2d.MervinResourceRegistry;
 import at.bitandart.zoubek.mervin.draw2d.RegistryResourceManager;
 import at.bitandart.zoubek.mervin.draw2d.ViewportFillingLayout;
-import at.bitandart.zoubek.mervin.draw2d.figures.DefaultOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.DefaultOverlayTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.DiagramContainerFigure;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.DiffWorkbench;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbench;

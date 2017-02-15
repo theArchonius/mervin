@@ -28,8 +28,8 @@ import org.eclipse.draw2d.geometry.Vector;
 import org.eclipse.swt.graphics.Font;
 
 import at.bitandart.zoubek.mervin.draw2d.DoublePrecisionVector;
-import at.bitandart.zoubek.mervin.draw2d.figures.IOverlayTypeStyleAdvisor;
-import at.bitandart.zoubek.mervin.draw2d.figures.OverlayType;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.IOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayType;
 
 /**
  * Represents an {@link IOffScreenIndicator} that replaces a set of

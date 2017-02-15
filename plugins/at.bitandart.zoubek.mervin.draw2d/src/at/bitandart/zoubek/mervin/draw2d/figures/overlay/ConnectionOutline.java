@@ -8,7 +8,7 @@
  * Contributors:
  *    Florian Zoubek - initial API and implementation
  *******************************************************************************/
-package at.bitandart.zoubek.mervin.draw2d.figures;
+package at.bitandart.zoubek.mervin.draw2d.figures.overlay;
 
 import java.util.ArrayList;
 import java.util.List;

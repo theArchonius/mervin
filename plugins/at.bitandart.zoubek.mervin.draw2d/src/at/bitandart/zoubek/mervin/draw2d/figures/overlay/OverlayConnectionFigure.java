@@ -8,7 +8,7 @@
  * Contributors:
  *    Florian Zoubek - initial API and implementation
  *******************************************************************************/
-package at.bitandart.zoubek.mervin.draw2d.figures;
+package at.bitandart.zoubek.mervin.draw2d.figures.overlay;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,6 +20,8 @@ import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Color;
+
+import at.bitandart.zoubek.mervin.draw2d.figures.ComposedNodeFigure;
 
 /**
  * An {@link IOverlayFigure} that is able to outline one or more connection

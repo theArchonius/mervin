@@ -16,11 +16,11 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
 
-import at.bitandart.zoubek.mervin.draw2d.figures.OverlayConnectionFigure;
-import at.bitandart.zoubek.mervin.draw2d.figures.OverlayType;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.ConnectionOffScreenOverlayIndicator;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.IOffScreenIndicator;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenOverlayIndicator;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayConnectionFigure;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayType;
 import at.bitandart.zoubek.mervin.model.modelreview.BendpointsDifference;
 import at.bitandart.zoubek.mervin.model.modelreview.Difference;
 import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;

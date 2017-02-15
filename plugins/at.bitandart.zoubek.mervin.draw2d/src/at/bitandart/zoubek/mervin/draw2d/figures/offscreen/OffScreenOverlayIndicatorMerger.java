@@ -22,7 +22,7 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LayoutListener;
 import org.eclipse.draw2d.geometry.Rectangle;
 
-import at.bitandart.zoubek.mervin.draw2d.figures.IOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.IOverlayTypeStyleAdvisor;
 
 /**
  * A {@link FigureListener} that automatically replaces close

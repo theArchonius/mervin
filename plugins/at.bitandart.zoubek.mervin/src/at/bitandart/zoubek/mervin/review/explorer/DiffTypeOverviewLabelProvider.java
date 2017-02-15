@@ -25,8 +25,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
 
-import at.bitandart.zoubek.mervin.draw2d.figures.IOverlayTypeStyleAdvisor;
-import at.bitandart.zoubek.mervin.draw2d.figures.OverlayType;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.IOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayType;
 import at.bitandart.zoubek.mervin.util.vis.MathUtil;
 
 /**

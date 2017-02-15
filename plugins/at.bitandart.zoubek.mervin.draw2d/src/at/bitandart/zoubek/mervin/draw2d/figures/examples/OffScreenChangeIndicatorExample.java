@@ -31,13 +31,13 @@ import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScalableFreeformLayer
 import org.eclipse.gmf.runtime.notation.MeasurementUnit;
 
 import at.bitandart.zoubek.mervin.draw2d.MervinLayerConstants;
-import at.bitandart.zoubek.mervin.draw2d.figures.DefaultOverlayTypeStyleAdvisor;
-import at.bitandart.zoubek.mervin.draw2d.figures.IOverlayTypeStyleAdvisor;
-import at.bitandart.zoubek.mervin.draw2d.figures.OverlayType;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.IOffScreenIndicator;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenIndicatorLayout;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenOverlayIndicator;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenOverlayIndicatorMerger;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.DefaultOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.IOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayType;
 
 /**
  * Demonstrates the usage of {@link IOffScreenIndicator}s.

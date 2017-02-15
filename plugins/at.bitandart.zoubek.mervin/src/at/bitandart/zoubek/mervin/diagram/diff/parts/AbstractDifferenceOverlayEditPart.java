@@ -27,12 +27,12 @@ import org.eclipse.gmf.runtime.notation.View;
 
 import at.bitandart.zoubek.mervin.diagram.diff.OffScreenIndicatorResolver;
 import at.bitandart.zoubek.mervin.draw2d.MervinLayerConstants;
-import at.bitandart.zoubek.mervin.draw2d.figures.DefaultOverlayLocator;
-import at.bitandart.zoubek.mervin.draw2d.figures.DefaultOverlayTypeStyleAdvisor;
-import at.bitandart.zoubek.mervin.draw2d.figures.IOverlayTypeStyleAdvisor;
-import at.bitandart.zoubek.mervin.draw2d.figures.OverlayLinkedFigureListener;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.IOffScreenIndicator;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenOverlayIndicator;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.DefaultOverlayLocator;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.DefaultOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.IOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayLinkedFigureListener;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.DiagramContainerFigure;
 import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
 

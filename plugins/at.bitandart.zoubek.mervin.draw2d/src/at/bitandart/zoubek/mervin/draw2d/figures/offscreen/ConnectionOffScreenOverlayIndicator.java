@@ -17,9 +17,9 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.Rectangle;
 
-import at.bitandart.zoubek.mervin.draw2d.figures.OverlayConnectionFigure;
-import at.bitandart.zoubek.mervin.draw2d.figures.ConnectionOutline;
-import at.bitandart.zoubek.mervin.draw2d.figures.IOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.ConnectionOutline;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.IOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayConnectionFigure;
 
 /**
  * An {@link OffScreenOverlayIndicator} that supports more precise visibility and
