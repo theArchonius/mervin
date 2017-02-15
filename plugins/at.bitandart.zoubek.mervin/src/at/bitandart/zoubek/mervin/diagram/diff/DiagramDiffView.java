@@ -42,6 +42,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.RecordingCommand;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
@@ -72,7 +73,10 @@ import at.bitandart.zoubek.mervin.IMervinContextConstants;
 import at.bitandart.zoubek.mervin.IReviewHighlightService;
 import at.bitandart.zoubek.mervin.IReviewHighlightServiceListener;
 import at.bitandart.zoubek.mervin.diagram.diff.GMFDiagramDiffViewService.DiagramDiffServiceListener;
+import at.bitandart.zoubek.mervin.diagram.diff.parts.DiagramEditPart;
 import at.bitandart.zoubek.mervin.diagram.diff.parts.IFocusHighlightEditPart;
+import at.bitandart.zoubek.mervin.draw2d.figures.workbench.DiagramContainerFigure;
+import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbenchTrayFigure;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.patchset.history.IPatchSetHistoryEntry;
@@ -261,7 +265,6 @@ public class DiagramDiffView implements IAdaptable {
 						boolean highlightsCleared = false;
 						ModelReview modelReview = getModelReview();
 
-						IFocusHighlightEditPart focusHighlightEditPart = getFocusHighlightEditPart();
 						ignoreHighlights = true;
 
 						while (iterator.hasNext()) {
@@ -584,18 +587,12 @@ public class DiagramDiffView implements IAdaptable {
 				Collection<EObject> unifiedCopies = review.getUnifiedModelMap().getCopies(eObject);
 				for (EObject unifiedCopy : unifiedCopies) {
 					if (unifiedCopy != null) {
-						IFigure figure = findFigureInEditPartTree(unifiedCopy, rootEditPart);
-						if (figure != null) {
-							figureSet.add(figure);
-						}
+						collectFiguresInEditPartTree(unifiedCopy, rootEditPart, figureSet);
 					}
 				}
 			}
 
-			IFigure figure = findFigureInEditPartTree(eObject, rootEditPart);
-			if (figure != null) {
-				figureSet.add(figure);
-			}
+			collectFiguresInEditPartTree(eObject, rootEditPart, figureSet);
 		}
 
 		/**
@@ -690,17 +687,74 @@ public class DiagramDiffView implements IAdaptable {
 		 *            the object to search for.
 		 * @param rootEditPart
 		 *            the root edit part to start the search at (inclusive).
-		 * @return the corresponding figure or null if none could be found.
+		 * @param figureSet
+		 *            the set to store the collected figures into.
 		 */
-		private IFigure findFigureInEditPartTree(EObject eObject, EditPart rootEditPart) {
+		private void collectFiguresInEditPartTree(EObject eObject, EditPart rootEditPart, Set<IFigure> figureSet) {
 
 			// search for the element itself
 			EditPart editPart = findEditPart(eObject, rootEditPart);
 
 			if (editPart != null && editPart instanceof GraphicalEditPart) {
-				return ((GraphicalEditPart) editPart).getFigure();
+
+				figureSet.add(((GraphicalEditPart) editPart).getFigure());
+				collectContainingDiagramContainerTrayFigures(editPart, figureSet, new HashSet<EditPart>());
+
 			}
-			return null;
+		}
+
+		/**
+		 * collects the tray figures of the {@link DiagramEditPart}s which
+		 * contain the given edit part or the source/target of the given
+		 * {@link ConnectionEditPart}.
+		 * 
+		 * @param editPart
+		 *            the edit part to find the tary figure for.
+		 * @param figureSet
+		 *            the set to store the collected figures into.
+		 * @param excludedEditParts
+		 *            the set of edit parts to exclude from the search.
+		 */
+		private void collectContainingDiagramContainerTrayFigures(EditPart editPart, Set<IFigure> figureSet,
+				Set<EditPart> excludedEditParts) {
+
+			if (excludedEditParts.contains(editPart)) {
+				return;
+			}
+			excludedEditParts.add(editPart);
+
+			if (editPart instanceof DiagramEditPart) {
+
+				DiagramContainerFigure diagramContainerFigure = ((DiagramEditPart) editPart)
+						.getDiagramContainerFigure();
+				if (diagramContainerFigure != null) {
+					IDiffWorkbenchTrayFigure trayFigure = diagramContainerFigure.getTrayFigure();
+					if (trayFigure != null) {
+						figureSet.add(trayFigure);
+					}
+				}
+
+			} else {
+
+				EditPart parent = editPart.getParent();
+				if (parent != null) {
+					collectContainingDiagramContainerTrayFigures(parent, figureSet, excludedEditParts);
+				}
+
+				if (editPart instanceof ConnectionEditPart) {
+
+					ConnectionEditPart connectionEditPart = (ConnectionEditPart) editPart;
+					EditPart source = connectionEditPart.getSource();
+					EditPart target = connectionEditPart.getTarget();
+					if (source != null) {
+						collectContainingDiagramContainerTrayFigures(source, figureSet, excludedEditParts);
+					}
+					if (target != null) {
+						collectContainingDiagramContainerTrayFigures(target, figureSet, excludedEditParts);
+					}
+				}
+			}
+
 		}
 
 		/**
