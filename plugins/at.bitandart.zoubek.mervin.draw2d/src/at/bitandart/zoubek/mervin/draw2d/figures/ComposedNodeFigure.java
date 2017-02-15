@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -89,6 +89,25 @@ public abstract class ComposedNodeFigure extends NodeFigure implements IComposed
 	 */
 	protected void notifyInitializationComplete() {
 		// intentionally left empty
+	}
+
+	@Override
+	public boolean containsPoint(int x, int y) {
+
+		if (!isInitialized()) {
+			initialize();
+		}
+
+		List<?> children = getChildren();
+		for (Object child : children) {
+			if (child instanceof IFigure) {
+				IFigure childFigure = (IFigure) child;
+				if (childFigure.isVisible() && childFigure.containsPoint(x, y)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 }

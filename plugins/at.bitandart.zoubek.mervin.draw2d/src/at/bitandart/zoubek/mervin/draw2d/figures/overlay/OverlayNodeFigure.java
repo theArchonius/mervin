@@ -15,6 +15,8 @@ import java.util.Collection;
 import org.eclipse.draw2d.Border;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LineBorder;
+import org.eclipse.draw2d.MouseEvent;
+import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
@@ -24,9 +26,9 @@ import org.eclipse.swt.graphics.Color;
 
 import at.bitandart.zoubek.mervin.draw2d.figures.ComposedNodeFigure;
 import at.bitandart.zoubek.mervin.draw2d.figures.DimensionPropertyChangeIndicator;
-import at.bitandart.zoubek.mervin.draw2d.figures.DirectionIndicator;
 import at.bitandart.zoubek.mervin.draw2d.figures.DimensionPropertyChangeIndicator.DimensionChange;
 import at.bitandart.zoubek.mervin.draw2d.figures.DimensionPropertyChangeIndicator.DimensionProperty;
+import at.bitandart.zoubek.mervin.draw2d.figures.DirectionIndicator;
 
 /**
  * An {@link IOverlayFigure} with a rectangular outline and indicators for
@@ -58,7 +60,7 @@ public class OverlayNodeFigure extends ComposedNodeFigure implements IOverlayFig
 
 	// layout properties
 
-	private Insets outlineInsets = new Insets(3);
+	private Insets outlineInsets = new Insets(0);
 	private Dimension defaultDirectionIndicatorSize = new Dimension(35, 35);
 	private Dimension defaultBoundsWidthSizeChangeIndicatorSize = new Dimension(50, 20);
 	private Dimension defaultBoundsHeightChangeIndicatorSize = new Dimension(20, 50);
@@ -72,6 +74,10 @@ public class OverlayNodeFigure extends ComposedNodeFigure implements IOverlayFig
 	private boolean showCommentHint = false;
 	private DimensionPropertyChangeType boundsWidthChangeType = DimensionPropertyChangeType.NONE;
 	private DimensionPropertyChangeType boundsHeightChangeType = DimensionPropertyChangeType.NONE;
+
+	// event handling
+	private boolean active = false;
+	private MouseOverListener mouseOverListener = new MouseOverListener();
 
 	/**
 	 * @param styleAdivsor
@@ -147,7 +153,12 @@ public class OverlayNodeFigure extends ComposedNodeFigure implements IOverlayFig
 	@Override
 	protected void notifyInitializationComplete() {
 		applyChangeStyles();
+		outline.addMouseMotionListener(mouseOverListener);
+		directionIndicator.addMouseMotionListener(mouseOverListener);
+		boundsHeightSizeChangeIndicator.addMouseMotionListener(mouseOverListener);
+		boundsWidthSizeChangeIndicator.addMouseMotionListener(mouseOverListener);
 		updateDimensionPropertyChangeIndicators();
+		updateMoveDirectionIndicator(moveDirection);
 		updateOutline();
 	}
 
@@ -161,9 +172,10 @@ public class OverlayNodeFigure extends ComposedNodeFigure implements IOverlayFig
 
 		outline.setForegroundColor(foregroundColor);
 		outline.setBackgroundColor(backgroundColor);
-		outline.setFill(!(overlayType == OverlayType.LAYOUT || overlayType == OverlayType.COMMENT));
-		outline.setOutline(overlayType != OverlayType.COMMENT);
+		outline.setFill(!(overlayType == OverlayType.LAYOUT || overlayType == OverlayType.COMMENT || active));
+		outline.setOutline((overlayType != OverlayType.COMMENT && active) || overlayType == OverlayType.LAYOUT);
 		outline.setShowCommentHint(showCommentHint);
+		outline.setUseOutlineAlpha(active);
 
 		directionIndicator.setBackgroundColor(foregroundColor);
 		directionIndicator.setForegroundColor(styleAdvisor.getIndicatorColorForOverlayType(overlayType));
@@ -205,7 +217,7 @@ public class OverlayNodeFigure extends ComposedNodeFigure implements IOverlayFig
 
 		// add insets and padding caused by the the line width
 		areaToCover.expand(outlineInsets);
-		double lineWidthSpacing = outline.getLineWidth() * 2.0;
+		double lineWidthSpacing = outline.getLineWidth();
 		areaToCover.expand(lineWidthSpacing, lineWidthSpacing);
 
 		Rectangle outlineBounds = areaToCover.getCopy();
@@ -301,11 +313,11 @@ public class OverlayNodeFigure extends ComposedNodeFigure implements IOverlayFig
 				indicator.setVisible(false);
 				break;
 			case BIGGER:
-				indicator.setVisible(true);
+				indicator.setVisible(active);
 				indicator.setDimensionChange(DimensionChange.BIGGER);
 				break;
 			case SMALLER:
-				indicator.setVisible(true);
+				indicator.setVisible(active);
 				indicator.setDimensionChange(DimensionChange.SMALLER);
 				break;
 			}
@@ -337,13 +349,24 @@ public class OverlayNodeFigure extends ComposedNodeFigure implements IOverlayFig
 			initialize();
 		}
 		this.moveDirection = moveDirection;
+		updateMoveDirectionIndicator(moveDirection);
+		applyChangeStyles();
+	}
+
+	/**
+	 * updates the move direction indicator based on the given move direction
+	 * and the current state.
+	 * 
+	 * @param moveDirection
+	 *            the move direction to use.
+	 */
+	protected void updateMoveDirectionIndicator(Vector moveDirection) {
 		if (moveDirection != null) {
-			directionIndicator.setVisible(true);
+			directionIndicator.setVisible(active);
 			directionIndicator.setDirection(moveDirection);
 		} else {
 			directionIndicator.setVisible(false);
 		}
-		applyChangeStyles();
 	}
 
 	/**
@@ -396,5 +419,51 @@ public class OverlayNodeFigure extends ComposedNodeFigure implements IOverlayFig
 	public void setShowCommentHint(boolean showCommentsHint) {
 		this.showCommentHint = showCommentsHint;
 		updateOutline();
+	}
+
+	private class MouseOverListener implements MouseMotionListener {
+
+		@Override
+		public void mouseMoved(MouseEvent me) {
+			// Intentionally left empty
+		}
+
+		@Override
+		public void mouseHover(MouseEvent me) {
+			// Intentionally left empty
+		}
+
+		@Override
+		public void mouseExited(MouseEvent me) {
+			active = false;
+			updateDimensionPropertyChangeIndicators();
+			updateMoveDirectionIndicator(moveDirection);
+			applyChangeStyles();
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent me) {
+			active = true;
+			updateDimensionPropertyChangeIndicators();
+			updateMoveDirectionIndicator(moveDirection);
+			applyChangeStyles();
+		}
+
+		@Override
+		public void mouseDragged(MouseEvent me) {
+			// Intentionally left empty
+		}
+	}
+
+	public DirectionIndicator getDirectionIndicator() {
+		return directionIndicator;
+	}
+
+	public DimensionPropertyChangeIndicator getBoundsHeightSizeChangeIndicator() {
+		return boundsHeightSizeChangeIndicator;
+	}
+
+	public DimensionPropertyChangeIndicator getBoundsWidthSizeChangeIndicator() {
+		return boundsWidthSizeChangeIndicator;
 	}
 }

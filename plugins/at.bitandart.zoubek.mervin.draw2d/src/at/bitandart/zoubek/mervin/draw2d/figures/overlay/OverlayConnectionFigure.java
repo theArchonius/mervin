@@ -18,6 +18,8 @@ import java.util.ListIterator;
 
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.MouseEvent;
+import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.graphics.Color;
 
@@ -41,6 +43,10 @@ public class OverlayConnectionFigure extends ComposedNodeFigure implements IOver
 	// change properties
 	private OverlayType overlayType = OverlayType.ADDITION;
 	private boolean showCommentHint = false;
+
+	// event handling
+	private boolean active = false;
+	private MouseOverListener mouseOverListener = new MouseOverListener();
 
 	/**
 	 * @param styleAdivsor
@@ -92,6 +98,7 @@ public class OverlayConnectionFigure extends ComposedNodeFigure implements IOver
 					outline.setAlpha(128);
 					outline.setLineWidthFloat(2f);
 					outlineIterator.add(outline);
+					outline.addMouseMotionListener(mouseOverListener);
 					add(outline);
 				}
 
@@ -102,7 +109,8 @@ public class OverlayConnectionFigure extends ComposedNodeFigure implements IOver
 
 		// remove unnecessary outlines
 		while (outlineIterator.hasNext()) {
-			outlineIterator.next();
+			ConnectionOutline outline = outlineIterator.next();
+			outline.removeMouseMotionListener(mouseOverListener);
 			outlineIterator.remove();
 		}
 
@@ -184,8 +192,9 @@ public class OverlayConnectionFigure extends ComposedNodeFigure implements IOver
 			outline.setBackgroundColor(backgroundColor);
 			outline.setForegroundColor(foregroundColor);
 
-			outline.setFill(!(overlayType == OverlayType.LAYOUT || overlayType == OverlayType.COMMENT));
-			outline.setOutline(overlayType != OverlayType.COMMENT);
+			outline.setFill(!(overlayType == OverlayType.LAYOUT || overlayType == OverlayType.COMMENT || active));
+			outline.setOutline((overlayType != OverlayType.COMMENT && active) || overlayType == OverlayType.LAYOUT);
+			outline.setUseOutlineAlpha(active);
 		}
 	}
 
@@ -231,6 +240,36 @@ public class OverlayConnectionFigure extends ComposedNodeFigure implements IOver
 	 */
 	public Collection<ConnectionOutline> getCurrentOutlines() {
 		return Collections.unmodifiableCollection(outlines);
+	}
+
+	private class MouseOverListener implements MouseMotionListener {
+
+		@Override
+		public void mouseMoved(MouseEvent me) {
+			// Intentionally left empty
+		}
+
+		@Override
+		public void mouseHover(MouseEvent me) {
+			// Intentionally left empty
+		}
+
+		@Override
+		public void mouseExited(MouseEvent me) {
+			active = false;
+			applyChangeStyles();
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent me) {
+			active = true;
+			applyChangeStyles();
+		}
+
+		@Override
+		public void mouseDragged(MouseEvent me) {
+			// Intentionally left empty
+		}
 	}
 
 }
