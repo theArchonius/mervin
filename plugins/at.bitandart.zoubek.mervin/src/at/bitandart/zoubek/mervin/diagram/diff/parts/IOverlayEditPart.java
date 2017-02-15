@@ -28,9 +28,9 @@ public interface IOverlayEditPart extends EditPart {
 	public GraphicalEditPart getLinkedEditPart();
 
 	/**
-	 * @return the linked edit part's parent to this overlay edit part or null if
-	 *         no linked edit part parent could be determined.
+	 * @return the first existing linked edit part's parent to this overlay edit
+	 *         part or null if no linked edit part parent could be determined.
 	 */
-	public GraphicalEditPart getLinkedParentEditPart();
+	public GraphicalEditPart getLinkedExistingParentEditPart();
 
 }

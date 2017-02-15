@@ -228,6 +228,9 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 				type = ModelReviewElementTypes.OVERLAY_DIFFERENCE_NODE_SEMANTIC_HINT;
 			}
 			differenceOverlay.setLinkedView(view);
+			if (!parentOverlays.isEmpty()) {
+				differenceOverlay.getDependencies().add(parentOverlays.get(parentOverlays.size() - 1));
+			}
 
 			// Determine actual differences
 
