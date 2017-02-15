@@ -102,7 +102,7 @@ public interface IOverlayTypeDescriptor {
 
 		@Override
 		public boolean isType(DifferenceOverlay overlay) {
-			return overlay.isCommented();
+			return overlay.isCommented() && !TYPE_DESCRIPTOR_DELETION.isType(overlay);
 		}
 
 		@Override
