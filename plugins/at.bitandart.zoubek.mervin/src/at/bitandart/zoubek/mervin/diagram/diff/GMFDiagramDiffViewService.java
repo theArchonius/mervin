@@ -239,9 +239,25 @@ public class GMFDiagramDiffViewService {
 		}
 
 		// add new diagram nodes
-		PatchSet rightPatchSet = modelReview.getRightPatchSet();
-		if (rightPatchSet != null) {
-			EList<Diagram> allNewInvolvedDiagrams = rightPatchSet.getAllNewInvolvedDiagrams();
+		PatchSet oldPatchSet = modelReview.getLeftPatchSet();
+		PatchSet newPatchSet = modelReview.getRightPatchSet();
+		EList<PatchSet> patchSets = modelReview.getPatchSets();
+		EList<Diagram> allNewInvolvedDiagrams = null;
+
+		if (newPatchSet != null) {
+			allNewInvolvedDiagrams = newPatchSet.getAllNewInvolvedDiagrams();
+		} else if (oldPatchSet != null) {
+			/* fall back to the original version of the old patch set */
+			allNewInvolvedDiagrams = oldPatchSet.getAllOldInvolvedDiagrams();
+		} else if (!patchSets.isEmpty()) {
+			/*
+			 * fall back to the default original version - the old diagrams of
+			 * the first patch set
+			 */
+			allNewInvolvedDiagrams = patchSets.get(0).getAllOldInvolvedDiagrams();
+		}
+
+		if (allNewInvolvedDiagrams != null) {
 			CompositeCommand compositeCommand = new CompositeCommand("");
 			for (Diagram diagram : allNewInvolvedDiagrams) {
 				compositeCommand

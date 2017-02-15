@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Florian Zoubek.
+ * Copyright (c) 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,46 +41,59 @@ public class EMFCompareDiffService implements IDiffService {
 
 		// models
 
-		PatchSet leftPatchSet = review.getLeftPatchSet();
-		PatchSet rightPatchSet = review.getRightPatchSet();
+		PatchSet oldPatchSet = review.getLeftPatchSet();
+		PatchSet newPatchSet = review.getRightPatchSet();
 
-		EList<ModelResource> involvedModelsLeft = new BasicEList<ModelResource>();
-		EList<ModelResource> involvedModelsRight = new BasicEList<ModelResource>();
-		if (leftPatchSet != null) {
-			involvedModelsLeft = leftPatchSet.getNewInvolvedModels();
-			involvedModelsRight = leftPatchSet.getOldInvolvedModels();
+		EList<ModelResource> oldInvolvedModels = new BasicEList<ModelResource>();
+		EList<ModelResource> newInvolvedModels = new BasicEList<ModelResource>();
+
+		EList<PatchSet> patchSets = review.getPatchSets();
+		if (!patchSets.isEmpty()) {
+			oldInvolvedModels = patchSets.get(0).getOldInvolvedModels();
+			newInvolvedModels = patchSets.get(0).getOldInvolvedModels();
 		}
 
-		if (rightPatchSet != null) {
-			involvedModelsRight = rightPatchSet.getNewInvolvedModels();
-			if (leftPatchSet == null) {
-				involvedModelsLeft = rightPatchSet.getOldInvolvedModels();
+		if (oldPatchSet != null) {
+			oldInvolvedModels = oldPatchSet.getNewInvolvedModels();
+			newInvolvedModels = oldPatchSet.getOldInvolvedModels();
+		}
+
+		if (newPatchSet != null) {
+			newInvolvedModels = newPatchSet.getNewInvolvedModels();
+			if (oldPatchSet == null) {
+				oldInvolvedModels = newPatchSet.getOldInvolvedModels();
 			}
 		}
 
 		progressMonitor.worked(1);
 		progressMonitor.subTask("Comparing diagrams...");
 
-		Comparison selectedModelComparison = compareModelInstances(involvedModelsLeft, involvedModelsRight);
+		Comparison selectedModelComparison = compareModelInstances(oldInvolvedModels, newInvolvedModels);
 		review.setSelectedModelComparison(selectedModelComparison);
 
 		// diagrams
 
-		EList<DiagramResource> involvedDiagramsLeft = new BasicEList<DiagramResource>();
-		EList<DiagramResource> involvedDiagramsRight = new BasicEList<DiagramResource>();
-		if (leftPatchSet != null) {
-			involvedDiagramsLeft = leftPatchSet.getNewInvolvedDiagrams();
-			involvedDiagramsRight = leftPatchSet.getOldInvolvedDiagrams();
+		EList<DiagramResource> oldInvolvedDiagrams = new BasicEList<DiagramResource>();
+		EList<DiagramResource> newInvolvedDiagrams = new BasicEList<DiagramResource>();
+
+		if (!patchSets.isEmpty()) {
+			oldInvolvedDiagrams = patchSets.get(0).getOldInvolvedDiagrams();
+			newInvolvedDiagrams = patchSets.get(0).getOldInvolvedDiagrams();
 		}
 
-		if (rightPatchSet != null) {
-			involvedDiagramsRight = rightPatchSet.getNewInvolvedDiagrams();
-			if (leftPatchSet == null) {
-				involvedDiagramsLeft = rightPatchSet.getOldInvolvedDiagrams();
+		if (oldPatchSet != null) {
+			oldInvolvedDiagrams = oldPatchSet.getNewInvolvedDiagrams();
+			newInvolvedDiagrams = oldPatchSet.getOldInvolvedDiagrams();
+		}
+
+		if (newPatchSet != null) {
+			newInvolvedDiagrams = newPatchSet.getNewInvolvedDiagrams();
+			if (oldPatchSet == null) {
+				oldInvolvedDiagrams = newPatchSet.getOldInvolvedDiagrams();
 			}
 		}
 
-		Comparison selectedDiagramComparison = compareModelInstances(involvedDiagramsLeft, involvedDiagramsRight);
+		Comparison selectedDiagramComparison = compareModelInstances(oldInvolvedDiagrams, newInvolvedDiagrams);
 		review.setSelectedDiagramComparison(selectedDiagramComparison);
 
 		progressMonitor.worked(1);
