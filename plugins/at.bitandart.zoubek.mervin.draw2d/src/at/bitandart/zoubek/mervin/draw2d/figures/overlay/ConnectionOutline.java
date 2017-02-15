@@ -8,13 +8,14 @@
  * Contributors:
  *    Florian Zoubek - initial API and implementation
  *******************************************************************************/
-package at.bitandart.zoubek.mervin.draw2d.figures;
+package at.bitandart.zoubek.mervin.draw2d.figures.overlay;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.Polygon;
 import org.eclipse.draw2d.Shape;
 import org.eclipse.draw2d.geometry.Geometry;
 import org.eclipse.draw2d.geometry.Point;
@@ -56,6 +57,18 @@ public class ConnectionOutline extends Shape {
 	private boolean showCommentHint = false;
 
 	/**
+	 * determines if the outline should use the same alpha value while drawing
+	 * as the interior.
+	 */
+	private boolean useOutlineAlpha = false;
+
+	/**
+	 * the cached bounds, any applied changes that might influence the bounds
+	 * must set this cache to null.
+	 */
+	private Rectangle cachedBounds = null;
+
+	/**
 	 * @param commentHintColor
 	 *            the color that is used to show the comment hint.
 	 */
@@ -65,22 +78,33 @@ public class ConnectionOutline extends Shape {
 
 	@Override
 	public Rectangle getBounds() {
-		return pointsToCover.getBounds().getCopy().expand(paddingWidth, paddingWidth);
+
+		if (cachedBounds == null) {
+			Polygon polygon = new Polygon();
+			polygon.setPoints(new PointList(calculateOutlineShape(pointsToCover, paddingWidth, getLineWidthFloat())));
+			cachedBounds = polygon.getBounds();
+		}
+		return cachedBounds;
 	}
 
 	@Override
 	protected void fillShape(Graphics graphics) {
 
-		int[] outlineShape = calculateOutlineShape(pointsToCover, paddingWidth + graphics.getLineWidthFloat(), 1);
-
+		int[] outlineShape = calculateOutlineShape(pointsToCover, paddingWidth, getLineWidthFloat());
+		graphics.pushState();
+		graphics.setFillRule(SWT.FILL_WINDING);
 		graphics.fillPolygon(outlineShape);
+		graphics.popState();
 	}
 
 	@Override
 	protected void outlineShape(Graphics graphics) {
 
 		graphics.pushState();
-		graphics.setAlpha(255);
+
+		if (!useOutlineAlpha) {
+			graphics.setAlpha(255);
+		}
 
 		int[] outlineShape = calculateOutlineShape(pointsToCover, paddingWidth, 1);
 
@@ -125,7 +149,9 @@ public class ConnectionOutline extends Shape {
 
 		graphics.setLineWidthFloat(getLineWidthFloat());
 
-		graphics.setAlpha(255);
+		if (!useOutlineAlpha) {
+			graphics.setAlpha(255);
+		}
 		graphics.setLineStyle(SWT.LINE_CUSTOM);
 		graphics.setLineDash(new float[] { 15.0f, 15.0f });
 		graphics.setForegroundColor(commentHintColor);
@@ -158,7 +184,7 @@ public class ConnectionOutline extends Shape {
 
 		int[] outlineShape = new int[numPoints * 4];
 
-		double actualOffset = offset;
+		double actualOffset = offset + lineWidth;
 		if (pointsToCover.size() > 1) {
 
 			DoublePrecisionVector prevDirection = null;
@@ -349,6 +375,7 @@ public class ConnectionOutline extends Shape {
 	 *            the points that make up the connection to cover
 	 */
 	public void setPointsToCover(PointList pointsToCover) {
+		cachedBounds = null;
 		this.pointsToCover = pointsToCover.getCopy();
 		// remove consecutive identical points from this list
 		removeConsecutiveIdenticalPoints(this.pointsToCover);
@@ -383,7 +410,7 @@ public class ConnectionOutline extends Shape {
 		/*
 		 * only points inside the outline are considered as inside this figure
 		 */
-		PointList outline = new PointList(calculateOutlineShape(pointsToCover, paddingWidth, 1));
+		PointList outline = new PointList(calculateOutlineShape(pointsToCover, paddingWidth, getLineWidthFloat()));
 		return Geometry.polygonContainsPoint(outline, x, y);
 	}
 
@@ -455,6 +482,16 @@ public class ConnectionOutline extends Shape {
 		translateToAbsolute(point);
 
 		return point;
+	}
+
+	/**
+	 * @param useOutlineAlpha
+	 *            true if the outline should use the same alpha value as the
+	 *            interior.
+	 */
+	public void setUseOutlineAlpha(boolean useOutlineAlpha) {
+		this.useOutlineAlpha = useOutlineAlpha;
+		repaint();
 	}
 
 }

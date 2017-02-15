@@ -67,6 +67,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: at.bitandart.zoubek.mervin.draw2d,
  at.bitandart.zoubek.mervin.draw2d.figures,
  at.bitandart.zoubek.mervin.draw2d.figures.offscreen,
+ at.bitandart.zoubek.mervin.draw2d.figures.overlay,
  at.bitandart.zoubek.mervin.draw2d.figures.workbench,
  com.google.common.base;version="15.0.0",
  com.google.common.collect;version="15.0.0",

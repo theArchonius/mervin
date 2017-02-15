@@ -10,7 +10,7 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.review.explorer;
 
-import at.bitandart.zoubek.mervin.draw2d.figures.IOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.IOverlayTypeStyleAdvisor;
 
 /**
  * A {@link DiffTypeOverviewLabelProvider} for the range from 0 to

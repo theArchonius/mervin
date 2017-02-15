@@ -29,11 +29,11 @@ import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.swt.SWT;
 
-import at.bitandart.zoubek.mervin.draw2d.figures.OverlayNodeFigure;
-import at.bitandart.zoubek.mervin.draw2d.figures.OverlayNodeFigure.DimensionPropertyChangeType;
-import at.bitandart.zoubek.mervin.draw2d.figures.OverlayType;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.IOffScreenIndicator;
 import at.bitandart.zoubek.mervin.draw2d.figures.offscreen.OffScreenOverlayIndicator;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayNodeFigure;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayNodeFigure.DimensionPropertyChangeType;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayType;
 import at.bitandart.zoubek.mervin.model.modelreview.Difference;
 import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
 import at.bitandart.zoubek.mervin.model.modelreview.DimensionChange;
@@ -64,6 +64,8 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 	 * view of this overlay, null if the bounds did not change.
 	 */
 	private IFigure oldBoundsConnector;
+
+	private MouseOverListener mouseOverListener = new MouseOverListener();
 
 	public NodeDifferenceOverlayEditPart(View view) {
 		super(view);
@@ -358,53 +360,12 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 	@Override
 	public void activate() {
 		super.activate();
-		getFigure().addMouseMotionListener(new MouseMotionListener() {
-
-			@Override
-			public void mouseMoved(MouseEvent arg0) {
-				// Intentionally left empty
-			}
-
-			@Override
-			public void mouseHover(MouseEvent arg0) {
-				// Intentionally left empty
-			}
-
-			@Override
-			public void mouseExited(MouseEvent arg0) {
-
-				/*
-				 * show the outline figures only if the mouse is over the
-				 * overlay figure
-				 */
-				if (oldBoundsOutline != null) {
-					oldBoundsOutline.setVisible(false);
-				}
-				if (oldBoundsConnector != null) {
-					oldBoundsConnector.setVisible(false);
-				}
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent arg0) {
-
-				/*
-				 * show the outline figures only if the mouse is over the
-				 * overlay figure
-				 */
-				if (oldBoundsOutline != null) {
-					oldBoundsOutline.setVisible(true);
-				}
-				if (oldBoundsConnector != null) {
-					oldBoundsConnector.setVisible(true);
-				}
-			}
-
-			@Override
-			public void mouseDragged(MouseEvent arg0) {
-				// Intentionally left empty
-			}
-		});
+		OverlayNodeFigure changeOverlayNodeFigure = getChangeOverlayNodeFigure();
+		if (changeOverlayNodeFigure != null) {
+			changeOverlayNodeFigure.getDirectionIndicator().addMouseMotionListener(mouseOverListener);
+			changeOverlayNodeFigure.getBoundsHeightSizeChangeIndicator().addMouseMotionListener(mouseOverListener);
+			changeOverlayNodeFigure.getBoundsWidthSizeChangeIndicator().addMouseMotionListener(mouseOverListener);
+		}
 	}
 
 	@Override
@@ -466,6 +427,54 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 			return (OffScreenOverlayIndicator) offScreenIndicator;
 		}
 		return null;
+	}
+
+	private class MouseOverListener implements MouseMotionListener {
+
+		@Override
+		public void mouseMoved(MouseEvent arg0) {
+			// Intentionally left empty
+		}
+
+		@Override
+		public void mouseHover(MouseEvent arg0) {
+			// Intentionally left empty
+		}
+
+		@Override
+		public void mouseExited(MouseEvent arg0) {
+
+			/*
+			 * show the outline figures only if the mouse is over the overlay
+			 * figure
+			 */
+			if (oldBoundsOutline != null) {
+				oldBoundsOutline.setVisible(false);
+			}
+			if (oldBoundsConnector != null) {
+				oldBoundsConnector.setVisible(false);
+			}
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent arg0) {
+
+			/*
+			 * show the outline figures only if the mouse is over the overlay
+			 * figure
+			 */
+			if (oldBoundsOutline != null) {
+				oldBoundsOutline.setVisible(true);
+			}
+			if (oldBoundsConnector != null) {
+				oldBoundsConnector.setVisible(true);
+			}
+		}
+
+		@Override
+		public void mouseDragged(MouseEvent arg0) {
+			// Intentionally left empty
+		}
 	}
 
 }

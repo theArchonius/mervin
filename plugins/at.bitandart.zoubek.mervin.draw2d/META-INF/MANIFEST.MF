@@ -17,6 +17,7 @@ Export-Package: at.bitandart.zoubek.mervin.draw2d,
  at.bitandart.zoubek.mervin.draw2d.figures,
  at.bitandart.zoubek.mervin.draw2d.figures.cluster,
  at.bitandart.zoubek.mervin.draw2d.figures.offscreen,
+ at.bitandart.zoubek.mervin.draw2d.figures.overlay,
  at.bitandart.zoubek.mervin.draw2d.figures.workbench
 Require-Bundle: org.eclipse.gmf.runtime.diagram.ui
 Bundle-ActivationPolicy: lazy

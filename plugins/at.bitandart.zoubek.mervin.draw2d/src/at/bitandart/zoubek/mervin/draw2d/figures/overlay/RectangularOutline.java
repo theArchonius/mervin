@@ -8,7 +8,7 @@
  * Contributors:
  *    Florian Zoubek - initial API and implementation
  *******************************************************************************/
-package at.bitandart.zoubek.mervin.draw2d.figures;
+package at.bitandart.zoubek.mervin.draw2d.figures.overlay;
 
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.Shape;
@@ -36,6 +36,12 @@ public class RectangularOutline extends Shape {
 	private boolean showCommentHint = false;
 
 	/**
+	 * determines if the outline should use the same alpha value while drawing
+	 * as the interior.
+	 */
+	private boolean useOutlineAlpha = false;
+
+	/**
 	 * @param commentHintColor
 	 *            the color that is used to show the comment hint.
 	 */
@@ -53,7 +59,9 @@ public class RectangularOutline extends Shape {
 
 		graphics.pushState();
 
-		graphics.setAlpha(255);
+		if (!useOutlineAlpha) {
+			graphics.setAlpha(255);
+		}
 		graphics.drawRectangle(getOutlineRectangle());
 
 		graphics.popState();
@@ -80,7 +88,9 @@ public class RectangularOutline extends Shape {
 
 		graphics.setLineWidthFloat(getLineWidthFloat());
 
-		graphics.setAlpha(255);
+		if (!useOutlineAlpha) {
+			graphics.setAlpha(255);
+		}
 		graphics.setLineStyle(SWT.LINE_CUSTOM);
 		graphics.setLineDash(new float[] { 15.0f, 15.0f });
 		graphics.setForegroundColor(commentHintColor);
@@ -114,6 +124,15 @@ public class RectangularOutline extends Shape {
 	public void setShowCommentHint(boolean showCommentHint) {
 		this.showCommentHint = showCommentHint;
 		repaint();
+	}
+
+	/**
+	 * @param useOutlineAlpha
+	 *            true if the outline should use the same alpha value as the
+	 *            interior.
+	 */
+	public void setUseOutlineAlpha(boolean useOutlineAlpha) {
+		this.useOutlineAlpha = useOutlineAlpha;
 	}
 
 }
