@@ -69,6 +69,8 @@ public class EdgeDifferenceOverlayItemProvider extends ItemProviderAdapter imple
 
 			addLinkedViewPropertyDescriptor(object);
 			addCommentedPropertyDescriptor(object);
+			addDependentOverlaysPropertyDescriptor(object);
+			addDependenciesPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -102,6 +104,37 @@ public class EdgeDifferenceOverlayItemProvider extends ItemProviderAdapter imple
 						"_UI_DifferenceOverlay_type"),
 				ModelReviewPackage.Literals.DIFFERENCE_OVERLAY__COMMENTED, true, false, false,
 				ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE, null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Dependent Overlays feature. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addDependentOverlaysPropertyDescriptor(Object object) {
+		itemPropertyDescriptors
+				.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(),
+						getResourceLocator(), getString("_UI_DifferenceOverlay_dependentOverlays_feature"),
+						getString("_UI_PropertyDescriptor_description",
+								"_UI_DifferenceOverlay_dependentOverlays_feature", "_UI_DifferenceOverlay_type"),
+						ModelReviewPackage.Literals.DIFFERENCE_OVERLAY__DEPENDENT_OVERLAYS, true, false, true, null,
+						null, null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Dependencies feature. <!--
+	 * begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	protected void addDependenciesPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add(createItemPropertyDescriptor(
+				((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
+				getString("_UI_DifferenceOverlay_dependencies_feature"),
+				getString("_UI_PropertyDescriptor_description", "_UI_DifferenceOverlay_dependencies_feature",
+						"_UI_DifferenceOverlay_type"),
+				ModelReviewPackage.Literals.DIFFERENCE_OVERLAY__DEPENDENCIES, true, false, true, null, null, null));
 	}
 
 	/**

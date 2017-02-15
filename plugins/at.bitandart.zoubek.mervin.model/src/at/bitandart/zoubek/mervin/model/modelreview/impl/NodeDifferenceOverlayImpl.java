@@ -13,6 +13,7 @@
 package at.bitandart.zoubek.mervin.model.modelreview.impl;
 
 import at.bitandart.zoubek.mervin.model.modelreview.Difference;
+import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 import at.bitandart.zoubek.mervin.model.modelreview.NodeDifferenceOverlay;
 
@@ -30,6 +31,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.gmf.runtime.notation.View;
@@ -50,6 +52,12 @@ import org.eclipse.gmf.runtime.notation.View;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.NodeDifferenceOverlayImpl#isCommented
  * <em>Commented</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.NodeDifferenceOverlayImpl#getDependentOverlays
+ * <em>Dependent Overlays</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.impl.NodeDifferenceOverlayImpl#getDependencies
+ * <em>Dependencies</em>}</li>
  * </ul>
  *
  * @generated
@@ -94,6 +102,27 @@ public class NodeDifferenceOverlayImpl extends MinimalEObjectImpl.Container impl
 	 * @ordered
 	 */
 	protected boolean commented = COMMENTED_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getDependentOverlays()
+	 * <em>Dependent Overlays</em>}' reference list. <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #getDependentOverlays()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<DifferenceOverlay> dependentOverlays;
+
+	/**
+	 * The cached value of the '{@link #getDependencies() <em>Dependencies</em>}
+	 * ' reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @see #getDependencies()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<DifferenceOverlay> dependencies;
 
 	/**
 	 * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -194,11 +223,61 @@ public class NodeDifferenceOverlayImpl extends MinimalEObjectImpl.Container impl
 	 * 
 	 * @generated
 	 */
+	public EList<DifferenceOverlay> getDependentOverlays() {
+		if (dependentOverlays == null) {
+			dependentOverlays = new EObjectWithInverseResolvingEList.ManyInverse<DifferenceOverlay>(
+					DifferenceOverlay.class, this, ModelReviewPackage.NODE_DIFFERENCE_OVERLAY__DEPENDENT_OVERLAYS,
+					ModelReviewPackage.DIFFERENCE_OVERLAY__DEPENDENCIES);
+		}
+		return dependentOverlays;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	public EList<DifferenceOverlay> getDependencies() {
+		if (dependencies == null) {
+			dependencies = new EObjectWithInverseResolvingEList.ManyInverse<DifferenceOverlay>(DifferenceOverlay.class,
+					this, ModelReviewPackage.NODE_DIFFERENCE_OVERLAY__DEPENDENCIES,
+					ModelReviewPackage.DIFFERENCE_OVERLAY__DEPENDENT_OVERLAYS);
+		}
+		return dependencies;
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+		case ModelReviewPackage.NODE_DIFFERENCE_OVERLAY__DEPENDENT_OVERLAYS:
+			return ((InternalEList<InternalEObject>) (InternalEList<?>) getDependentOverlays()).basicAdd(otherEnd,
+					msgs);
+		case ModelReviewPackage.NODE_DIFFERENCE_OVERLAY__DEPENDENCIES:
+			return ((InternalEList<InternalEObject>) (InternalEList<?>) getDependencies()).basicAdd(otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 		case ModelReviewPackage.NODE_DIFFERENCE_OVERLAY__DIFFERENCES:
 			return ((InternalEList<?>) getDifferences()).basicRemove(otherEnd, msgs);
+		case ModelReviewPackage.NODE_DIFFERENCE_OVERLAY__DEPENDENT_OVERLAYS:
+			return ((InternalEList<?>) getDependentOverlays()).basicRemove(otherEnd, msgs);
+		case ModelReviewPackage.NODE_DIFFERENCE_OVERLAY__DEPENDENCIES:
+			return ((InternalEList<?>) getDependencies()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -219,6 +298,10 @@ public class NodeDifferenceOverlayImpl extends MinimalEObjectImpl.Container impl
 			return getDifferences();
 		case ModelReviewPackage.NODE_DIFFERENCE_OVERLAY__COMMENTED:
 			return isCommented();
+		case ModelReviewPackage.NODE_DIFFERENCE_OVERLAY__DEPENDENT_OVERLAYS:
+			return getDependentOverlays();
+		case ModelReviewPackage.NODE_DIFFERENCE_OVERLAY__DEPENDENCIES:
+			return getDependencies();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -242,6 +325,14 @@ public class NodeDifferenceOverlayImpl extends MinimalEObjectImpl.Container impl
 		case ModelReviewPackage.NODE_DIFFERENCE_OVERLAY__COMMENTED:
 			setCommented((Boolean) newValue);
 			return;
+		case ModelReviewPackage.NODE_DIFFERENCE_OVERLAY__DEPENDENT_OVERLAYS:
+			getDependentOverlays().clear();
+			getDependentOverlays().addAll((Collection<? extends DifferenceOverlay>) newValue);
+			return;
+		case ModelReviewPackage.NODE_DIFFERENCE_OVERLAY__DEPENDENCIES:
+			getDependencies().clear();
+			getDependencies().addAll((Collection<? extends DifferenceOverlay>) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -263,6 +354,12 @@ public class NodeDifferenceOverlayImpl extends MinimalEObjectImpl.Container impl
 		case ModelReviewPackage.NODE_DIFFERENCE_OVERLAY__COMMENTED:
 			setCommented(COMMENTED_EDEFAULT);
 			return;
+		case ModelReviewPackage.NODE_DIFFERENCE_OVERLAY__DEPENDENT_OVERLAYS:
+			getDependentOverlays().clear();
+			return;
+		case ModelReviewPackage.NODE_DIFFERENCE_OVERLAY__DEPENDENCIES:
+			getDependencies().clear();
+			return;
 		}
 		super.eUnset(featureID);
 	}
@@ -281,6 +378,10 @@ public class NodeDifferenceOverlayImpl extends MinimalEObjectImpl.Container impl
 			return differences != null && !differences.isEmpty();
 		case ModelReviewPackage.NODE_DIFFERENCE_OVERLAY__COMMENTED:
 			return commented != COMMENTED_EDEFAULT;
+		case ModelReviewPackage.NODE_DIFFERENCE_OVERLAY__DEPENDENT_OVERLAYS:
+			return dependentOverlays != null && !dependentOverlays.isEmpty();
+		case ModelReviewPackage.NODE_DIFFERENCE_OVERLAY__DEPENDENCIES:
+			return dependencies != null && !dependencies.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

@@ -45,6 +45,9 @@ import org.eclipse.gmf.runtime.notation.RelativeBendpoints;
 import org.eclipse.gmf.runtime.notation.Size;
 import org.eclipse.gmf.runtime.notation.View;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+
 import at.bitandart.zoubek.mervin.diagram.diff.gmf.ModelReviewElementTypes;
 import at.bitandart.zoubek.mervin.draw2d.DoublePrecisionVector;
 import at.bitandart.zoubek.mervin.model.modelreview.BendpointsDifference;
@@ -79,6 +82,10 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 	private Collection<Object> overlayedViews;
 	private ModelReview modelReview;
 	private Set<EObject> cachedLinkTargets;
+	/**
+	 * overlay index, links unified view to overlay
+	 */
+	private BiMap<View, DifferenceOverlay> overlayIndex;
 
 	public AddOverlayNodesCommand(TransactionalEditingDomain domain, Comparison diagramComparison,
 			UnifiedModelMap unifiedModelMap, View container, Collection<Object> overlayedViews,
@@ -91,11 +98,13 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 		this.reviewFactory = reviewFactory;
 		this.overlayedViews = overlayedViews;
 		this.modelReview = modelReview;
+		this.overlayIndex = HashBiMap.create();
 	}
 
 	@Override
 	protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 
+		overlayIndex.clear();
 		cachedLinkTargets = collectLinkTargets();
 
 		for (Object child : overlayedViews) {
@@ -105,6 +114,8 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 				createOverlayForView(childView, true, new LinkedList<DifferenceOverlay>());
 			}
 		}
+
+		updateOverlayDependencies();
 
 		return CommandResult.newOKCommandResult();
 	}
@@ -228,6 +239,9 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 				type = ModelReviewElementTypes.OVERLAY_DIFFERENCE_NODE_SEMANTIC_HINT;
 			}
 			differenceOverlay.setLinkedView(view);
+			if (!parentOverlays.isEmpty()) {
+				differenceOverlay.getDependencies().add(parentOverlays.get(parentOverlays.size() - 1));
+			}
 
 			// Determine actual differences
 
@@ -272,6 +286,7 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 				 */
 				ViewService.createNode(container, differenceOverlay, type, preferencesHint);
 				parentOverlays.add(differenceOverlay);
+				overlayIndex.put(view, differenceOverlay);
 
 			} else {
 				differenceOverlay = null;
@@ -477,9 +492,6 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 
 		for (Diff layoutDifference : layoutConstraintDifferences) {
 
-			// TODO update DifferenceOverlay properties based on the
-			// differences
-
 			if (layoutDifference instanceof AttributeChange) {
 
 				AttributeChange attributeChange = (AttributeChange) layoutDifference;
@@ -593,6 +605,101 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 			differenceOverlay.getDifferences().add(sizeDifference);
 
 		}
+	}
+
+	/**
+	 * updates the overlay dependencies in the current overlay index based on
+	 * their linked unified views.
+	 */
+	private void updateOverlayDependencies() {
+
+		Set<DifferenceOverlay> overlays = overlayIndex.values();
+		for (DifferenceOverlay overlay : overlays) {
+
+			View linkedView = overlay.getLinkedView();
+			if (linkedView instanceof Node) {
+
+				Node linkedNode = (Node) linkedView;
+				addDependentOverlays(linkedNode.getSourceEdges(), overlay);
+				addDependentOverlays(linkedNode.getTargetEdges(), overlay);
+			}
+		}
+	}
+
+	/**
+	 * adds the dependent overlays assigned to the views in the given list of
+	 * objects. Currently overlays are dependent if they are the first overlay
+	 * in the child view hierarchy.
+	 * 
+	 * @param objects
+	 *            a list of object containing the views to search for dependent
+	 *            overlays.
+	 * @param overlay
+	 *            the overlay to add the dependent overlays to.
+	 * @see #addDependentOverlays(View, DifferenceOverlay)
+	 */
+	private void addDependentOverlays(Collection<?> objects, DifferenceOverlay overlay) {
+
+		for (Object object : objects) {
+			if (object instanceof View) {
+				addDependentOverlays((View) object, overlay);
+			}
+		}
+	}
+
+	/**
+	 * adds the dependent overlays assigned to the given view. Currently
+	 * overlays are dependent if they are the first overlay in the child view
+	 * hierarchy.
+	 * 
+	 * @param view
+	 *            the view to search for dependent overlays.
+	 * @param overlay
+	 *            the overlay to add the dependent overlays to.
+	 */
+	private void addDependentOverlays(View view, DifferenceOverlay overlay) {
+
+		LinkedList<DifferenceOverlay> dependentOverlays = new LinkedList<DifferenceOverlay>();
+		collectDependentOverlaysInView(view, dependentOverlays);
+		overlay.getDependentOverlays().addAll(dependentOverlays);
+	}
+
+	/**
+	 * collects the dependent overlays assigned to the given view. Currently
+	 * overlays are dependent if they are the first overlay in the child view
+	 * hierarchy. Does not add dependencies that already exist in the given
+	 * collection.
+	 * 
+	 * @param view
+	 *            the view to search for dependent overlays.
+	 * @param dependentOverlays
+	 *            the collection of dependent overlays to store the overlays
+	 *            into.
+	 */
+	private void collectDependentOverlaysInView(View view, Collection<DifferenceOverlay> dependentOverlays) {
+
+		if (view == null) {
+			return;
+		}
+
+		DifferenceOverlay differenceOverlay = overlayIndex.get(view);
+
+		if (differenceOverlay != null) {
+
+			if (!dependentOverlays.contains(differenceOverlay)) {
+				dependentOverlays.add(differenceOverlay);
+			}
+
+		} else {
+
+			EList<?> children = view.getChildren();
+			for (Object child : children) {
+				if (child instanceof View) {
+					collectDependentOverlaysInView((View) child, dependentOverlays);
+				}
+			}
+		}
+
 	}
 
 	/**

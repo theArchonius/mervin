@@ -30,7 +30,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
  * </ul>
  * 
  * It also returns true for
- * {@link #shouldUpdateOverlayedElement(IOverlayTypeDescriptor)} if the the
+ * {@link #shouldUpdateOverlaidElement(IOverlayTypeDescriptor)} if the the
  * passed descriptor is equal to
  * {@link IOverlayTypeDescriptor#TYPE_DESCRIPTOR_DELETION}.
  * 
@@ -94,8 +94,8 @@ public class ModelReviewVisibilityState implements IOverlayVisibilityState {
 	}
 
 	@Override
-	public boolean shouldUpdateOverlayedElement(IOverlayTypeDescriptor descriptor) {
-		return descriptor == IOverlayTypeDescriptor.TYPE_DESCRIPTOR_DELETION;
+	public boolean shouldUpdateOverlaidElement(IOverlayTypeDescriptor descriptor) {
+		return descriptor == IOverlayTypeDescriptor.TYPE_DESCRIPTOR_DELETION || getVisibility(descriptor);
 	}
 
 }

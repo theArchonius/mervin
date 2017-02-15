@@ -35,6 +35,12 @@ import org.eclipse.gmf.runtime.notation.View;
  * <li>
  * {@link at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay#isCommented
  * <em>Commented</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay#getDependentOverlays
+ * <em>Dependent Overlays</em>}</li>
+ * <li>
+ * {@link at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay#getDependencies
+ * <em>Dependencies</em>}</li>
  * </ul>
  *
  * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getDifferenceOverlay()
@@ -120,5 +126,47 @@ public interface DifferenceOverlay extends EObject {
 	 * @generated
 	 */
 	void setCommented(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Dependent Overlays</b></em>' reference
+	 * list. The list contents are of type
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay}.
+	 * It is bidirectional and its opposite is '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay#getDependencies
+	 * <em>Dependencies</em>}'. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Dependent Overlays</em>' reference list isn't
+	 * clear, there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Dependent Overlays</em>' reference list.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getDifferenceOverlay_DependentOverlays()
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay#getDependencies
+	 * @model opposite="dependencies"
+	 * @generated
+	 */
+	EList<DifferenceOverlay> getDependentOverlays();
+
+	/**
+	 * Returns the value of the '<em><b>Dependencies</b></em>' reference list.
+	 * The list contents are of type
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay}.
+	 * It is bidirectional and its opposite is '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay#getDependentOverlays
+	 * <em>Dependent Overlays</em>}'. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Dependencies</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @return the value of the '<em>Dependencies</em>' reference list.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage#getDifferenceOverlay_Dependencies()
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay#getDependentOverlays
+	 * @model opposite="dependentOverlays"
+	 * @generated
+	 */
+	EList<DifferenceOverlay> getDependencies();
 
 } // DifferenceOverlay

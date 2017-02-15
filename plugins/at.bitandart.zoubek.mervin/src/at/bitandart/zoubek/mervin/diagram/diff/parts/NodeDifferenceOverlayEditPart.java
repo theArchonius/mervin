@@ -23,6 +23,7 @@ import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.geometry.Vector;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
@@ -87,6 +88,9 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 			Vector originalLocation = null;
 			Dimension originalDimension = null;
 
+			GraphicalEditPart linkedEditPart = getLinkedEditPart();
+			IFigure linkedFigure = null;
+
 			/*
 			 * assume a comment only overlay by default if the overlayed element
 			 * has comments, this will be overridden if state difference are
@@ -99,7 +103,9 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 				}
 			}
 
-			IFigure linkedFigure = getLinkedEditPart().getFigure();
+			if (linkedEditPart != null) {
+				linkedFigure = linkedEditPart.getFigure();
+			}
 
 			for (Difference difference : differences) {
 
@@ -144,7 +150,7 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 
 				} else if (difference instanceof LocationDifference) {
 
-					if (!ignoreOldLocation(linkedFigure)) {
+					if (linkedFigure != null && !ignoreOldLocation(linkedFigure)) {
 						LocationDifference locationDifference = (LocationDifference) difference;
 						changeOverlayNodeFigure.setMoveDirection(locationDifference.getMoveDirection());
 						originalLocation = locationDifference.getOriginalLocation();
@@ -187,11 +193,15 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 					changeOverlayNodeFigure.getParent().add(oldBoundsOutline, null);
 					changeOverlayNodeFigure.getParent().add(oldBoundsConnector, null);
 				}
-				/* update the constraints of the outline figure */
-				changeOverlayNodeFigure.getParent().setConstraint(oldBoundsOutline,
-						new OldBoundsLocator(originalLocation, originalDimension, linkedFigure));
-				changeOverlayNodeFigure.getParent().setConstraint(oldBoundsConnector,
-						new OldBoundsConnectorLocator(originalLocation, linkedFigure));
+
+				if (linkedFigure != null) {
+
+					/* update the constraints of the outline figure */
+					changeOverlayNodeFigure.getParent().setConstraint(oldBoundsOutline,
+							new OldBoundsLocator(originalLocation, originalDimension, linkedFigure));
+					changeOverlayNodeFigure.getParent().setConstraint(oldBoundsConnector,
+							new OldBoundsConnectorLocator(originalLocation, linkedFigure));
+				}
 
 			} else {
 

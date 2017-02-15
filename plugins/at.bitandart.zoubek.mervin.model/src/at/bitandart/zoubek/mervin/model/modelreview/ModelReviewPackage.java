@@ -955,13 +955,31 @@ public interface ModelReviewPackage extends EPackage {
 	int DIFFERENCE_OVERLAY__COMMENTED = 2;
 
 	/**
+	 * The feature id for the '<em><b>Dependent Overlays</b></em>' reference
+	 * list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int DIFFERENCE_OVERLAY__DEPENDENT_OVERLAYS = 3;
+
+	/**
+	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int DIFFERENCE_OVERLAY__DEPENDENCIES = 4;
+
+	/**
 	 * The number of structural features of the '<em>Difference Overlay</em>'
 	 * class. <!-- begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 * @ordered
 	 */
-	int DIFFERENCE_OVERLAY_FEATURE_COUNT = 3;
+	int DIFFERENCE_OVERLAY_FEATURE_COUNT = 5;
 
 	/**
 	 * The number of operations of the '<em>Difference Overlay</em>' class. <!--
@@ -1010,6 +1028,24 @@ public interface ModelReviewPackage extends EPackage {
 	 * @ordered
 	 */
 	int NODE_DIFFERENCE_OVERLAY__COMMENTED = DIFFERENCE_OVERLAY__COMMENTED;
+
+	/**
+	 * The feature id for the '<em><b>Dependent Overlays</b></em>' reference
+	 * list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_DIFFERENCE_OVERLAY__DEPENDENT_OVERLAYS = DIFFERENCE_OVERLAY__DEPENDENT_OVERLAYS;
+
+	/**
+	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int NODE_DIFFERENCE_OVERLAY__DEPENDENCIES = DIFFERENCE_OVERLAY__DEPENDENCIES;
 
 	/**
 	 * The number of structural features of the '
@@ -1068,6 +1104,24 @@ public interface ModelReviewPackage extends EPackage {
 	 * @ordered
 	 */
 	int EDGE_DIFFERENCE_OVERLAY__COMMENTED = DIFFERENCE_OVERLAY__COMMENTED;
+
+	/**
+	 * The feature id for the '<em><b>Dependent Overlays</b></em>' reference
+	 * list. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int EDGE_DIFFERENCE_OVERLAY__DEPENDENT_OVERLAYS = DIFFERENCE_OVERLAY__DEPENDENT_OVERLAYS;
+
+	/**
+	 * The feature id for the '<em><b>Dependencies</b></em>' reference list.
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @generated
+	 * @ordered
+	 */
+	int EDGE_DIFFERENCE_OVERLAY__DEPENDENCIES = DIFFERENCE_OVERLAY__DEPENDENCIES;
 
 	/**
 	 * The number of structural features of the '
@@ -2410,6 +2464,32 @@ public interface ModelReviewPackage extends EPackage {
 	EAttribute getDifferenceOverlay_Commented();
 
 	/**
+	 * Returns the meta object for the reference list '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay#getDependentOverlays
+	 * <em>Dependent Overlays</em>}'. <!-- begin-user-doc --> <!-- end-user-doc
+	 * -->
+	 * 
+	 * @return the meta object for the reference list '
+	 *         <em>Dependent Overlays</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay#getDependentOverlays()
+	 * @see #getDifferenceOverlay()
+	 * @generated
+	 */
+	EReference getDifferenceOverlay_DependentOverlays();
+
+	/**
+	 * Returns the meta object for the reference list '
+	 * {@link at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay#getDependencies
+	 * <em>Dependencies</em>}'. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @return the meta object for the reference list '<em>Dependencies</em>'.
+	 * @see at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay#getDependencies()
+	 * @see #getDifferenceOverlay()
+	 * @generated
+	 */
+	EReference getDifferenceOverlay_Dependencies();
+
+	/**
 	 * Returns the meta object for class '
 	 * {@link at.bitandart.zoubek.mervin.model.modelreview.NodeDifferenceOverlay
 	 * <em>Node Difference Overlay</em>}'. <!-- begin-user-doc --> <!--
@@ -3355,6 +3435,22 @@ public interface ModelReviewPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute DIFFERENCE_OVERLAY__COMMENTED = eINSTANCE.getDifferenceOverlay_Commented();
+
+		/**
+		 * The meta object literal for the '<em><b>Dependent Overlays</b></em>'
+		 * reference list feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference DIFFERENCE_OVERLAY__DEPENDENT_OVERLAYS = eINSTANCE.getDifferenceOverlay_DependentOverlays();
+
+		/**
+		 * The meta object literal for the '<em><b>Dependencies</b></em>'
+		 * reference list feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+		 * 
+		 * @generated
+		 */
+		EReference DIFFERENCE_OVERLAY__DEPENDENCIES = eINSTANCE.getDifferenceOverlay_Dependencies();
 
 		/**
 		 * The meta object literal for the '

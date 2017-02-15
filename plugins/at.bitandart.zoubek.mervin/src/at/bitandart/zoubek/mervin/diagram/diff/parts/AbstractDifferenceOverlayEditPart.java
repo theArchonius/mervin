@@ -50,8 +50,8 @@ public abstract class AbstractDifferenceOverlayEditPart extends ShapeNodeEditPar
 	private GraphicalEditPart previousLinkedParentEditPart = null;
 
 	/**
-	 * An {@link EditPartListener} that will be attached to the edit part of the
-	 * linked views parent view. It is used to trigger an update of the bounds
+	 * An {@link EditPartListener} that will be attached to the first existing edit part of the
+	 * linked views parents. It is used to trigger an update of the bounds
 	 * constraint information once the children of the edit part change. This is
 	 * necessary as the linked view edit part may not (yet) exist at the time
 	 * the bounds constraints are set in {@link #refreshBounds()}.
@@ -76,7 +76,7 @@ public abstract class AbstractDifferenceOverlayEditPart extends ShapeNodeEditPar
 
 		@Override
 		public void childAdded(EditPart child, int index) {
-			refreshBounds();
+			refreshVisuals();
 		}
 	};
 
@@ -159,14 +159,17 @@ public abstract class AbstractDifferenceOverlayEditPart extends ShapeNodeEditPar
 	}
 
 	@Override
-	public GraphicalEditPart getLinkedParentEditPart() {
+	public GraphicalEditPart getLinkedExistingParentEditPart() {
 
 		DifferenceOverlay changeOverlay = getDifferenceOverlay();
 		if (changeOverlay != null) {
-
-			Object editPart = getViewer().getEditPartRegistry().get(changeOverlay.getLinkedView().eContainer());
-			if (editPart instanceof GraphicalEditPart) {
-				return (GraphicalEditPart) editPart;
+			EObject container = changeOverlay.getLinkedView().eContainer();
+			while (container != null) {
+				Object editPart = getViewer().getEditPartRegistry().get(container);
+				if (editPart instanceof GraphicalEditPart) {
+					return (GraphicalEditPart) editPart;
+				}
+				container = container.eContainer();
 			}
 
 		}
@@ -259,7 +262,7 @@ public abstract class AbstractDifferenceOverlayEditPart extends ShapeNodeEditPar
 		 * edit part to keep track when the linked view's edit part is created
 		 * and destroyed.
 		 */
-		GraphicalEditPart linkedParentEditPart = getLinkedParentEditPart();
+		GraphicalEditPart linkedParentEditPart = getLinkedExistingParentEditPart();
 		if (linkedParentEditPart != previousLinkedParentEditPart) {
 			if (previousLinkedParentEditPart != null) {
 				previousLinkedParentEditPart.removeEditPartListener(linkedParentEditPartListener);
