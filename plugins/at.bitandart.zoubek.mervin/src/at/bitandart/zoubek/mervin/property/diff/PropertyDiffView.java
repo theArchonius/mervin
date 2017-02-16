@@ -146,11 +146,13 @@ public class PropertyDiffView extends ModelReviewEditorTrackingView {
 	 */
 	private Object createInputFromSelection(IStructuredSelection selection) {
 
-		Comparison comparison = getComparison(selection);
+		ModelReview currentModelReview = getCurrentModelReview();
+		Comparison modelComparison = getModelComparison();
+		Comparison diagramComparison = getDiagramComparison();
 
 		List<SelectionEntry> modelEntries = new ArrayList<>(selection.size());
 
-		if (comparison != null) {
+		if (modelComparison != null || diagramComparison != null) {
 			Iterator<?> selectionIterator = selection.iterator();
 			int selectionIndex = 1;
 			while (selectionIterator.hasNext()) {
@@ -159,7 +161,6 @@ public class PropertyDiffView extends ModelReviewEditorTrackingView {
 				EObject selectedSemanticModelElement = diagramModelHelper.getSemanticModel(object);
 				View selectedNotationModelElement = diagramModelHelper.getNotationModel(object);
 
-				ModelReview currentModelReview = getCurrentModelReview();
 				if (currentModelReview != null) {
 
 					View originalNotationModelElement = (View) currentModelReview.getUnifiedModelMap()
@@ -170,8 +171,15 @@ public class PropertyDiffView extends ModelReviewEditorTrackingView {
 					}
 				}
 
-				Match semanticModelMatch = comparison.getMatch(selectedSemanticModelElement);
-				Match notationModelMatch = comparison.getMatch(selectedNotationModelElement);
+				Match semanticModelMatch = null;
+				if (modelComparison != null) {
+					semanticModelMatch = modelComparison.getMatch(selectedSemanticModelElement);
+				}
+
+				Match notationModelMatch = null;
+				if (diagramComparison != null) {
+					notationModelMatch = diagramComparison.getMatch(selectedNotationModelElement);
+				}
 
 				/*
 				 * create an entry only if the selection contains a model
@@ -195,17 +203,26 @@ public class PropertyDiffView extends ModelReviewEditorTrackingView {
 	}
 
 	/**
-	 * returns the comparison associated with the given selection.
-	 * 
-	 * @param selection
-	 *            the selection to get the comparison for.
-	 * @return the comparison.
+	 * @return the diagram comparison to use for this view.
 	 */
-	private Comparison getComparison(IStructuredSelection selection) {
+	private Comparison getDiagramComparison() {
 
 		ModelReview currentModelReview = getCurrentModelReview();
 		if (currentModelReview != null) {
 			return currentModelReview.getSelectedDiagramComparison();
+		}
+
+		return null;
+	}
+
+	/**
+	 * @return the model comparison to use for this view.
+	 */
+	private Comparison getModelComparison() {
+
+		ModelReview currentModelReview = getCurrentModelReview();
+		if (currentModelReview != null) {
+			return currentModelReview.getSelectedModelComparison();
 		}
 
 		return null;
