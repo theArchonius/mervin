@@ -205,6 +205,7 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 		if (elementMatch != null) {
 
 			viewElementDifferences = elementMatch.getDifferences();
+			/* check for comments on the element */
 			hasComments = containsTargetsOfCommentLinks(elementMatch);
 			EObject parent = view.eContainer();
 
@@ -219,6 +220,19 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 			}
 		}
 
+		if (viewMatch != null) {
+			/* check for comments on the view */
+			hasComments = hasComments || containsTargetsOfCommentLinks(viewMatch);
+		}
+
+		/*
+		 * A pseudo view copy has been copied into the unified model due to
+		 * unmergeable reference of a deleted object. It is therefore
+		 * "duplicated" - two views exist, an old and a new one, the new may
+		 * have any difference, the old one and all contained views have only a
+		 * deletion state difference.
+		 */
+		boolean isPseudoCopy = unifiedModelMap.isPseudoCopy(view) || isParentPseudoCopy(view);
 		boolean hasViewReferenceDifferences = viewReferenceChange != null;
 		boolean hasLayoutConstraintDifferences = (layoutConstraintDifferences != null
 				&& !layoutConstraintDifferences.isEmpty());
@@ -226,7 +240,7 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 		boolean hasViewElementDifferences = (viewElementDifferences != null && !viewElementDifferences.isEmpty());
 		boolean ignoreChildren = false;
 
-		if (hasViewReferenceDifferences || hasLayoutConstraintDifferences || hasBendpointsDifferences
+		if (isPseudoCopy || hasViewReferenceDifferences || hasLayoutConstraintDifferences || hasBendpointsDifferences
 				|| hasViewElementDifferences || hasComments) {
 
 			// create an overlay depending on the view type
@@ -245,11 +259,11 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 
 			// Determine actual differences
 
-			if (hasLayoutConstraintDifferences) {
+			if (hasLayoutConstraintDifferences && !isPseudoCopy) {
 				handleLayoutConstraintDifferences(layoutConstraintMatch, differenceOverlay);
 			}
 
-			if (hasBendpointsDifferences) {
+			if (hasBendpointsDifferences && !isPseudoCopy) {
 				handleBendpointDifferences(bendpointsMatch, differenceOverlay);
 			}
 
@@ -258,7 +272,7 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 			 * the view in its parent
 			 */
 
-			if (hasViewReferenceDifferences) {
+			if (hasViewReferenceDifferences && !isPseudoCopy) {
 
 				StateDifferenceType stateDifferenceType = toStateDifferenceType(viewReferenceChange.getKind());
 
@@ -274,6 +288,16 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 					differenceOverlay.getDifferences().add(stateDifference);
 				}
 
+			}
+
+			if (isPseudoCopy) {
+
+				if (!hasParentSameStateDifferenceType(parentOverlays, StateDifferenceType.DELETED)) {
+
+					StateDifference stateDifference = reviewFactory.createStateDifference();
+					stateDifference.setType(StateDifferenceType.DELETED);
+					differenceOverlay.getDifferences().add(stateDifference);
+				}
 			}
 
 			differenceOverlay.setCommented(hasComments);
@@ -304,6 +328,23 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 		}
 
 		parentOverlays.remove(differenceOverlay);
+	}
+
+	/**
+	 * @param view
+	 *            the view to check
+	 * @return true if any of the parent views is a pseudo copy, false
+	 *         otherwise.
+	 */
+	private boolean isParentPseudoCopy(View view) {
+		EObject parent = view.eContainer();
+		while (parent != null) {
+			if (unifiedModelMap.isPseudoCopy(parent)) {
+				return true;
+			}
+			parent = parent.eContainer();
+		}
+		return false;
 	}
 
 	/**

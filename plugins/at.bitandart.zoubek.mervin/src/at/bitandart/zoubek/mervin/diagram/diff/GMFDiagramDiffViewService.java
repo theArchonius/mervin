@@ -61,6 +61,7 @@ import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.View;
 
+import at.bitandart.zoubek.mervin.IMatchHelper;
 import at.bitandart.zoubek.mervin.diagram.diff.gmf.ModelReviewElementTypes;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
@@ -79,6 +80,9 @@ public class GMFDiagramDiffViewService {
 
 	@Inject
 	private ModelReviewFactory reviewFactory;
+
+	@Inject
+	private IMatchHelper matchHelper;
 
 	/**
 	 * the currently registered {@link DiagramDiffServiceListener}s for this
@@ -525,6 +529,7 @@ public class GMFDiagramDiffViewService {
 								|| unifiedModelMap.containsOriginal(newContainer))) {
 
 							EObject valueCopy = copier.copy(refValue);
+							unifiedModelMap.markPseudoCopy(valueCopy);
 
 							if (newContainer instanceof Diagram) {
 								/*
@@ -828,7 +833,7 @@ public class GMFDiagramDiffViewService {
 	 * @return the old value of the given match.
 	 */
 	private EObject getOldValue(Match match) {
-		return match.getRight();
+		return matchHelper.getOldValue(match);
 	}
 
 	/**
@@ -840,7 +845,7 @@ public class GMFDiagramDiffViewService {
 	 * @return the new value of the given match.
 	 */
 	private EObject getNewValue(Match match) {
-		return match.getLeft();
+		return matchHelper.getNewValue(match);
 	}
 
 	/**
