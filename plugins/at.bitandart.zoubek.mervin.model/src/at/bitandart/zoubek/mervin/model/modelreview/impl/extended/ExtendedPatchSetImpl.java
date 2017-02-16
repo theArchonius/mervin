@@ -23,6 +23,7 @@ import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EContentAdapter;
@@ -218,14 +219,34 @@ public class ExtendedPatchSetImpl extends PatchSetImpl {
 
 					EObject element = objectsToVisit.pop();
 
+					int referenceCount = 0;
+
+					EList<EReference> ownReferences = element.eClass().getEAllReferences();
+					for (EReference reference : ownReferences) {
+
+						Object value = element.eGet(reference);
+						if (value instanceof EObject) {
+							Match match = comparison.getMatch((EObject) value);
+							if (match != null && !match.getDifferences().isEmpty()) {
+								referenceCount++;
+							}
+						}
+					}
+
 					/*
-					 * use the cross reference adapter to determine the
-					 * reference count
+					 * use the cross reference adapter to determine the inverse
+					 * reference change count
 					 */
 
 					Collection<Setting> references = crossReferenceAdapter.getInverseReferences(element, true);
 
-					int referenceCount = references.size();
+					for (Setting setting : references) {
+						Match match = comparison.getMatch(setting.getEObject());
+						if (match != null && !match.getDifferences().isEmpty()) {
+							referenceCount++;
+						}
+					}
+
 					if (referenceCount > maxObjectChangeRefCount) {
 						maxObjectChangeRefCount = referenceCount;
 					}
