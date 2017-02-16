@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2016, 2017 Florian Zoubek.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Florian Zoubek - initial API and implementation
+ *******************************************************************************/
 package at.bitandart.zoubek.mervin.diagram.diff.toolcontrols;
 
 import java.lang.reflect.InvocationTargetException;
@@ -73,6 +83,12 @@ public abstract class VersionSelector {
 	 */
 	private String labelText = null;
 
+	/**
+	 * determines if the selection events should be ignored or not. Used to
+	 * avoid unnecessary comparison updates while updating the control.
+	 */
+	private boolean ignoreSelection = false;
+
 	public VersionSelector(String labelText) {
 		super();
 		this.labelText = labelText;
@@ -101,7 +117,7 @@ public abstract class VersionSelector {
 
 				ISelection selection = event.getSelection();
 
-				if (!selection.isEmpty() && selection instanceof IStructuredSelection) {
+				if (!ignoreSelection && !selection.isEmpty() && selection instanceof IStructuredSelection) {
 
 					IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 					setVersion(structuredSelection.getFirstElement());
@@ -131,11 +147,13 @@ public abstract class VersionSelector {
 			versionViewer.setInput(patchSets);
 			Object version = getSelectedVersion();
 
+			ignoreSelection = true;
 			if (version != null) {
 				versionViewer.setSelection(new StructuredSelection(version));
 			} else {
 				versionViewer.setSelection(new StructuredSelection(COMPARE_BASE));
 			}
+			ignoreSelection = false;
 		}
 	}
 

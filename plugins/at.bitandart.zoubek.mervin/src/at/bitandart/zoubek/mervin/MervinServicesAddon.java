@@ -69,6 +69,10 @@ public class MervinServicesAddon {
 		IDiagramModelHelper semanticModelHelper = ContextInjectionFactory.make(MervinDiagramModelHelper.class, context);
 		context.set(IDiagramModelHelper.class, semanticModelHelper);
 
+		/* add the default mervin match helper */
+		IMatchHelper matchHelper = ContextInjectionFactory.make(MervinMatchHelper.class, context);
+		context.set(IMatchHelper.class, matchHelper);
+
 		/*
 		 * the prototype supports currently only Gerrit, so use the Gerrit
 		 * service by default

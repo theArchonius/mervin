@@ -13,6 +13,7 @@ package at.bitandart.zoubek.mervin.util;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -24,7 +25,9 @@ import com.google.common.collect.Multimap;
 
 /**
  * A map that maps original {@link EObject}s of a unified model to one or more
- * copies and vice-versa.
+ * copies and vice-versa. It also keeps track of "Pseudo" copies. A pseudo copy
+ * has been copied into the unified model due to unmergeable reference of a
+ * deleted object.
  * 
  * @author Florian Zoubek
  *
@@ -34,6 +37,7 @@ public class UnifiedModelMap {
 	// underlying maps
 	private Multimap<EObject, EObject> originalToCopyMap = HashMultimap.create();
 	private Map<EObject, EObject> copyToOriginalMap = new HashMap<>();
+	private Set<EObject> pseudoCopies = new HashSet<>();
 
 	/**
 	 * adds a mapping between the given original {@link EObject} and its given
@@ -116,6 +120,28 @@ public class UnifiedModelMap {
 	public void clear() {
 		originalToCopyMap.clear();
 		copyToOriginalMap.clear();
+		pseudoCopies.clear();
+	}
+
+	/**
+	 * marks the given copy as a "pseudo" copy.
+	 * 
+	 * @param copy
+	 *            the copy to mark as an pseudo copy
+	 */
+	public void markPseudoCopy(EObject copy) {
+		pseudoCopies.add(copy);
+	}
+
+	/**
+	 * checks if the given copy is a "pseudo" copy.
+	 * 
+	 * @param copy
+	 *            the copy to check.
+	 * @return true if the given copy is a "pseudo" copy, false otherwise.
+	 */
+	public boolean isPseudoCopy(EObject copy) {
+		return pseudoCopies.contains(copy);
 	}
 
 }

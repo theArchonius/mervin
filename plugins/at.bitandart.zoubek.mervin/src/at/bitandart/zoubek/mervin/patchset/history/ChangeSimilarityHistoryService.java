@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Florian Zoubek.
+ * Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,8 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.CompareFactory;
@@ -33,6 +35,7 @@ import org.eclipse.emf.compare.match.eobject.WeightProviderDescriptorRegistryImp
 import org.eclipse.emf.compare.utils.UseIdentifiers;
 import org.eclipse.emf.ecore.EObject;
 
+import at.bitandart.zoubek.mervin.IMatchHelper;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.util.vis.MathUtil;
 
@@ -45,6 +48,9 @@ import at.bitandart.zoubek.mervin.util.vis.MathUtil;
  *
  */
 public class ChangeSimilarityHistoryService implements ISimilarityHistoryService {
+
+	@Inject
+	private IMatchHelper matchHelper;
 
 	@Override
 	public IPatchSetHistoryEntry<Diff, DiffWithSimilarity> createEntryFor(Diff object, Collection<PatchSet> patchSets,
@@ -118,16 +124,8 @@ public class ChangeSimilarityHistoryService implements ISimilarityHistoryService
 	 */
 	private EObject getOppositeObject(Match match, Object object) {
 
-		if (match != null) {
-
-			EObject left = match.getLeft();
-			EObject right = match.getRight();
-
-			if (left == object) {
-				return right;
-			} else if (right == object) {
-				return left;
-			}
+		if (object instanceof EObject) {
+			return matchHelper.getOpposite((EObject) object, match);
 		}
 		return null;
 	}

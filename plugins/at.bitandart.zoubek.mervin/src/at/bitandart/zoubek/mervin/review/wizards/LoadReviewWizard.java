@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Florian Zoubek.
+ * Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 
+import at.bitandart.zoubek.mervin.IDiffService;
 import at.bitandart.zoubek.mervin.IReviewRepositoryService;
 import at.bitandart.zoubek.mervin.exceptions.InvalidReviewException;
 import at.bitandart.zoubek.mervin.exceptions.InvalidReviewRepositoryException;
@@ -52,6 +53,9 @@ public class LoadReviewWizard extends Wizard {
 
 	@Inject
 	private IReviewRepositoryService repoService;
+
+	@Inject
+	private IDiffService diffService;
 
 	/**
 	 * the model review factory used by this wizard to create all model elements
@@ -105,6 +109,7 @@ public class LoadReviewWizard extends Wizard {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
 						modelReview = repoService.loadReview(uri, id, reviewer, monitor);
+						diffService.updateSelectedComparison(modelReview, monitor);
 					} catch (RepositoryIOException | InvalidReviewRepositoryException | InvalidReviewException e) {
 						new InvocationTargetException(e);
 					}
