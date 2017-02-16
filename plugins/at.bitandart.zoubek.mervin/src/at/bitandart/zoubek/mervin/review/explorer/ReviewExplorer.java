@@ -247,7 +247,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		refCountColumn.getColumn().setMoveable(false);
 		refCountColumn.getColumn().setText("#RC");
 		refCountColumn.getColumn().setAlignment(SWT.CENTER);
-		refCountColumn.getColumn().setToolTipText("Number of references to the element");
+		refCountColumn.getColumn().setToolTipText("Number of referenced and referencing changed elements");
 		ReferencedChangeCountColumnLabelProvider refChangeCountColumnlabelProvider = new ReferencedChangeCountColumnLabelProvider(
 				reviewTreeViewer, Display.getCurrent().getSystemColor(SWT.COLOR_WHITE),
 				Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
