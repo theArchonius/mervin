@@ -36,7 +36,8 @@ import at.bitandart.zoubek.mervin.util.vis.MathUtil;
  * bar, where {@link DifferenceKind#MOVE} is considered as a
  * {@link DifferenceKind#CHANGE}. The diff count is determined by a given
  * {@link IDifferenceCounter}. The tooltip shows more shows the actual number of
- * differences for a subset of all {@link OverlayType}s.
+ * differences for a subset of all {@link OverlayType}s. This provider also
+ * shows an optional overview of types with a non-zero count.
  * 
  * @author Florian Zoubek
  *
@@ -47,8 +48,13 @@ public abstract class DiffTypeOverviewLabelProvider extends OwnerDrawLabelProvid
 	private ViewerColumn column;
 	private IOverlayTypeStyleAdvisor styleAdvisor;
 	private IDifferenceCounter diffCounter;
-	private OverlayType[] tooltipChangeTypes = new OverlayType[] { OverlayType.ADDITION,
-			OverlayType.DELETION, OverlayType.MODIFICATION };
+	private OverlayType[] tooltipChangeTypes = new OverlayType[] { OverlayType.ADDITION, OverlayType.DELETION,
+			OverlayType.MODIFICATION };
+	private boolean drawTypeOverview;
+	private int maxTypeOverviewWidth = 5;
+	private int maxTypeOverviewExtent = 5;
+	private float relTypeOverviewWidth = 0.25f;
+	private float relVerticalPadding = 0.2f;
 
 	/**
 	 * @param styleAdvisor
@@ -56,10 +62,14 @@ public abstract class DiffTypeOverviewLabelProvider extends OwnerDrawLabelProvid
 	 * @param diffCounter
 	 *            the {@link IDifferenceCounter} that is used to obtain the
 	 *            count values for the stacked bars.
+	 * @param drawTypeOverview
+	 *            true if the type overview should be drawn, false otherwise.
 	 */
-	public DiffTypeOverviewLabelProvider(IOverlayTypeStyleAdvisor styleAdvisor, IDifferenceCounter diffCounter) {
+	public DiffTypeOverviewLabelProvider(IOverlayTypeStyleAdvisor styleAdvisor, IDifferenceCounter diffCounter,
+			boolean drawTypeOverview) {
 		this.styleAdvisor = styleAdvisor;
 		this.diffCounter = diffCounter;
+		this.drawTypeOverview = drawTypeOverview;
 	}
 
 	@Override
@@ -112,16 +122,35 @@ public abstract class DiffTypeOverviewLabelProvider extends OwnerDrawLabelProvid
 			/* not able to retrieve the bounds of the item */
 			return;
 		}
-		bounds.width -= 1;
+		// horizontal padding
+		int padding = Math.max(Math.round(bounds.height * relVerticalPadding), 1);
+		bounds.height -= padding * 2;
+		bounds.y += padding;
+		// fixed vertical padding of 1 pixel
+		bounds.width -= 2;
+		bounds.x += 1;
 
 		int maxCountValue = getMaximumCount(element);
-		DifferenceKind[] kinds = DifferenceKind.values();
 
 		GC gc = event.gc;
 
+		EnumMap<OverlayType, Integer> typeCounts = calculateDiffCount(element, DifferenceKind.values());
+
 		/* cache the background color to restore it later */
 		Color previousBackgroundColor = event.gc.getBackground();
-		drawDiffTypeStackedBars(gc, element, maxCountValue, kinds, bounds);
+		Rectangle stackedBarBounds = new Rectangle(bounds.x, bounds.y, bounds.width, bounds.height);
+		if (drawTypeOverview) {
+
+			int overviewWidth = Math.min(maxTypeOverviewWidth, Math.round(bounds.width * relTypeOverviewWidth));
+			Rectangle typeOverviewBounds = new Rectangle(bounds.x, bounds.y, overviewWidth, bounds.height);
+
+			stackedBarBounds.x = typeOverviewBounds.x + typeOverviewBounds.width + 1;
+			stackedBarBounds.width -= typeOverviewBounds.width;
+
+			drawTypeOverview(gc, element, typeCounts, typeOverviewBounds, false);
+
+		}
+		drawDiffTypeStackedBars(gc, element, maxCountValue, typeCounts, stackedBarBounds);
 		gc.setBackground(previousBackgroundColor);
 
 	}
@@ -130,20 +159,7 @@ public abstract class DiffTypeOverviewLabelProvider extends OwnerDrawLabelProvid
 	public String getToolTipText(Object element) {
 
 		/* show detailed type statistics in the tooltip */
-		EnumMap<OverlayType, Integer> typeCounts = new EnumMap<OverlayType, Integer>(
-				OverlayType.class);
-
-		for (DifferenceKind kind : DifferenceKind.values()) {
-
-			OverlayType changeType = toChangeType(kind);
-			int currentCount = 0;
-			if (typeCounts.containsKey(changeType)) {
-				currentCount = typeCounts.get(changeType).intValue();
-			}
-			currentCount += Math.max(diffCounter.getDiffCount(element, kind), 0);
-			typeCounts.put(changeType, currentCount);
-
-		}
+		EnumMap<OverlayType, Integer> typeCounts = calculateDiffCount(element, DifferenceKind.values());
 
 		StringBuilder tooltip = new StringBuilder();
 
@@ -165,6 +181,33 @@ public abstract class DiffTypeOverviewLabelProvider extends OwnerDrawLabelProvid
 	}
 
 	/**
+	 * calculates the counts for each given {@link DifferenceKind} using the
+	 * current {@link IDifferenceCounter} and returns a map containing the
+	 * counts mapped to their respective {@link OverlayType}.
+	 * 
+	 * @param element
+	 *            the to get the diff count for.
+	 * @return a map containing the counts mapped to their respective
+	 *         {@link OverlayType}
+	 */
+	private EnumMap<OverlayType, Integer> calculateDiffCount(Object element, DifferenceKind[] kinds) {
+		EnumMap<OverlayType, Integer> typeCounts = new EnumMap<OverlayType, Integer>(OverlayType.class);
+
+		for (DifferenceKind kind : kinds) {
+
+			OverlayType changeType = toChangeType(kind);
+			int currentCount = 0;
+			if (typeCounts.containsKey(changeType)) {
+				currentCount = typeCounts.get(changeType).intValue();
+			}
+			currentCount += Math.max(diffCounter.getDiffCount(element, kind), 0);
+			typeCounts.put(changeType, currentCount);
+
+		}
+		return typeCounts;
+	}
+
+	/**
 	 * draws the stacked bars for the given element within the given bounds.
 	 * 
 	 * @param gc
@@ -172,20 +215,25 @@ public abstract class DiffTypeOverviewLabelProvider extends OwnerDrawLabelProvid
 	 * @param element
 	 *            the element to draw the stacked bars for.
 	 * @param maxValue
-	 *            the vale that is assigned to the rightmost position on the
+	 *            the value that is assigned to the rightmost position on the
 	 *            visible range.
-	 * @param kinds
-	 *            the difference kinds to draw bars for.
+	 * @param typeCounts
+	 *            a map containing the counts for each {@link OverlayType}.
 	 * @param bounds
 	 *            the bounds to draw the bars into.
 	 */
-	protected void drawDiffTypeStackedBars(GC gc, Object element, int maxValue, DifferenceKind[] kinds,
+	protected void drawDiffTypeStackedBars(GC gc, Object element, int maxValue, EnumMap<OverlayType, Integer> counts,
 			Rectangle bounds) {
 
 		int xOffset = 0;
-		boolean drawSeparator = false;
-		for (DifferenceKind kind : kinds) {
-			int diffKindCount = Math.max(diffCounter.getDiffCount(element, kind), 0);
+		for (OverlayType type : OverlayType.values()) {
+
+			int diffKindCount = 0;
+			Integer count = counts.get(type);
+			if (count != null) {
+				diffKindCount = count.intValue();
+			}
+
 			/*
 			 * the int cast is safe as the mapped value will be in the range
 			 * from 0 to bounds.width - the latter is an integer, so the result
@@ -193,18 +241,61 @@ public abstract class DiffTypeOverviewLabelProvider extends OwnerDrawLabelProvid
 			 */
 			int width = (int) Math.round(MathUtil.map(diffKindCount, 0, maxValue, 0, bounds.width - 1));
 
-			if (drawSeparator && width != 0) {
-				gc.setForeground(gc.getDevice().getSystemColor(SWT.COLOR_GRAY));
-				gc.drawLine(bounds.x + xOffset, Math.round(bounds.y + bounds.height * 0.1f), bounds.x + xOffset,
-						bounds.y + bounds.height);
-			}
-
-			gc.setBackground(styleAdvisor.getBackgroundColorForOverlayType(toChangeType(kind)));
-			gc.fillRectangle(bounds.x + xOffset, Math.round(bounds.y + bounds.height * 0.4f), width,
-					Math.round(bounds.height * 0.6f));
+			gc.setBackground(styleAdvisor.getBackgroundColorForOverlayType(type));
+			gc.fillRectangle(bounds.x + xOffset, bounds.y, width, bounds.height);
 			xOffset += width;
-			if (width != 0) {
-				drawSeparator = true;
+		}
+	}
+
+	/**
+	 * draws the type overview for the given element within the given bounds.
+	 * 
+	 * @param gc
+	 *            the {@link GC} used to draw.
+	 * @param element
+	 *            the element to draw the type overview for.
+	 * @param counts
+	 *            a map containing the counts for each {@link OverlayType}.
+	 * @param bounds
+	 *            he bounds to draw the overview into.
+	 * @param horizontal
+	 *            true if the type should be arranged horizontally, false if
+	 *            they should be arranged vertically.
+	 */
+	private void drawTypeOverview(GC gc, Object element, EnumMap<OverlayType, Integer> counts, Rectangle bounds,
+			boolean horizontal) {
+
+		int offset = 0;
+		int boundsExtent = horizontal ? bounds.width : bounds.height;
+		int extent = Math.max((int) Math.round(boundsExtent / (double) OverlayType.values().length),
+				maxTypeOverviewExtent);
+
+		int numTypes = 0;
+		for (OverlayType type : OverlayType.values()) {
+
+			Integer count = counts.get(type);
+			if (count != null && count.intValue() > 0) {
+				numTypes++;
+			}
+		}
+
+		offset = Math.round((boundsExtent - (extent * numTypes)) * 0.5f);
+
+		for (OverlayType type : OverlayType.values()) {
+
+			int diffKindCount = 0;
+			Integer count = counts.get(type);
+			if (count != null) {
+				diffKindCount = count.intValue();
+			}
+			if (diffKindCount > 0) {
+				gc.setBackground(styleAdvisor.getBackgroundColorForOverlayType(type));
+				if (horizontal) {
+					gc.fillRectangle(bounds.x + offset, bounds.y, extent, bounds.height);
+				} else {
+					gc.fillRectangle(bounds.x, bounds.y + offset, bounds.width, extent);
+				}
+				offset += extent;
 			}
 		}
 	}
@@ -247,6 +338,60 @@ public abstract class DiffTypeOverviewLabelProvider extends OwnerDrawLabelProvid
 		default:
 			return OverlayType.MODIFICATION;
 		}
+	}
+
+	/**
+	 * sets the relative padding between the top and the content as well as
+	 * between the content and the bottom. The actual padding is at least 1
+	 * pixel.
+	 * 
+	 * @param relVerticalPadding
+	 *            the relative vertical padding to set.
+	 */
+	public void setRelVerticalPadding(float relVerticalPadding) {
+		this.relVerticalPadding = relVerticalPadding;
+	}
+
+	/**
+	 * sets the maximum width that should be used for the type overview.
+	 * 
+	 * @param maxTypeOverviewWidth
+	 *            the maximum width to set.
+	 */
+	public void setMaxTypeOverviewWidth(int maxTypeOverviewWidth) {
+		this.maxTypeOverviewWidth = maxTypeOverviewWidth;
+	}
+
+	/**
+	 * sets the relative width that should be used for the type overview. If the
+	 * actual value exceeds the maximum width, the maximum width will be used
+	 * instead.
+	 * 
+	 * @param relTypeOverviewWidth
+	 *            the relative width to set.
+	 */
+	public void setRelTypeOverviewWidth(float relTypeOverviewWidth) {
+		this.relTypeOverviewWidth = relTypeOverviewWidth;
+	}
+
+	/**
+	 * sets the maximum extent (height) of a type in the type overview.
+	 * 
+	 * @param maxTypeOverviewExtent
+	 *            the extent to set.
+	 */
+	public void setMaxTypeOverviewExtent(int maxTypeOverviewExtent) {
+		this.maxTypeOverviewExtent = maxTypeOverviewExtent;
+	}
+
+	/**
+	 * enables/disables the drawing of the type overview.
+	 * 
+	 * @param drawTypeOverview
+	 *            true if the type overview should be drawn, false otherwise.
+	 */
+	public void setDrawTypeOverview(boolean drawTypeOverview) {
+		this.drawTypeOverview = drawTypeOverview;
 	}
 
 }
