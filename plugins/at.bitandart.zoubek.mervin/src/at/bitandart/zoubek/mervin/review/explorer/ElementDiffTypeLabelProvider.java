@@ -25,10 +25,12 @@ public class ElementDiffTypeLabelProvider extends DiffTypeOverviewLabelProvider 
 	/**
 	 * @param styleAdvisor
 	 * @param diffCounter
+	 * @param drawTypeOverview
 	 * @see DiffTypeOverviewLabelProvider
 	 */
-	public ElementDiffTypeLabelProvider(IOverlayTypeStyleAdvisor styleAdvisor, IDifferenceCounter diffCounter) {
-		super(styleAdvisor, diffCounter);
+	public ElementDiffTypeLabelProvider(IOverlayTypeStyleAdvisor styleAdvisor, IDifferenceCounter diffCounter,
+			boolean drawTypeOverview) {
+		super(styleAdvisor, diffCounter, drawTypeOverview);
 	}
 
 	@Override

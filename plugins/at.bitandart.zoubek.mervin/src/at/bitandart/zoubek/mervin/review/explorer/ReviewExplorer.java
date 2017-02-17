@@ -209,7 +209,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		totalDiffTypeColumn.getColumn().setAlignment(SWT.CENTER);
 		totalDiffTypeColumn.getColumn().setToolTipText("Total diff type overview");
 		DiffTypeOverviewLabelProvider totalDiffTypeLabelProvider = new TotalDiffTypeLabelProvider(styleAdvisor,
-				diffCounter);
+				diffCounter, true);
 		totalDiffTypeColumn.setLabelProvider(totalDiffTypeLabelProvider);
 		totalDiffTypeColumn.getColumn().addSelectionListener(new ThreeWayObjectTreeViewerComparator(reviewTreeViewer,
 				totalDiffTypeColumn, new DiffCounterComparator(diffCounter)));
@@ -222,7 +222,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		elementDiffTypeColumn.getColumn().setAlignment(SWT.CENTER);
 		elementDiffTypeColumn.getColumn().setToolTipText("Element diff type overview");
 		DiffTypeOverviewLabelProvider elementDiffTypeLabelProvider = new ElementDiffTypeLabelProvider(styleAdvisor,
-				diffCounter);
+				diffCounter, false);
 		elementDiffTypeColumn.setLabelProvider(elementDiffTypeLabelProvider);
 		elementDiffTypeColumn.getColumn().addSelectionListener(new ThreeWayObjectTreeViewerComparator(reviewTreeViewer,
 				elementDiffTypeColumn, new DiffCounterComparator(diffCounter)));
