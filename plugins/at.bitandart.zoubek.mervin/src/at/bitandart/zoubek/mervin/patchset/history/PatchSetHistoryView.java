@@ -67,6 +67,7 @@ import at.bitandart.zoubek.mervin.review.HighlightSelectionListener;
 import at.bitandart.zoubek.mervin.review.IReviewHighlightProvidingPart;
 import at.bitandart.zoubek.mervin.review.ModelReviewEditorTrackingView;
 import at.bitandart.zoubek.mervin.swt.ProgressPanel;
+import at.bitandart.zoubek.mervin.swt.text.styles.HighlightStyler;
 import at.bitandart.zoubek.mervin.util.vis.ThreeWayObjectTreeViewerComparator;
 
 /**

@@ -73,6 +73,10 @@ public class MervinServicesAddon {
 		IMatchHelper matchHelper = ContextInjectionFactory.make(MervinMatchHelper.class, context);
 		context.set(IMatchHelper.class, matchHelper);
 
+		/* add the default mervin overlay type helper */
+		IOverlayTypeHelper overlayHelper = ContextInjectionFactory.make(MervinOverlayTypeHelper.class, context);
+		context.set(IOverlayTypeHelper.class, overlayHelper);
+
 		/*
 		 * the prototype supports currently only Gerrit, so use the Gerrit
 		 * service by default

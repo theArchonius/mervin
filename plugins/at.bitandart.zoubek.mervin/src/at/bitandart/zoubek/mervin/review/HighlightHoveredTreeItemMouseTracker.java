@@ -68,7 +68,7 @@ public class HighlightHoveredTreeItemMouseTracker implements MouseTrackListener 
 						 */
 						highlightService.clearHighlights(modelReview);
 						/* add new highlighted element */
-						highlightService.addHighlightFor(modelReview, item.getData());
+						highlightService.addHighlightFor(modelReview, data);
 					}
 				}
 			}
