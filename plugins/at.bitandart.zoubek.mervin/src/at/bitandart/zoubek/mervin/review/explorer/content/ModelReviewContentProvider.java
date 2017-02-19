@@ -30,6 +30,7 @@ import at.bitandart.zoubek.mervin.IMatchHelper;
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramResource;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelResource;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
+import at.bitandart.zoubek.mervin.model.modelreview.Patch;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 
 /**
@@ -46,7 +47,7 @@ public class ModelReviewContentProvider implements IReviewExplorerContentProvide
 
 	private ModelReview modelReview;
 	private Map<PatchSet, Collection<Object>> cachedPatchSetChildren = new HashMap<>();
-	private Map<EObject, DifferencesTreeItem> cachedDiffrenceTreeItems = new HashMap<>();
+	private Map<EObject, DifferencesTreeItem> cachedDifferenceTreeItems = new HashMap<>();
 	private IMatchHelper matchHelper;
 
 	public ModelReviewContentProvider(IMatchHelper matchHelper) {
@@ -64,7 +65,7 @@ public class ModelReviewContentProvider implements IReviewExplorerContentProvide
 		}
 		// clear the cache
 		cachedPatchSetChildren.clear();
-		cachedDiffrenceTreeItems.clear();
+		cachedDifferenceTreeItems.clear();
 	}
 
 	@Override
@@ -104,28 +105,11 @@ public class ModelReviewContentProvider implements IReviewExplorerContentProvide
 		if (element instanceof PatchSet) {
 			return ((PatchSet) element).getReview();
 		}
-		if (element instanceof DiagramResource) {
-			DiagramResource diagramResource = (DiagramResource) element;
-			for (PatchSet patchSet : modelReview.getPatchSets()) {
-				if (patchSet.getNewInvolvedDiagrams().contains(diagramResource)
-						|| patchSet.getNewInvolvedDiagrams().contains(diagramResource)) {
-					return patchSet;
-				}
-			}
-			return null;
-		}
-		if (element instanceof ModelResource) {
-			ModelResource modelResource = (ModelResource) element;
-			for (PatchSet patchSet : modelReview.getPatchSets()) {
-				if (patchSet.getNewInvolvedModels().contains(modelResource)
-						|| patchSet.getOldInvolvedModels().contains(modelResource)) {
-					return patchSet;
-				}
-			}
-			return null;
+		if (element instanceof DiagramResource || element instanceof ModelResource || element instanceof Patch) {
+			return getPatchSetChildContainer(element);
 		}
 		if (element instanceof Diff) {
-			return matchHelper.getNewValue(((Diff) element).getMatch());
+			return getDifferenceContainer((Diff) element);
 		}
 		if (element instanceof EObject) {
 			EObject eObject = (EObject) element;
@@ -155,6 +139,48 @@ public class ModelReviewContentProvider implements IReviewExplorerContentProvide
 				}
 			}
 			return parent;
+		}
+		return null;
+	}
+
+	/**
+	 * @param object
+	 *            the object to get the container for.
+	 * @return the container containing the given object, or null if no
+	 *         container has been found.
+	 */
+	private Object getPatchSetChildContainer(Object object) {
+
+		Collection<Collection<Object>> cachedPatchSetChildrenEntries = cachedPatchSetChildren.values();
+
+		for (Collection<Object> cachedChildren : cachedPatchSetChildrenEntries) {
+
+			if (cachedChildren != null) {
+
+				for (Object child : cachedChildren) {
+
+					if (child instanceof ITreeItemContainer
+							&& Arrays.asList(((ITreeItemContainer) child).getChildren()).contains(object)) {
+						return child;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * @param diff
+	 *            the {@link Diff} to find the {@link DifferencesTreeItem} for.
+	 * @return the {@link DifferencesTreeItem} containing the given diff or null
+	 *         if no {@link DifferencesTreeItem} could be found.
+	 */
+	private DifferencesTreeItem getDifferenceContainer(Diff diff) {
+
+		EObject newValue = matchHelper.getNewValue((diff).getMatch());
+
+		if (newValue != null) {
+			return cachedDifferenceTreeItems.get(newValue);
 		}
 		return null;
 	}
@@ -226,10 +252,10 @@ public class ModelReviewContentProvider implements IReviewExplorerContentProvide
 				 * create a temporary container. We cache them to make sure that
 				 * the category stays the same even if the tree is refreshed.
 				 */
-				if (!cachedDiffrenceTreeItems.containsKey(parentEObject)) {
-					cachedDiffrenceTreeItems.put(parentEObject, new DifferencesTreeItem(parentEObject, matchDiffs));
+				if (!cachedDifferenceTreeItems.containsKey(parentEObject)) {
+					cachedDifferenceTreeItems.put(parentEObject, new DifferencesTreeItem(parentEObject, matchDiffs));
 				}
-				children.add(cachedDiffrenceTreeItems.get(parentEObject));
+				children.add(cachedDifferenceTreeItems.get(parentEObject));
 			}
 
 			return children.toArray();

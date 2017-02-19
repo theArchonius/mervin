@@ -22,7 +22,6 @@ import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
@@ -318,15 +317,9 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 
 				if (currentUpdateThread != null && currentUpdateThread.isAlive()) {
 					/*
-					 * update thread is already running - disable the progress
-					 * panel update, create a new monitor for the progess panel
-					 * and cancel the previous thread using the old progress
-					 * monitor
+					 * update thread is already running - cancel the operation
 					 */
-					currentUpdateThread.setUpdateProgressPanel(false);
-					IProgressMonitor oldMonitor = progressPanel.getProgressMonitor();
-					progressPanel.createNewProgressMonitor();
-					oldMonitor.setCanceled(true);
+					currentUpdateThread.cancelOperation();
 				}
 
 				PatchSet activePatchSet = null;
@@ -654,7 +647,16 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 
 				Object entryObject = ((IPatchSetHistoryEntry<?, ?>) element).getEntryObject();
 				// delegate to the default EMF compare label provider
-				return adapterFactoryLabelProvider.getImage(entryObject);
+				try {
+					return adapterFactoryLabelProvider.getImage(entryObject);
+				} catch (Exception e) {
+					/*
+					 * just in case that the label provider throws some
+					 * unexpected exceptions, e.g. sometimes for diffs...
+					 */
+					// TODO log warning
+					return null;
+				}
 
 			}
 			return null;

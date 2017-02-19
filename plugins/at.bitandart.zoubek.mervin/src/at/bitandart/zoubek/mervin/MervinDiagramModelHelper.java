@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Florian Zoubek.
+ * Copyright (c) 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,10 +10,20 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature.Setting;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 
 import at.bitandart.zoubek.mervin.model.modelreview.DifferenceOverlay;
@@ -95,10 +105,40 @@ public class MervinDiagramModelHelper implements IDiagramModelHelper {
 			}
 			/* the passed object is already a non overlay view, so return it */
 			return (View) object;
-
 		}
 
 		return null;
+	}
+
+	@Override
+	public Set<View> getReferencingViews(EObject object) {
+
+		EObject eObject = (EObject) object;
+		Resource resource = ((EObject) object).eResource();
+		if (resource != null) {
+			ResourceSet resourceSet = resource.getResourceSet();
+			if (resourceSet != null) {
+
+				Set<View> views = new HashSet<View>();
+
+				ECrossReferenceAdapter crossReferenceAdapter = ECrossReferenceAdapter
+						.getCrossReferenceAdapter(resourceSet);
+				if (crossReferenceAdapter == null) {
+
+					// install adapter if none exists
+					crossReferenceAdapter = new ECrossReferenceAdapter();
+					crossReferenceAdapter.setTarget(resourceSet);
+				}
+				Collection<Setting> inverseReferences = crossReferenceAdapter.getInverseReferences(eObject);
+				for (Setting setting : inverseReferences) {
+					if (setting.getEStructuralFeature() == NotationPackage.Literals.VIEW__ELEMENT) {
+						views.add((View) setting.getEObject());
+					}
+				}
+				return views;
+			}
+		}
+		return Collections.emptySet();
 	}
 
 }

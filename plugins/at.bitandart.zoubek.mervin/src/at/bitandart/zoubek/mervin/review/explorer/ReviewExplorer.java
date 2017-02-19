@@ -14,9 +14,10 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumMap;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -28,16 +29,14 @@ import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.e4.ui.workbench.modeling.ElementMatcher;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.ReferenceChange;
-import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
-import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.util.Policy;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
@@ -63,7 +62,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 
+import at.bitandart.zoubek.mervin.IDiagramModelHelper;
 import at.bitandart.zoubek.mervin.IMatchHelper;
+import at.bitandart.zoubek.mervin.IModelReviewHelper;
 import at.bitandart.zoubek.mervin.IOverlayTypeHelper;
 import at.bitandart.zoubek.mervin.IReviewHighlightService;
 import at.bitandart.zoubek.mervin.IReviewHighlightServiceListener;
@@ -76,8 +77,6 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelResource;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.Patch;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
-import at.bitandart.zoubek.mervin.patchset.history.IPatchSetHistoryEntry;
-import at.bitandart.zoubek.mervin.patchset.history.ISimilarityHistoryService.DiffWithSimilarity;
 import at.bitandart.zoubek.mervin.review.HighlightHoveredTreeItemMouseTracker;
 import at.bitandart.zoubek.mervin.review.HighlightMode;
 import at.bitandart.zoubek.mervin.review.HighlightSelectionListener;
@@ -87,6 +86,7 @@ import at.bitandart.zoubek.mervin.review.explorer.content.DifferencesTreeItem;
 import at.bitandart.zoubek.mervin.review.explorer.content.IReviewExplorerContentProvider;
 import at.bitandart.zoubek.mervin.review.explorer.content.ITreeItemContainer;
 import at.bitandart.zoubek.mervin.review.explorer.content.ModelReviewContentProvider;
+import at.bitandart.zoubek.mervin.swt.ProgressPanel;
 import at.bitandart.zoubek.mervin.swt.text.styles.ComposedStyler;
 import at.bitandart.zoubek.mervin.swt.text.styles.DiffStyler;
 import at.bitandart.zoubek.mervin.swt.text.styles.FontStyler;
@@ -136,6 +136,12 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 	@Inject
 	private IOverlayTypeHelper overlayTypeHelper;
 
+	@Inject
+	private IDiagramModelHelper diagramModelHelper;
+
+	@Inject
+	private IModelReviewHelper modelReviewHelper;
+
 	// text styles
 	private HighlightStyler highlightStyler;
 
@@ -149,7 +155,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 	 * the complete list of filtered and derived elements to highlight in this
 	 * view.
 	 */
-	private List<Object> objectsToHighlight = new LinkedList<>();
+	private Set<Object> objectsToHighlight = new HashSet<>();
 
 	/**
 	 * the current highlight mode, never null
@@ -170,12 +176,18 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 	 */
 	private Composite mainPanel;
 
+	private ProgressPanel progressPanel;
+
 	// Data
 
 	/**
 	 * indicates if all SWT controls and viewers have been correctly set up
 	 */
 	private boolean viewInitialized = false;
+
+	private ReviewExplorerHighlightUpdater reviewHighlightUpdater;
+
+	private ModelReviewContentProvider reviewExplorerContentProvider;
 
 	@PostConstruct
 	public void postConstruct(Composite parent, EModelService modelService, MPart part) {
@@ -198,7 +210,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 
 		reviewTreeViewer = new TreeViewer(mainPanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
 		reviewTreeViewer.setComparator(new ViewerComparator());
-		ModelReviewContentProvider reviewExplorerContentProvider = new ModelReviewContentProvider(matchHelper);
+		reviewExplorerContentProvider = new ModelReviewContentProvider(matchHelper);
 		reviewTreeViewer.setContentProvider(reviewExplorerContentProvider);
 		reviewTreeViewer.addSelectionChangedListener(new HighlightSelectionListener(this) {
 
@@ -298,6 +310,10 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		resourceColumn.getColumn().addSelectionListener(
 				new ThreeWayLabelTreeViewerComparator(reviewTreeViewer, resourceColumn, resourceColumnLabelProvider));
 
+		progressPanel = new ProgressPanel(mainPanel, SWT.NONE);
+		progressPanel.setVisible(false);
+		progressPanel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).exclude(true).create());
+
 		// all controls updated, now update them with the given values
 		viewInitialized = true;
 
@@ -307,7 +323,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 			@Override
 			public void elementRemoved(ModelReview review, Object element) {
 
-				updatesObjectToHighlight();
+				updateObjectsToHighlight();
 				reviewTreeViewer.refresh();
 
 			}
@@ -315,7 +331,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 			@Override
 			public void elementAdded(ModelReview review, Object element) {
 
-				updatesObjectToHighlight();
+				updateObjectsToHighlight();
 				reviewTreeViewer.refresh();
 
 			}
@@ -341,84 +357,28 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 	 * updates the list of filtered and derived highlighted elements from the
 	 * current highlight service for the current model review.
 	 */
-	private void updatesObjectToHighlight() {
+	private void updateObjectsToHighlight() {
 
-		objectsToHighlight.clear();
+		if (reviewHighlightUpdater != null && reviewHighlightUpdater.isAlive()) {
+			reviewHighlightUpdater.cancelOperation();
+			reviewHighlightUpdater = null;
+		}
+
+		objectsToHighlight = new HashSet<Object>();
 		ModelReview currentModelReview = getCurrentModelReview();
 
 		if (currentModelReview != null) {
 
 			List<Object> highlightedElements = highlightService.getHighlightedElements(getCurrentModelReview());
-			// TODO apply filter
-			objectsToHighlight.addAll(highlightedElements);
 
-			addDerivedElementsToHighlight(currentModelReview, highlightedElements, objectsToHighlight);
+			reviewHighlightUpdater = new ReviewExplorerHighlightUpdater(progressPanel, mainPanel, highlightedElements,
+					objectsToHighlight, currentModelReview, reviewTreeViewer, reviewExplorerContentProvider,
+					diagramModelHelper, modelReviewHelper);
+
+			reviewHighlightUpdater.start();
+
 		}
 
-	}
-
-	/**
-	 * adds the derived objects to highlight for the given {@link ModelReview}
-	 * {@link Diff} to the given list of highlighted objects.
-	 * 
-	 * @param modelReview
-	 *            the model review to highlight elements for.
-	 * @param highlightedElements
-	 *            the highlighted elements as reported by the highlight service.
-	 * @param objectsToHighlight
-	 *            the list of elements to add the derived highlighted elements
-	 *            to.
-	 */
-	protected void addDerivedElementsToHighlight(ModelReview modelReview, List<Object> highlightedElements,
-			List<Object> objectsToHighlight) {
-
-		for (Object highlightedElement : highlightedElements) {
-
-			if (highlightedElement instanceof IPatchSetHistoryEntry<?, ?>) {
-
-				IPatchSetHistoryEntry<?, ?> historyEntry = (IPatchSetHistoryEntry<?, ?>) highlightedElement;
-				Object entryObject = historyEntry.getEntryObject();
-
-				/* check the entry object first */
-				if (entryObject instanceof Diff) {
-
-					// TODO apply filter
-					Diff diff = (Diff) entryObject;
-					addDerivedElementsToHighlight(diff, objectsToHighlight);
-				}
-
-				EList<PatchSet> patchSets = modelReview.getPatchSets();
-				for (PatchSet patchSet : patchSets) {
-
-					Object value = historyEntry.getValue(patchSet);
-					if (value instanceof DiffWithSimilarity) {
-
-						// TODO apply filter
-						Diff diff = ((DiffWithSimilarity) value).getDiff();
-						// TODO apply filter
-						addDerivedElementsToHighlight(diff, objectsToHighlight);
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * adds the derived objects to highlight for the given highlighted
-	 * {@link Diff} to the given list of highlighted objects.
-	 * 
-	 * @param diff
-	 *            the highlighted diff to add derived highlighted objects to the
-	 *            given list of highlighted objects
-	 * @param objectsToHighlight
-	 */
-	protected void addDerivedElementsToHighlight(Diff diff, List<Object> objectsToHighlight) {
-
-		Object value = MatchUtil.getValue(diff);
-		// TODO apply filter
-		if (value != null) {
-			objectsToHighlight.add(value);
-		}
 	}
 
 	/**
@@ -452,7 +412,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		// we cannot update the controls if they are not initialized yet
 		if (viewInitialized) {
 
-			updatesObjectToHighlight();
+			updateObjectsToHighlight();
 			ModelReview currentModelReview = getCurrentModelReview();
 
 			// update the tree viewer
@@ -574,7 +534,8 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 
 					if (diff instanceof ReferenceChange && ((ReferenceChange) diff).getReference().isContainment()) {
 
-						OverlayTypeStyler typeStyler = overlayTypeStylers.get(overlayTypeHelper.toOverlayType(diff.getKind()));
+						OverlayTypeStyler typeStyler = overlayTypeStylers
+								.get(overlayTypeHelper.toOverlayType(diff.getKind()));
 						if (typeStyler != null) {
 							stylers.add(typeStyler);
 						}
@@ -630,16 +591,10 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		 * @return true if the given element should be highlighted, false
 		 *         otherwise.
 		 */
-		private boolean isHighlighted(Object element, List<Object> highlightedElements) {
+		private boolean isHighlighted(Object element, Set<Object> highlightedElements) {
 
 			if (highlightedElements.contains(element)) {
 				return true;
-			}
-
-			if (element instanceof View) {
-				if (isHighlighted(((View) element).getElement(), highlightedElements)) {
-					return true;
-				}
 			}
 
 			if (element instanceof ModelPatch) {
@@ -652,61 +607,6 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 						|| isHighlighted(((DiagramPatch) element).getOldDiagramResource(), highlightedElements);
 			}
 
-			if (element instanceof Diff) {
-				Object value = MatchUtil.getValue((Diff) element);
-				return value != null && highlightedElements.contains(value);
-			}
-
-			if (isHighlighted(contentProvider.getChildren(element), highlightedElements)) {
-				return true;
-			}
-
-			if (element instanceof EObject) {
-				if (isHighlighted(((EObject) element).eContents(), highlightedElements)) {
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-		/**
-		 * checks if one of the elements provided by the given iterable is
-		 * highlighted or not.
-		 * 
-		 * @param iterable
-		 *            the iterable that provides the elements.
-		 * @param highlightedElements
-		 *            the set of elements to highlight.
-		 * @return true if one of the elements provided by the given iterable
-		 *         should be highlighted, false otherwise.
-		 */
-		public boolean isHighlighted(Iterable<?> iterable, List<Object> highlightedElements) {
-			for (Object element : iterable) {
-				if (isHighlighted(element, highlightedElements)) {
-					return true;
-				}
-			}
-			return false;
-		}
-
-		/**
-		 * checks if one of the elements provided by the given array is
-		 * highlighted or not.
-		 * 
-		 * @param array
-		 *            the array that provides the elements.
-		 * @param highlightedElements
-		 *            the set of elements to highlight.
-		 * @return true if one of the elements provided by the given array
-		 *         should be highlighted, false otherwise.
-		 */
-		public boolean isHighlighted(Object[] array, List<Object> highlightedElements) {
-			for (Object element : array) {
-				if (isHighlighted(element, highlightedElements)) {
-					return true;
-				}
-			}
 			return false;
 		}
 
