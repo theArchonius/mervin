@@ -8,10 +8,12 @@
  * Contributors:
  *    Florian Zoubek - initial API and implementation
  *******************************************************************************/
-package at.bitandart.zoubek.mervin.patchset.history;
+package at.bitandart.zoubek.mervin.patchset.history.organizers;
 
 import java.util.Collection;
 import java.util.List;
+
+import at.bitandart.zoubek.mervin.patchset.history.IPatchSetHistoryEntry;
 
 /**
  * Base interface for classes implementing strategies that group or organize

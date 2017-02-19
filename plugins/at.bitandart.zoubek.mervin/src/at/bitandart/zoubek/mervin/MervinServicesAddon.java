@@ -26,9 +26,9 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewFactory;
 import at.bitandart.zoubek.mervin.model.modelreview.User;
 import at.bitandart.zoubek.mervin.model.modelreview.impl.extended.DefaultModelReviewFactory;
 import at.bitandart.zoubek.mervin.patchset.history.ChangeSimilarityHistoryService;
-import at.bitandart.zoubek.mervin.patchset.history.DependencyDiffOrganizer;
-import at.bitandart.zoubek.mervin.patchset.history.IPatchSetHistoryEntryOrganizer;
 import at.bitandart.zoubek.mervin.patchset.history.ISimilarityHistoryService;
+import at.bitandart.zoubek.mervin.patchset.history.organizers.DependencyDiffOrganizer;
+import at.bitandart.zoubek.mervin.patchset.history.organizers.IPatchSetHistoryEntryOrganizer;
 import at.bitandart.zoubek.mervin.swt.comments.CommentList.CommentLinkListener;
 import at.bitandart.zoubek.mervin.swt.comments.data.ICommentProvider;
 

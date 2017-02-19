@@ -8,7 +8,7 @@
  * Contributors:
  *    Florian Zoubek - initial API and implementation
  *******************************************************************************/
-package at.bitandart.zoubek.mervin.patchset.history;
+package at.bitandart.zoubek.mervin.patchset.history.organizers;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,6 +17,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.compare.Diff;
+
+import at.bitandart.zoubek.mervin.patchset.history.IPatchSetHistoryEntry;
+import at.bitandart.zoubek.mervin.patchset.history.NamedHistoryEntryContainer;
 
 /**
  * A {@link DiffCategoryOrganizer} that organizes the diff entries by their

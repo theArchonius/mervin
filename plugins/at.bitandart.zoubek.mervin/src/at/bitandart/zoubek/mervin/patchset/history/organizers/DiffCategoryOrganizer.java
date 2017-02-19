@@ -8,11 +8,14 @@
  * Contributors:
  *    Florian Zoubek - initial API and implementation
  *******************************************************************************/
-package at.bitandart.zoubek.mervin.patchset.history;
+package at.bitandart.zoubek.mervin.patchset.history.organizers;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import at.bitandart.zoubek.mervin.patchset.history.IPatchSetHistoryEntry;
+import at.bitandart.zoubek.mervin.patchset.history.NamedHistoryEntryContainer;
 
 /**
  * A {@link IPatchSetHistoryEntryOrganizer} that groups the entries by their

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Florian Zoubek.
+ * Copyright (c) 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,7 +20,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
  * @author Florian Zoubek
  *
  */
-class NamedHistoryEntryContainer extends AbstractHistoryEntry<String, String> {
+public class NamedHistoryEntryContainer extends AbstractHistoryEntry<String, String> {
 
 	private String name;
 
