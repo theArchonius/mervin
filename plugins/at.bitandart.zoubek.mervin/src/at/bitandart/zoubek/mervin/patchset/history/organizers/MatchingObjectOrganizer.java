@@ -23,6 +23,8 @@ import javax.inject.Named;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 
@@ -81,6 +83,7 @@ public class MatchingObjectOrganizer extends DiffCategoryOrganizer {
 	private void organizeEntries(List<IPatchSetHistoryEntry<?, ?>> entries, IPatchSetHistoryEntry<?, ?> parent) {
 
 		Map<Object, IPatchSetHistoryEntry<?, ?>> objectDiffMap = new HashMap<>();
+		Map<EPackage, IPatchSetHistoryEntry<?, ?>> packageEntries = new HashMap<>();
 		parent.getSubEntries().clear();
 
 		for (IPatchSetHistoryEntry<?, ?> entry : entries) {
@@ -96,13 +99,49 @@ public class MatchingObjectOrganizer extends DiffCategoryOrganizer {
 					parentEntry = new NamedHistoryEntryContainer(adapterFactoryLabelProvider.getText(key),
 							new LinkedList<IPatchSetHistoryEntry<?, ?>>());
 
-					parent.getSubEntries().add(parentEntry);
+					if (key instanceof EObject) {
+
+						/* create a subentry for each containing package */
+
+						EPackage containingPackage = getContainingPackage((EObject) key);
+						if (containingPackage != null) {
+
+							IPatchSetHistoryEntry<?, ?> packageEntry = packageEntries.get(containingPackage);
+							if (packageEntry == null) {
+
+								packageEntry = new NamedHistoryEntryContainer(
+										adapterFactoryLabelProvider.getText(containingPackage),
+										new LinkedList<IPatchSetHistoryEntry<?, ?>>());
+								parent.getSubEntries().add(packageEntry);
+								packageEntries.put(containingPackage, packageEntry);
+							}
+							packageEntry.getSubEntries().add(parentEntry);
+						}
+
+					} else {
+
+						parent.getSubEntries().add(parentEntry);
+					}
+
 					objectDiffMap.put(key, parentEntry);
 				}
 
 				parentEntry.getSubEntries().add(entry);
 			}
 		}
+	}
+
+	/**
+	 * @param eObject
+	 *            the {@link EObject} to find the root {@link EPackage} for.
+	 * @return the containing root package of the given {@link EObject}.
+	 */
+	private EPackage getContainingPackage(EObject eObject) {
+		EPackage ePackage = eObject.eClass().getEPackage();
+		while (ePackage.getESuperPackage() != null) {
+			ePackage = ePackage.getESuperPackage();
+		}
+		return ePackage;
 	}
 
 	/**
