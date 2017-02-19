@@ -390,7 +390,8 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 
 			@Override
 			public boolean apply(Resource resource) {
-				return !resource.getURI().fileExtension().equals("notation");
+				org.eclipse.emf.common.util.URI uri = resource.getURI();
+				return !uri.fileExtension().equals("notation") && uri.scheme().equals(GitURIParser.GIT_COMMIT_SCHEME);
 			}
 		});
 		Comparison comparison = comparator.compare(scope);
@@ -429,7 +430,8 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 
 			@Override
 			public boolean apply(Resource resource) {
-				return resource.getURI().fileExtension().equals("notation");
+				org.eclipse.emf.common.util.URI uri = resource.getURI();
+				return uri.fileExtension().equals("notation") && uri.scheme().equals(GitURIParser.GIT_COMMIT_SCHEME);
 			}
 		});
 		Comparison comparison = comparator.compare(scope);

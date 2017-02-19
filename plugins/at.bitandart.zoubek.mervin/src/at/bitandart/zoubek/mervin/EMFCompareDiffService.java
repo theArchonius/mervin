@@ -65,11 +65,11 @@ public class EMFCompareDiffService implements IDiffService {
 			}
 		}
 
-		progressMonitor.worked(1);
-		progressMonitor.subTask("Comparing diagrams...");
-
 		Comparison selectedModelComparison = compareModelInstances(oldInvolvedModels, newInvolvedModels);
 		review.setSelectedModelComparison(selectedModelComparison);
+
+		progressMonitor.worked(1);
+		progressMonitor.subTask("Comparing diagrams...");
 
 		// diagrams
 
