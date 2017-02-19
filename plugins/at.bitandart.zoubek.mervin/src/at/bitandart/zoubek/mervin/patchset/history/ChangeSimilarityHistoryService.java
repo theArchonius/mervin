@@ -159,7 +159,8 @@ public class ChangeSimilarityHistoryService implements ISimilarityHistoryService
 	protected Comparison matchDiffs(List<? extends EObject> leftEObjects, List<? extends EObject> rightEObjects) {
 
 		Comparison comparison = CompareFactory.eINSTANCE.createComparison();
-		IEObjectMatcher objectMatcher = DefaultMatchEngine.createDefaultEObjectMatcher(UseIdentifiers.WHEN_AVAILABLE);
+		IEObjectMatcher objectMatcher = new PatchSetHistoryDiffMatcher(
+				DefaultMatchEngine.createDefaultEObjectMatcher(UseIdentifiers.WHEN_AVAILABLE), matchHelper);
 
 		objectMatcher.createMatches(comparison, leftEObjects.iterator(), rightEObjects.iterator(),
 				new ArrayList<EObject>().iterator(), new BasicMonitor());
@@ -185,7 +186,8 @@ public class ChangeSimilarityHistoryService implements ISimilarityHistoryService
 	protected Match findMatch(Diff entryObject, PatchSet patchSet, Comparison comparison) {
 
 		// TODO refactor: remove duplicated code here and in matchDiffs()
-		IEObjectMatcher objectMatcher = DefaultMatchEngine.createDefaultEObjectMatcher(UseIdentifiers.WHEN_AVAILABLE);
+		IEObjectMatcher objectMatcher = new PatchSetHistoryDiffMatcher(
+				DefaultMatchEngine.createDefaultEObjectMatcher(UseIdentifiers.WHEN_AVAILABLE), matchHelper);
 		List<EObject> leftEObjects = new ArrayList<EObject>(1);
 		leftEObjects.add(entryObject);
 
