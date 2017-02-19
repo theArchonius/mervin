@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.TreeItem;
 
+import at.bitandart.zoubek.mervin.IOverlayTypeHelper;
 import at.bitandart.zoubek.mervin.draw2d.figures.overlay.IOverlayTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayType;
 import at.bitandart.zoubek.mervin.util.vis.MathUtil;
@@ -44,6 +45,7 @@ import at.bitandart.zoubek.mervin.util.vis.MathUtil;
  */
 public abstract class DiffTypeOverviewLabelProvider extends OwnerDrawLabelProvider {
 
+	private IOverlayTypeHelper overlayTypeHelper;
 	private ColumnViewer viewer;
 	private ViewerColumn column;
 	private IOverlayTypeStyleAdvisor styleAdvisor;
@@ -64,12 +66,16 @@ public abstract class DiffTypeOverviewLabelProvider extends OwnerDrawLabelProvid
 	 *            count values for the stacked bars.
 	 * @param drawTypeOverview
 	 *            true if the type overview should be drawn, false otherwise.
+	 * @param overlayTypeHelper
+	 *            the {@link IOverlayTypeHelper} used to map
+	 *            {@link DifferenceKind}s to {@link OverlayType}s.
 	 */
 	public DiffTypeOverviewLabelProvider(IOverlayTypeStyleAdvisor styleAdvisor, IDifferenceCounter diffCounter,
-			boolean drawTypeOverview) {
+			boolean drawTypeOverview, IOverlayTypeHelper overlayTypeHelper) {
 		this.styleAdvisor = styleAdvisor;
 		this.diffCounter = diffCounter;
 		this.drawTypeOverview = drawTypeOverview;
+		this.overlayTypeHelper = overlayTypeHelper;
 	}
 
 	@Override
@@ -326,18 +332,7 @@ public abstract class DiffTypeOverviewLabelProvider extends OwnerDrawLabelProvid
 	 * @return the corresponding {@link OverlayType}.
 	 */
 	protected OverlayType toChangeType(DifferenceKind kind) {
-		switch (kind) {
-		case ADD:
-			return OverlayType.ADDITION;
-		case DELETE:
-			return OverlayType.DELETION;
-		case MOVE:
-			return OverlayType.MODIFICATION;
-		case CHANGE:
-			return OverlayType.MODIFICATION;
-		default:
-			return OverlayType.MODIFICATION;
-		}
+		return overlayTypeHelper.toOverlayType(kind);
 	}
 
 	/**

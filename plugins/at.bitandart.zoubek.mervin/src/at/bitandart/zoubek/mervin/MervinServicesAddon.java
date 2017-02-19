@@ -65,6 +65,10 @@ public class MervinServicesAddon {
 		IDiffService diffService = ContextInjectionFactory.make(EMFCompareDiffService.class, context);
 		context.set(IDiffService.class, diffService);
 
+		/* add the default mervin model review helper */
+		IModelReviewHelper modelReviewHelper = ContextInjectionFactory.make(MervinModelReviewHelper.class, context);
+		context.set(IModelReviewHelper.class, modelReviewHelper);
+
 		/* add the default mervin diagram model helper */
 		IDiagramModelHelper semanticModelHelper = ContextInjectionFactory.make(MervinDiagramModelHelper.class, context);
 		context.set(IDiagramModelHelper.class, semanticModelHelper);
@@ -72,6 +76,10 @@ public class MervinServicesAddon {
 		/* add the default mervin match helper */
 		IMatchHelper matchHelper = ContextInjectionFactory.make(MervinMatchHelper.class, context);
 		context.set(IMatchHelper.class, matchHelper);
+
+		/* add the default mervin overlay type helper */
+		IOverlayTypeHelper overlayHelper = ContextInjectionFactory.make(MervinOverlayTypeHelper.class, context);
+		context.set(IOverlayTypeHelper.class, overlayHelper);
 
 		/*
 		 * the prototype supports currently only Gerrit, so use the Gerrit

@@ -11,10 +11,13 @@
 package at.bitandart.zoubek.mervin.review.explorer;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.LinkedList;
+import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -26,15 +29,14 @@ import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.e4.ui.workbench.modeling.ElementMatcher;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.utils.MatchUtil;
+import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
-import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.util.Policy;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
@@ -45,6 +47,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.ViewerCell;
@@ -59,26 +62,36 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 
+import at.bitandart.zoubek.mervin.IDiagramModelHelper;
+import at.bitandart.zoubek.mervin.IMatchHelper;
+import at.bitandart.zoubek.mervin.IModelReviewHelper;
+import at.bitandart.zoubek.mervin.IOverlayTypeHelper;
 import at.bitandart.zoubek.mervin.IReviewHighlightService;
 import at.bitandart.zoubek.mervin.IReviewHighlightServiceListener;
 import at.bitandart.zoubek.mervin.draw2d.figures.overlay.DefaultOverlayTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.overlay.IOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayType;
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelPatch;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelResource;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.Patch;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
-import at.bitandart.zoubek.mervin.patchset.history.HighlightStyler;
-import at.bitandart.zoubek.mervin.patchset.history.IPatchSetHistoryEntry;
-import at.bitandart.zoubek.mervin.patchset.history.ISimilarityHistoryService.DiffWithSimilarity;
 import at.bitandart.zoubek.mervin.review.HighlightHoveredTreeItemMouseTracker;
 import at.bitandart.zoubek.mervin.review.HighlightMode;
 import at.bitandart.zoubek.mervin.review.HighlightSelectionListener;
 import at.bitandart.zoubek.mervin.review.IReviewHighlightProvidingPart;
 import at.bitandart.zoubek.mervin.review.ModelReviewEditorTrackingView;
+import at.bitandart.zoubek.mervin.review.explorer.content.DifferencesTreeItem;
+import at.bitandart.zoubek.mervin.review.explorer.content.IReviewExplorerContentProvider;
 import at.bitandart.zoubek.mervin.review.explorer.content.ITreeItemContainer;
 import at.bitandart.zoubek.mervin.review.explorer.content.ModelReviewContentProvider;
+import at.bitandart.zoubek.mervin.swt.ProgressPanel;
+import at.bitandart.zoubek.mervin.swt.text.styles.ComposedStyler;
+import at.bitandart.zoubek.mervin.swt.text.styles.DiffStyler;
+import at.bitandart.zoubek.mervin.swt.text.styles.FontStyler;
+import at.bitandart.zoubek.mervin.swt.text.styles.HighlightStyler;
+import at.bitandart.zoubek.mervin.swt.text.styles.OverlayTypeStyler;
 import at.bitandart.zoubek.mervin.util.vis.HSB;
 import at.bitandart.zoubek.mervin.util.vis.NumericColoredColumnLabelProvider;
 import at.bitandart.zoubek.mervin.util.vis.ThreeWayLabelTreeViewerComparator;
@@ -117,7 +130,24 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 	@Inject
 	private Display display;
 
+	@Inject
+	private IMatchHelper matchHelper;
+
+	@Inject
+	private IOverlayTypeHelper overlayTypeHelper;
+
+	@Inject
+	private IDiagramModelHelper diagramModelHelper;
+
+	@Inject
+	private IModelReviewHelper modelReviewHelper;
+
+	// text styles
 	private HighlightStyler highlightStyler;
+
+	private FontStyler diffStyler;
+
+	private EnumMap<OverlayType, OverlayTypeStyler> overlayTypeStylers = new EnumMap<>(OverlayType.class);
 
 	private IOverlayTypeStyleAdvisor styleAdvisor;
 
@@ -125,7 +155,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 	 * the complete list of filtered and derived elements to highlight in this
 	 * view.
 	 */
-	private List<Object> objectsToHighlight = new LinkedList<>();
+	private Set<Object> objectsToHighlight = new HashSet<>();
 
 	/**
 	 * the current highlight mode, never null
@@ -146,6 +176,8 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 	 */
 	private Composite mainPanel;
 
+	private ProgressPanel progressPanel;
+
 	// Data
 
 	/**
@@ -153,13 +185,23 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 	 */
 	private boolean viewInitialized = false;
 
+	private ReviewExplorerHighlightUpdater reviewHighlightUpdater;
+
+	private ModelReviewContentProvider reviewExplorerContentProvider;
+
 	@PostConstruct
 	public void postConstruct(Composite parent, EModelService modelService, MPart part) {
 
 		syncMenuAndToolbarItemState(modelService, part);
 
-		highlightStyler = new HighlightStyler(display);
 		styleAdvisor = new DefaultOverlayTypeStyleAdvisor();
+
+		highlightStyler = new HighlightStyler(display);
+		diffStyler = new DiffStyler(display);
+
+		for (OverlayType overlayType : OverlayType.values()) {
+			overlayTypeStylers.put(overlayType, new OverlayTypeStyler(overlayType, styleAdvisor));
+		}
 
 		mainPanel = new Composite(parent, SWT.NONE);
 		mainPanel.setLayout(new GridLayout());
@@ -168,7 +210,8 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 
 		reviewTreeViewer = new TreeViewer(mainPanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
 		reviewTreeViewer.setComparator(new ViewerComparator());
-		reviewTreeViewer.setContentProvider(new ModelReviewContentProvider());
+		reviewExplorerContentProvider = new ModelReviewContentProvider(matchHelper);
+		reviewTreeViewer.setContentProvider(reviewExplorerContentProvider);
 		reviewTreeViewer.addSelectionChangedListener(new HighlightSelectionListener(this) {
 
 			@Override
@@ -195,7 +238,8 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		labelColumn.getColumn().setMoveable(true);
 		labelColumn.getColumn().setText("Element");
 		labelColumn.getColumn().setWidth(200);
-		ModelReviewExplorerMainColumnLabelProvider labelColumnLabelProvider = new ModelReviewExplorerMainColumnLabelProvider();
+		ModelReviewExplorerMainColumnLabelProvider labelColumnLabelProvider = new ModelReviewExplorerMainColumnLabelProvider(
+				reviewExplorerContentProvider, overlayTypeHelper);
 		labelColumn.setLabelProvider(labelColumnLabelProvider);
 		labelColumn.getColumn().addSelectionListener(
 				new ThreeWayObjectTreeViewerComparator(reviewTreeViewer, labelColumn, labelColumnLabelProvider));
@@ -209,7 +253,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		totalDiffTypeColumn.getColumn().setAlignment(SWT.CENTER);
 		totalDiffTypeColumn.getColumn().setToolTipText("Total diff type overview");
 		DiffTypeOverviewLabelProvider totalDiffTypeLabelProvider = new TotalDiffTypeLabelProvider(styleAdvisor,
-				diffCounter, true);
+				diffCounter, true, overlayTypeHelper);
 		totalDiffTypeColumn.setLabelProvider(totalDiffTypeLabelProvider);
 		totalDiffTypeColumn.getColumn().addSelectionListener(new ThreeWayObjectTreeViewerComparator(reviewTreeViewer,
 				totalDiffTypeColumn, new DiffCounterComparator(diffCounter)));
@@ -222,7 +266,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		elementDiffTypeColumn.getColumn().setAlignment(SWT.CENTER);
 		elementDiffTypeColumn.getColumn().setToolTipText("Element diff type overview");
 		DiffTypeOverviewLabelProvider elementDiffTypeLabelProvider = new ElementDiffTypeLabelProvider(styleAdvisor,
-				diffCounter, false);
+				diffCounter, false, overlayTypeHelper);
 		elementDiffTypeColumn.setLabelProvider(elementDiffTypeLabelProvider);
 		elementDiffTypeColumn.getColumn().addSelectionListener(new ThreeWayObjectTreeViewerComparator(reviewTreeViewer,
 				elementDiffTypeColumn, new DiffCounterComparator(diffCounter)));
@@ -266,6 +310,10 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		resourceColumn.getColumn().addSelectionListener(
 				new ThreeWayLabelTreeViewerComparator(reviewTreeViewer, resourceColumn, resourceColumnLabelProvider));
 
+		progressPanel = new ProgressPanel(mainPanel, SWT.NONE);
+		progressPanel.setVisible(false);
+		progressPanel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).exclude(true).create());
+
 		// all controls updated, now update them with the given values
 		viewInitialized = true;
 
@@ -275,7 +323,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 			@Override
 			public void elementRemoved(ModelReview review, Object element) {
 
-				updatesObjectToHighlight();
+				updateObjectsToHighlight();
 				reviewTreeViewer.refresh();
 
 			}
@@ -283,7 +331,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 			@Override
 			public void elementAdded(ModelReview review, Object element) {
 
-				updatesObjectToHighlight();
+				updateObjectsToHighlight();
 				reviewTreeViewer.refresh();
 
 			}
@@ -297,6 +345,9 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		if (highlightStyler != null) {
 			highlightStyler.dispose();
 		}
+		if (diffStyler != null) {
+			diffStyler.dispose();
+		}
 		if (styleAdvisor != null) {
 			styleAdvisor.dispose();
 		}
@@ -306,93 +357,28 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 	 * updates the list of filtered and derived highlighted elements from the
 	 * current highlight service for the current model review.
 	 */
-	private void updatesObjectToHighlight() {
+	private void updateObjectsToHighlight() {
 
-		objectsToHighlight.clear();
+		if (reviewHighlightUpdater != null && reviewHighlightUpdater.isAlive()) {
+			reviewHighlightUpdater.cancelOperation();
+			reviewHighlightUpdater = null;
+		}
+
+		objectsToHighlight = new HashSet<Object>();
 		ModelReview currentModelReview = getCurrentModelReview();
 
 		if (currentModelReview != null) {
 
 			List<Object> highlightedElements = highlightService.getHighlightedElements(getCurrentModelReview());
-			// TODO apply filter
-			objectsToHighlight.addAll(highlightedElements);
 
-			addDerivedElementsToHighlight(currentModelReview, highlightedElements, objectsToHighlight);
+			reviewHighlightUpdater = new ReviewExplorerHighlightUpdater(progressPanel, mainPanel, highlightedElements,
+					objectsToHighlight, currentModelReview, reviewTreeViewer, reviewExplorerContentProvider,
+					diagramModelHelper, modelReviewHelper);
+
+			reviewHighlightUpdater.start();
+
 		}
 
-	}
-
-	/**
-	 * adds the derived objects to highlight for the given {@link ModelReview}
-	 * {@link Diff} to the given list of highlighted objects.
-	 * 
-	 * @param modelReview
-	 *            the model review to highlight elements for.
-	 * @param highlightedElements
-	 *            the highlighted elements as reported by the highlight service.
-	 * @param objectsToHighlight
-	 *            the list of elements to add the derived highlighted elements
-	 *            to.
-	 */
-	protected void addDerivedElementsToHighlight(ModelReview modelReview, List<Object> highlightedElements,
-			List<Object> objectsToHighlight) {
-
-		for (Object highlightedElement : highlightedElements) {
-
-			if (highlightedElement instanceof IPatchSetHistoryEntry<?, ?>) {
-
-				IPatchSetHistoryEntry<?, ?> historyEntry = (IPatchSetHistoryEntry<?, ?>) highlightedElement;
-				Object entryObject = historyEntry.getEntryObject();
-
-				/* check the entry object first */
-				if (entryObject instanceof Diff) {
-
-					// TODO apply filter
-					Diff diff = (Diff) entryObject;
-					addDerivedElementsToHighlight(diff, objectsToHighlight);
-				}
-
-				EList<PatchSet> patchSets = modelReview.getPatchSets();
-				for (PatchSet patchSet : patchSets) {
-
-					Object value = historyEntry.getValue(patchSet);
-					if (value instanceof DiffWithSimilarity) {
-
-						// TODO apply filter
-						Diff diff = ((DiffWithSimilarity) value).getDiff();
-						// TODO apply filter
-						addDerivedElementsToHighlight(diff, objectsToHighlight);
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * adds the derived objects to highlight for the given highlighted
-	 * {@link Diff} to the given list of highlighted objects.
-	 * 
-	 * @param diff
-	 *            the highlighted diff to add derived highlighted objects to the
-	 *            given list of highlighted objects
-	 * @param objectsToHighlight
-	 */
-	protected void addDerivedElementsToHighlight(Diff diff, List<Object> objectsToHighlight) {
-
-		Match match = diff.getMatch();
-		EObject left = match.getLeft();
-		EObject right = match.getRight();
-		Object value = MatchUtil.getValue(diff);
-		// TODO apply filter
-		if (value != null) {
-			objectsToHighlight.add(value);
-		}
-		if (left != null) {
-			objectsToHighlight.add(left);
-		}
-		if (right != null) {
-			objectsToHighlight.add(right);
-		}
 	}
 
 	/**
@@ -426,7 +412,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		// we cannot update the controls if they are not initialized yet
 		if (viewInitialized) {
 
-			updatesObjectToHighlight();
+			updateObjectsToHighlight();
 			ModelReview currentModelReview = getCurrentModelReview();
 
 			// update the tree viewer
@@ -490,13 +476,28 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		 */
 		private AdapterFactoryLabelProvider adapterFactoryLabelProvider;
 
-		public ModelReviewExplorerMainColumnLabelProvider() {
+		/**
+		 * the overlay type helper used to convert {@link DifferenceKind}s to
+		 * {@link OverlayType}s.
+		 */
+		private IOverlayTypeHelper overlayTypeHelper;
+
+		/**
+		 * the content provider used to determine the children during
+		 * highlighting.
+		 */
+		private IReviewExplorerContentProvider contentProvider;
+
+		public ModelReviewExplorerMainColumnLabelProvider(IReviewExplorerContentProvider contentProvider,
+				IOverlayTypeHelper overlayTypeHelper) {
 			/*
 			 * Obtain the registered label providers for model and diagram
 			 * elements
 			 */
 			adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(
 					new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
+			this.contentProvider = contentProvider;
+			this.overlayTypeHelper = overlayTypeHelper;
 		}
 
 		@Override
@@ -504,10 +505,67 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 
 			Object element = cell.getElement();
 			StyledString text = new StyledString();
+
+			List<Styler> stylers = new ArrayList<Styler>();
+
+			/* collect the stylers that should be applied to the label */
+			if (element instanceof Diff) {
+
+				stylers.add(diffStyler);
+				OverlayTypeStyler typeStyler = overlayTypeStylers
+						.get(overlayTypeHelper.toOverlayType(((Diff) element).getKind()));
+
+				if (typeStyler != null) {
+					stylers.add(typeStyler);
+				}
+
+			} else if (element instanceof DifferencesTreeItem) {
+				stylers.add(diffStyler);
+
+			} else if (element instanceof EObject) {
+
+				/*
+				 * color EObjects based on their referencing containment
+				 * difference
+				 */
+
+				List<Diff> diffs = contentProvider.getDiffsFor((EObject) element);
+				for (Diff diff : diffs) {
+
+					if (diff instanceof ReferenceChange && ((ReferenceChange) diff).getReference().isContainment()) {
+
+						OverlayTypeStyler typeStyler = overlayTypeStylers
+								.get(overlayTypeHelper.toOverlayType(diff.getKind()));
+						if (typeStyler != null) {
+							stylers.add(typeStyler);
+						}
+
+						break;
+					}
+				}
+			}
+
 			if (isHighlighted(element, objectsToHighlight)) {
-				text.append(getText(element), highlightStyler);
-			} else {
+				stylers.add(highlightStyler);
+			}
+
+			/* all stylers collected, now apply them */
+
+			if (stylers.isEmpty()) {
+				/* no styles */
 				text.append(getText(element));
+
+			} else {
+
+				Styler styler = null;
+				if (stylers.size() > 1) {
+					/* multiple styles, so compose them to one style */
+					styler = new ComposedStyler(stylers.toArray(new Styler[stylers.size()]));
+				} else {
+					styler = stylers.get(0);
+				}
+
+				text.append(getText(element), styler);
 			}
 
 			cell.setText(text.getString());
@@ -533,24 +591,10 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		 * @return true if the given element should be highlighted, false
 		 *         otherwise.
 		 */
-		private boolean isHighlighted(Object element, List<Object> highlightedElements) {
+		private boolean isHighlighted(Object element, Set<Object> highlightedElements) {
 
 			if (highlightedElements.contains(element)) {
 				return true;
-			}
-
-			if (element instanceof View) {
-				if (isHighlighted(((View) element).getElement(), highlightedElements)) {
-					return true;
-				}
-			}
-
-			if (element instanceof ITreeItemContainer) {
-				return isHighlighted(((ITreeItemContainer) element).getChildren(), highlightedElements);
-			}
-
-			if (element instanceof PatchSet) {
-				return isHighlighted(((PatchSet) element).getPatches(), highlightedElements);
 			}
 
 			if (element instanceof ModelPatch) {
@@ -563,54 +607,6 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 						|| isHighlighted(((DiagramPatch) element).getOldDiagramResource(), highlightedElements);
 			}
 
-			if (element instanceof ModelResource) {
-				return isHighlighted(((ModelResource) element).getObjects(), highlightedElements);
-			}
-
-			if (element instanceof EObject) {
-				return isHighlighted(((EObject) element).eContents(), highlightedElements);
-			}
-
-			return false;
-		}
-
-		/**
-		 * checks if one of the elements provided by the given iterable is
-		 * highlighted or not.
-		 * 
-		 * @param iterable
-		 *            the iterable that provides the elements.
-		 * @param highlightedElements
-		 *            the set of elements to highlight.
-		 * @return true if one of the elements provided by the given iterable
-		 *         should be highlighted, false otherwise.
-		 */
-		public boolean isHighlighted(Iterable<?> iterable, List<Object> highlightedElements) {
-			for (Object element : iterable) {
-				if (isHighlighted(element, highlightedElements)) {
-					return true;
-				}
-			}
-			return false;
-		}
-
-		/**
-		 * checks if one of the elements provided by the given array is
-		 * highlighted or not.
-		 * 
-		 * @param array
-		 *            the array that provides the elements.
-		 * @param highlightedElements
-		 *            the set of elements to highlight.
-		 * @return true if one of the elements provided by the given array
-		 *         should be highlighted, false otherwise.
-		 */
-		public boolean isHighlighted(Object[] array, List<Object> highlightedElements) {
-			for (Object element : array) {
-				if (isHighlighted(element, highlightedElements)) {
-					return true;
-				}
-			}
 			return false;
 		}
 
@@ -652,7 +648,16 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		public Image getImage(Object element) {
 
 			if (element instanceof EObject) {
-				return adapterFactoryLabelProvider.getImage(element);
+				try {
+					return adapterFactoryLabelProvider.getImage(element);
+				} catch (Exception e) {
+					/*
+					 * just in case that the label provider throws some
+					 * unexpected exceptions, e.g. sometimes for diffs...
+					 */
+					// TODO log warning
+					return null;
+				}
 			}
 			return null;
 

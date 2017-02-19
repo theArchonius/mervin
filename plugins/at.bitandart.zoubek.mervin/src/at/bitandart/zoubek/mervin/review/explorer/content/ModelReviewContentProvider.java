@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Florian Zoubek.
+ * Copyright (c) 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,12 +10,15 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.review.explorer.content;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -23,9 +26,11 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
+import at.bitandart.zoubek.mervin.IMatchHelper;
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramResource;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelResource;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
+import at.bitandart.zoubek.mervin.model.modelreview.Patch;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 
 /**
@@ -36,16 +41,19 @@ import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
  * @author Florian Zoubek
  *
  */
-public class ModelReviewContentProvider implements ITreeContentProvider {
+public class ModelReviewContentProvider implements IReviewExplorerContentProvider {
 
 	private AdapterFactoryContentProvider adapterFactoryContentProvider;
 
 	private ModelReview modelReview;
 	private Map<PatchSet, Collection<Object>> cachedPatchSetChildren = new HashMap<>();
+	private Map<EObject, DifferencesTreeItem> cachedDifferenceTreeItems = new HashMap<>();
+	private IMatchHelper matchHelper;
 
-	public ModelReviewContentProvider() {
+	public ModelReviewContentProvider(IMatchHelper matchHelper) {
 		adapterFactoryContentProvider = new AdapterFactoryContentProvider(
 				new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
+		this.matchHelper = matchHelper;
 	}
 
 	@Override
@@ -57,6 +65,7 @@ public class ModelReviewContentProvider implements ITreeContentProvider {
 		}
 		// clear the cache
 		cachedPatchSetChildren.clear();
+		cachedDifferenceTreeItems.clear();
 	}
 
 	@Override
@@ -79,7 +88,7 @@ public class ModelReviewContentProvider implements ITreeContentProvider {
 			return !((ModelResource) element).getObjects().isEmpty();
 		}
 		if (element instanceof EObject) {
-			return adapterFactoryContentProvider.hasChildren(element);
+			return adapterFactoryContentProvider.hasChildren(element) || !getMatchDiffsFor((EObject) element).isEmpty();
 		}
 		return false;
 	}
@@ -96,25 +105,11 @@ public class ModelReviewContentProvider implements ITreeContentProvider {
 		if (element instanceof PatchSet) {
 			return ((PatchSet) element).getReview();
 		}
-		if (element instanceof DiagramResource) {
-			DiagramResource diagramResource = (DiagramResource) element;
-			for (PatchSet patchSet : modelReview.getPatchSets()) {
-				if (patchSet.getNewInvolvedDiagrams().contains(diagramResource)
-						|| patchSet.getNewInvolvedDiagrams().contains(diagramResource)) {
-					return patchSet;
-				}
-			}
-			return null;
+		if (element instanceof DiagramResource || element instanceof ModelResource || element instanceof Patch) {
+			return getPatchSetChildContainer(element);
 		}
-		if (element instanceof ModelResource) {
-			ModelResource modelResource = (ModelResource) element;
-			for (PatchSet patchSet : modelReview.getPatchSets()) {
-				if (patchSet.getNewInvolvedModels().contains(modelResource)
-						|| patchSet.getOldInvolvedModels().contains(modelResource)) {
-					return patchSet;
-				}
-			}
-			return null;
+		if (element instanceof Diff) {
+			return getDifferenceContainer((Diff) element);
 		}
 		if (element instanceof EObject) {
 			EObject eObject = (EObject) element;
@@ -144,6 +139,48 @@ public class ModelReviewContentProvider implements ITreeContentProvider {
 				}
 			}
 			return parent;
+		}
+		return null;
+	}
+
+	/**
+	 * @param object
+	 *            the object to get the container for.
+	 * @return the container containing the given object, or null if no
+	 *         container has been found.
+	 */
+	private Object getPatchSetChildContainer(Object object) {
+
+		Collection<Collection<Object>> cachedPatchSetChildrenEntries = cachedPatchSetChildren.values();
+
+		for (Collection<Object> cachedChildren : cachedPatchSetChildrenEntries) {
+
+			if (cachedChildren != null) {
+
+				for (Object child : cachedChildren) {
+
+					if (child instanceof ITreeItemContainer
+							&& Arrays.asList(((ITreeItemContainer) child).getChildren()).contains(object)) {
+						return child;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * @param diff
+	 *            the {@link Diff} to find the {@link DifferencesTreeItem} for.
+	 * @return the {@link DifferencesTreeItem} containing the given diff or null
+	 *         if no {@link DifferencesTreeItem} could be found.
+	 */
+	private DifferencesTreeItem getDifferenceContainer(Diff diff) {
+
+		EObject newValue = matchHelper.getNewValue((diff).getMatch());
+
+		if (newValue != null) {
+			return cachedDifferenceTreeItems.get(newValue);
 		}
 		return null;
 	}
@@ -201,8 +238,78 @@ public class ModelReviewContentProvider implements ITreeContentProvider {
 			return ((ModelResource) parentElement).getObjects().toArray();
 		}
 		if (parentElement instanceof EObject) {
-			return adapterFactoryContentProvider.getChildren(parentElement);
+
+			EObject parentEObject = (EObject) parentElement;
+
+			List<Object> children = new LinkedList<Object>();
+			children.addAll(Arrays.asList(adapterFactoryContentProvider.getChildren(parentElement)));
+
+			List<Diff> matchDiffs = getMatchDiffsFor(parentEObject);
+
+			if (!matchDiffs.isEmpty()) {
+				/*
+				 * This category does not exist in the model, so we have to
+				 * create a temporary container. We cache them to make sure that
+				 * the category stays the same even if the tree is refreshed.
+				 */
+				if (!cachedDifferenceTreeItems.containsKey(parentEObject)) {
+					cachedDifferenceTreeItems.put(parentEObject, new DifferencesTreeItem(parentEObject, matchDiffs));
+				}
+				children.add(cachedDifferenceTreeItems.get(parentEObject));
+			}
+
+			return children.toArray();
 		}
 		return new Object[0];
+	}
+
+	@Override
+	public PatchSet getContainingPatchSet(Object object) {
+
+		Object parent = object;
+		while (parent != null) {
+
+			if (parent instanceof PatchSet) {
+				return (PatchSet) parent;
+			}
+			parent = getParent(parent);
+		}
+
+		return null;
+	}
+
+	@Override
+	public List<Diff> getMatchDiffsFor(EObject eObject) {
+
+		List<Diff> differences = new LinkedList<Diff>();
+
+		PatchSet patchSet = getContainingPatchSet(eObject);
+		if (patchSet != null) {
+
+			Match match = patchSet.getModelComparison().getMatch(eObject);
+			if (match != null) {
+				differences.addAll(match.getDifferences());
+			}
+
+			match = patchSet.getDiagramComparison().getMatch(eObject);
+			if (match != null) {
+				differences.addAll(match.getDifferences());
+			}
+		}
+		return differences;
+	}
+
+	@Override
+	public List<Diff> getDiffsFor(EObject eObject) {
+
+		List<Diff> differences = new LinkedList<Diff>();
+
+		PatchSet patchSet = getContainingPatchSet(eObject);
+		if (patchSet != null) {
+
+			differences.addAll(patchSet.getModelComparison().getDifferences(eObject));
+			differences.addAll(patchSet.getDiagramComparison().getDifferences(eObject));
+		}
+		return differences;
 	}
 }

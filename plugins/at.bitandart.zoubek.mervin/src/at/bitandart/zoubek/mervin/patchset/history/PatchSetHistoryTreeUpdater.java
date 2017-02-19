@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Florian Zoubek.
+ * Copyright (c) 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,7 +19,6 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TreeColumn;
@@ -28,17 +27,18 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.patchset.history.ISimilarityHistoryService.DiffWithSimilarity;
 import at.bitandart.zoubek.mervin.swt.ProgressPanel;
+import at.bitandart.zoubek.mervin.swt.ProgressPanelOperationThread;
 import at.bitandart.zoubek.mervin.util.vis.HSB;
 import at.bitandart.zoubek.mervin.util.vis.ThreeWayLabelTreeViewerComparator;
 
 /**
- * A thread that updates the Patch Set History data and assigns it to the given
- * tree viewer.
+ * A {@link ProgressPanelOperationThread} that updates the Patch Set History
+ * data and assigns it to the given tree viewer.
  * 
  * @author Florian Zoubek
  *
  */
-public class PatchSetHistoryTreeUpdater extends Thread {
+public class PatchSetHistoryTreeUpdater extends ProgressPanelOperationThread {
 
 	private ModelReview currentModelReview;
 	private PatchSet activePatchSet;
@@ -47,9 +47,6 @@ public class PatchSetHistoryTreeUpdater extends Thread {
 	private IPatchSetHistoryEntryOrganizer organizer;
 	private TreeViewer historyTreeViewer;
 	private TreeViewerColumn labelColumn;
-	private ProgressPanel progressPanel;
-	private Composite mainPanel;
-	private boolean updateProgressPanel;
 
 	/**
 	 * 
@@ -81,7 +78,7 @@ public class PatchSetHistoryTreeUpdater extends Thread {
 			ISimilarityHistoryService similarityHistoryService, IPatchSetHistoryEntryOrganizer organizer,
 			TreeViewer historyTreeViewer, TreeViewerColumn labelColumn, ProgressPanel progressPanel,
 			Composite mainPanel) {
-		super();
+		super(progressPanel, mainPanel);
 		this.currentModelReview = currentModelReview;
 		this.activePatchSet = activePatchSet;
 		this.mergeEqualDiffs = mergeEqualDiffs;
@@ -89,64 +86,11 @@ public class PatchSetHistoryTreeUpdater extends Thread {
 		this.organizer = organizer;
 		this.historyTreeViewer = historyTreeViewer;
 		this.labelColumn = labelColumn;
-		this.progressPanel = progressPanel;
-		this.mainPanel = mainPanel;
-		this.updateProgressPanel = true;
 	}
 
 	@Override
-	public void run() {
-		Display display = mainPanel.getDisplay();
-
-		setProgressPanelVisibility(display, true);
-
-		IProgressMonitor monitor = progressPanel.getProgressMonitor();
-		updateHistoryTree(currentModelReview, monitor, display);
-		done(monitor);
-
-		setProgressPanelVisibility(display, false);
-	}
-
-	/**
-	 * shows the progress panel if updating the progress panel is enabled.
-	 */
-	public void showProgressPanel() {
-
-		Display display = mainPanel.getDisplay();
-		setProgressPanelVisibility(display, true);
-	}
-
-	/**
-	 * hides the progress panel if updating the progress panel is enabled.
-	 */
-	public void hideProgressPanel() {
-
-		Display display = mainPanel.getDisplay();
-		setProgressPanelVisibility(display, false);
-	}
-
-	/**
-	 * updates the visibility of the progress panel if updating the progress
-	 * panel is enabled.
-	 * 
-	 * @param display
-	 *            the display the progress panel is contained in.
-	 * @param visible
-	 *            the visibility of the progress panel.
-	 */
-	private void setProgressPanelVisibility(Display display, final boolean visible) {
-
-		if (updateProgressPanel) {
-			display.syncExec(new Runnable() {
-
-				@Override
-				public void run() {
-					progressPanel.setVisible(visible);
-					((GridData) progressPanel.getLayoutData()).exclude = !visible;
-					mainPanel.layout();
-				}
-			});
-		}
+	protected void runOperation() {
+		updateHistoryTree(currentModelReview, getProgressMonitor(), getDisplay());
 	}
 
 	/**
@@ -224,34 +168,6 @@ public class PatchSetHistoryTreeUpdater extends Thread {
 	}
 
 	/**
-	 * updates the monitor with the given amount of work if updating the
-	 * progress panel is enabled.
-	 * 
-	 * @param monitor
-	 *            the monitor to update.
-	 * @param workDone
-	 *            the work done.
-	 */
-	private void worked(IProgressMonitor monitor, int workDone) {
-		if (updateProgressPanel) {
-			monitor.worked(workDone);
-		}
-	}
-
-	/**
-	 * notifies the monitor that the work has been done if updating the progress
-	 * panel is enabled.
-	 * 
-	 * @param monitor
-	 *            the monitor to update.
-	 */
-	private void done(IProgressMonitor monitor) {
-		if (updateProgressPanel) {
-			monitor.done();
-		}
-	}
-
-	/**
 	 * creates a new column in the given tree viewer that contains the history
 	 * value for the given patch set.
 	 * 
@@ -280,15 +196,5 @@ public class PatchSetHistoryTreeUpdater extends Thread {
 
 		return column;
 
-	}
-
-	/**
-	 * enables or disable the update of the assigned progress panel.
-	 * 
-	 * @param updateProgressPanel
-	 *            true if the progress panel should be updated, false otherwise.
-	 */
-	public void setUpdateProgressPanel(boolean updateProgressPanel) {
-		this.updateProgressPanel = updateProgressPanel;
 	}
 }

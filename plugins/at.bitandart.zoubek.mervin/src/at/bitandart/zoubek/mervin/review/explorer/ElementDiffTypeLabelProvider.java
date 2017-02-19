@@ -10,6 +10,7 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.review.explorer;
 
+import at.bitandart.zoubek.mervin.IOverlayTypeHelper;
 import at.bitandart.zoubek.mervin.draw2d.figures.overlay.IOverlayTypeStyleAdvisor;
 
 /**
@@ -26,11 +27,12 @@ public class ElementDiffTypeLabelProvider extends DiffTypeOverviewLabelProvider 
 	 * @param styleAdvisor
 	 * @param diffCounter
 	 * @param drawTypeOverview
+	 * @param overlayTypeHelper
 	 * @see DiffTypeOverviewLabelProvider
 	 */
 	public ElementDiffTypeLabelProvider(IOverlayTypeStyleAdvisor styleAdvisor, IDifferenceCounter diffCounter,
-			boolean drawTypeOverview) {
-		super(styleAdvisor, diffCounter, drawTypeOverview);
+			boolean drawTypeOverview, IOverlayTypeHelper overlayTypeHelper) {
+		super(styleAdvisor, diffCounter, drawTypeOverview, overlayTypeHelper);
 	}
 
 	@Override
