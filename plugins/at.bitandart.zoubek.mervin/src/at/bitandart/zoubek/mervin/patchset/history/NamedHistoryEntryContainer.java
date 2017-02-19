@@ -13,6 +13,7 @@ package at.bitandart.zoubek.mervin.patchset.history;
 import java.util.List;
 
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
+import at.bitandart.zoubek.mervin.patchset.history.ISimilarityHistoryService.DiffWithSimilarity;
 
 /**
  * A named container for {@link IPatchSetHistoryEntry}s for use within the UI.
@@ -20,7 +21,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
  * @author Florian Zoubek
  *
  */
-public class NamedHistoryEntryContainer extends AbstractHistoryEntry<String, String> {
+public class NamedHistoryEntryContainer extends AbstractHistoryEntry<String, Double> {
 
 	private String name;
 
@@ -34,12 +35,37 @@ public class NamedHistoryEntryContainer extends AbstractHistoryEntry<String, Str
 	}
 
 	@Override
-	public String getValue(PatchSet patchSet) {
+	public Double getValue(PatchSet patchSet) {
+
+		boolean hasValue = false;
+		double valueSum = 0;
+
+		List<IPatchSetHistoryEntry<?, ?>> subEntries = getSubEntries();
+
+		for (IPatchSetHistoryEntry<?, ?> entry : subEntries) {
+
+			Object value = entry.getValue(patchSet);
+
+			if (value instanceof Number) {
+
+				valueSum += ((Number) value).floatValue();
+				hasValue = true;
+
+			} else if (value instanceof DiffWithSimilarity) {
+
+				valueSum += (float) ((DiffWithSimilarity) value).getSimilarity();
+				hasValue = true;
+			}
+		}
+
+		if (hasValue) {
+			return valueSum / (double) subEntries.size();
+		}
 		return null;
 	}
 
 	@Override
-	public void setValue(PatchSet patchSet, String value) {
+	public void setValue(PatchSet patchSet, Double value) {
 		// intentionally left empty
 	}
 

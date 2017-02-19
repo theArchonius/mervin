@@ -27,8 +27,8 @@ import at.bitandart.zoubek.mervin.model.modelreview.User;
 import at.bitandart.zoubek.mervin.model.modelreview.impl.extended.DefaultModelReviewFactory;
 import at.bitandart.zoubek.mervin.patchset.history.ChangeSimilarityHistoryService;
 import at.bitandart.zoubek.mervin.patchset.history.ISimilarityHistoryService;
-import at.bitandart.zoubek.mervin.patchset.history.organizers.DependencyDiffOrganizer;
 import at.bitandart.zoubek.mervin.patchset.history.organizers.IPatchSetHistoryEntryOrganizer;
+import at.bitandart.zoubek.mervin.patchset.history.organizers.MatchingObjectOrganizer;
 import at.bitandart.zoubek.mervin.swt.comments.CommentList.CommentLinkListener;
 import at.bitandart.zoubek.mervin.swt.comments.data.ICommentProvider;
 
@@ -94,7 +94,7 @@ public class MervinServicesAddon {
 		context.set(ISimilarityHistoryService.class, changeSimilarityHistoryService);
 
 		// add default patch set history entry organizer
-		IPatchSetHistoryEntryOrganizer entryOrganizer = ContextInjectionFactory.make(DependencyDiffOrganizer.class,
+		IPatchSetHistoryEntryOrganizer entryOrganizer = ContextInjectionFactory.make(MatchingObjectOrganizer.class,
 				context);
 		context.set(IPatchSetHistoryEntryOrganizer.class, entryOrganizer);
 

@@ -550,7 +550,10 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 		 */
 		private int countTotalNumberOfEntries(IPatchSetHistoryEntry<?, ?> entry) {
 			List<IPatchSetHistoryEntry<?, ?>> subEntries = entry.getSubEntries();
-			int size = subEntries.size();
+			if (subEntries.isEmpty()) {
+				return 1;
+			}
+			int size = 0;
 			for (IPatchSetHistoryEntry<?, ?> subEntry : subEntries) {
 				size += countTotalNumberOfEntries(subEntry);
 			}
