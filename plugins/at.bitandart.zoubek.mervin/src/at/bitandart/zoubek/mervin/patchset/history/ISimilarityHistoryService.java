@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Florian Zoubek.
+ * Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package at.bitandart.zoubek.mervin.patchset.history;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.compare.Diff;
 
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
@@ -37,11 +38,16 @@ public interface ISimilarityHistoryService extends IPatchSetHistoryService<Diff,
 	 *            true if equal diffs should be merged into a single entry,
 	 *            false if an entry should be created for each diff in all patch
 	 *            sets.
+	 * @param monitor
+	 *            the progress monitor to use for reporting progress to the
+	 *            user. It is the caller's responsibility to call done() on the
+	 *            given monitor. Accepts null, indicating that no progress
+	 *            should be reported and that the operation cannot be cancelled.
 	 * @return a list of {@link IPatchSetHistoryEntry}s for all model
 	 *         differences in the given patch set
 	 */
 	public List<IPatchSetHistoryEntry<Diff, DiffWithSimilarity>> createModelEntries(PatchSet patchSet,
-			List<PatchSet> patchSets, boolean mergeEqualDiffs);
+			List<PatchSet> patchSets, boolean mergeEqualDiffs, IProgressMonitor monitor);
 
 	/**
 	 * creates all entries for all model differences in the given list of patch
@@ -53,11 +59,16 @@ public interface ISimilarityHistoryService extends IPatchSetHistoryService<Diff,
 	 *            true if equal diffs should be merged into a single entry,
 	 *            false if an entry should be created for each diff in all patch
 	 *            sets.
+	 * @param monitor
+	 *            the progress monitor to use for reporting progress to the
+	 *            user. It is the caller's responsibility to call done() on the
+	 *            given monitor. Accepts null, indicating that no progress
+	 *            should be reported and that the operation cannot be cancelled.
 	 * @return a list of {@link IPatchSetHistoryEntry}s for all model
 	 *         differences in the given patch set
 	 */
 	public List<IPatchSetHistoryEntry<Diff, DiffWithSimilarity>> createModelEntries(List<PatchSet> patchSets,
-			boolean mergeEqualDiffs);
+			boolean mergeEqualDiffs, IProgressMonitor monitor);
 
 	/**
 	 * creates all entries for all diagram differences in the given patch set.
@@ -70,11 +81,16 @@ public interface ISimilarityHistoryService extends IPatchSetHistoryService<Diff,
 	 *            true if equal diffs should be merged into a single entry,
 	 *            false if an entry should be created for each diff in all patch
 	 *            sets.
+	 * @param monitor
+	 *            the progress monitor to use for reporting progress to the
+	 *            user. It is the caller's responsibility to call done() on the
+	 *            given monitor. Accepts null, indicating that no progress
+	 *            should be reported and that the operation cannot be cancelled.
 	 * @return a list of {@link IPatchSetHistoryEntry}s for all diagram
 	 *         differences in the given patch set
 	 */
 	public List<IPatchSetHistoryEntry<Diff, DiffWithSimilarity>> createDiagramEntries(PatchSet patchSet,
-			List<PatchSet> patchSets, boolean mergeEqualDiffs);
+			List<PatchSet> patchSets, boolean mergeEqualDiffs, IProgressMonitor monitor);
 
 	/**
 	 * creates all entries for all diagram differences in the given list of
@@ -86,11 +102,16 @@ public interface ISimilarityHistoryService extends IPatchSetHistoryService<Diff,
 	 *            true if equal diffs should be merged into a single entry,
 	 *            false if an entry should be created for each diff in all patch
 	 *            sets.
+	 * @param monitor
+	 *            the progress monitor to use for reporting progress to the
+	 *            user. It is the caller's responsibility to call done() on the
+	 *            given monitor. Accepts null, indicating that no progress
+	 *            should be reported and that the operation cannot be cancelled.
 	 * @return a list of {@link IPatchSetHistoryEntry}s for all diagram
 	 *         differences in the given patch set
 	 */
 	public List<IPatchSetHistoryEntry<Diff, DiffWithSimilarity>> createDiagramEntries(List<PatchSet> patchSets,
-			boolean mergeEqualDiffs);
+			boolean mergeEqualDiffs, IProgressMonitor monitor);
 
 	/**
 	 * 
