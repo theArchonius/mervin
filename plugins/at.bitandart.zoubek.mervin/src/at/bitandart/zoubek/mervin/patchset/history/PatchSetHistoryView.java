@@ -610,8 +610,16 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 				return 1;
 			}
 			int size = 0;
+			boolean containsSubDiffEntry = false;
 			for (IPatchSetHistoryEntry<?, ?> subEntry : subEntries) {
-				size += countTotalNumberOfEntries(subEntry);
+				if (subEntry instanceof SubDiffEntry) {
+					containsSubDiffEntry = true;
+				} else {
+					size += countTotalNumberOfEntries(subEntry);
+				}
+			}
+			if (containsSubDiffEntry) {
+				size++;
 			}
 			return size;
 		}
@@ -695,7 +703,14 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 
 				Object entryObject = ((IPatchSetHistoryEntry<?, ?>) element).getEntryObject();
 				// delegate to the default EMF compare label provider
-				return adapterFactoryLabelProvider.getText(entryObject);
+				String providerText = adapterFactoryLabelProvider.getText(entryObject);
+
+				if (element instanceof SubDiffEntry) {
+					return MessageFormat.format("PS#{0}: {1}", ((SubDiffEntry) element).getPatchSet().getId(),
+							providerText);
+				}
+
+				return providerText;
 
 			}
 			return element.toString();

@@ -242,7 +242,16 @@ public class DiffSimilarityHistoryService implements ISimilarityHistoryService {
 	 */
 	protected void postProcessEntry(IPatchSetHistoryEntry<Diff, DiffWithSimilarity> entry, PatchSet patchSet,
 			IProgressMonitor monitor) {
-		// intentionally left empty
+
+		SubMonitor.convert(monitor, 100);
+
+		DiffWithSimilarity value = entry.getValue(patchSet);
+
+		if (value != null) {
+			SubDiffEntry subDiffEntry = new SubDiffEntry(patchSet, entry.getValue(patchSet));
+			entry.getSubEntries().add(subDiffEntry);
+		}
+
 	}
 
 	/**
