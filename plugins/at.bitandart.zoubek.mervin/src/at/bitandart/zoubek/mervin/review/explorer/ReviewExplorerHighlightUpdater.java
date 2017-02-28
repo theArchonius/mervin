@@ -17,6 +17,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -28,6 +29,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.patchset.history.IPatchSetHistoryEntry;
 import at.bitandart.zoubek.mervin.patchset.history.ISimilarityHistoryService.DiffWithSimilarity;
+import at.bitandart.zoubek.mervin.patchset.history.NamedHistoryEntryContainer;
 import at.bitandart.zoubek.mervin.review.explorer.content.IReviewExplorerContentProvider;
 import at.bitandart.zoubek.mervin.swt.ProgressPanel;
 import at.bitandart.zoubek.mervin.swt.ProgressPanelOperationThread;
@@ -128,6 +130,7 @@ public class ReviewExplorerHighlightUpdater extends ProgressPanelOperationThread
 	 *            the set of elements to add the derived highlighted elements
 	 *            to.
 	 * @param progressMonitor
+	 *            the {@link IProgressMonitor} to check the cancellation state.
 	 */
 	protected void addDerivedElementsToHighlight(ModelReview modelReview, List<Object> highlightedElements,
 			Set<Object> objectsToHighlight, IProgressMonitor progressMonitor) {
@@ -138,47 +141,99 @@ public class ReviewExplorerHighlightUpdater extends ProgressPanelOperationThread
 				return;
 			}
 
-			if (highlightedElement instanceof IPatchSetHistoryEntry<?, ?>) {
+			if (highlightedElement instanceof NamedHistoryEntryContainer) {
 
-				IPatchSetHistoryEntry<?, ?> historyEntry = (IPatchSetHistoryEntry<?, ?>) highlightedElement;
-				Object entryObject = historyEntry.getEntryObject();
+				// TODO move in own method
 
-				/* check the entry object first */
-				if (entryObject instanceof Diff) {
-
-					// TODO apply filter
-					Diff diff = (Diff) entryObject;
-					addDerivedElementsToHighlight(diff, objectsToHighlight, progressMonitor);
-
-					if (progressMonitor.isCanceled()) {
-						return;
-					}
-				}
-
-				EList<PatchSet> patchSets = modelReview.getPatchSets();
-				for (PatchSet patchSet : patchSets) {
-
-					if (progressMonitor.isCanceled()) {
-						return;
+				for (IPatchSetHistoryEntry<?, ?> subEntry : ((NamedHistoryEntryContainer) highlightedElement)
+						.getSubEntries()) {
+					Object entryObject = subEntry.getEntryObject();
+					if (entryObject instanceof Diff) {
+						Match match = ((Diff) entryObject).getMatch();
+						EObject left = match.getLeft();
+						EObject right = match.getRight();
+						if (left != null) {
+							objectsToHighlight.add(left);
+						}
+						if (right != null) {
+							objectsToHighlight.add(right);
+						}
 					}
 
-					Object value = historyEntry.getValue(patchSet);
-					if (value instanceof DiffWithSimilarity) {
-
-						// TODO apply filter
-						Diff diff = ((DiffWithSimilarity) value).getDiff();
-						// TODO apply filter
-						addDerivedElementsToHighlight(diff, objectsToHighlight, progressMonitor);
-
-						if (progressMonitor.isCanceled()) {
-							return;
+					for (PatchSet patchSet : modelReview.getPatchSets()) {
+						Object value = subEntry.getValue(patchSet);
+						if (value instanceof DiffWithSimilarity) {
+							Match match = ((DiffWithSimilarity) value).getDiff().getMatch();
+							EObject left = match.getLeft();
+							EObject right = match.getRight();
+							if (left != null) {
+								objectsToHighlight.add(left);
+							}
+							if (right != null) {
+								objectsToHighlight.add(right);
+							}
 						}
 					}
 				}
+
+			} else if (highlightedElement instanceof IPatchSetHistoryEntry<?, ?>) {
+				addDerivedElementsToHighlight((IPatchSetHistoryEntry<?, ?>) highlightedElement, objectsToHighlight,
+						modelReview, progressMonitor);
 			}
 
 			if (highlightedElement instanceof EObject) {
 				objectsToHighlight.addAll(diagramModelHelper.getReferencingViews((EObject) highlightedElement));
+			}
+		}
+	}
+
+	/**
+	 * adds the derived objects to highlight for the given
+	 * {@link IPatchSetHistoryEntry} to the given list of highlighted objects.
+	 * 
+	 * @param historyEntry
+	 *            the entry to derive the objects from.
+	 * @param objectsToHighlight
+	 *            the set of objects to store the highlighted objects into
+	 * @param modelReview
+	 *            the corresponding {@link ModelReview}
+	 * @param progressMonitor
+	 *            the {@link IProgressMonitor} to check the cancellation state.
+	 */
+	private void addDerivedElementsToHighlight(IPatchSetHistoryEntry<?, ?> historyEntry, Set<Object> objectsToHighlight,
+			ModelReview modelReview, IProgressMonitor progressMonitor) {
+		Object entryObject = historyEntry.getEntryObject();
+
+		/* check the entry object first */
+		if (entryObject instanceof Diff) {
+
+			// TODO apply filter
+			Diff diff = (Diff) entryObject;
+			addDerivedElementsToHighlight(diff, objectsToHighlight, progressMonitor);
+
+			if (progressMonitor.isCanceled()) {
+				return;
+			}
+		}
+
+		EList<PatchSet> patchSets = modelReview.getPatchSets();
+		for (PatchSet patchSet : patchSets) {
+
+			if (progressMonitor.isCanceled()) {
+				return;
+			}
+
+			Object value = historyEntry.getValue(patchSet);
+			if (value instanceof DiffWithSimilarity) {
+
+				// TODO apply filter
+				Diff diff = ((DiffWithSimilarity) value).getDiff();
+				// TODO apply filter
+				addDerivedElementsToHighlight(diff, objectsToHighlight, progressMonitor);
+
+				if (progressMonitor.isCanceled()) {
+					return;
+				}
 			}
 		}
 	}

@@ -151,6 +151,18 @@ public class ModelReviewContentProvider implements IReviewExplorerContentProvide
 	 */
 	private Object getPatchSetChildContainer(Object object) {
 
+		PatchSet patchSet = null;
+		if (object instanceof EObject) {
+			EObject container = ((EObject) object).eContainer();
+			if (container instanceof PatchSet) {
+				patchSet = (PatchSet) container;
+			}
+		}
+
+		if (patchSet != null && !cachedPatchSetChildren.containsKey(patchSet)) {
+			rebuildPatchSetChildrenContainersFor(patchSet);
+		}
+
 		Collection<Collection<Object>> cachedPatchSetChildrenEntries = cachedPatchSetChildren.values();
 
 		for (Collection<Object> cachedChildren : cachedPatchSetChildrenEntries) {
@@ -170,6 +182,16 @@ public class ModelReviewContentProvider implements IReviewExplorerContentProvide
 	}
 
 	/**
+	 * rebuilds the cached containers for the given patch set
+	 * 
+	 * @param patchSet
+	 *            the patch set to rebuild the container cache for.
+	 */
+	private void rebuildPatchSetChildrenContainersFor(PatchSet patchSet) {
+		getChildren(patchSet);
+	}
+
+	/**
 	 * @param diff
 	 *            the {@link Diff} to find the {@link DifferencesTreeItem} for.
 	 * @return the {@link DifferencesTreeItem} containing the given diff or null
@@ -180,9 +202,23 @@ public class ModelReviewContentProvider implements IReviewExplorerContentProvide
 		EObject newValue = matchHelper.getNewValue((diff).getMatch());
 
 		if (newValue != null) {
+
+			if (!cachedDifferenceTreeItems.containsKey(newValue)) {
+				rebuildCachedDifferenceContainerFor(newValue);
+			}
 			return cachedDifferenceTreeItems.get(newValue);
 		}
 		return null;
+	}
+
+	/**
+	 * rebuilds the cached containers for the given {@link EObject}
+	 * 
+	 * @param object
+	 *            the EObject to rebuild the container cache for.
+	 */
+	private void rebuildCachedDifferenceContainerFor(EObject object) {
+		getChildren(object);
 	}
 
 	/**

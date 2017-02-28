@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Florian Zoubek.
+ * Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,8 @@
 package at.bitandart.zoubek.mervin.patchset.history;
 
 import java.util.Collection;
+
+import org.eclipse.core.runtime.IProgressMonitor;
 
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 
@@ -41,9 +43,15 @@ public interface IPatchSetHistoryService<O, V> {
 	 * @param context
 	 *            an object describing the context of the given object to create
 	 *            the entry for. May be null if no context is available.
+	 * @param monitor
+	 *            the progress monitor to use for reporting progress to the
+	 *            user. It is the caller's responsibility to call done() on the
+	 *            given monitor. Accepts null, indicating that no progress
+	 *            should be reported and that the operation cannot be cancelled.
 	 * @return the entry matching the given parameters.
 	 */
-	IPatchSetHistoryEntry<O, V> createEntryFor(O object, Collection<PatchSet> patchSets, Object context);
+	IPatchSetHistoryEntry<O, V> createEntryFor(O object, Collection<PatchSet> patchSets, Object context,
+			IProgressMonitor monitor);
 
 	/**
 	 * forces an update of a given entry's values using the collection of
@@ -57,8 +65,14 @@ public interface IPatchSetHistoryService<O, V> {
 	 * @param context
 	 *            an object describing the context of the given object to create
 	 *            the entry for. May be null if no context is available.
+	 * @param monitor
+	 *            the progress monitor to use for reporting progress to the
+	 *            user. It is the caller's responsibility to call done() on the
+	 *            given monitor. Accepts null, indicating that no progress
+	 *            should be reported and that the operation cannot be cancelled.
 	 */
-	void updateEntryFor(IPatchSetHistoryEntry<O, V> entry, Collection<PatchSet> patchSets, Object context);
+	void updateEntryFor(IPatchSetHistoryEntry<O, V> entry, Collection<PatchSet> patchSets, Object context,
+			IProgressMonitor monitor);
 
 	/**
 	 * forces an update of a given entry's value using the given
@@ -72,7 +86,12 @@ public interface IPatchSetHistoryService<O, V> {
 	 * @param context
 	 *            an object describing the context of the given object to create
 	 *            the entry for. May be null if no context is available.
+	 * @param monitor
+	 *            the progress monitor to use for reporting progress to the
+	 *            user. It is the caller's responsibility to call done() on the
+	 *            given monitor. Accepts null, indicating that no progress
+	 *            should be reported and that the operation cannot be cancelled.
 	 */
-	void updateEntryFor(IPatchSetHistoryEntry<O, V> entry, PatchSet patchSet, Object context);
+	void updateEntryFor(IPatchSetHistoryEntry<O, V> entry, PatchSet patchSet, Object context, IProgressMonitor monitor);
 
 }

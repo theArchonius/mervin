@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -26,6 +27,7 @@ import org.eclipse.swt.widgets.TreeColumn;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.patchset.history.ISimilarityHistoryService.DiffWithSimilarity;
+import at.bitandart.zoubek.mervin.patchset.history.organizers.IPatchSetHistoryEntryOrganizer;
 import at.bitandart.zoubek.mervin.swt.ProgressPanel;
 import at.bitandart.zoubek.mervin.swt.ProgressPanelOperationThread;
 import at.bitandart.zoubek.mervin.util.vis.HSB;
@@ -101,7 +103,7 @@ public class PatchSetHistoryTreeUpdater extends ProgressPanelOperationThread {
 	 */
 	private void updateHistoryTree(ModelReview currentModelReview, IProgressMonitor monitor, Display display) {
 
-		monitor.beginTask("Updating Patch Set History...", 3);
+		SubMonitor subMonitor = SubMonitor.convert(monitor, "Updating Patch Set History...", 3);
 
 		final EList<PatchSet> patchSets = currentModelReview.getPatchSets();
 
@@ -110,36 +112,34 @@ public class PatchSetHistoryTreeUpdater extends ProgressPanelOperationThread {
 		if (activePatchSet != null) {
 
 			List<IPatchSetHistoryEntry<Diff, DiffWithSimilarity>> modelHistoryEntries = similarityHistoryService
-					.createModelEntries(activePatchSet, patchSets, mergeEqualDiffs);
+					.createModelEntries(activePatchSet, patchSets, mergeEqualDiffs, subMonitor.newChild(1));
 
 			if (monitor.isCanceled()) {
 				return;
 			}
-			worked(monitor, 1);
 
 			List<IPatchSetHistoryEntry<Diff, DiffWithSimilarity>> diagramHistoryEntries = similarityHistoryService
-					.createDiagramEntries(activePatchSet, patchSets, mergeEqualDiffs);
+					.createDiagramEntries(activePatchSet, patchSets, mergeEqualDiffs, subMonitor.newChild(1));
 			historyData = organizer.groupPatchSetHistoryEntries(modelHistoryEntries, diagramHistoryEntries);
 
 		} else {
 
 			List<IPatchSetHistoryEntry<Diff, DiffWithSimilarity>> modelHistoryEntries = similarityHistoryService
-					.createModelEntries(patchSets, mergeEqualDiffs);
+					.createModelEntries(patchSets, mergeEqualDiffs, subMonitor.newChild(1));
 
 			if (monitor.isCanceled()) {
 				return;
 			}
-			worked(monitor, 1);
 
 			List<IPatchSetHistoryEntry<Diff, DiffWithSimilarity>> diagramHistoryEntries = similarityHistoryService
-					.createDiagramEntries(patchSets, mergeEqualDiffs);
+					.createDiagramEntries(patchSets, mergeEqualDiffs, subMonitor.newChild(1));
 			historyData = organizer.groupPatchSetHistoryEntries(modelHistoryEntries, diagramHistoryEntries);
 		}
 
 		if (monitor.isCanceled()) {
 			return;
 		}
-		worked(monitor, 1);
+		subMonitor.worked(1);
 
 		// update columns
 

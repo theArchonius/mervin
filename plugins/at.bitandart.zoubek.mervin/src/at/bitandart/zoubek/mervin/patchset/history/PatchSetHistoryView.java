@@ -11,9 +11,11 @@
 package at.bitandart.zoubek.mervin.patchset.history;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -40,6 +42,7 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
+import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
@@ -55,18 +58,25 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 
+import at.bitandart.zoubek.mervin.IOverlayTypeHelper;
 import at.bitandart.zoubek.mervin.IReviewHighlightService;
 import at.bitandart.zoubek.mervin.IReviewHighlightServiceListener;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.DefaultOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.IOverlayTypeStyleAdvisor;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayType;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
+import at.bitandart.zoubek.mervin.patchset.history.organizers.IPatchSetHistoryEntryOrganizer;
 import at.bitandart.zoubek.mervin.review.HighlightHoveredTreeItemMouseTracker;
 import at.bitandart.zoubek.mervin.review.HighlightMode;
 import at.bitandart.zoubek.mervin.review.HighlightSelectionListener;
 import at.bitandart.zoubek.mervin.review.IReviewHighlightProvidingPart;
 import at.bitandart.zoubek.mervin.review.ModelReviewEditorTrackingView;
 import at.bitandart.zoubek.mervin.swt.ProgressPanel;
+import at.bitandart.zoubek.mervin.swt.text.styles.ComposedStyler;
 import at.bitandart.zoubek.mervin.swt.text.styles.HighlightStyler;
+import at.bitandart.zoubek.mervin.swt.text.styles.OverlayTypeStyler;
 import at.bitandart.zoubek.mervin.util.vis.ThreeWayObjectTreeViewerComparator;
 
 /**
@@ -122,6 +132,9 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 	@Inject
 	private IReviewHighlightService highlightService;
 
+	@Inject
+	private IOverlayTypeHelper overlayTypeHelper;
+
 	private IPatchSetHistoryEntryOrganizer entryOrganizer;
 
 	private VisibleDiffMode visibleDiffs = VisibleDiffMode.ALL_DIFFS;
@@ -152,11 +165,11 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 	private Color progressBackgroundColor;
 	private Color progressForegroundColor;
 
-	private HighlightStyler highlightStyler;
-
 	private ProgressPanel progressPanel;
 
 	private PatchSetHistoryTreeUpdater currentUpdateThread;
+
+	private DiffNameColumnLabelProvider labelColumnLabelProvider;
 
 	@Inject
 	public PatchSetHistoryView() {
@@ -175,7 +188,6 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 		syncMenuAndToolbarItemState(modelService, part);
 
 		initializeColors();
-		highlightStyler = new HighlightStyler(display);
 
 		mainPanel = new Composite(parent, SWT.NONE);
 		mainPanel.setLayout(new GridLayout());
@@ -212,8 +224,7 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 		labelColumn.getColumn().setText("Diff");
 		labelColumn.getColumn().setWidth(400);
 
-		DiffNameColumnLabelProvider labelColumnLabelProvider = new DiffNameColumnLabelProvider(
-				patchSetHistoryContentProvider);
+		labelColumnLabelProvider = new DiffNameColumnLabelProvider(patchSetHistoryContentProvider, overlayTypeHelper);
 		labelColumn.setLabelProvider(labelColumnLabelProvider);
 		labelColumn.getColumn().addSelectionListener(
 				new ThreeWayObjectTreeViewerComparator(historyTreeViewer, labelColumn, labelColumnLabelProvider));
@@ -348,7 +359,7 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 
 	@PreDestroy
 	private void dispose() {
-		highlightStyler.dispose();
+		labelColumnLabelProvider.dispose();
 		progressBackgroundColor.dispose();
 		progressForegroundColor.dispose();
 	}
@@ -496,7 +507,8 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 	 * A {@link ColumnLabelProvider} implementation that provides labels for
 	 * {@link NamedHistoryEntryContainer}s, as well as
 	 * {@link IPatchSetHistoryEntry} entry objects which are instances of EMF
-	 * compare model elements.
+	 * compare model elements. This class allocates system memory and should be
+	 * disposed once it is not used any more.
 	 * 
 	 * @author Florian Zoubek
 	 *
@@ -505,11 +517,26 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 
 		private AdapterFactoryLabelProvider adapterFactoryLabelProvider;
 		private ITreeContentProvider contentProvider;
+		private IOverlayTypeStyleAdvisor styleAdvisor;
+		private EnumMap<OverlayType, Styler> overlayTypeStylers = new EnumMap<>(OverlayType.class);
+		private IOverlayTypeHelper overlayTypeHelper;
+		private HighlightStyler highlightStyler;
 
-		public DiffNameColumnLabelProvider(ITreeContentProvider contentProvider) {
+		public DiffNameColumnLabelProvider(ITreeContentProvider contentProvider, IOverlayTypeHelper overlayTypeHelper) {
+
 			adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(
 					new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
 			this.contentProvider = contentProvider;
+
+			this.overlayTypeHelper = overlayTypeHelper;
+
+			styleAdvisor = new DefaultOverlayTypeStyleAdvisor();
+
+			highlightStyler = new HighlightStyler(display);
+
+			for (OverlayType overlayType : OverlayType.values()) {
+				overlayTypeStylers.put(overlayType, new OverlayTypeStyler(overlayType, styleAdvisor));
+			}
 		}
 
 		@Override
@@ -518,11 +545,41 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 			Object element = cell.getElement();
 			List<Object> highlightedElements = highlightService.getHighlightedElements(getCurrentModelReview());
 			StyledString text = new StyledString();
+
+			List<Styler> stylers = new ArrayList<Styler>();
+
 			if (isHighlighted(element, highlightedElements)) {
-				text.append(getText(element), highlightStyler);
-			} else {
-				text.append(getText(element));
+				stylers.add(highlightStyler);
 			}
+
+			if (element instanceof IPatchSetHistoryEntry<?, ?>) {
+				Object entryObject = ((IPatchSetHistoryEntry<?, ?>) element).getEntryObject();
+				if (entryObject instanceof Diff) {
+					Styler overlayStyler = overlayTypeStylers
+							.get(overlayTypeHelper.toOverlayType(((Diff) entryObject).getKind()));
+					if (overlayStyler != null) {
+						stylers.add(overlayStyler);
+					}
+				}
+			}
+
+			if (stylers.isEmpty()) {
+				/* no styles */
+				text.append(getText(element));
+
+			} else {
+
+				Styler styler = null;
+				if (stylers.size() > 1) {
+					/* multiple styles, so compose them to one style */
+					styler = new ComposedStyler(stylers.toArray(new Styler[stylers.size()]));
+				} else {
+					styler = stylers.get(0);
+				}
+
+				text.append(getText(element), styler);
+			}
+
 			if (element instanceof NamedHistoryEntryContainer) {
 
 				NamedHistoryEntryContainer container = (NamedHistoryEntryContainer) element;
@@ -549,9 +606,20 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 		 */
 		private int countTotalNumberOfEntries(IPatchSetHistoryEntry<?, ?> entry) {
 			List<IPatchSetHistoryEntry<?, ?>> subEntries = entry.getSubEntries();
-			int size = subEntries.size();
+			if (subEntries.isEmpty()) {
+				return 1;
+			}
+			int size = 0;
+			boolean containsSubDiffEntry = false;
 			for (IPatchSetHistoryEntry<?, ?> subEntry : subEntries) {
-				size += countTotalNumberOfEntries(subEntry);
+				if (subEntry instanceof SubDiffEntry) {
+					containsSubDiffEntry = true;
+				} else {
+					size += countTotalNumberOfEntries(subEntry);
+				}
+			}
+			if (containsSubDiffEntry) {
+				size++;
 			}
 			return size;
 		}
@@ -635,7 +703,14 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 
 				Object entryObject = ((IPatchSetHistoryEntry<?, ?>) element).getEntryObject();
 				// delegate to the default EMF compare label provider
-				return adapterFactoryLabelProvider.getText(entryObject);
+				String providerText = adapterFactoryLabelProvider.getText(entryObject);
+
+				if (element instanceof SubDiffEntry) {
+					return MessageFormat.format("PS#{0}: {1}", ((SubDiffEntry) element).getPatchSet().getId(),
+							providerText);
+				}
+
+				return providerText;
 
 			}
 			return element.toString();
@@ -667,6 +742,10 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 			String text1 = getText(object1);
 			String text2 = getText(object2);
 			return Policy.getComparator().compare(text1, text2);
+		}
+
+		public void dispose() {
+			highlightStyler.dispose();
 		}
 
 	}
