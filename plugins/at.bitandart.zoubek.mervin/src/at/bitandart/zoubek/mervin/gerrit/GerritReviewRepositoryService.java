@@ -19,7 +19,6 @@ import java.net.URI;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -287,7 +286,8 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 					loadPatches(patchSet, refEntry.getValue(), git);
 
 					// load involved models
-					resourceSets.addAll(loadInvolvedModelsAndDiagrams(patchSet, refEntry.getValue(), git));
+					resourceSets.addAll(loadInvolvedModelsAndDiagrams(patchSet, refEntry.getValue(), git,
+							new ArrayList<>(resourceSets)));
 
 					// compare the involved models
 					patchSet.setModelComparison(compareModels(patchSet));
@@ -452,7 +452,8 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 	 *         resources.
 	 * @throws IOException
 	 */
-	private List<ResourceSet> loadInvolvedModelsAndDiagrams(PatchSet patchSet, Ref ref, Git git) throws IOException {
+	private List<ResourceSet> loadInvolvedModelsAndDiagrams(PatchSet patchSet, Ref ref, Git git,
+			List<ResourceSet> cachedResourceSets) throws IOException {
 
 		String commitHash = ref.getObjectId().name();
 
@@ -472,10 +473,8 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 			repoPath = repoPath.substring(0, repoPath.length() - 1);
 		}
 
-		ResourceSet newResourceSet = createGitAwareResourceSet(commitHash, repoPath,
-				Collections.<ResourceSet> emptyList());
-		ResourceSet oldModelResourceSet = createGitAwareResourceSet(parentCommitHash, repoPath,
-				Collections.<ResourceSet> emptyList());
+		ResourceSet newResourceSet = createGitAwareResourceSet(commitHash, repoPath, cachedResourceSets);
+		ResourceSet oldModelResourceSet = createGitAwareResourceSet(parentCommitHash, repoPath, cachedResourceSets);
 
 		for (Patch patch : patchSet.getPatches()) {
 			if (patch instanceof ModelPatch || patch instanceof DiagramPatch) {
@@ -711,7 +710,6 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 				 * sets
 				 */
 				for (ResourceSet resourceSet : fallbackSets) {
-
 					Resource resource = resourceSet.getResource(uri, false);
 					if (resource != null) {
 						return resource;
