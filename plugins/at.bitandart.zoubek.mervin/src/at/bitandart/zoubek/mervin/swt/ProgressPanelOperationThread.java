@@ -161,8 +161,8 @@ public abstract class ProgressPanelOperationThread extends Thread {
 	public void cancelOperation() {
 		hideProgressPanel();
 		IProgressMonitor progressMonitor = getProgressMonitor();
-		disconnectFromProgressPanel();
 		progressMonitor.setCanceled(true);
+		disconnectFromProgressPanel();
 	}
 
 	/**

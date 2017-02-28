@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Florian Zoubek.
+ * Copyright (c) 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -74,12 +74,15 @@ class ProgressPanelMonitor implements IProgressMonitor {
 			workState = totalWork;
 		}
 
-		if (this.progressPanel != null && !this.progressPanel.isDisposed()) {
+		if (hasValidPanel()) {
 			this.progressPanel.getDisplay().syncExec(new Runnable() {
 
 				@Override
 				public void run() {
-					ProgressPanelMonitor.this.progressPanel.getProgressBar().setSelection(workState);
+
+					if (ProgressPanelMonitor.this.hasValidPanel()) {
+						ProgressPanelMonitor.this.progressPanel.getProgressBar().setSelection(workState);
+					}
 
 				}
 			});
@@ -92,22 +95,25 @@ class ProgressPanelMonitor implements IProgressMonitor {
 
 		workState = 0;
 		canceled = false;
-		if (this.progressPanel != null && !this.progressPanel.isDisposed()) {
+		if (hasValidPanel()) {
 			this.progressPanel.getDisplay().syncExec(new Runnable() {
 
 				@Override
 				public void run() {
 
-					ProgressPanelMonitor.this.progressPanel.getProgressLabel().setText("");
+					if (ProgressPanelMonitor.this.hasValidPanel()) {
 
-					ProgressPanelMonitor.this.progressPanel
-							.getProgressBarLayout().topControl = ProgressPanelMonitor.this.progressPanel
-									.getProgressBar();
-					ProgressPanelMonitor.this.progressPanel.getProgressBar().setSelection(workState);
-					ProgressPanelMonitor.this.progressPanel.getProgressBar().setMaximum(0);
+						ProgressPanelMonitor.this.progressPanel.getProgressLabel().setText("");
 
-					ProgressPanelMonitor.this.progressPanel.getProgressBarPanel().layout();
+						ProgressPanelMonitor.this.progressPanel
+								.getProgressBarLayout().topControl = ProgressPanelMonitor.this.progressPanel
+										.getProgressBar();
+						ProgressPanelMonitor.this.progressPanel.getProgressBar().setSelection(workState);
+						ProgressPanelMonitor.this.progressPanel.getProgressBar().setMaximum(0);
 
+						ProgressPanelMonitor.this.progressPanel.getProgressBarPanel().layout();
+
+					}
 				}
 			});
 		}
@@ -120,32 +126,42 @@ class ProgressPanelMonitor implements IProgressMonitor {
 		taskName = name;
 		this.totalWork = totalWork;
 
-		if (this.progressPanel != null && !this.progressPanel.isDisposed()) {
+		if (hasValidPanel()) {
 			this.progressPanel.getDisplay().syncExec(new Runnable() {
 
 				@Override
 				public void run() {
 
-					ProgressPanelMonitor.this.progressPanel.getProgressLabel().setText(taskName);
-					if (ProgressPanelMonitor.this.totalWork == IProgressMonitor.UNKNOWN) {
-						ProgressPanelMonitor.this.progressPanel
-								.getProgressBarLayout().topControl = ProgressPanelMonitor.this.progressPanel
-										.getIndeterminedProgressBar();
-					} else {
-						ProgressPanelMonitor.this.progressPanel
-								.getProgressBarLayout().topControl = ProgressPanelMonitor.this.progressPanel
-										.getProgressBar();
-						ProgressPanelMonitor.this.progressPanel.getProgressBar().setSelection(workState);
-						ProgressPanelMonitor.this.progressPanel.getProgressBar()
-								.setMaximum(ProgressPanelMonitor.this.totalWork);
+					if (ProgressPanelMonitor.this.hasValidPanel()) {
+
+						ProgressPanelMonitor.this.progressPanel.getProgressLabel().setText(taskName);
+						if (ProgressPanelMonitor.this.totalWork == IProgressMonitor.UNKNOWN) {
+							ProgressPanelMonitor.this.progressPanel
+									.getProgressBarLayout().topControl = ProgressPanelMonitor.this.progressPanel
+											.getIndeterminedProgressBar();
+						} else {
+							ProgressPanelMonitor.this.progressPanel
+									.getProgressBarLayout().topControl = ProgressPanelMonitor.this.progressPanel
+											.getProgressBar();
+							ProgressPanelMonitor.this.progressPanel.getProgressBar().setSelection(workState);
+							ProgressPanelMonitor.this.progressPanel.getProgressBar()
+									.setMaximum(ProgressPanelMonitor.this.totalWork);
+						}
+
+						ProgressPanelMonitor.this.progressPanel.getProgressBarPanel().layout();
+
 					}
-
-					ProgressPanelMonitor.this.progressPanel.getProgressBarPanel().layout();
-
 				}
 			});
 		}
 
+	}
+
+	/**
+	 * @return true if a valid panel has been assigned, false otherwise.
+	 */
+	public boolean hasValidPanel() {
+		return this.progressPanel != null && !this.progressPanel.isDisposed();
 	}
 
 	public void setProgressPanel(ProgressPanel progressPanel) {
