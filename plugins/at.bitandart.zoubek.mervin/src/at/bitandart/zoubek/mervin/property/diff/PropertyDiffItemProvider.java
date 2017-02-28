@@ -10,6 +10,7 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.property.diff;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -280,7 +281,7 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 	private void addMultiValuedChildren(BaseEntry parent, Comparison comparison, List<BaseEntry> children,
 			Object leftValue, Object rightValue, EStructuralFeature feature, DiffCache featureDiffs) {
 
-		ListEntry listEntry = new ListEntry(parent, feature.getName(), comparison, null);
+		ListEntry listEntry = new ListEntry(parent, getText(feature), comparison, null);
 
 		children.add(listEntry);
 
@@ -511,6 +512,35 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 	}
 
 	/**
+	 * convenience method to get a description text for the given feature.
+	 * 
+	 * @param feature
+	 *            the feature to create the text for.
+	 * @return a String describing the given feature.
+	 */
+	protected String getText(EStructuralFeature feature) {
+
+		StringBuilder sb = new StringBuilder();
+		if (feature.isDerived()) {
+			sb.append("[Derived] ");
+		}
+
+		if (feature instanceof EReference && ((EReference) feature).isContainment()) {
+			sb.append("[Containment] ");
+		}
+
+		sb.append(feature.getName());
+		sb.append(" : ");
+		sb.append(feature.getEType().getName());
+
+		if (feature.isMany()) {
+			sb.append(" []");
+		}
+
+		return sb.toString();
+	}
+
+	/**
 	 * checks if the values of the given match is affected by a move or not.
 	 * This is the case if a diff in the given DiffCache with kind move exists
 	 * for the left or right value of the match.
@@ -613,7 +643,7 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 					/*
 					 * same match, so add only one entry
 					 */
-					children.add(createMatchEntry(parent, feature.getName() + " : ", leftMatch, TreeDiffSide.LEFT,
+					children.add(createMatchEntry(parent, getText(feature) + " : ", leftMatch, TreeDiffSide.LEFT,
 							feature, featureDiffs));
 
 				} else {
@@ -621,14 +651,14 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 					/*
 					 * two different matches, add one list entry for each match
 					 */
-					ListEntry listEntry = new ListEntry(parent, feature.getName(), comparison, null);
+					ListEntry listEntry = new ListEntry(parent, getText(feature), comparison, null);
 					List<BaseEntry> elementList = listEntry.getElementList();
 					if (leftMatch != null) {
-						elementList.add(createMatchEntry(listEntry, feature.getName() + " : ", leftMatch,
+						elementList.add(createMatchEntry(listEntry, getText(feature) + " : ", leftMatch,
 								TreeDiffSide.LEFT, feature, featureDiffs));
 					}
 					if (rightMatch != null) {
-						elementList.add(createMatchEntry(listEntry, feature.getName() + " : ", rightMatch,
+						elementList.add(createMatchEntry(listEntry, getText(feature) + " : ", rightMatch,
 								TreeDiffSide.RIGHT, feature, featureDiffs));
 					}
 					if (elementList.size() == 1) {
@@ -645,7 +675,7 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 
 		} else {
 
-			children.add(new ObjectEntry(parent, feature.getName() + " : ", comparison, leftValue, rightValue));
+			children.add(new ObjectEntry(parent, getText(feature) + " : ", comparison, leftValue, rightValue));
 
 		}
 	}
@@ -909,6 +939,10 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 			} else {
 				text += "<null>";
 			}
+
+		} else if (entry instanceof ListEntry) {
+
+			text += MessageFormat.format(" - {0} Element(s)", ((ListEntry) entry).getElementList().size());
 		}
 
 		return text;
