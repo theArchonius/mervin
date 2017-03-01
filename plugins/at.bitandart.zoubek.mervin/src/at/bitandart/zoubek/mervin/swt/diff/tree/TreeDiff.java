@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Florian Zoubek.
+ * Copyright (c) 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,8 +10,10 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.swt.diff.tree;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -1656,17 +1658,18 @@ public class TreeDiff extends Composite {
 				if (diffItemSide != null) {
 
 					StyledString labelText = new StyledString();
-					labelText.append(diffItemSide.getLabel(), new Styler() {
+					labelText.append(diffItemSide.getLabel(), new DiffTypeStyler(item.getTreeDiffType()));
 
-						@Override
-						public void applyStyles(TextStyle textStyle) {
-							TreeDiffType diffType = item.getTreeDiffType();
-							if (diffType != TreeDiffType.EQUAL) {
-								textStyle.foreground = getDiffColor(diffType);
+					/* add the diff type counts for non-equal items */
+					DiffTypeCount diffTypeCount = calculateChildDiffCount(item);
+					if (!diffTypeCount.hasOnlyEqualChildDiffs()) {
+						for (TreeDiffType diffType : TreeDiffType.getValuesExcluding(TreeDiffType.EQUAL)) {
+							int count = diffTypeCount.getCount(diffType);
+							if (count > 0) {
+								labelText.append(MessageFormat.format(" ({0})", count), new DiffTypeStyler(diffType));
 							}
-
 						}
-					});
+					}
 
 					cell.setText(labelText.getString());
 					cell.setStyleRanges(labelText.getStyleRanges());
@@ -1685,6 +1688,44 @@ public class TreeDiff extends Composite {
 		}
 
 		/**
+		 * calculates the count of each type in the child hierarchy of the given
+		 * {@link TreeDiffItem}.
+		 * 
+		 * @param item
+		 *            the item to calculate the counts for.
+		 * @return a {@link DiffTypeCount} that stores the calculated counts for
+		 *         each {@link TreeDiffType} in the child hierarchy of the given
+		 *         {@link TreeDiffItem}.
+		 */
+		private DiffTypeCount calculateChildDiffCount(TreeDiffItem item) {
+
+			DiffTypeCount diffTypeCount = new DiffTypeCount();
+			List<TreeDiffItem> children = item.getChildren();
+			for (TreeDiffItem child : children) {
+				updateChildDiffCount(child, diffTypeCount);
+			}
+			return diffTypeCount;
+		}
+
+		/**
+		 * updates the given {@link DiffTypeCount} with the {@link TreeDiffType}
+		 * counts of the given item and its child hierarchy.
+		 * 
+		 * @param item
+		 *            the item to update the counts for.
+		 * @param childItemDiffTypeCount
+		 *            the {@link DiffTypeCount} to store the counts in.
+		 */
+		private void updateChildDiffCount(TreeDiffItem item, DiffTypeCount childItemDiffTypeCount) {
+
+			childItemDiffTypeCount.increment(item.getTreeDiffType());
+			List<TreeDiffItem> children = item.getChildren();
+			for (TreeDiffItem child : children) {
+				updateChildDiffCount(child, childItemDiffTypeCount);
+			}
+		}
+
+		/**
 		 * returns the {@link TreeDiffSideItem} based on the configured
 		 * {@link TreeDiffSide}.
 		 * 
@@ -1699,6 +1740,85 @@ public class TreeDiff extends Composite {
 				return item.getLeftSideItem();
 			} else {
 				return item.getRightSideItem();
+			}
+
+		}
+
+		/**
+		 * A helper class that stores the counts of {@link TreeDiffType}. The
+		 * count for each {@link TreeDiffType} is 0 by default.
+		 * 
+		 * @author Florian Zoubek
+		 *
+		 */
+		private class DiffTypeCount {
+
+			private EnumMap<TreeDiffType, Integer> countData = new EnumMap<>(TreeDiffType.class);
+
+			public DiffTypeCount() {
+
+				for (TreeDiffType type : TreeDiffType.values()) {
+					countData.put(type, 0);
+				}
+			}
+
+			/**
+			 * increments the count of the given TreeDiffType by 1.
+			 * 
+			 * @param treeDiffType
+			 *            the {@link TreeDiffType} to increment the count for.
+			 */
+			public void increment(TreeDiffType treeDiffType) {
+				int count = countData.get(treeDiffType);
+				count++;
+				countData.put(treeDiffType, count);
+			}
+
+			/**
+			 * @param treeDiffType
+			 *            the {@link TreeDiffType} to retrieve the count for.
+			 * @return the current count for the given {@link TreeDiffType}.
+			 */
+			public int getCount(TreeDiffType treeDiffType) {
+				return countData.get(treeDiffType);
+			}
+
+			/**
+			 * @return true if the counts of all non equal {@link TreeDiffType}s
+			 *         is 0, false otherwise.
+			 */
+			public boolean hasOnlyEqualChildDiffs() {
+
+				for (TreeDiffType type : TreeDiffType.values()) {
+					if (type != TreeDiffType.EQUAL && countData.get(type) > 0) {
+						return false;
+					}
+				}
+				return true;
+			}
+
+		}
+
+		/**
+		 * A {@link Styler} that applies the default text style for elements
+		 * associated with a given {@link TreeDiffType}.
+		 * 
+		 * @author Florian Zoubek
+		 *
+		 */
+		private class DiffTypeStyler extends Styler {
+
+			private TreeDiffType type;
+
+			public DiffTypeStyler(TreeDiffType type) {
+				this.type = type;
+			}
+
+			@Override
+			public void applyStyles(TextStyle textStyle) {
+				if (type != TreeDiffType.EQUAL) {
+					textStyle.foreground = getDiffColor(type);
+				}
 			}
 
 		}
