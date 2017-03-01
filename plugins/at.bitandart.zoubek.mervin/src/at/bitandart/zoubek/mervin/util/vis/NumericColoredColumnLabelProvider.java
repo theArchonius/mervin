@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,8 +28,7 @@ import org.eclipse.swt.widgets.Display;
  * @author Florian Zoubek
  *
  */
-public abstract class NumericColoredColumnLabelProvider extends
-		NumericColumnLabelProvider {
+public abstract class NumericColoredColumnLabelProvider extends NumericColumnLabelProvider {
 
 	private Map<Object, Color> colors = new HashMap<>();
 
@@ -41,25 +40,19 @@ public abstract class NumericColoredColumnLabelProvider extends
 
 	private Color fgColor1;
 	private Color fgColor2;
-	private float fgColor1Brightness;
-	private float fgColor2Brightness;
 
-	public NumericColoredColumnLabelProvider(HSB minHSB, HSB maxHSB,
-			Color fgColor1, Color fgColor2) {
+	public NumericColoredColumnLabelProvider(HSB minHSB, HSB maxHSB, Color fgColor1, Color fgColor2) {
 		this.minHSB = minHSB;
 		this.maxHSB = maxHSB;
 		this.fgColor1 = fgColor1;
 		this.fgColor2 = fgColor2;
-		fgColor1Brightness = getBrightness(this.fgColor1.getRGB());
-		fgColor2Brightness = getBrightness(this.fgColor2.getRGB());
 	}
 
 	@Override
 	public Color getBackground(Object element) {
 		if (hasValue(element)) {
 
-			RGB rgb = computeRGB(getValue(element), getMinValue(element),
-					getMaxValue(element));
+			RGB rgb = computeRGB(getValue(element), getMinValue(element), getMaxValue(element));
 			Color color = new Color(Display.getCurrent(), rgb);
 
 			if (colors.containsKey(element)) {
@@ -83,48 +76,22 @@ public abstract class NumericColoredColumnLabelProvider extends
 	 */
 	private RGB computeRGB(float value, float minValue, float maxValue) {
 
-		RGB rgb = new RGB((float) MathUtil.map(value, minValue, maxValue, minHSB.hue,
-				maxHSB.hue), (float) MathUtil.map(value, minValue, maxValue,
-				minHSB.saturation, maxHSB.saturation), (float) MathUtil.map(value,
-				minValue, maxValue, minHSB.brightness, maxHSB.brightness));
+		RGB rgb = new RGB((float) MathUtil.map(value, minValue, maxValue, minHSB.hue, maxHSB.hue),
+				(float) MathUtil.map(value, minValue, maxValue, minHSB.saturation, maxHSB.saturation),
+				(float) MathUtil.map(value, minValue, maxValue, minHSB.brightness, maxHSB.brightness));
 		return rgb;
-	}
-
-	/**
-	 * @param rgb
-	 * @return the brightness of the given RGB color
-	 */
-	private float getBrightness(RGB rgb) {
-		return ((rgb.red * 299) + (rgb.green * 587) + (rgb.blue * 114)) / 1000.0f;
-	}
-
-	/**
-	 * 
-	 * @param rgb
-	 * @param rgb2
-	 * @return the accumulated absolute difference between the components of the
-	 *         RGB values.
-	 */
-	private float getColorDifference(RGB rgb, RGB rgb2) {
-		return Math.abs(rgb.red - rgb2.red) + Math.abs(rgb.green - rgb2.green)
-				+ Math.abs(rgb.blue - rgb2.blue);
 	}
 
 	@Override
 	public Color getForeground(Object element) {
 		if (hasValue(element)) {
 
-			RGB rgb = computeRGB(getValue(element), getMinValue(element),
-					getMaxValue(element));
-			float brightness = getBrightness(rgb);
-			// Difference metric based on
-			// http://www.w3.org/TR/AERT#color-contrast
-			float fgColor1Diff = Math.abs(brightness - fgColor1Brightness)
-					+ getColorDifference(fgColor1.getRGB(), rgb);
-			float fgColor2Diff = Math.abs(brightness - fgColor2Brightness)
-					+ getColorDifference(fgColor2.getRGB(), rgb);
+			RGB rgb = computeRGB(getValue(element), getMinValue(element), getMaxValue(element));
 
-			if (fgColor2Diff > fgColor1Diff) {
+			double fgColor1Contrast = ColorUtil.calculateContrastRatio(fgColor1.getRGB(), rgb);
+			double fgColor2Contrast = ColorUtil.calculateContrastRatio(fgColor2.getRGB(), rgb);
+
+			if (fgColor2Contrast > fgColor1Contrast) {
 				return fgColor2;
 			} else {
 				return fgColor1;

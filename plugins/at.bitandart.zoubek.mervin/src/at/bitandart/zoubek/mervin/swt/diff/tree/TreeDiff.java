@@ -14,7 +14,6 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -45,6 +44,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.TextStyle;
 import org.eclipse.swt.widgets.Composite;
@@ -57,6 +57,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
 import at.bitandart.zoubek.mervin.swt.comments.examples.TreeDiffViewerExample;
+import at.bitandart.zoubek.mervin.util.vis.ColorUtil;
 
 /**
  * A widget that shows differences between to trees side-by-side, that
@@ -87,8 +88,13 @@ public class TreeDiff extends Composite {
 	private static final int DEFAULT_CENTER_WIDTH = 20;
 
 	// color styles
-	private Map<TreeDiffType, Color> diffColorStyles = new HashMap<>();
+	private Map<TreeDiffType, Color> diffColorStyles = new EnumMap<>(TreeDiffType.class);
+	private Map<TreeDiffType, Color> diffBackgroundColorStyles = new EnumMap<>(TreeDiffType.class);
 	private Color defaultDiffColor;
+	private Color defaultDiffBackgroundColor;
+	// foreground colors used for text on a colored background
+	private Color fgColor1;
+	private Color fgColor2;
 
 	// Providers
 	private TreeDiffContentProvider leftTreeDiffContentProvider;
@@ -125,6 +131,10 @@ public class TreeDiff extends Composite {
 
 		// initialize colors
 		defaultDiffColor = getDisplay().getSystemColor(SWT.COLOR_GRAY);
+		defaultDiffBackgroundColor = new Color(getDisplay(),
+				ColorUtil.blend(defaultDiffColor.getRGB(), 0.5, new RGB(255, 255, 255)));
+		fgColor1 = getDisplay().getSystemColor(SWT.COLOR_WHITE);
+		fgColor2 = getDisplay().getSystemColor(SWT.COLOR_BLACK);
 
 		// initialize layout
 		setLayout(new TreeDiffLayout());
@@ -1211,7 +1221,19 @@ public class TreeDiff extends Composite {
 	public void setDiffColor(TreeDiffType type, Color color) {
 		if (type != null && color != null) {
 			diffColorStyles.put(type, color);
+			Color backgroundColor = new Color(getDisplay(),
+					ColorUtil.blend(color.getRGB(), 0.5, new RGB(255, 255, 255)));
+			diffBackgroundColorStyles.put(type, backgroundColor);
 		}
+	}
+
+	@Override
+	public void dispose() {
+		defaultDiffBackgroundColor.dispose();
+		for (Color color : diffBackgroundColorStyles.values()) {
+			color.dispose();
+		}
+		super.dispose();
 	}
 
 	/**
@@ -1224,6 +1246,21 @@ public class TreeDiff extends Composite {
 		Color color = diffColorStyles.get(type);
 		if (color == null) {
 			color = defaultDiffColor;
+		}
+
+		return color;
+	}
+
+	/**
+	 * @param type
+	 *            the type the retrieve the background color for.
+	 * @return the associated background color for the given type.
+	 */
+	protected Color getDiffBackgroundColor(TreeDiffType type) {
+
+		Color color = diffBackgroundColorStyles.get(type);
+		if (color == null) {
+			color = defaultDiffBackgroundColor;
 		}
 
 		return color;
@@ -1663,10 +1700,12 @@ public class TreeDiff extends Composite {
 					/* add the diff type counts for non-equal items */
 					DiffTypeCount diffTypeCount = calculateChildDiffCount(item);
 					if (!diffTypeCount.hasOnlyEqualChildDiffs()) {
+						labelText.append(" ");
 						for (TreeDiffType diffType : TreeDiffType.getValuesExcluding(TreeDiffType.EQUAL)) {
 							int count = diffTypeCount.getCount(diffType);
 							if (count > 0) {
-								labelText.append(MessageFormat.format(" ({0})", count), new DiffTypeStyler(diffType));
+								labelText.append(MessageFormat.format(" ({0}) ", count),
+										new DiffTypeCountStyler(diffType));
 							}
 						}
 					}
@@ -1817,10 +1856,46 @@ public class TreeDiff extends Composite {
 			@Override
 			public void applyStyles(TextStyle textStyle) {
 				if (type != TreeDiffType.EQUAL) {
-					textStyle.foreground = getDiffColor(type);
+					Color diffColor = getDiffColor(type);
+					textStyle.foreground = diffColor;
 				}
 			}
 
+		}
+
+		/**
+		 * A {@link Styler} that applies the counter text style for counts
+		 * associated with a given {@link TreeDiffType}.
+		 * 
+		 * @author Florian Zoubek
+		 *
+		 */
+		private class DiffTypeCountStyler extends Styler {
+
+			private TreeDiffType type;
+
+			public DiffTypeCountStyler(TreeDiffType type) {
+				this.type = type;
+			}
+
+			@Override
+			public void applyStyles(TextStyle textStyle) {
+
+				if (type != TreeDiffType.EQUAL) {
+
+					Color diffColor = getDiffBackgroundColor(type);
+					textStyle.background = diffColor;
+
+					double contrast1 = ColorUtil.calculateContrastRatio(diffColor.getRGB(), fgColor1.getRGB());
+					double contrast2 = ColorUtil.calculateContrastRatio(diffColor.getRGB(), fgColor2.getRGB());
+
+					if (contrast1 > contrast2) {
+						textStyle.foreground = fgColor1;
+					} else {
+						textStyle.foreground = fgColor2;
+					}
+				}
+			}
 		}
 	}
 
