@@ -324,16 +324,9 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 			leftValue = null;
 			rightValue = null;
 
-			/*
-			 * indicators that determine which iterators should be moved forward
-			 * before the next iterations
-			 */
-			boolean moveLeft = true;
-			boolean moveRight = true;
-
 			while (leftIterator.hasNext() && rightIterator.hasNext()) {
 
-				if (moveLeft) {
+				if (leftValue == null) {
 
 					if (leftIterator.hasNext()) {
 						leftValue = leftIterator.next();
@@ -341,9 +334,8 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 					} else {
 						break;
 					}
-					moveLeft = false;
 				}
-				if (moveRight) {
+				if (rightValue == null) {
 
 					if (rightIterator.hasNext()) {
 						rightValue = rightIterator.next();
@@ -351,7 +343,6 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 					} else {
 						break;
 					}
-					moveRight = false;
 				}
 
 				Match leftMatch = null;
@@ -379,8 +370,9 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 						 */
 						elementList.add(
 								createMatchEntry(listEntry, "", leftMatch, TreeDiffSide.LEFT, feature, featureDiffs));
-						moveLeft = true;
-						moveRight = true;
+
+						leftValue = null;
+						rightValue = null;
 
 					} else {
 
@@ -393,13 +385,15 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 
 							elementList.add(createMatchEntry(listEntry, "", leftMatch, TreeDiffSide.LEFT, feature,
 									featureDiffs));
-							moveLeft = true;
+
+							leftValue = null;
 
 						} else if (isMoveMatch(featureDiffs, rightMatch)) {
 
 							elementList.add(createMatchEntry(listEntry, "", rightMatch, TreeDiffSide.RIGHT, feature,
 									featureDiffs));
-							moveRight = true;
+
+							rightValue = null;
 
 						} else {
 
@@ -417,7 +411,8 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 								 */
 								elementList.add(createMatchEntry(listEntry, "", leftMatch, TreeDiffSide.LEFT, feature,
 										featureDiffs));
-								moveLeft = true;
+
+								leftValue = null;
 
 							} else {
 								EObject container = leftMatchedValue.eContainer();
@@ -430,11 +425,11 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 									if (rightList.indexOf(rightEObj) > rightList.indexOf(leftMatchedValue)) {
 										elementList.add(createMatchEntry(listEntry, "", leftMatch, TreeDiffSide.LEFT,
 												feature, featureDiffs));
-										moveLeft = true;
+										leftValue = null;
 									} else {
 										elementList.add(createMatchEntry(listEntry, "", rightMatch, TreeDiffSide.RIGHT,
 												feature, featureDiffs));
-										moveRight = true;
+										rightValue = null;
 									}
 
 								} else {
@@ -445,7 +440,7 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 									 */
 									elementList.add(createMatchEntry(listEntry, "", leftMatch, TreeDiffSide.LEFT,
 											feature, featureDiffs));
-									moveLeft = true;
+									leftValue = null;
 								}
 
 							}
@@ -465,8 +460,8 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 
 							/* values are equal */
 							elementList.add(new ObjectEntry(listEntry, "", comparison, leftValue, rightValue));
-							moveLeft = true;
-							moveRight = true;
+							leftValue = null;
+							rightValue = null;
 
 						} else {
 
@@ -474,15 +469,15 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 							 * assume left has been deleted, so add single entry
 							 */
 							elementList.add(new ObjectEntry(listEntry, "", comparison, leftValue, null));
-							moveLeft = true;
+							leftValue = null;
 						}
 
 					} else if (leftValue == rightValue) {
 
 						/* values are both null */
 						elementList.add(new ObjectEntry(listEntry, "", comparison, leftValue, rightValue));
-						moveLeft = true;
-						moveRight = true;
+						leftValue = null;
+						rightValue = null;
 
 					} else {
 
@@ -490,11 +485,22 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 						 * assume left has been deleted, so add single entry
 						 */
 						elementList.add(new ObjectEntry(listEntry, "", comparison, leftValue, null));
-						moveLeft = true;
+						leftValue = null;
 					}
 				}
 
 			} // while end
+
+			/*
+			 * reset the iterators in case the objects have not been handled yet
+			 */
+			if (leftValue != null) {
+				leftIterator.previous();
+			}
+
+			if (rightValue != null) {
+				rightIterator.previous();
+			}
 
 			if (leftIterator.hasNext()) {
 
