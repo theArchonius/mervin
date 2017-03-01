@@ -198,7 +198,7 @@ public class PropertyDiffItemProviderTest {
 
 		Object[] entries = itemProvider.getChildren(matchEntry);
 		UserChildren children = assertUserChildren(leftUser, rightUser, entries, 1);
-		assertMatchEntry(children.singleAvatarEntry, leftUser.getAvatar(), rightUser.getAvatar(), null);
+		assertMatchEntry(children.singleAvatarEntry, leftUser.getAvatar(), rightUser.getAvatar(), matchEntry);
 	}
 
 	@Test
@@ -228,7 +228,7 @@ public class PropertyDiffItemProviderTest {
 
 		Object[] entries = itemProvider.getChildren(matchEntry);
 		UserChildren children = assertUserChildren(leftUser, rightUser, entries, 1);
-		assertMatchEntry(children.singleAvatarEntry, leftUser.getAvatar(), rightUser.getAvatar(), null);
+		assertMatchEntry(children.singleAvatarEntry, leftUser.getAvatar(), rightUser.getAvatar(), matchEntry);
 	}
 
 	@Test
@@ -259,7 +259,7 @@ public class PropertyDiffItemProviderTest {
 
 		Object[] entries = itemProvider.getChildren(matchEntry);
 		UserChildren children = assertUserChildren(leftUser, rightUser, entries, 1);
-		assertMatchEntry(children.singleAvatarEntry, leftUser.getAvatar(), rightUser.getAvatar(), null);
+		assertMatchEntry(children.singleAvatarEntry, leftUser.getAvatar(), rightUser.getAvatar(), matchEntry);
 	}
 
 	@Test
@@ -291,7 +291,7 @@ public class PropertyDiffItemProviderTest {
 
 		Object[] entries = itemProvider.getChildren(matchEntry);
 		UserChildren children = assertUserChildren(leftUser, rightUser, entries, 1);
-		assertMatchEntry(children.singleAvatarEntry, leftUser.getAvatar(), rightUser.getAvatar(), null);
+		assertMatchEntry(children.singleAvatarEntry, leftUser.getAvatar(), rightUser.getAvatar(), matchEntry);
 	}
 
 	@Test
@@ -340,13 +340,13 @@ public class PropertyDiffItemProviderTest {
 
 		Object[] entries = itemProvider.getChildren(matchEntry);
 		UserChildren children = assertUserChildren(leftUser, rightUser, entries, 1);
-		assertMatchEntry(children.singleAvatarEntry, leftUser.getAvatar(), rightUser2.getAvatar(), null);
+		assertMatchEntry(children.singleAvatarEntry, leftUser.getAvatar(), rightUser2.getAvatar(), matchEntry);
 
 		// retrieve and check entries for the second match
 
 		entries = itemProvider.getChildren(matchEntry2);
 		children = assertUserChildren(leftUser2, rightUser2, entries, 1);
-		assertMatchEntry(children.singleAvatarEntry, leftUser.getAvatar(), rightUser2.getAvatar(), null);
+		assertMatchEntry(children.singleAvatarEntry, leftUser.getAvatar(), rightUser2.getAvatar(), matchEntry2);
 
 	}
 
@@ -725,6 +725,222 @@ public class PropertyDiffItemProviderTest {
 		}
 
 		performSimpleTextEntryAddTest(itemProvider, title, addedIndices);
+	}
+
+	/* #### Multi-Valued-Reference - add & deletion */
+
+	@Test
+	public void testGetChildren_MatchEntry_addDelete_sameIndex_middle_multiValued_containmentReference() {
+
+		PropertyDiffItemProvider itemProvider = new PropertyDiffItemProvider();
+
+		String title = "Title";
+
+		// left
+		TextEntry leftTextEntry = modelFactory.createTextEntry();
+		leftTextEntry.setTitle(title);
+
+		EList<TodoEntry> leftSubentries = leftTextEntry.getSubentries();
+		TextEntry subEntry = modelFactory.createTextEntry();
+		subEntry.setTitle(title + "1.1");
+		leftSubentries.add(subEntry);
+
+		subEntry = modelFactory.createTextEntry();
+		subEntry.setTitle("Deleted");
+		leftSubentries.add(subEntry);
+
+		subEntry = modelFactory.createTextEntry();
+		subEntry.setTitle(title + "1.3");
+		leftSubentries.add(subEntry);
+
+		// right
+		TextEntry rightTextEntry = EcoreUtil.copy(leftTextEntry);
+
+		rightTextEntry.getSubentries().remove(1);
+
+		subEntry = modelFactory.createTextEntry();
+		subEntry.setTitle("New");
+		rightTextEntry.getSubentries().add(1, subEntry);
+
+		// compare
+		Comparison comparison = compare(leftTextEntry, rightTextEntry);
+		Match match = comparison.getMatches().get(0);
+
+		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry(null, "", match, null,
+				new ReferencingDiffCache(match));
+
+		// retrieve entries
+
+		Object[] entries = itemProvider.getChildren(matchEntry);
+
+		// check entries
+		TextEntryChildren children = assertTextEntryChildren(leftTextEntry, rightTextEntry, matchEntry, entries);
+		List<BaseEntry> elementList = children.subEntriesEntry.getElementList();
+
+		assertThat(elementList.size(), is(4));
+
+		// first entry -> equal
+		assertThat(elementList.get(0), instanceOf(MatchEntry.class));
+		assertMatchEntry((MatchEntry) elementList.get(0), leftTextEntry.getSubentries().get(0),
+				rightTextEntry.getSubentries().get(0), children.subEntriesEntry);
+
+		// second entry -> delete
+		assertThat(elementList.get(1), instanceOf(MatchEntry.class));
+		assertMatchEntry((MatchEntry) elementList.get(1), leftTextEntry.getSubentries().get(1), null,
+				children.subEntriesEntry);
+
+		// third entry -> add
+		assertThat(elementList.get(2), instanceOf(MatchEntry.class));
+		assertMatchEntry((MatchEntry) elementList.get(2), null, rightTextEntry.getSubentries().get(1),
+				children.subEntriesEntry);
+
+		// fourth entry -> equal
+		assertThat(elementList.get(3), instanceOf(MatchEntry.class));
+		assertMatchEntry((MatchEntry) elementList.get(3), leftTextEntry.getSubentries().get(2),
+				rightTextEntry.getSubentries().get(2), children.subEntriesEntry);
+	}
+
+	@Test
+	public void testGetChildren_MatchEntry_addDelete_sameIndex_start_multiValued_containmentReference() {
+
+		PropertyDiffItemProvider itemProvider = new PropertyDiffItemProvider();
+
+		String title = "Title";
+
+		// left
+		TextEntry leftTextEntry = modelFactory.createTextEntry();
+		leftTextEntry.setTitle(title);
+
+		EList<TodoEntry> leftSubentries = leftTextEntry.getSubentries();
+		TextEntry subEntry = modelFactory.createTextEntry();
+		subEntry.setTitle("Deleted");
+		leftSubentries.add(subEntry);
+
+		subEntry = modelFactory.createTextEntry();
+		subEntry.setTitle(title + "1.2");
+		leftSubentries.add(subEntry);
+
+		subEntry = modelFactory.createTextEntry();
+		subEntry.setTitle(title + "1.3");
+		leftSubentries.add(subEntry);
+
+		// right
+		TextEntry rightTextEntry = EcoreUtil.copy(leftTextEntry);
+
+		rightTextEntry.getSubentries().remove(0);
+
+		subEntry = modelFactory.createTextEntry();
+		subEntry.setTitle("New");
+		rightTextEntry.getSubentries().add(0, subEntry);
+
+		// compare
+		Comparison comparison = compare(leftTextEntry, rightTextEntry);
+		Match match = comparison.getMatches().get(0);
+
+		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry(null, "", match, null,
+				new ReferencingDiffCache(match));
+
+		// retrieve entries
+
+		Object[] entries = itemProvider.getChildren(matchEntry);
+
+		// check entries
+		TextEntryChildren children = assertTextEntryChildren(leftTextEntry, rightTextEntry, matchEntry, entries);
+		List<BaseEntry> elementList = children.subEntriesEntry.getElementList();
+
+		assertThat(elementList.size(), is(4));
+
+		// first entry -> delete
+		assertThat(elementList.get(0), instanceOf(MatchEntry.class));
+		assertMatchEntry((MatchEntry) elementList.get(0), leftTextEntry.getSubentries().get(0), null,
+				children.subEntriesEntry);
+
+		// second entry -> add
+		assertThat(elementList.get(1), instanceOf(MatchEntry.class));
+		assertMatchEntry((MatchEntry) elementList.get(1), null, rightTextEntry.getSubentries().get(0),
+				children.subEntriesEntry);
+
+		// third entry -> equal
+		assertThat(elementList.get(2), instanceOf(MatchEntry.class));
+		assertMatchEntry((MatchEntry) elementList.get(2), leftTextEntry.getSubentries().get(1),
+				rightTextEntry.getSubentries().get(1), children.subEntriesEntry);
+
+		// fourth entry -> equal
+		assertThat(elementList.get(3), instanceOf(MatchEntry.class));
+		assertMatchEntry((MatchEntry) elementList.get(3), leftTextEntry.getSubentries().get(2),
+				rightTextEntry.getSubentries().get(2), children.subEntriesEntry);
+	}
+
+	@Test
+	public void testGetChildren_MatchEntry_addDelete_sameIndex_end_multiValued_containmentReference() {
+
+		PropertyDiffItemProvider itemProvider = new PropertyDiffItemProvider();
+
+		String title = "Title";
+
+		// left
+		TextEntry leftTextEntry = modelFactory.createTextEntry();
+		leftTextEntry.setTitle(title);
+
+		EList<TodoEntry> leftSubentries = leftTextEntry.getSubentries();
+		TextEntry subEntry = modelFactory.createTextEntry();
+		subEntry.setTitle(title + "1.1");
+		leftSubentries.add(subEntry);
+
+		subEntry = modelFactory.createTextEntry();
+		subEntry.setTitle(title + "1.2");
+		leftSubentries.add(subEntry);
+
+		subEntry = modelFactory.createTextEntry();
+		subEntry.setTitle("Deleted");
+		leftSubentries.add(subEntry);
+
+		// right
+		TextEntry rightTextEntry = EcoreUtil.copy(leftTextEntry);
+
+		rightTextEntry.getSubentries().remove(2);
+
+		subEntry = modelFactory.createTextEntry();
+		subEntry.setTitle("New");
+		rightTextEntry.getSubentries().add(2, subEntry);
+
+		// compare
+		Comparison comparison = compare(leftTextEntry, rightTextEntry);
+		Match match = comparison.getMatches().get(0);
+
+		MatchEntry matchEntry = new PropertyDiffItemProvider.MatchEntry(null, "", match, null,
+				new ReferencingDiffCache(match));
+
+		// retrieve entries
+
+		Object[] entries = itemProvider.getChildren(matchEntry);
+
+		// check entries
+		TextEntryChildren children = assertTextEntryChildren(leftTextEntry, rightTextEntry, matchEntry, entries);
+		List<BaseEntry> elementList = children.subEntriesEntry.getElementList();
+
+		assertThat(elementList.size(), is(4));
+
+		// first entry -> equal
+		assertThat(elementList.get(0), instanceOf(MatchEntry.class));
+		assertMatchEntry((MatchEntry) elementList.get(0), leftTextEntry.getSubentries().get(0),
+				rightTextEntry.getSubentries().get(0), children.subEntriesEntry);
+
+		// second entry -> equal
+		assertThat(elementList.get(1), instanceOf(MatchEntry.class));
+		assertMatchEntry((MatchEntry) elementList.get(1), leftTextEntry.getSubentries().get(1),
+				rightTextEntry.getSubentries().get(1), children.subEntriesEntry);
+
+		// third entry -> delete
+		assertThat(elementList.get(2), instanceOf(MatchEntry.class));
+		assertMatchEntry((MatchEntry) elementList.get(2), leftTextEntry.getSubentries().get(2), null,
+				children.subEntriesEntry);
+
+		// fourth entry -> add
+		assertThat(elementList.get(3), instanceOf(MatchEntry.class));
+		assertMatchEntry((MatchEntry) elementList.get(3), null, rightTextEntry.getSubentries().get(2),
+				children.subEntriesEntry);
+
 	}
 
 	/* #### Multi-Valued-Reference - move #### */
