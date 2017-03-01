@@ -46,7 +46,7 @@
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.gmf.feature.group" version="0.0.0"/>
-<repository location="https://dl.bintray.com/thearchonius/gmf-runtime-fork/gmf-runtime/1.10/"/>
+<repository location="https://dl.bintray.com/thearchonius/gmf-runtime-fork/gmf-runtime/1.10.1/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.wst.web_ui.feature.feature.group" version="3.7.1.v201602111638"/>
