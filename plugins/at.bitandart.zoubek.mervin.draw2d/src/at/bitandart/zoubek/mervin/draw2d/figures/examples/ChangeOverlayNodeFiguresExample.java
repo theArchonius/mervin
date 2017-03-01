@@ -25,8 +25,8 @@ import at.bitandart.zoubek.mervin.draw2d.figures.overlay.DefaultOverlayLocator;
 import at.bitandart.zoubek.mervin.draw2d.figures.overlay.DefaultOverlayTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayLinkedFigureListener;
 import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayNodeFigure;
-import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayType;
 import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayNodeFigure.DimensionPropertyChangeType;
+import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayType;
 
 /**
  * Demonstrates the usage of {@link OverlayNodeFigure}.
@@ -56,7 +56,7 @@ public class ChangeOverlayNodeFiguresExample extends BaseExample {
 		Layer primaryLayer = new Layer();
 		primaryLayer.setOpaque(true);
 		primaryLayer.setBackgroundColor(org.eclipse.draw2d.ColorConstants.white);
-		GridLayout gridLayout = new GridLayout(10, true);
+		GridLayout gridLayout = new GridLayout(12, true);
 		gridLayout.horizontalSpacing = 75;
 		gridLayout.verticalSpacing = 75;
 		primaryLayer.setLayoutManager(gridLayout);
@@ -144,6 +144,16 @@ public class ChangeOverlayNodeFiguresExample extends BaseExample {
 				movedResizedLabelWithComments.setBorder(new LineBorder());
 				primaryLayer.add(movedResizedLabelWithComments, getGridDataConstraint());
 
+				Label constraintSetLabel = new Label("figure");
+				constraintSetLabel.addFigureListener(overlayLinkedFigureListener);
+				constraintSetLabel.setBorder(new LineBorder());
+				primaryLayer.add(constraintSetLabel, getGridDataConstraint());
+
+				Label constraintUnsetLabel = new Label("figure");
+				constraintUnsetLabel.addFigureListener(overlayLinkedFigureListener);
+				constraintUnsetLabel.setBorder(new LineBorder());
+				primaryLayer.add(constraintUnsetLabel, getGridDataConstraint());
+
 				/*
 				 * Add the overlay figures to the overlay layer. In this case
 				 * overlay figures are linked to other figures on the primary
@@ -202,6 +212,16 @@ public class ChangeOverlayNodeFiguresExample extends BaseExample {
 				overlayWithCommentsMoveResize.setMoveDirection(new Vector(-1, 0.5));
 				overlayLayer.add(overlayWithCommentsMoveResize,
 						new DefaultOverlayLocator(movedResizedLabelWithComments));
+
+				OverlayNodeFigure overlayWithConstraintsSet = new OverlayNodeFigure(styleAdvisor, overlayType);
+				overlayWithConstraintsSet.setBoundsHeightChangeType(DimensionPropertyChangeType.SET);
+				overlayWithConstraintsSet.setBoundsWidthChangeType(DimensionPropertyChangeType.SET);
+				overlayLayer.add(overlayWithConstraintsSet, new DefaultOverlayLocator(constraintSetLabel));
+
+				OverlayNodeFigure overlayWithConstraintsUnset = new OverlayNodeFigure(styleAdvisor, overlayType);
+				overlayWithConstraintsUnset.setBoundsHeightChangeType(DimensionPropertyChangeType.UNSET);
+				overlayWithConstraintsUnset.setBoundsWidthChangeType(DimensionPropertyChangeType.UNSET);
+				overlayLayer.add(overlayWithConstraintsUnset, new DefaultOverlayLocator(constraintUnsetLabel));
 
 			}
 
