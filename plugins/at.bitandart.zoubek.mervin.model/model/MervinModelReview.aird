@@ -405,6 +405,14 @@
                 <styles xmi:type="notation:FontStyle" xmi:id="_LRLgAXGMEeWFy-IIJfQ0GA" fontName="Cantarell" fontHeight="8"/>
                 <layoutConstraint xmi:type="notation:Location" xmi:id="_LRLgAnGMEeWFy-IIJfQ0GA"/>
               </children>
+              <children xmi:type="notation:Node" xmi:id="_Z6aeQP9TEeagtbn8n8y2vg" type="3010" element="_Z5DMUP9TEeagtbn8n8y2vg">
+                <styles xmi:type="notation:FontStyle" xmi:id="_Z6aeQf9TEeagtbn8n8y2vg" fontName="Ubuntu" fontHeight="8"/>
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_Z6aeQv9TEeagtbn8n8y2vg"/>
+              </children>
+              <children xmi:type="notation:Node" xmi:id="_bDDhUP9TEeagtbn8n8y2vg" type="3010" element="_bB2ncP9TEeagtbn8n8y2vg">
+                <styles xmi:type="notation:FontStyle" xmi:id="_bDDhUf9TEeagtbn8n8y2vg" fontName="Ubuntu" fontHeight="8"/>
+                <layoutConstraint xmi:type="notation:Location" xmi:id="_bDDhUv9TEeagtbn8n8y2vg"/>
+              </children>
               <styles xmi:type="notation:SortingStyle" xmi:id="_ffySAXAFEeWmisQa3jlsLw"/>
               <styles xmi:type="notation:FilteringStyle" xmi:id="_ffySAnAFEeWmisQa3jlsLw"/>
             </children>
@@ -1941,6 +1949,22 @@
           <target xmi:type="ecore:EEnumLiteral" href="MervinModelReview.ecore#//DimensionChange/EQUAL"/>
           <semanticElements xmi:type="ecore:EEnumLiteral" href="MervinModelReview.ecore#//DimensionChange/EQUAL"/>
           <ownedStyle xmi:type="diagram:BundledImage" xmi:id="_LPRbgHGMEeWFy-IIJfQ0GA" labelAlignment="LEFT">
+            <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EEnum']/@subNodeMappings[name='EC%20EEnumLiteral']/@style"/>
+          </ownedStyle>
+          <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EEnum']/@subNodeMappings[name='EC%20EEnumLiteral']"/>
+        </ownedElements>
+        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_Z5DMUP9TEeagtbn8n8y2vg" name="SET" tooltipText="">
+          <target xmi:type="ecore:EEnumLiteral" href="MervinModelReview.ecore#//DimensionChange/SET"/>
+          <semanticElements xmi:type="ecore:EEnumLiteral" href="MervinModelReview.ecore#//DimensionChange/SET"/>
+          <ownedStyle xmi:type="diagram:BundledImage" xmi:id="_Z5EacP9TEeagtbn8n8y2vg" labelAlignment="LEFT">
+            <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EEnum']/@subNodeMappings[name='EC%20EEnumLiteral']/@style"/>
+          </ownedStyle>
+          <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EEnum']/@subNodeMappings[name='EC%20EEnumLiteral']"/>
+        </ownedElements>
+        <ownedElements xmi:type="diagram:DNodeListElement" xmi:id="_bB2ncP9TEeagtbn8n8y2vg" name="UNSET" tooltipText="">
+          <target xmi:type="ecore:EEnumLiteral" href="MervinModelReview.ecore#//DimensionChange/UNSET"/>
+          <semanticElements xmi:type="ecore:EEnumLiteral" href="MervinModelReview.ecore#//DimensionChange/UNSET"/>
+          <ownedStyle xmi:type="diagram:BundledImage" xmi:id="_bB3OgP9TEeagtbn8n8y2vg" labelAlignment="LEFT">
             <description xmi:type="style:BundledImageDescription" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EEnum']/@subNodeMappings[name='EC%20EEnumLiteral']/@style"/>
           </ownedStyle>
           <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.eclipse.emf.ecoretools.design/description/ecore.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Entities']/@defaultLayer/@containerMappings[name='EC%20EEnum']/@subNodeMappings[name='EC%20EEnumLiteral']"/>

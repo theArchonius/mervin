@@ -48,7 +48,7 @@ public class OverlayNodeFigure extends ComposedNodeFigure implements IOverlayFig
 	 *
 	 */
 	public enum DimensionPropertyChangeType {
-		NONE, SMALLER, BIGGER
+		NONE, SMALLER, BIGGER, SET, UNSET
 	}
 
 	// child figures
@@ -319,6 +319,14 @@ public class OverlayNodeFigure extends ComposedNodeFigure implements IOverlayFig
 			case SMALLER:
 				indicator.setVisible(active);
 				indicator.setDimensionChange(DimensionChange.SMALLER);
+				break;
+			case SET:
+				indicator.setVisible(active);
+				indicator.setDimensionChange(DimensionChange.SET);
+				break;
+			case UNSET:
+				indicator.setVisible(active);
+				indicator.setDimensionChange(DimensionChange.UNSET);
 				break;
 			}
 		}

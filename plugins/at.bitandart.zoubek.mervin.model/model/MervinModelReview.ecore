@@ -173,6 +173,8 @@
     <eLiterals name="BIGGER" value="1"/>
     <eLiterals name="UNKNOWN" value="3"/>
     <eLiterals name="EQUAL" value="2" literal="EQUAL"/>
+    <eLiterals name="SET" value="4"/>
+    <eLiterals name="UNSET" value="5"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="Vector" instanceClassName="org.eclipse.draw2d.geometry.Vector"/>
   <eClassifiers xsi:type="ecore:EClass" name="BendpointsDifference" eSuperTypes="#//LayoutDifference"/>

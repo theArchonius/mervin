@@ -62,36 +62,39 @@ public class OffScreenIndicatorResolver implements MouseListener {
 
 		Point figureLocation = null;
 
-		if (source instanceof MergedOffScreenOverlayIndicator) {
+		if (source instanceof IOffScreenIndicator && ((IOffScreenIndicator) source).isVisible()) {
 
-			MergedOffScreenOverlayIndicator mergedIndicator = (MergedOffScreenOverlayIndicator) source;
+			if (source instanceof MergedOffScreenOverlayIndicator) {
 
-			PrecisionPoint mergedIndicatorLocation = new PrecisionPoint(mergedIndicator.getLocation());
-			mergedIndicator.getParent().translateToAbsolute(mergedIndicatorLocation);
+				MergedOffScreenOverlayIndicator mergedIndicator = (MergedOffScreenOverlayIndicator) source;
 
-			double closestDistance = -1;
+				PrecisionPoint mergedIndicatorLocation = new PrecisionPoint(mergedIndicator.getLocation());
+				mergedIndicator.getParent().translateToAbsolute(mergedIndicatorLocation);
 
-			Set<OffScreenOverlayIndicator> mergedIndicators = mergedIndicator.getMergedIndicators();
-			for (OffScreenOverlayIndicator indicator : mergedIndicators) {
+				double closestDistance = -1;
 
-				Point location = indicator.getLinkedFiguresBounds().getLocation();
-				if (closestDistance < 0) {
+				Set<OffScreenOverlayIndicator> mergedIndicators = mergedIndicator.getMergedIndicators();
+				for (OffScreenOverlayIndicator indicator : mergedIndicators) {
 
-					figureLocation = location;
-					closestDistance = new Vector(mergedIndicatorLocation, new PrecisionPoint(location)).getLength();
+					Point location = indicator.getLinkedFiguresBounds().getLocation();
+					if (closestDistance < 0) {
 
-				} else {
-
-					double distance = new Vector(mergedIndicatorLocation, new PrecisionPoint(location)).getLength();
-					if (closestDistance > distance) {
 						figureLocation = location;
-						closestDistance = distance;
+						closestDistance = new Vector(mergedIndicatorLocation, new PrecisionPoint(location)).getLength();
+
+					} else {
+
+						double distance = new Vector(mergedIndicatorLocation, new PrecisionPoint(location)).getLength();
+						if (closestDistance > distance) {
+							figureLocation = location;
+							closestDistance = distance;
+						}
 					}
 				}
-			}
 
-		} else if (source instanceof IOffScreenIndicator) {
-			figureLocation = ((IOffScreenIndicator) source).getLinkedFiguresBounds().getLocation();
+			} else {
+				figureLocation = ((IOffScreenIndicator) source).getLinkedFiguresBounds().getLocation();
+			}
 		}
 
 		if (figureLocation != null) {
@@ -103,6 +106,7 @@ public class OffScreenIndicatorResolver implements MouseListener {
 			scrollPane.scrollTo(figureLocation);
 			event.consume();
 		}
+
 	}
 
 	/*

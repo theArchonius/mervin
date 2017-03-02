@@ -390,6 +390,10 @@ public class NodeDifferenceOverlayEditPart extends AbstractDifferenceOverlayEdit
 			return DimensionPropertyChangeType.SMALLER;
 		case BIGGER:
 			return DimensionPropertyChangeType.BIGGER;
+		case SET:
+			return DimensionPropertyChangeType.SET;
+		case UNSET:
+			return DimensionPropertyChangeType.UNSET;
 		default:
 		case EQUAL:
 		case UNKNOWN:
