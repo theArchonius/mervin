@@ -66,7 +66,25 @@ public enum DimensionChange implements Enumerator {
 	 * @generated
 	 * @ordered
 	 */
-	EQUAL(2, "EQUAL", "EQUAL");
+	EQUAL(2, "EQUAL", "EQUAL"),
+	/**
+	 * The '<em><b>SET</b></em>' literal object. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #SET_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	SET(4, "SET", "SET"),
+	/**
+	 * The '<em><b>UNSET</b></em>' literal object. <!-- begin-user-doc --> <!--
+	 * end-user-doc -->
+	 * 
+	 * @see #UNSET_VALUE
+	 * @generated
+	 * @ordered
+	 */
+	UNSET(5, "UNSET", "UNSET");
 
 	/**
 	 * The '<em><b>SMALLER</b></em>' literal value. <!-- begin-user-doc -->
@@ -129,12 +147,43 @@ public enum DimensionChange implements Enumerator {
 	public static final int EQUAL_VALUE = 2;
 
 	/**
+	 * The '<em><b>SET</b></em>' literal value. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>SET</b></em>' literal object isn't clear, there
+	 * really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #SET
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int SET_VALUE = 4;
+
+	/**
+	 * The '<em><b>UNSET</b></em>' literal value. <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of '<em><b>UNSET</b></em>' literal object isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * 
+	 * @see #UNSET
+	 * @model
+	 * @generated
+	 * @ordered
+	 */
+	public static final int UNSET_VALUE = 5;
+
+	/**
 	 * An array of all the '<em><b>Dimension Change</b></em>' enumerators. <!--
 	 * begin-user-doc --> <!-- end-user-doc -->
 	 * 
 	 * @generated
 	 */
-	private static final DimensionChange[] VALUES_ARRAY = new DimensionChange[] { SMALLER, BIGGER, UNKNOWN, EQUAL, };
+	private static final DimensionChange[] VALUES_ARRAY = new DimensionChange[] { SMALLER, BIGGER, UNKNOWN, EQUAL, SET,
+			UNSET, };
 
 	/**
 	 * A public read-only list of all the '<em><b>Dimension Change</b></em>'
@@ -201,6 +250,10 @@ public enum DimensionChange implements Enumerator {
 			return UNKNOWN;
 		case EQUAL_VALUE:
 			return EQUAL;
+		case SET_VALUE:
+			return SET;
+		case UNSET_VALUE:
+			return UNSET;
 		}
 		return null;
 	}

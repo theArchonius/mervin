@@ -1676,6 +1676,8 @@ public class ModelReviewPackageImpl extends EPackageImpl implements ModelReviewP
 		addEEnumLiteral(dimensionChangeEEnum, DimensionChange.BIGGER);
 		addEEnumLiteral(dimensionChangeEEnum, DimensionChange.UNKNOWN);
 		addEEnumLiteral(dimensionChangeEEnum, DimensionChange.EQUAL);
+		addEEnumLiteral(dimensionChangeEEnum, DimensionChange.SET);
+		addEEnumLiteral(dimensionChangeEEnum, DimensionChange.UNSET);
 
 		// Initialize data types
 		initEDataType(vectorEDataType, Vector.class, "Vector", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);

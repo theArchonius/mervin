@@ -27,6 +27,8 @@
       <genEnumLiterals ecoreEnumLiteral="MervinModelReview.ecore#//DimensionChange/BIGGER"/>
       <genEnumLiterals ecoreEnumLiteral="MervinModelReview.ecore#//DimensionChange/UNKNOWN"/>
       <genEnumLiterals ecoreEnumLiteral="MervinModelReview.ecore#//DimensionChange/EQUAL"/>
+      <genEnumLiterals ecoreEnumLiteral="MervinModelReview.ecore#//DimensionChange/SET"/>
+      <genEnumLiterals ecoreEnumLiteral="MervinModelReview.ecore#//DimensionChange/UNSET"/>
     </genEnums>
     <genDataTypes ecoreDataType="MervinModelReview.ecore#//Vector"/>
     <genDataTypes ecoreDataType="MervinModelReview.ecore#//UnifiedModelMap"/>
