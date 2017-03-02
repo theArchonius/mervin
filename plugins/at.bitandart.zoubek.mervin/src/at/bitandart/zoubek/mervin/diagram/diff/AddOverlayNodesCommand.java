@@ -615,7 +615,15 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 			sizeDifference.getRawDiffs().addAll(sizeRawDiffs);
 			sizeDifference.setOriginalDimension(oldSize);
 
-			if (oldSize.preciseWidth() < newSize.preciseWidth()) {
+			if (oldSize.preciseWidth() < 0 && newSize.preciseWidth() >= 0) {
+
+				sizeDifference.setWidthChange(DimensionChange.SET);
+
+			} else if (newSize.preciseWidth() < 0 && oldSize.preciseWidth() >= 0) {
+
+				sizeDifference.setWidthChange(DimensionChange.UNSET);
+
+			} else if (oldSize.preciseWidth() < newSize.preciseWidth()) {
 
 				sizeDifference.setWidthChange(DimensionChange.BIGGER);
 
@@ -629,7 +637,15 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 
 			}
 
-			if (oldSize.preciseHeight() < newSize.preciseHeight()) {
+			if (oldSize.preciseHeight() < 0 && newSize.preciseHeight() >= 0) {
+
+				sizeDifference.setHeightChange(DimensionChange.SET);
+
+			} else if (newSize.preciseHeight() < 0 && oldSize.preciseHeight() >= 0) {
+
+				sizeDifference.setHeightChange(DimensionChange.UNSET);
+
+			} else if (oldSize.preciseHeight() < newSize.preciseHeight()) {
 
 				sizeDifference.setHeightChange(DimensionChange.BIGGER);
 
