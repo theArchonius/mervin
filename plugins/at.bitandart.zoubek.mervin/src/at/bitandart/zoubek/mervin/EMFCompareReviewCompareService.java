@@ -17,6 +17,7 @@ import org.eclipse.emf.common.util.BasicMonitor;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.match.impl.MatchEngineFactoryRegistryImpl;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -60,7 +61,8 @@ public class EMFCompareReviewCompareService implements IReviewCompareService {
 
 		EcoreUtil.resolveAll(resourceSet);
 
-		EMFCompare comparator = EMFCompare.builder().build();
+		EMFCompare comparator = EMFCompare.builder()
+				.setPostProcessorRegistry(EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry()).build();
 
 		DefaultComparisonScope scope = new DefaultComparisonScope(eObject.eResource().getResourceSet(), resourceSet,
 				null);
@@ -79,7 +81,8 @@ public class EMFCompareReviewCompareService implements IReviewCompareService {
 		EcoreUtil.resolveAll(leftResourceSet);
 		EcoreUtil.resolveAll(rightResourceSet);
 
-		EMFCompare comparator = EMFCompare.builder().build();
+		EMFCompare comparator = EMFCompare.builder()
+				.setPostProcessorRegistry(EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry()).build();
 
 		DefaultComparisonScope scope = new DefaultComparisonScope(leftResourceSet, rightResourceSet, null);
 		scope.setResourceSetContentFilter(PREDICATE_GIT_RESOURCE);

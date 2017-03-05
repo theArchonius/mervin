@@ -39,6 +39,7 @@ import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
@@ -383,7 +384,8 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 		EcoreUtil.resolveAll(oldResourceSet);
 		EcoreUtil.resolveAll(newResourceSet);
 
-		EMFCompare comparator = EMFCompare.builder().build();
+		EMFCompare comparator = EMFCompare.builder()
+				.setPostProcessorRegistry(EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry()).build();
 
 		DefaultComparisonScope scope = new DefaultComparisonScope(newResourceSet, oldResourceSet, null);
 		scope.setResourceSetContentFilter(new Predicate<Resource>() {
@@ -423,7 +425,8 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 		EcoreUtil.resolveAll(oldResourceSet);
 		EcoreUtil.resolveAll(newResourceSet);
 
-		EMFCompare comparator = EMFCompare.builder().build();
+		EMFCompare comparator = EMFCompare.builder()
+				.setPostProcessorRegistry(EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry()).build();
 
 		DefaultComparisonScope scope = new DefaultComparisonScope(newResourceSet, oldResourceSet, null);
 		scope.setResourceSetContentFilter(new Predicate<Resource>() {

@@ -32,6 +32,7 @@ import org.eclipse.e4.ui.workbench.modeling.ElementMatcher;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.ReferenceChange;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -494,8 +495,8 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 			 * Obtain the registered label providers for model and diagram
 			 * elements
 			 */
-			adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(
-					new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
+			adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(new ComposedAdapterFactory(
+					EMFCompareRCPPlugin.getDefault().createFilteredAdapterFactoryRegistry()));
 			this.contentProvider = contentProvider;
 			this.overlayTypeHelper = overlayTypeHelper;
 		}
