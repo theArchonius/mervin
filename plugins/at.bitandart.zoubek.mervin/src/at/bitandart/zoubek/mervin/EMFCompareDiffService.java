@@ -15,6 +15,7 @@ import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -125,7 +126,8 @@ public class EMFCompareDiffService implements IDiffService {
 		EcoreUtil.resolveAll(oldResourceSet);
 		EcoreUtil.resolveAll(newResourceSet);
 
-		EMFCompare comparator = EMFCompare.builder().build();
+		EMFCompare comparator = EMFCompare.builder()
+				.setPostProcessorRegistry(EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry()).build();
 
 		DefaultComparisonScope scope = new DefaultComparisonScope(newResourceSet, oldResourceSet, null);
 		return comparator.compare(scope);

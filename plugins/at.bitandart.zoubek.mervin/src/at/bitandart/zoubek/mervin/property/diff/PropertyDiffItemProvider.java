@@ -28,12 +28,15 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ResourceAttachmentChange;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import at.bitandart.zoubek.mervin.swt.diff.tree.ITreeDiffItemProvider;
@@ -54,6 +57,13 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 	private static final String SEMANTIC_MODEL_ELEMENT_PREFIX = "Model: ";
 	private static final String NOTATION_MODEL_ELEMENT_PREFIX = "Notation: ";
 	private static final String OTHER_NOTATION_MODEL_ELEMENTS_PREFIX = "Notation: ";
+
+	private AdapterFactoryLabelProvider labelProvider;
+
+	public PropertyDiffItemProvider() {
+		labelProvider = new AdapterFactoryLabelProvider(
+				new ComposedAdapterFactory(EMFCompareRCPPlugin.getDefault().createFilteredAdapterFactoryRegistry()));
+	}
 
 	@Override
 	public Object[] getRootItems(Object input) {
@@ -941,7 +951,12 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 				value = match.getRight();
 			}
 			if (value != null) {
-				text += value.eClass().getName();
+				String factoryText = labelProvider.getText(value);
+				if (factoryText != null) {
+					text += factoryText;
+				} else {
+					text += value.eClass().getName();
+				}
 			} else {
 				text += "<null>";
 			}

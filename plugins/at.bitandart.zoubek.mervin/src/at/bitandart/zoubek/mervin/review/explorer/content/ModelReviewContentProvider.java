@@ -19,6 +19,7 @@ import java.util.Map;
 
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -52,7 +53,7 @@ public class ModelReviewContentProvider implements IReviewExplorerContentProvide
 
 	public ModelReviewContentProvider(IMatchHelper matchHelper) {
 		adapterFactoryContentProvider = new AdapterFactoryContentProvider(
-				new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
+				new ComposedAdapterFactory(EMFCompareRCPPlugin.getDefault().createFilteredAdapterFactoryRegistry()));
 		this.matchHelper = matchHelper;
 	}
 

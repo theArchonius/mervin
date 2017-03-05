@@ -31,6 +31,7 @@ import org.eclipse.e4.ui.workbench.modeling.ElementMatcher;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EContentAdapter;
@@ -524,8 +525,8 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 
 		public DiffNameColumnLabelProvider(ITreeContentProvider contentProvider, IOverlayTypeHelper overlayTypeHelper) {
 
-			adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(
-					new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
+			adapterFactoryLabelProvider = new AdapterFactoryLabelProvider(new ComposedAdapterFactory(
+					EMFCompareRCPPlugin.getDefault().createFilteredAdapterFactoryRegistry()));
 			this.contentProvider = contentProvider;
 
 			this.overlayTypeHelper = overlayTypeHelper;

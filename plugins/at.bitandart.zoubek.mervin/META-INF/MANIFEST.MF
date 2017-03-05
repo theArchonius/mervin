@@ -62,7 +62,8 @@ Require-Bundle: org.eclipse.swt,
  org.eclipse.papyrus.uml.diagram.timing;bundle-version="1.1.2",
  org.eclipse.papyrus.uml.diagram.usecase;bundle-version="1.1.2",
  org.eclipse.gmf.tooling.runtime,
- org.eclipse.papyrus.infra.elementtypesconfigurations;bundle-version="1.1.4"
+ org.eclipse.papyrus.infra.elementtypesconfigurations;bundle-version="1.1.4",
+ org.eclipse.emf.compare.rcp;bundle-version="2.5.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: at.bitandart.zoubek.mervin.draw2d,
  at.bitandart.zoubek.mervin.draw2d.figures,
