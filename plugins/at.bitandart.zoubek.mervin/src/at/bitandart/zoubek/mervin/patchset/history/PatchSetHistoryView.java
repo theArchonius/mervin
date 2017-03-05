@@ -48,7 +48,6 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerCell;
-import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -208,7 +207,6 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 
 		PatchSetHistoryContentProvider patchSetHistoryContentProvider = new PatchSetHistoryContentProvider();
 		historyTreeViewer = new TreeViewer(mainPanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
-		historyTreeViewer.setComparator(new ViewerComparator());
 		historyTreeViewer.setContentProvider(patchSetHistoryContentProvider);
 		historyTreeViewer.addSelectionChangedListener(new HighlightSelectionListener(this));
 		Tree histroryTree = historyTreeViewer.getTree();
@@ -227,8 +225,10 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 
 		labelColumnLabelProvider = new DiffNameColumnLabelProvider(patchSetHistoryContentProvider, overlayTypeHelper);
 		labelColumn.setLabelProvider(labelColumnLabelProvider);
-		labelColumn.getColumn().addSelectionListener(
-				new ThreeWayObjectTreeViewerComparator(historyTreeViewer, labelColumn, labelColumnLabelProvider));
+		ThreeWayObjectTreeViewerComparator defaultComparator = new ThreeWayObjectTreeViewerComparator(historyTreeViewer,
+				labelColumn, labelColumnLabelProvider);
+		labelColumn.getColumn().addSelectionListener(defaultComparator);
+		historyTreeViewer.setComparator(defaultComparator);
 
 		viewInitialized = true;
 

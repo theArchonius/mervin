@@ -52,7 +52,6 @@ import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.ViewerCell;
-import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -210,7 +209,6 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		// initialize tree viewer
 
 		reviewTreeViewer = new TreeViewer(mainPanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
-		reviewTreeViewer.setComparator(new ViewerComparator());
 		reviewExplorerContentProvider = new ModelReviewContentProvider(matchHelper);
 		reviewTreeViewer.setContentProvider(reviewExplorerContentProvider);
 		reviewTreeViewer.addSelectionChangedListener(new HighlightSelectionListener(this) {
@@ -242,8 +240,10 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		ModelReviewExplorerMainColumnLabelProvider labelColumnLabelProvider = new ModelReviewExplorerMainColumnLabelProvider(
 				reviewExplorerContentProvider, overlayTypeHelper);
 		labelColumn.setLabelProvider(labelColumnLabelProvider);
-		labelColumn.getColumn().addSelectionListener(
-				new ThreeWayObjectTreeViewerComparator(reviewTreeViewer, labelColumn, labelColumnLabelProvider));
+		ThreeWayObjectTreeViewerComparator defaultComparator = new ThreeWayObjectTreeViewerComparator(reviewTreeViewer,
+				labelColumn, labelColumnLabelProvider);
+		labelColumn.getColumn().addSelectionListener(defaultComparator);
+		reviewTreeViewer.setComparator(defaultComparator);
 
 		// total diff type overview column
 		IDifferenceCounter diffCounter = new ModelReviewContentViewerDiffCounter(reviewTreeViewer);
