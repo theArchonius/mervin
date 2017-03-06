@@ -92,7 +92,18 @@ public class DiffSimilarityHistoryService implements ISimilarityHistoryService {
 
 		Collection<Diff> candidates = getCandidates(entryObject, patchSet, context, subMonitor.newChild(50));
 
-		Comparison comparison = CompareFactory.eINSTANCE.createComparison();
+		Comparison oldComparison = CompareFactory.eINSTANCE.createComparison();
+		Comparison newComparison = CompareFactory.eINSTANCE.createComparison();
+
+		if (context instanceof DiffContext) {
+			/* retrieve the comparisons form the context cache if possible */
+			DiffContext diffContext = (DiffContext) context;
+			PatchSet containingPatchSet = diffContext.getContainingPatchSet();
+			PatchSetComparisonCache cache = diffContext.getCache();
+
+			oldComparison = cache.getComparison(containingPatchSet, patchSet, Version.OLD);
+			newComparison = cache.getComparison(containingPatchSet, patchSet, Version.NEW);
+		}
 
 		Diff bestCandidate = null;
 		double bestSimilarity = -1;
@@ -101,7 +112,7 @@ public class DiffSimilarityHistoryService implements ISimilarityHistoryService {
 
 		for (Diff candidate : candidates) {
 
-			double distance = calculateSimilarity(comparison, entryObject, candidate);
+			double distance = calculateSimilarity(oldComparison, newComparison, entryObject, candidate);
 			if (distance > bestSimilarity) {
 				bestSimilarity = distance;
 				bestCandidate = candidate;
@@ -255,19 +266,81 @@ public class DiffSimilarityHistoryService implements ISimilarityHistoryService {
 	}
 
 	/**
-	 * calculates the distance between two {@link EObject}s in the range 0(not
-	 * equal) and 1(equal).
+	 * calculates the similarity between two {@link Diff}s in the range 0 (not
+	 * equal) and 1 (equal).
 	 * 
-	 * @param comparison
-	 * @param left
-	 * @param right
-	 * @return
+	 * @param oldComparison
+	 *            the comparison containing the matches of the old versions of
+	 *            the patch sets containing the {@link Diff}s.
+	 * @param newComparison
+	 *            the comparison containing the matches of the new versions of
+	 *            the patch sets containing the {@link Diff}s.
+	 * @param diff
+	 *            the reference {@link Diff} to calculate the similarity for.
+	 * @param otherDiff
+	 *            the {@link Diff} to calculate the similarity for.
+	 * @return the similarity in the range 0 (not equal) and 1 (equal).
 	 */
-	protected double calculateSimilarity(Comparison comparison, EObject left, EObject right) {
+	protected double calculateSimilarity(Comparison oldComparison, Comparison newComparison, Diff diff,
+			Diff otherDiff) {
 
 		EditionDistance editionDistance = new EditionDistance(
 				WeightProviderDescriptorRegistryImpl.createStandaloneInstance());
-		return MathUtil.map(editionDistance.distance(comparison, left, right), 0.0, Double.MAX_VALUE, 1.0, 0.0);
+
+		/* determine similarity of the diff value */
+
+		double valueSimilarity = 0.0;
+
+		Object leftValue = MatchUtil.getValue(diff);
+		Object rightValue = MatchUtil.getValue(otherDiff);
+
+		if (leftValue == rightValue) {
+			valueSimilarity = 1.0;
+
+		} else if (leftValue instanceof EObject && rightValue instanceof EObject) {
+
+			EObject leftEObject = (EObject) leftValue;
+			EObject rightEObject = (EObject) rightValue;
+
+			if (leftEObject.eClass().equals(rightEObject.eClass())) {
+
+				double oldSimilarity = MathUtil.map(editionDistance.distance(oldComparison, leftEObject, rightEObject),
+						0.0, Double.MAX_VALUE, 1.0, 0.0);
+				double newSimilarity = MathUtil.map(editionDistance.distance(newComparison, leftEObject, rightEObject),
+						0.0, Double.MAX_VALUE, 1.0, 0.0);
+
+				valueSimilarity = Math.max(oldSimilarity, newSimilarity);
+			}
+
+		} else if (leftValue instanceof Number && rightValue instanceof Number) {
+
+			Number leftNumber = (Number) leftValue;
+			Number rightNumber = (Number) rightValue;
+
+			valueSimilarity = MathUtil.map(Math.abs(leftNumber.doubleValue() - rightNumber.doubleValue()), 0.0,
+					Double.MAX_VALUE, 1.0, 0.0);
+
+		} else if (leftValue != null && leftValue.equals(rightValue)) {
+			valueSimilarity = 1.0;
+		}
+
+		/* determine similarity of the difference type */
+
+		double typeSimilarity = 0.0;
+
+		if (diff.eClass().equals(otherDiff.eClass())) {
+			typeSimilarity = 1.0;
+		}
+
+		/* determine similarity of the difference kind */
+
+		double kindSimilarity = 0.0;
+
+		if (diff.getKind().equals(otherDiff.getKind())) {
+			kindSimilarity = 1.0;
+		}
+
+		return typeSimilarity * 0.25 + kindSimilarity * 0.25 + valueSimilarity * 0.5;
 	}
 
 	/**
