@@ -21,7 +21,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.eclipse.e4.core.di.annotations.Optional;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.ecore.EObject;
@@ -32,9 +31,7 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import at.bitandart.zoubek.mervin.IMatchHelper;
 import at.bitandart.zoubek.mervin.IMervinContextConstants;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
-import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.patchset.history.IPatchSetHistoryEntry;
-import at.bitandart.zoubek.mervin.patchset.history.ISimilarityHistoryService.DiffWithSimilarity;
 import at.bitandart.zoubek.mervin.patchset.history.NamedHistoryEntryContainer;
 
 /**
@@ -170,39 +167,6 @@ public class MatchingObjectOrganizer extends DiffCategoryOrganizer {
 
 		if (primaryKey != null) {
 			return primaryKey;
-		}
-
-		/*
-		 * try to obtain the primary key and secondary key from the value diff
-		 * as fallback for the case that the assumption (the old values match
-		 * or, if no old values exist, the new values match) is wrong
-		 */
-		if (modelReview != null) {
-
-			EList<PatchSet> patchSets = modelReview.getPatchSets();
-			for (PatchSet patchSet : patchSets) {
-
-				Object value = entry.getValue(patchSet);
-				Diff valueDiff = null;
-
-				if (value instanceof Diff) {
-					valueDiff = (Diff) value;
-				} else if (value instanceof DiffWithSimilarity) {
-					valueDiff = ((DiffWithSimilarity) value).getDiff();
-				}
-
-				if (valueDiff != null) {
-					primaryKey = getPrimaryKey(valueDiff);
-					if (secondaryKey != null) {
-						secondaryKey = getSecondaryKey(valueDiff);
-					}
-				}
-
-				if (primaryKey != null) {
-					return primaryKey;
-				}
-			}
-
 		}
 		return secondaryKey;
 
