@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
@@ -50,6 +52,7 @@ public class ReviewExplorerHighlightUpdater extends ProgressPanelOperationThread
 	private IReviewExplorerContentProvider contentProvider;
 	private IDiagramModelHelper diagramModelHelper;
 	private IModelReviewHelper modelReviewHelper;
+	private IEventBroker eventBroker;
 
 	/**
 	 * 
@@ -76,11 +79,13 @@ public class ReviewExplorerHighlightUpdater extends ProgressPanelOperationThread
 	 * @param modelReviewHelper
 	 *            the {@link IModelReviewHelper} used to derive objects related
 	 *            to the given {@link ModelReview}.
+	 * @param eventBroker
+	 *            the {@link IEventBroker} to use for UI update requests
 	 */
 	public ReviewExplorerHighlightUpdater(ProgressPanel progressPanel, Composite mainPanel, List<Object> baseElements,
 			Set<Object> objectsToHighlight, ModelReview modelReview, TreeViewer treeViewer,
 			IReviewExplorerContentProvider contentProvider, IDiagramModelHelper diagramModelHelper,
-			IModelReviewHelper modelReviewHelper) {
+			IModelReviewHelper modelReviewHelper, IEventBroker eventBroker) {
 
 		super(progressPanel, mainPanel);
 
@@ -91,6 +96,7 @@ public class ReviewExplorerHighlightUpdater extends ProgressPanelOperationThread
 		this.contentProvider = contentProvider;
 		this.diagramModelHelper = diagramModelHelper;
 		this.modelReviewHelper = modelReviewHelper;
+		this.eventBroker = eventBroker;
 	}
 
 	@Override
@@ -114,6 +120,8 @@ public class ReviewExplorerHighlightUpdater extends ProgressPanelOperationThread
 			@Override
 			public void run() {
 				treeViewer.refresh();
+
+				eventBroker.send(UIEvents.REQUEST_ENABLEMENT_UPDATE_TOPIC, UIEvents.ALL_ELEMENT_ID);
 			}
 		});
 	}

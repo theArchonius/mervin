@@ -259,8 +259,7 @@ public class DiffSimilarityHistoryService implements ISimilarityHistoryService {
 		DiffWithSimilarity value = entry.getValue(patchSet);
 
 		if (value != null) {
-			SubDiffEntry subDiffEntry = new SubDiffEntry(patchSet, entry.getValue(patchSet));
-			entry.getSubEntries().add(subDiffEntry);
+			new SubDiffEntry(entry, patchSet, entry.getValue(patchSet));
 		}
 
 	}

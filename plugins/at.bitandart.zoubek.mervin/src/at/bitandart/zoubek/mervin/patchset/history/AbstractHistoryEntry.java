@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Florian Zoubek.
+ * Copyright (c) 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,16 +25,52 @@ import java.util.List;
  */
 public abstract class AbstractHistoryEntry<O, V> implements IPatchSetHistoryEntry<O, V> {
 
+	protected IPatchSetHistoryEntry<?, ?> parent;
+
 	protected List<IPatchSetHistoryEntry<?, ?>> subEntries;
 
-	public AbstractHistoryEntry(List<IPatchSetHistoryEntry<?, ?>> subEntries) {
+	public AbstractHistoryEntry(IPatchSetHistoryEntry<?, ?> parent, List<IPatchSetHistoryEntry<?, ?>> subEntries) {
 		super();
 		this.subEntries = subEntries;
+		this.parent = parent;
+		updateSubentriesParents();
+		updateParentSubentries();
+	}
+
+	private void updateSubentriesParents() {
+		if (subEntries != null) {
+			for (IPatchSetHistoryEntry<?, ?> subEntry : subEntries) {
+				subEntry.setParent(this);
+			}
+		}
+	}
+
+	private void updateParentSubentries() {
+		if (parent != null) {
+			List<IPatchSetHistoryEntry<?, ?>> siblings = parent.getSubEntries();
+			if (!siblings.contains(this)) {
+				siblings.add(this);
+			}
+		}
 	}
 
 	@Override
 	public List<IPatchSetHistoryEntry<?, ?>> getSubEntries() {
 		return subEntries;
+	}
+
+	@Override
+	public void setParent(IPatchSetHistoryEntry<?, ?> parent) {
+		if (this.parent != parent && this.parent != null) {
+			this.parent.getSubEntries().remove(this);
+		}
+		this.parent = parent;
+		updateParentSubentries();
+	}
+
+	@Override
+	public IPatchSetHistoryEntry<?, ?> getParent() {
+		return parent;
 	}
 
 }

@@ -49,4 +49,28 @@ public interface IReviewHighlightingPart {
 	 */
 	public IReviewHighlightService getReviewHighlightService();
 
+	/**
+	 * reveals the next highlighted element in the view. Does nothing if no next
+	 * highlight exists.
+	 */
+	public void revealNextHighlight();
+
+	/**
+	 * reveals the previous highlighted element in the view. Does nothing if no
+	 * next highlight exists.
+	 */
+	public void revealPreviousHighlight();
+
+	/**
+	 * @return true if a highlighted element exists after the current position,
+	 *         false otherwise.
+	 */
+	public boolean hasNextHighlight();
+
+	/**
+	 * @return true if a highlighted element exists before the current position,
+	 *         false otherwise.
+	 */
+	public boolean hasPreviousHighlight();
+
 }
