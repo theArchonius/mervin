@@ -71,7 +71,7 @@ import at.bitandart.zoubek.mervin.patchset.history.organizers.IPatchSetHistoryEn
 import at.bitandart.zoubek.mervin.review.HighlightHoveredTreeItemMouseTracker;
 import at.bitandart.zoubek.mervin.review.HighlightMode;
 import at.bitandart.zoubek.mervin.review.HighlightSelectionListener;
-import at.bitandart.zoubek.mervin.review.IReviewHighlightProvidingPart;
+import at.bitandart.zoubek.mervin.review.IReviewHighlightingPart;
 import at.bitandart.zoubek.mervin.review.ModelReviewEditorTrackingView;
 import at.bitandart.zoubek.mervin.swt.ProgressPanel;
 import at.bitandart.zoubek.mervin.swt.text.styles.ComposedStyler;
@@ -93,7 +93,7 @@ import at.bitandart.zoubek.mervin.util.vis.ThreeWayObjectTreeViewerComparator;
  *
  */
 public class PatchSetHistoryView extends ModelReviewEditorTrackingView
-		implements IReviewHighlightProvidingPart, IAdaptable {
+		implements IReviewHighlightingPart, IAdaptable {
 
 	public static final String PART_DESCRIPTOR_ID = "at.bitandart.zoubek.mervin.partdescriptor.patchset.history";
 

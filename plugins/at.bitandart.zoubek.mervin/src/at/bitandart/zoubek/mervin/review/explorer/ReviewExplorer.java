@@ -80,7 +80,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.review.HighlightHoveredTreeItemMouseTracker;
 import at.bitandart.zoubek.mervin.review.HighlightMode;
 import at.bitandart.zoubek.mervin.review.HighlightSelectionListener;
-import at.bitandart.zoubek.mervin.review.IReviewHighlightProvidingPart;
+import at.bitandart.zoubek.mervin.review.IReviewHighlightingPart;
 import at.bitandart.zoubek.mervin.review.ModelReviewEditorTrackingView;
 import at.bitandart.zoubek.mervin.review.explorer.content.DifferencesTreeItem;
 import at.bitandart.zoubek.mervin.review.explorer.content.IReviewExplorerContentProvider;
@@ -113,7 +113,7 @@ import at.bitandart.zoubek.mervin.util.vis.ThreeWayObjectTreeViewerComparator;
  * @see ModelReviewEditorTrackingView
  *
  */
-public class ReviewExplorer extends ModelReviewEditorTrackingView implements IReviewHighlightProvidingPart, IAdaptable {
+public class ReviewExplorer extends ModelReviewEditorTrackingView implements IReviewHighlightingPart, IAdaptable {
 
 	public static final String PART_DESCRIPTOR_ID = "at.bitandart.zoubek.mervin.partdescriptor.review";
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Florian Zoubek.
+ * Copyright (c) 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,13 +14,13 @@ import at.bitandart.zoubek.mervin.IReviewHighlightService;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 
 /**
- * Base Interface for parts that provide highlights using a
+ * Base Interface for parts that shows highlights provided by a
  * {@link IReviewHighlightService}.
  * 
  * @author Florian Zoubek
  *
  */
-public interface IReviewHighlightProvidingPart {
+public interface IReviewHighlightingPart {
 
 	/**
 	 * set the current highlight mode for this view.
