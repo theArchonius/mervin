@@ -290,36 +290,59 @@ public class DiffSimilarityHistoryService implements ISimilarityHistoryService {
 
 		double valueSimilarity = 0.0;
 
-		Object leftValue = MatchUtil.getValue(diff);
-		Object rightValue = MatchUtil.getValue(otherDiff);
+		Object diffValue = MatchUtil.getValue(diff);
+		Object otherDiffValue = MatchUtil.getValue(otherDiff);
 
-		if (leftValue == rightValue) {
+		if (diffValue == otherDiffValue) {
 			valueSimilarity = 1.0;
 
-		} else if (leftValue instanceof EObject && rightValue instanceof EObject) {
+		} else if (diffValue instanceof EObject && otherDiffValue instanceof EObject) {
 
-			EObject leftEObject = (EObject) leftValue;
-			EObject rightEObject = (EObject) rightValue;
+			EObject valueEObject = (EObject) diffValue;
+			EObject otherValueEObject = (EObject) otherDiffValue;
 
-			if (leftEObject.eClass().equals(rightEObject.eClass())) {
+			if (valueEObject.eClass().equals(otherValueEObject.eClass())) {
 
-				double oldSimilarity = MathUtil.map(editionDistance.distance(oldComparison, leftEObject, rightEObject),
-						0.0, Double.MAX_VALUE, 1.0, 0.0);
-				double newSimilarity = MathUtil.map(editionDistance.distance(newComparison, leftEObject, rightEObject),
-						0.0, Double.MAX_VALUE, 1.0, 0.0);
+				double oldSimilarity = MathUtil.map(
+						editionDistance.distance(oldComparison, valueEObject, otherValueEObject), 0.0, Double.MAX_VALUE,
+						1.0, 0.0);
+				double newSimilarity = MathUtil.map(
+						editionDistance.distance(newComparison, valueEObject, otherValueEObject), 0.0, Double.MAX_VALUE,
+						1.0, 0.0);
 
 				valueSimilarity = Math.max(oldSimilarity, newSimilarity);
+
+				double featureSimilarity = 0.0;
+
+				EStructuralFeature structuralFeature = valueEObject.eContainingFeature();
+				EStructuralFeature otherStructuralFeature = otherValueEObject.eContainingFeature();
+
+				if (structuralFeature != null && structuralFeature == otherStructuralFeature) {
+					if (structuralFeature.isMany()) {
+						int valueIndex = ((EList<?>) valueEObject.eContainer().eGet(structuralFeature))
+								.indexOf(valueEObject);
+						int otherValueIndex = ((EList<?>) otherValueEObject.eContainer().eGet(otherStructuralFeature))
+								.indexOf(otherValueEObject);
+						featureSimilarity = MathUtil.map(Math.abs(valueIndex - otherValueIndex), 0.0, Integer.MAX_VALUE,
+								1.0, 0.0);
+					} else {
+						featureSimilarity = 1.0;
+					}
+				}
+
+				valueSimilarity = valueSimilarity * 0.9 + featureSimilarity * 0.1;
+
 			}
 
-		} else if (leftValue instanceof Number && rightValue instanceof Number) {
+		} else if (diffValue instanceof Number && otherDiffValue instanceof Number) {
 
-			Number leftNumber = (Number) leftValue;
-			Number rightNumber = (Number) rightValue;
+			Number leftNumber = (Number) diffValue;
+			Number rightNumber = (Number) otherDiffValue;
 
 			valueSimilarity = MathUtil.map(Math.abs(leftNumber.doubleValue() - rightNumber.doubleValue()), 0.0,
 					Double.MAX_VALUE, 1.0, 0.0);
 
-		} else if (leftValue != null && leftValue.equals(rightValue)) {
+		} else if (diffValue != null && diffValue.equals(otherDiffValue)) {
 			valueSimilarity = 1.0;
 		}
 
