@@ -20,6 +20,7 @@ import javax.inject.Named;
 
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.ui.services.IServiceConstants;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.ecore.EObject;
@@ -34,6 +35,9 @@ import at.bitandart.zoubek.mervin.IDiagramModelHelper;
 import at.bitandart.zoubek.mervin.draw2d.figures.overlay.IOverlayTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayType;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
+import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
+import at.bitandart.zoubek.mervin.property.diff.PropertyDiffItemProvider.BaseEntry;
+import at.bitandart.zoubek.mervin.property.diff.PropertyDiffItemProvider.ContainerEntry;
 import at.bitandart.zoubek.mervin.property.diff.PropertyDiffItemProvider.SelectionEntry;
 import at.bitandart.zoubek.mervin.review.ModelReviewEditorTrackingView;
 import at.bitandart.zoubek.mervin.swt.diff.tree.TreeDiff;
@@ -147,55 +151,30 @@ public class PropertyDiffView extends ModelReviewEditorTrackingView {
 	private Object createInputFromSelection(IStructuredSelection selection) {
 
 		ModelReview currentModelReview = getCurrentModelReview();
-		Comparison modelComparison = getModelComparison();
-		Comparison diagramComparison = getDiagramComparison();
+		List<ContainerEntry> modelEntries = new ArrayList<>();
 
-		List<SelectionEntry> modelEntries = new ArrayList<>(selection.size());
+		if (currentModelReview != null) {
 
-		if (modelComparison != null || diagramComparison != null) {
-			Iterator<?> selectionIterator = selection.iterator();
-			int selectionIndex = 1;
-			while (selectionIterator.hasNext()) {
+			Comparison modelComparison = getSelectedModelComparison();
+			Comparison diagramComparison = getSelectedDiagramComparison();
 
-				Object object = selectionIterator.next();
-				EObject selectedSemanticModelElement = diagramModelHelper.getSemanticModel(object);
-				View selectedNotationModelElement = diagramModelHelper.getNotationModel(object);
-
-				if (currentModelReview != null) {
-
-					View originalNotationModelElement = (View) currentModelReview.getUnifiedModelMap()
-							.getOriginal(selectedNotationModelElement);
-
-					if (originalNotationModelElement != null) {
-						selectedNotationModelElement = originalNotationModelElement;
-					}
+			if (modelComparison != null || diagramComparison != null) {
+				List<BaseEntry> selectionEntries = createSelectionEntries(selection, currentModelReview,
+						modelComparison, diagramComparison);
+				if (!selectionEntries.isEmpty()) {
+					modelEntries.add(new ContainerEntry(null, "Selected Comparison (new)", "Selected Comparison (old)",
+							selectionEntries));
 				}
+			}
 
-				Match semanticModelMatch = null;
-				if (modelComparison != null) {
-					semanticModelMatch = modelComparison.getMatch(selectedSemanticModelElement);
+			EList<PatchSet> patchSets = currentModelReview.getPatchSets();
+			for (PatchSet patchSet : patchSets) {
+				List<BaseEntry> selectionEntries = createSelectionEntries(selection, currentModelReview,
+						patchSet.getModelComparison(), patchSet.getDiagramComparison());
+				if (!selectionEntries.isEmpty()) {
+					modelEntries.add(new ContainerEntry(null, "Patch Set " + patchSet.getId() + " (new)",
+							"Base Version (old)", selectionEntries));
 				}
-
-				Match notationModelMatch = null;
-				if (diagramComparison != null) {
-					notationModelMatch = diagramComparison.getMatch(selectedNotationModelElement);
-				}
-
-				/*
-				 * create an entry only if the selection contains a model
-				 * element contained in the comparison
-				 */
-				if (semanticModelMatch != null || notationModelMatch != null) {
-					SelectionEntry modelEntry = new SelectionEntry(null, selectionIndex + ". ", semanticModelMatch,
-							notationModelMatch);
-					modelEntries.add(modelEntry);
-
-					// TODO add other (referencing, context, etc...) notation
-					// models
-
-					selectionIndex++;
-				}
-
 			}
 		}
 
@@ -203,9 +182,73 @@ public class PropertyDiffView extends ModelReviewEditorTrackingView {
 	}
 
 	/**
+	 * creates {@link SelectionEntry}s for the given selection and comparisons.
+	 * 
+	 * @param selection
+	 *            the selection to obtain the elements to display from.
+	 * @param currentModelReview
+	 *            the {@link ModelReview} instance used to obtain the views for
+	 *            the elements to display.
+	 * @param modelComparison
+	 *            the model {@link Comparison} to display the elements for.
+	 * @param diagramComparison
+	 *            the diagram {@link Comparison} to display the elements for.
+	 * @return a {@link List} of all created selection entries, never null.
+	 */
+	private List<BaseEntry> createSelectionEntries(IStructuredSelection selection, ModelReview currentModelReview,
+			Comparison modelComparison, Comparison diagramComparison) {
+		List<BaseEntry> modelEntries = new ArrayList<>();
+		Iterator<?> selectionIterator = selection.iterator();
+		int selectionIndex = 1;
+		while (selectionIterator.hasNext()) {
+
+			Object object = selectionIterator.next();
+			EObject selectedSemanticModelElement = diagramModelHelper.getSemanticModel(object);
+			View selectedNotationModelElement = diagramModelHelper.getNotationModel(object);
+
+			if (currentModelReview != null) {
+
+				View originalNotationModelElement = (View) currentModelReview.getUnifiedModelMap()
+						.getOriginal(selectedNotationModelElement);
+
+				if (originalNotationModelElement != null) {
+					selectedNotationModelElement = originalNotationModelElement;
+				}
+			}
+
+			Match semanticModelMatch = null;
+			if (modelComparison != null) {
+				semanticModelMatch = modelComparison.getMatch(selectedSemanticModelElement);
+			}
+
+			Match notationModelMatch = null;
+			if (diagramComparison != null) {
+				notationModelMatch = diagramComparison.getMatch(selectedNotationModelElement);
+			}
+
+			/*
+			 * create an entry only if the selection contains a model element
+			 * contained in the comparison
+			 */
+			if (semanticModelMatch != null || notationModelMatch != null) {
+				SelectionEntry modelEntry = new SelectionEntry(null, selectionIndex + ". ", semanticModelMatch,
+						notationModelMatch);
+				modelEntries.add(modelEntry);
+
+				// TODO add other (referencing, context, etc...) notation
+				// models
+
+				selectionIndex++;
+			}
+
+		}
+		return modelEntries;
+	}
+
+	/**
 	 * @return the diagram comparison to use for this view.
 	 */
-	private Comparison getDiagramComparison() {
+	private Comparison getSelectedDiagramComparison() {
 
 		ModelReview currentModelReview = getCurrentModelReview();
 		if (currentModelReview != null) {
@@ -218,7 +261,7 @@ public class PropertyDiffView extends ModelReviewEditorTrackingView {
 	/**
 	 * @return the model comparison to use for this view.
 	 */
-	private Comparison getModelComparison() {
+	private Comparison getSelectedModelComparison() {
 
 		ModelReview currentModelReview = getCurrentModelReview();
 		if (currentModelReview != null) {
