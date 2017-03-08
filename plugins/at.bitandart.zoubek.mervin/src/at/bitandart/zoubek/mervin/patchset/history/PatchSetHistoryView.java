@@ -61,6 +61,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 
 import at.bitandart.zoubek.mervin.IOverlayTypeHelper;
 import at.bitandart.zoubek.mervin.IReviewHighlightService;
@@ -268,7 +269,7 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 				}
 				return false;
 			}
-		});
+		}, Predicates.alwaysTrue());
 
 		viewInitialized = true;
 

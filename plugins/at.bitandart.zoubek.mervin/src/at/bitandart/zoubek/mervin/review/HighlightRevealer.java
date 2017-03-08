@@ -41,6 +41,7 @@ public class HighlightRevealer {
 
 	public TreeViewer treeViewer;
 	public Predicate<Object> highlightedElementPredicate;
+	public Predicate<Object> highlightContainerPredicate;
 
 	/**
 	 * @param treeViewer
@@ -48,8 +49,17 @@ public class HighlightRevealer {
 	 * @param highlightedElementPredicate
 	 *            the predicate the will be evaluated for each element that is
 	 *            traversed forwards or backwards.
+	 * @param highlightContainerPredicate
+	 *            a predicate that determines if a given element may contain
+	 *            highlights or not. This containment check includes highlights
+	 *            in the whole child tree of the element. If this predicate
+	 *            returns false, the child tree of the given element is ignored
+	 *            while walking through the tree. This may be used in
+	 *            combination with a cache to speed up the computation of the
+	 *            next or previous highlighted element.
 	 */
-	public HighlightRevealer(TreeViewer treeViewer, Predicate<Object> highlightedElementPredicate) {
+	public HighlightRevealer(TreeViewer treeViewer, Predicate<Object> highlightedElementPredicate,
+			Predicate<Object> highlightContainerPredicate) {
 		super();
 		if (treeViewer == null || highlightedElementPredicate == null) {
 			throw new IllegalArgumentException(
@@ -57,6 +67,7 @@ public class HighlightRevealer {
 		}
 		this.treeViewer = treeViewer;
 		this.highlightedElementPredicate = highlightedElementPredicate;
+		this.highlightContainerPredicate = highlightContainerPredicate;
 	}
 
 	/**
@@ -146,6 +157,11 @@ public class HighlightRevealer {
 	 */
 	protected Object findHighlightedChildElement(Object parent, boolean forward) {
 
+		if (!highlightContainerPredicate.apply(parent)) {
+			/* the parent does not contain highlights, so skip the traversal */
+			return null;
+		}
+
 		Object[] children = getChildren(parent);
 		int startIndex = 0;
 		int direction = 1;
@@ -215,59 +231,67 @@ public class HighlightRevealer {
 		/* retrieve the siblings */
 		Object parent = treeContentProvider.getParent(currentElement);
 		Object[] siblings = null;
-		if (parent == null) {
-			siblings = getElements(input);
-		} else {
-			siblings = getChildren(parent);
-		}
 
-		/* search for the current element in the siblings */
-		int currentElementIndex = 0;
-		for (Object sibling : siblings) {
-			if (sibling == currentElement) {
-				break;
+		/*
+		 * do not walk through the siblings if the parent is known not to
+		 * contain highlights
+		 */
+		if (parent == null || highlightContainerPredicate.apply(parent)) {
+
+			if (parent == null) {
+				siblings = getElements(input);
+			} else {
+				siblings = getChildren(parent);
 			}
-			currentElementIndex++;
-		}
 
-		if (currentElementIndex >= siblings.length) {
-			/*
-			 * the current element was not found within the expected sibling
-			 * scope
-			 */
-			return null;
-		}
-
-		int nextDirectionElementIndex = currentElementIndex;
-		if (forward) {
-			nextDirectionElementIndex++;
-		} else {
-			nextDirectionElementIndex--;
-		}
-
-		if (nextDirectionElementIndex < siblings.length && nextDirectionElementIndex >= 0) {
-
-			/*
-			 * move in the given direction and return the first highlighted
-			 * element
-			 */
-
-			int direction = 1;
-			if (!forward) {
-				direction = -1;
-			}
-			for (; nextDirectionElementIndex < siblings.length
-					&& nextDirectionElementIndex >= 0; nextDirectionElementIndex += direction) {
-
-				Object sibling = siblings[nextDirectionElementIndex];
-
-				if (highlightedElementPredicate.apply(sibling)) {
-					return sibling;
+			/* search for the current element in the siblings */
+			int currentElementIndex = 0;
+			for (Object sibling : siblings) {
+				if (sibling == currentElement) {
+					break;
 				}
+				currentElementIndex++;
+			}
 
-				Object highlightedChildElement = findHighlightedChildElement(sibling, forward);
-				if (highlightedChildElement != null) {
-					return highlightedChildElement;
+			if (currentElementIndex >= siblings.length) {
+				/*
+				 * the current element was not found within the expected sibling
+				 * scope
+				 */
+				return null;
+			}
+
+			int nextDirectionElementIndex = currentElementIndex;
+			if (forward) {
+				nextDirectionElementIndex++;
+			} else {
+				nextDirectionElementIndex--;
+			}
+
+			if (nextDirectionElementIndex < siblings.length && nextDirectionElementIndex >= 0) {
+
+				/*
+				 * move in the given direction and return the first highlighted
+				 * element
+				 */
+
+				int direction = 1;
+				if (!forward) {
+					direction = -1;
+				}
+				for (; nextDirectionElementIndex < siblings.length
+						&& nextDirectionElementIndex >= 0; nextDirectionElementIndex += direction) {
+
+					Object sibling = siblings[nextDirectionElementIndex];
+
+					if (highlightedElementPredicate.apply(sibling)) {
+						return sibling;
+					}
+
+					Object highlightedChildElement = findHighlightedChildElement(sibling, forward);
+					if (highlightedChildElement != null) {
+						return highlightedChildElement;
+					}
 				}
 			}
 		}

@@ -254,6 +254,12 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 				}
 				return false;
 			}
+		}, new Predicate<Object>() {
+
+			@Override
+			public boolean apply(Object element) {
+				return isHighlighted(element, objectsToHighlight);
+			}
 		});
 
 		Tree reviewTree = reviewTreeViewer.getTree();
