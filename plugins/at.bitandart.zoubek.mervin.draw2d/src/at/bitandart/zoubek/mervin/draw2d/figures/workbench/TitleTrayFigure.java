@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Florian Zoubek.
+ * Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -106,7 +106,7 @@ public class TitleTrayFigure extends ComposedClickable implements IDiffWorkbench
 	 * figure. Subclasses may override.
 	 */
 	protected int getDefaultVerticalSpacing() {
-		return (int) (getDefaultHorizontalSpacing() * 0.618);
+		return (int) (getDefaultHorizontalSpacing() * 0.382);
 	}
 
 	@Override
@@ -130,11 +130,11 @@ public class TitleTrayFigure extends ComposedClickable implements IDiffWorkbench
 	 */
 	protected void updateStateColors() {
 		if (getContainer().isActive()) {
-			setBackgroundColor(ColorConstants.white);
-			setForegroundColor(ColorConstants.black);
+			setBackgroundColor(ColorConstants.menuBackgroundSelected);
+			setForegroundColor(ColorConstants.menuForegroundSelected);
 		} else {
-			setBackgroundColor(ColorConstants.gray);
-			setForegroundColor(ColorConstants.lightGray);
+			setBackgroundColor(ColorConstants.menuBackground);
+			setForegroundColor(ColorConstants.menuForeground);
 		}
 	}
 
