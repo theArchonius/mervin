@@ -17,7 +17,7 @@ import org.eclipse.e4.ui.model.application.ui.menu.MHandledItem;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 
 import at.bitandart.zoubek.mervin.review.HighlightMode;
-import at.bitandart.zoubek.mervin.review.IReviewHighlightProvidingPart;
+import at.bitandart.zoubek.mervin.review.IReviewHighlightingPart;
 
 /**
  * Switches between {@link HighlightMode#HOVER} and
@@ -34,12 +34,12 @@ public class SwitchHighlightMode {
 
 		Object object = part.getObject();
 
-		if (object instanceof IReviewHighlightProvidingPart) {
+		if (object instanceof IReviewHighlightingPart) {
 			HighlightMode highlightMode = HighlightMode.SELECTION;
 			if (item.isSelected()) {
 				highlightMode = HighlightMode.HOVER;
 			}
-			((IReviewHighlightProvidingPart) object).setHighlightMode(highlightMode);
+			((IReviewHighlightingPart) object).setHighlightMode(highlightMode);
 		}
 
 	}

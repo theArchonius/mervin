@@ -23,6 +23,8 @@
     <elements xsi:type="commands:Command" xmi:id="_Z4Qh8Db8EeaRo_cgSmIxdQ" elementId="at.bitandart.zoubek.mervin.command.patchset.history.mergeequaldiffs" commandName="Merge Equal Diffs"/>
     <elements xsi:type="commands:Command" xmi:id="_S-b8kDh_EeaJkOmvJc6KWA" elementId="at.bitandart.zoubek.mervin.command.views.highlight.switchmode" commandName="Switch Highlight Mode"/>
     <elements xsi:type="commands:Command" xmi:id="_Vi6tID0BEeaYz6GEb20auA" elementId="at.bitandart.zoubek.mervin.command.highlights.clear" commandName="Clear Highlights"/>
+    <elements xsi:type="commands:Command" xmi:id="_-z19cAMfEeejMcCxMoDObw" elementId="at.bitandart.zoubek.mervin.command.highlights.reveal.next" commandName="Reveal Next Highlight"/>
+    <elements xsi:type="commands:Command" xmi:id="_Njk7wAM1EeejMcCxMoDObw" elementId="at.bitandart.zoubek.mervin.command.highlights.reveal.previous" commandName="Reveal Previous Highlight"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_rV6KoPsFEeS2q_4qNTgMUQ" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:Handler" xmi:id="_ZCDZQAX8EeWDm7E-HymwAA" elementId="at.bitandart.zoubek.mervin.handler.review.load" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.LoadReviewHandler" command="_UTSkEAX8EeWDm7E-HymwAA"/>
@@ -33,6 +35,8 @@
     <elements xsi:type="commands:Handler" xmi:id="_g9QOsDb8EeaRo_cgSmIxdQ" elementId="at.bitandart.zoubek.mervin.handler.patchset.history.mergeequaldiffs" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.MergeEqualDiffs" command="_Z4Qh8Db8EeaRo_cgSmIxdQ"/>
     <elements xsi:type="commands:Handler" xmi:id="_ebZvIDh_EeaJkOmvJc6KWA" elementId="at.bitandart.zoubek.mervin.handler.views.highlight.switchmode" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.SwitchHighlightMode" command="_S-b8kDh_EeaJkOmvJc6KWA"/>
     <elements xsi:type="commands:Handler" xmi:id="_hj2IYD0BEeaYz6GEb20auA" elementId="at.bitandart.zoubek.mervin.handler.highlights.clear" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.ClearHighlights" command="_Vi6tID0BEeaYz6GEb20auA"/>
+    <elements xsi:type="commands:Handler" xmi:id="_6UUeIAMfEeejMcCxMoDObw" elementId="at.bitandart.zoubek.mervin.handler.highlights.reveal.next" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.RevealNextHighlightedElement" command="_-z19cAMfEeejMcCxMoDObw"/>
+    <elements xsi:type="commands:Handler" xmi:id="_IfcTgAM1EeejMcCxMoDObw" elementId="at.bitandart.zoubek.mervin.handler.highlights.reveal.previous" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.RevealPreviousHighlightedElement" command="_Njk7wAM1EeejMcCxMoDObw"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_OapfwPsGEeS2q_4qNTgMUQ" featurename="descriptors" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="basic:PartDescriptor" xmi:id="_b4kdcPsGEeS2q_4qNTgMUQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.diagram.diffviewer" label="Diagram Diff Viewer" allowMultiple="true" category="Mervin" closeable="true" dirtyable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.diagram.diff.DiagramDiffView">
@@ -63,6 +67,8 @@
       </menus>
       <toolbar xmi:id="_f9fuMISVEeadQ7Sb89he3A" elementId="at.bitandart.zoubek.mervin.toolbar.review">
         <children xsi:type="menu:HandledToolItem" xmi:id="_58FXIISVEeadQ7Sb89he3A" elementId="at.bitandart.zoubek.mervin.toolbar.review.highlights.clear" label="Clear Highlights" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/etool/clearHighlights_16.png" tooltip="Clear Highlights" command="_Vi6tID0BEeaYz6GEb20auA"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_L4zBgAMgEeejMcCxMoDObw" elementId="at.bitandart.zoubek.mervin.toolbar.review.highlights.reveal.next" label="Next Highlight" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/etool/nextHighlight_16.png" tooltip="Reveal Next Highlight" command="_-z19cAMfEeejMcCxMoDObw"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_R-hdEAM1EeejMcCxMoDObw" elementId="at.bitandart.zoubek.mervin.toolbar.review.highlights.reveal.previous" label="Previous Highlight" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/etool/previousHighlight_16.png" tooltip="Reveal Previous Highlight" command="_Njk7wAM1EeejMcCxMoDObw"/>
       </toolbar>
     </elements>
     <elements xsi:type="basic:PartDescriptor" xmi:id="_kGxz0P1dEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.comments" label="Review Comments" category="Mervin" closeable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.comments.CommentsView">
@@ -84,6 +90,8 @@
       </menus>
       <toolbar xmi:id="_IhtjwISWEeadQ7Sb89he3A" elementId="at.bitandart.zoubek.mervin.toolbar.patchset.history">
         <children xsi:type="menu:HandledToolItem" xmi:id="_OBaGoISWEeadQ7Sb89he3A" elementId="at.bitandart.zoubek.mervin.toolbar.patchset.history.highlights.clear" label="Clear Highlights" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/etool/clearHighlights_16.png" tooltip="Clear Highlights" command="_Vi6tID0BEeaYz6GEb20auA"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_ZFR40AM_EeejMcCxMoDObw" elementId="at.bitandart.zoubek.mervin.toolbar.patchset.history.highlights.next" label="Next Highlight" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/etool/nextHighlight_16.png" tooltip="Reveal Next Highlight" command="_-z19cAMfEeejMcCxMoDObw"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_jSAykAM_EeejMcCxMoDObw" elementId="at.bitandart.zoubek.mervin.toolbar.patchset.history.highlights.previous" label="Previous Highlight" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/etool/previousHighlight_16.png" tooltip="Reveal Previous Highlight" command="_Njk7wAM1EeejMcCxMoDObw"/>
       </toolbar>
     </elements>
     <elements xsi:type="basic:PartDescriptor" xmi:id="_791IgP1dEeSbdbEoUfEbuQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.properties.diff" label="Property Diff" category="Mervin" closeable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.property.diff.PropertyDiffView">

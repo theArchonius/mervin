@@ -38,8 +38,8 @@ public class SubDiffEntry extends AbstractHistoryEntry<Diff, DiffWithSimilarity>
 	 *            the {@link DiffWithSimilarity} assigned to this
 	 *            {@link SubDiffEntry}.
 	 */
-	public SubDiffEntry(PatchSet patchSet, DiffWithSimilarity subDiff) {
-		super(new ArrayList<IPatchSetHistoryEntry<?, ?>>());
+	public SubDiffEntry(IPatchSetHistoryEntry<?, ?> parent, PatchSet patchSet, DiffWithSimilarity subDiff) {
+		super(parent, new ArrayList<IPatchSetHistoryEntry<?, ?>>());
 		this.patchSet = patchSet;
 		this.subDiff = subDiff;
 	}

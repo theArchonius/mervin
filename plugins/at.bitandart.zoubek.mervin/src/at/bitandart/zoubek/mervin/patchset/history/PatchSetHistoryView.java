@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -24,8 +23,10 @@ import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
+import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.ElementMatcher;
 import org.eclipse.emf.common.notify.Notification;
@@ -41,6 +42,7 @@ import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.util.Policy;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.StyledString.Styler;
@@ -58,6 +60,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 
+import com.google.common.base.Predicate;
+
 import at.bitandart.zoubek.mervin.IOverlayTypeHelper;
 import at.bitandart.zoubek.mervin.IReviewHighlightService;
 import at.bitandart.zoubek.mervin.IReviewHighlightServiceListener;
@@ -70,8 +74,9 @@ import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.patchset.history.organizers.IPatchSetHistoryEntryOrganizer;
 import at.bitandart.zoubek.mervin.review.HighlightHoveredTreeItemMouseTracker;
 import at.bitandart.zoubek.mervin.review.HighlightMode;
+import at.bitandart.zoubek.mervin.review.HighlightRevealer;
 import at.bitandart.zoubek.mervin.review.HighlightSelectionListener;
-import at.bitandart.zoubek.mervin.review.IReviewHighlightProvidingPart;
+import at.bitandart.zoubek.mervin.review.IReviewHighlightingPart;
 import at.bitandart.zoubek.mervin.review.ModelReviewEditorTrackingView;
 import at.bitandart.zoubek.mervin.swt.ProgressPanel;
 import at.bitandart.zoubek.mervin.swt.text.styles.ComposedStyler;
@@ -92,8 +97,7 @@ import at.bitandart.zoubek.mervin.util.vis.ThreeWayObjectTreeViewerComparator;
  * @author Florian Zoubek
  *
  */
-public class PatchSetHistoryView extends ModelReviewEditorTrackingView
-		implements IReviewHighlightProvidingPart, IAdaptable {
+public class PatchSetHistoryView extends ModelReviewEditorTrackingView implements IReviewHighlightingPart, IAdaptable {
 
 	public static final String PART_DESCRIPTOR_ID = "at.bitandart.zoubek.mervin.partdescriptor.patchset.history";
 
@@ -135,6 +139,9 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 	@Inject
 	private IOverlayTypeHelper overlayTypeHelper;
 
+	@Inject
+	private IEventBroker eventBroker;
+
 	private IPatchSetHistoryEntryOrganizer entryOrganizer;
 
 	private VisibleDiffMode visibleDiffs = VisibleDiffMode.ALL_DIFFS;
@@ -171,6 +178,10 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 
 	private DiffNameColumnLabelProvider labelColumnLabelProvider;
 
+	private boolean ignoreSelection = false;
+
+	private HighlightRevealer highlightRevealer;
+
 	@Inject
 	public PatchSetHistoryView() {
 		patchSetHistoryViewUpdater = new UpdatePatchSetHistoryViewAdapter();
@@ -205,10 +216,19 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 
 		// initialize tree viewer
 
-		PatchSetHistoryContentProvider patchSetHistoryContentProvider = new PatchSetHistoryContentProvider();
+		final PatchSetHistoryContentProvider patchSetHistoryContentProvider = new PatchSetHistoryContentProvider();
 		historyTreeViewer = new TreeViewer(mainPanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
 		historyTreeViewer.setContentProvider(patchSetHistoryContentProvider);
-		historyTreeViewer.addSelectionChangedListener(new HighlightSelectionListener(this));
+		historyTreeViewer.addSelectionChangedListener(new HighlightSelectionListener(this) {
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				if (!ignoreSelection) {
+					super.selectionChanged(event);
+				}
+				eventBroker.send(UIEvents.REQUEST_ENABLEMENT_UPDATE_TOPIC, UIEvents.ALL_ELEMENT_ID);
+			}
+		});
+
 		Tree histroryTree = historyTreeViewer.getTree();
 		histroryTree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		histroryTree.setLinesVisible(false);
@@ -229,6 +249,26 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 				labelColumn, labelColumnLabelProvider);
 		labelColumn.getColumn().addSelectionListener(defaultComparator);
 		historyTreeViewer.setComparator(defaultComparator);
+
+		highlightRevealer = new HighlightRevealer(historyTreeViewer, new Predicate<Object>() {
+
+			@Override
+			public boolean apply(Object element) {
+
+				List<Object> highlightedElements = highlightService.getHighlightedElements(getCurrentModelReview());
+
+				if (labelColumnLabelProvider.isHighlighted(element, highlightedElements)) {
+					Object[] children = patchSetHistoryContentProvider.getChildren(element);
+					for (Object child : children) {
+						if (labelColumnLabelProvider.isHighlighted(child, highlightedElements)) {
+							return false;
+						}
+					}
+					return true;
+				}
+				return false;
+			}
+		});
 
 		viewInitialized = true;
 
@@ -447,25 +487,12 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 	 */
 	public class PatchSetHistoryContentProvider implements ITreeContentProvider {
 
-		private List<IPatchSetHistoryEntry<?, ?>> cachedContainers = new LinkedList<IPatchSetHistoryEntry<?, ?>>();
-
 		@Override
 		public void dispose() {
 		}
 
 		@Override
 		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-			cachedContainers.clear();
-
-			// cache all containers for a parent identification in
-			// #getParent(Object)
-
-			Object[] elements = getElements(newInput);
-			for (Object object : elements) {
-				if (object instanceof IPatchSetHistoryEntry<?, ?>) {
-					cachedContainers.add((IPatchSetHistoryEntry<?, ?>) object);
-				}
-			}
 		}
 
 		@Override
@@ -486,10 +513,8 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 
 		@Override
 		public Object getParent(Object element) {
-			for (IPatchSetHistoryEntry<?, ?> container : cachedContainers) {
-				if (container.getSubEntries().contains(element)) {
-					return container;
-				}
+			if (element instanceof IPatchSetHistoryEntry<?, ?>) {
+				return ((IPatchSetHistoryEntry<?, ?>) element).getParent();
 			}
 			return null;
 		}
@@ -635,7 +660,7 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 		 * @return true if the given element should be highlighted, false
 		 *         otherwise.
 		 */
-		private boolean isHighlighted(Object element, List<Object> highlightedElements) {
+		public boolean isHighlighted(Object element, List<Object> highlightedElements) {
 
 			if (element == null) {
 				return false;
@@ -749,6 +774,30 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView
 			highlightStyler.dispose();
 		}
 
+	}
+
+	@Override
+	public void revealNextHighlight() {
+		ignoreSelection = true;
+		highlightRevealer.revealNextHighlight();
+		ignoreSelection = false;
+	}
+
+	@Override
+	public void revealPreviousHighlight() {
+		ignoreSelection = true;
+		highlightRevealer.revealPreviousHighlight();
+		ignoreSelection = false;
+	}
+
+	@Override
+	public boolean hasNextHighlight() {
+		return highlightRevealer.hasNextHighlight();
+	}
+
+	@Override
+	public boolean hasPreviousHighlight() {
+		return highlightRevealer.hasPreviousHighlight();
 	}
 
 }

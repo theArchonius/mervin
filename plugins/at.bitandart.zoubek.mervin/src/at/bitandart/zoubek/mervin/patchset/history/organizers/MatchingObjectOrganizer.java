@@ -82,7 +82,6 @@ public class MatchingObjectOrganizer extends DiffCategoryOrganizer {
 
 		Map<Object, IPatchSetHistoryEntry<?, ?>> objectDiffMap = new HashMap<>();
 		Map<EPackage, IPatchSetHistoryEntry<?, ?>> packageEntries = new HashMap<>();
-		parent.getSubEntries().clear();
 
 		for (IPatchSetHistoryEntry<?, ?> entry : entries) {
 
@@ -94,7 +93,7 @@ public class MatchingObjectOrganizer extends DiffCategoryOrganizer {
 
 				if (parentEntry == null) {
 
-					parentEntry = new NamedHistoryEntryContainer(adapterFactoryLabelProvider.getText(key),
+					parentEntry = new NamedHistoryEntryContainer(parent, adapterFactoryLabelProvider.getText(key),
 							new LinkedList<IPatchSetHistoryEntry<?, ?>>());
 
 					if (key instanceof EObject) {
@@ -107,24 +106,20 @@ public class MatchingObjectOrganizer extends DiffCategoryOrganizer {
 							IPatchSetHistoryEntry<?, ?> packageEntry = packageEntries.get(containingPackage);
 							if (packageEntry == null) {
 
-								packageEntry = new NamedHistoryEntryContainer(
+								packageEntry = new NamedHistoryEntryContainer(parent,
 										adapterFactoryLabelProvider.getText(containingPackage),
 										new LinkedList<IPatchSetHistoryEntry<?, ?>>());
-								parent.getSubEntries().add(packageEntry);
 								packageEntries.put(containingPackage, packageEntry);
 							}
-							packageEntry.getSubEntries().add(parentEntry);
+							parentEntry.setParent(packageEntry);
 						}
 
-					} else {
-
-						parent.getSubEntries().add(parentEntry);
 					}
 
 					objectDiffMap.put(key, parentEntry);
 				}
 
-				parentEntry.getSubEntries().add(entry);
+				entry.setParent(parentEntry);
 			}
 		}
 	}

@@ -51,8 +51,25 @@ public interface IPatchSetHistoryEntry<O, V> {
 	O getEntryObject();
 
 	/**
-	 * @return a list containing all subentries
+	 * @return a list containing all subentries. It is the responsibility of the
+	 *         caller to set the parent of the entry if an entry is added to
+	 *         this list.
+	 * @see #setParent(IPatchSetHistoryEntry)
 	 */
 	List<IPatchSetHistoryEntry<?, ?>> getSubEntries();
+
+	/**
+	 * @return the parent entry or null if no parent entry exists.
+	 */
+	IPatchSetHistoryEntry<?, ?> getParent();
+
+	/**
+	 * sets the parent entry and updates the current and former parent's sub
+	 * entries if necessary.
+	 * 
+	 * @param parent
+	 *            the parent to set or null if the entry has no parent.
+	 */
+	void setParent(IPatchSetHistoryEntry<?, ?> parent);
 
 }

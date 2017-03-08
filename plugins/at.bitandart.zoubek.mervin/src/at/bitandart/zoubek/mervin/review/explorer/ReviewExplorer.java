@@ -24,8 +24,10 @@ import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
+import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.e4.ui.workbench.modeling.ElementMatcher;
@@ -62,6 +64,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 
+import com.google.common.base.Predicate;
+
 import at.bitandart.zoubek.mervin.IDiagramModelHelper;
 import at.bitandart.zoubek.mervin.IMatchHelper;
 import at.bitandart.zoubek.mervin.IModelReviewHelper;
@@ -79,8 +83,9 @@ import at.bitandart.zoubek.mervin.model.modelreview.Patch;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.review.HighlightHoveredTreeItemMouseTracker;
 import at.bitandart.zoubek.mervin.review.HighlightMode;
+import at.bitandart.zoubek.mervin.review.HighlightRevealer;
 import at.bitandart.zoubek.mervin.review.HighlightSelectionListener;
-import at.bitandart.zoubek.mervin.review.IReviewHighlightProvidingPart;
+import at.bitandart.zoubek.mervin.review.IReviewHighlightingPart;
 import at.bitandart.zoubek.mervin.review.ModelReviewEditorTrackingView;
 import at.bitandart.zoubek.mervin.review.explorer.content.DifferencesTreeItem;
 import at.bitandart.zoubek.mervin.review.explorer.content.IReviewExplorerContentProvider;
@@ -113,7 +118,7 @@ import at.bitandart.zoubek.mervin.util.vis.ThreeWayObjectTreeViewerComparator;
  * @see ModelReviewEditorTrackingView
  *
  */
-public class ReviewExplorer extends ModelReviewEditorTrackingView implements IReviewHighlightProvidingPart, IAdaptable {
+public class ReviewExplorer extends ModelReviewEditorTrackingView implements IReviewHighlightingPart, IAdaptable {
 
 	public static final String PART_DESCRIPTOR_ID = "at.bitandart.zoubek.mervin.partdescriptor.review";
 
@@ -141,6 +146,9 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 
 	@Inject
 	private IModelReviewHelper modelReviewHelper;
+
+	@Inject
+	private IEventBroker eventBroker;
 
 	// text styles
 	private HighlightStyler highlightStyler;
@@ -189,6 +197,10 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 
 	private ModelReviewContentProvider reviewExplorerContentProvider;
 
+	private HighlightRevealer highlightRevealer;
+
+	private boolean ignoreSelection = false;
+
 	@PostConstruct
 	public void postConstruct(Composite parent, EModelService modelService, MPart part) {
 
@@ -216,12 +228,33 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 
-				super.selectionChanged(event);
-				ISelection selection = event.getSelection();
-				selectionService.setSelection(selection);
+				if (!ignoreSelection) {
+					super.selectionChanged(event);
+					ISelection selection = event.getSelection();
+					selectionService.setSelection(selection);
+
+				}
+				eventBroker.send(UIEvents.REQUEST_ENABLEMENT_UPDATE_TOPIC, UIEvents.ALL_ELEMENT_ID);
 			}
 		});
 		ColumnViewerToolTipSupport.enableFor(reviewTreeViewer);
+
+		highlightRevealer = new HighlightRevealer(reviewTreeViewer, new Predicate<Object>() {
+
+			@Override
+			public boolean apply(Object element) {
+				if (isHighlighted(element, objectsToHighlight)) {
+					Object[] children = reviewExplorerContentProvider.getChildren(element);
+					for (Object child : children) {
+						if (isHighlighted(child, objectsToHighlight)) {
+							return false;
+						}
+					}
+					return true;
+				}
+				return false;
+			}
+		});
 
 		Tree reviewTree = reviewTreeViewer.getTree();
 		reviewTree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -374,7 +407,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 
 			reviewHighlightUpdater = new ReviewExplorerHighlightUpdater(progressPanel, mainPanel, highlightedElements,
 					objectsToHighlight, currentModelReview, reviewTreeViewer, reviewExplorerContentProvider,
-					diagramModelHelper, modelReviewHelper);
+					diagramModelHelper, modelReviewHelper, eventBroker);
 
 			reviewHighlightUpdater.start();
 
@@ -583,35 +616,6 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		}
 
 		/**
-		 * checks if the given element should be highlighted or not.
-		 * 
-		 * @param element
-		 *            the element to check.
-		 * @param highlightedElements
-		 *            the set of elements to highlight.
-		 * @return true if the given element should be highlighted, false
-		 *         otherwise.
-		 */
-		private boolean isHighlighted(Object element, Set<Object> highlightedElements) {
-
-			if (highlightedElements.contains(element)) {
-				return true;
-			}
-
-			if (element instanceof ModelPatch) {
-				return isHighlighted(((ModelPatch) element).getNewModelResource(), highlightedElements)
-						|| isHighlighted(((ModelPatch) element).getOldModelResource(), highlightedElements);
-			}
-
-			if (element instanceof DiagramPatch) {
-				return isHighlighted(((DiagramPatch) element).getNewDiagramResource(), highlightedElements)
-						|| isHighlighted(((DiagramPatch) element).getOldDiagramResource(), highlightedElements);
-			}
-
-			return false;
-		}
-
-		/**
 		 * @param element
 		 *            the element to retrieve the label text for.
 		 * @return the label text for the given element.
@@ -693,6 +697,34 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 			String text2 = getText(object2);
 			return Policy.getComparator().compare(text1, text2);
 		}
+	}
+
+	/**
+	 * checks if the given element should be highlighted or not.
+	 * 
+	 * @param element
+	 *            the element to check.
+	 * @param highlightedElements
+	 *            the set of elements to highlight.
+	 * @return true if the given element should be highlighted, false otherwise.
+	 */
+	private boolean isHighlighted(Object element, Set<Object> highlightedElements) {
+
+		if (highlightedElements.contains(element)) {
+			return true;
+		}
+
+		if (element instanceof ModelPatch) {
+			return isHighlighted(((ModelPatch) element).getNewModelResource(), highlightedElements)
+					|| isHighlighted(((ModelPatch) element).getOldModelResource(), highlightedElements);
+		}
+
+		if (element instanceof DiagramPatch) {
+			return isHighlighted(((DiagramPatch) element).getNewDiagramResource(), highlightedElements)
+					|| isHighlighted(((DiagramPatch) element).getOldDiagramResource(), highlightedElements);
+		}
+
+		return false;
 	}
 
 	/**
@@ -857,6 +889,30 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 			return false;
 		}
 
+	}
+
+	@Override
+	public void revealNextHighlight() {
+		ignoreSelection = true;
+		highlightRevealer.revealNextHighlight();
+		ignoreSelection = false;
+	}
+
+	@Override
+	public void revealPreviousHighlight() {
+		ignoreSelection = true;
+		highlightRevealer.revealPreviousHighlight();
+		ignoreSelection = false;
+	}
+
+	@Override
+	public boolean hasNextHighlight() {
+		return highlightRevealer.hasNextHighlight();
+	}
+
+	@Override
+	public boolean hasPreviousHighlight() {
+		return highlightRevealer.hasPreviousHighlight();
 	}
 
 }

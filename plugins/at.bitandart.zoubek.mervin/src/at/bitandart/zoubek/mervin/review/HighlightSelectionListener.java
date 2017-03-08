@@ -23,8 +23,8 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 /**
  * An {@link ISelectionChangedListener} that highlights the current selection
  * using the highlight service and model review of the associated
- * {@link IReviewHighlightProvidingPart}. Nothing will be done if the
- * {@link HighlightMode} of the associated {@link IReviewHighlightProvidingPart}
+ * {@link IReviewHighlightingPart}. Nothing will be done if the
+ * {@link HighlightMode} of the associated {@link IReviewHighlightingPart}
  * is not set to {@link HighlightMode#SELECTION}.
  * 
  * @author Florian Zoubek
@@ -32,14 +32,14 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
  */
 public class HighlightSelectionListener implements ISelectionChangedListener {
 
-	private IReviewHighlightProvidingPart part;
+	private IReviewHighlightingPart part;
 
 	/**
 	 * @param part
-	 *            the {@link IReviewHighlightProvidingPart} associated with this
+	 *            the {@link IReviewHighlightingPart} associated with this
 	 *            listener.
 	 */
-	public HighlightSelectionListener(IReviewHighlightProvidingPart part) {
+	public HighlightSelectionListener(IReviewHighlightingPart part) {
 		this.part = part;
 	}
 

@@ -22,9 +22,9 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 /**
  * A {@link MouseTrackListener} that highlights the data element of a tree item
  * using the highlight service and the model review of the
- * {@link IReviewHighlightProvidingPart} when the mouse hovers over a
+ * {@link IReviewHighlightingPart} when the mouse hovers over a
  * {@link TreeItem}. This tracker does nothing if the the highlight mode of the
- * associated {@link IReviewHighlightProvidingPart} is not set to
+ * associated {@link IReviewHighlightingPart} is not set to
  * {@link HighlightMode#HOVER}.
  * 
  * @author Florian Zoubek
@@ -32,14 +32,14 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
  */
 public class HighlightHoveredTreeItemMouseTracker implements MouseTrackListener {
 
-	private IReviewHighlightProvidingPart part;
+	private IReviewHighlightingPart part;
 
 	/**
 	 * @param part
-	 *            the {@link IReviewHighlightProvidingPart} associated with this
+	 *            the {@link IReviewHighlightingPart} associated with this
 	 *            tracker.
 	 */
-	public HighlightHoveredTreeItemMouseTracker(IReviewHighlightProvidingPart part) {
+	public HighlightHoveredTreeItemMouseTracker(IReviewHighlightingPart part) {
 		this.part = part;
 	}
 

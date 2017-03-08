@@ -26,7 +26,12 @@ public class NamedHistoryEntryContainer extends AbstractHistoryEntry<String, Dou
 	private String name;
 
 	public NamedHistoryEntryContainer(String name, List<IPatchSetHistoryEntry<?, ?>> entries) {
-		super(entries);
+		this(null, name, entries);
+	}
+
+	public NamedHistoryEntryContainer(IPatchSetHistoryEntry<?, ?> parent, String name,
+			List<IPatchSetHistoryEntry<?, ?>> entries) {
+		super(parent, entries);
 		this.name = name;
 	}
 
