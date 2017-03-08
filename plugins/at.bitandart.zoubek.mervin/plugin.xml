@@ -77,14 +77,20 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="org.eclipse.ui.ide.workbench"
-            name="%product.name">
+            name="Mervin Model Review Visualization Prototype">
          <property
                name="windowImages"
                value="eclipse16.png,eclipse32.png,eclipse48.png">
          </property>
          <property
                name="aboutText"
-               value="%product.about">
+               value="Mervin (ModEl Review VIsualizatioN) Prototype
+
+Copyright (c) 2015, 2016 Florian Zoubek.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html">
          </property>
          <property
                name="aboutImage"
@@ -104,7 +110,7 @@
          </property>
          <property
                name="appName"
-               value="%product.name">
+               value="Mervin Model Review Visualization Prototype">
          </property>
          <property
                name="preferenceCustomization"
