@@ -20,6 +20,7 @@ import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
 import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -212,15 +213,23 @@ public class ReviewExplorerHighlightUpdater extends ProgressPanelOperationThread
 			ModelReview modelReview, IProgressMonitor progressMonitor) {
 		Object entryObject = historyEntry.getEntryObject();
 
-		/* check the entry object first */
-		if (entryObject instanceof Diff) {
+		if (entryObject != null) {
+			Diff diff = null;
 
-			// TODO apply filter
-			Diff diff = (Diff) entryObject;
-			addDerivedElementsToHighlight(diff, objectsToHighlight, progressMonitor);
+			if (entryObject instanceof Diff) {
+				diff = (Diff) entryObject;
+			} else if (entryObject instanceof DiffWithSimilarity) {
+				diff = ((DiffWithSimilarity) entryObject).getDiff();
+			}
 
-			if (progressMonitor.isCanceled()) {
-				return;
+			/* check the entry object first */
+			if (diff != null) {
+
+				addDerivedElementsToHighlight(diff, objectsToHighlight, progressMonitor);
+
+				if (progressMonitor.isCanceled()) {
+					return;
+				}
 			}
 		}
 
@@ -265,10 +274,17 @@ public class ReviewExplorerHighlightUpdater extends ProgressPanelOperationThread
 			return;
 		}
 
-		Object value = MatchUtil.getValue(diff);
-		// TODO apply filter
-		if (value != null) {
-			objectsToHighlight.add(value);
+		if (diff instanceof DiagramDiff) {
+			EObject view = ((DiagramDiff) diff).getView();
+			if (view != null) {
+				objectsToHighlight.add(view);
+			}
+		} else {
+			Object value = MatchUtil.getValue(diff);
+			// TODO apply filter
+			if (value != null) {
+				objectsToHighlight.add(value);
+			}
 		}
 	}
 
