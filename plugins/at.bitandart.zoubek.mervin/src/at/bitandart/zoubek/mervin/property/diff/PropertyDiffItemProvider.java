@@ -39,6 +39,9 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
+
 import at.bitandart.zoubek.mervin.swt.diff.tree.ITreeDiffItemProvider;
 import at.bitandart.zoubek.mervin.swt.diff.tree.TreeDiffSide;
 import at.bitandart.zoubek.mervin.swt.diff.tree.TreeDiffType;
@@ -55,8 +58,8 @@ import at.bitandart.zoubek.mervin.swt.diff.tree.TreeDiffType;
 public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 
 	private static final String SEMANTIC_MODEL_ELEMENT_PREFIX = "Model: ";
-	private static final String NOTATION_MODEL_ELEMENT_PREFIX = "Notation: ";
-	private static final String OTHER_NOTATION_MODEL_ELEMENTS_PREFIX = "Notation: ";
+	private static final String NOTATION_MODEL_ELEMENT_PREFIX = "Diagram Model: ";
+	private static final String OTHER_NOTATION_MODEL_ELEMENTS_PREFIX = "Diagram Model: ";
 
 	private AdapterFactoryLabelProvider labelProvider;
 
@@ -68,35 +71,20 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 	@Override
 	public Object[] getRootItems(Object input) {
 
-		if (input instanceof SelectionEntry) {
+		if (input instanceof BaseEntry) {
 
-			/* single selection entry -> return only it's children */
-			return getEntryChildren((SelectionEntry) input);
+			/* single entry -> return only it's children */
+			return getEntryChildren((BaseEntry) input);
 
-		} else if (input instanceof SelectionEntry[]) {
+		} else if (input instanceof BaseEntry[]) {
 
-			SelectionEntry[] entries = (SelectionEntry[]) input;
-			if (entries.length == 1) {
-
-				/* single selection entry -> return only it's children */
-				return getEntryChildren(entries[0]);
-			}
-
+			BaseEntry[] entries = (BaseEntry[]) input;
 			return entries;
 
 		} else if (input instanceof Collection<?>) {
 
 			Collection<?> collection = (Collection<?>) input;
-			if (collection.size() == 1) {
-
-				Object firstElement = collection.toArray()[0];
-				if (firstElement instanceof SelectionEntry) {
-					/* single selection entry -> return only it's children */
-					return getEntryChildren((SelectionEntry) firstElement);
-				}
-
-			} else if (containsOnlySelectionEntries(collection)) {
-
+			if (containsOnlyBaseEntries(collection)) {
 				return collection.toArray();
 			}
 		}
@@ -111,7 +99,9 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 	 */
 	private Object[] getEntryChildren(BaseEntry entry) {
 
-		if (entry instanceof SelectionEntry) {
+		if (entry instanceof ContainerEntry) {
+			return ((ContainerEntry) entry).getChildEntries().toArray();
+		} else if (entry instanceof SelectionEntry) {
 			return getEntryChildren((SelectionEntry) entry);
 		} else if (entry instanceof ListEntry) {
 			return getEntryChildren((ListEntry) entry);
@@ -129,7 +119,6 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 	 */
 	private Object[] getEntryChildren(SelectionEntry entry) {
 
-		Comparison comparison = entry.getComparison();
 		Match modelElementMatch = entry.getModelElementMatch();
 		Match notationElementMatch = entry.getNotationElementMatch();
 		List<Match> otherNotationElementMatches = entry.getOtherNotationElementMatches();
@@ -150,7 +139,7 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 
 		if (!otherNotationElementMatches.isEmpty()) {
 
-			ListEntry listEntry = new ListEntry(entry, OTHER_NOTATION_MODEL_ELEMENTS_PREFIX, comparison, null);
+			ListEntry listEntry = new ListEntry(entry, OTHER_NOTATION_MODEL_ELEMENTS_PREFIX, null);
 			children.add(listEntry);
 			List<BaseEntry> elementList = listEntry.getElementList();
 
@@ -291,7 +280,7 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 	private void addMultiValuedChildren(BaseEntry parent, Comparison comparison, List<BaseEntry> children,
 			Object leftValue, Object rightValue, EStructuralFeature feature, DiffCache featureDiffs) {
 
-		ListEntry listEntry = new ListEntry(parent, getText(feature), comparison, null);
+		ListEntry listEntry = new ListEntry(parent, getText(feature), null);
 
 		children.add(listEntry);
 
@@ -667,7 +656,7 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 					/*
 					 * two different matches, add one list entry for each match
 					 */
-					ListEntry listEntry = new ListEntry(parent, getText(feature), comparison, null);
+					ListEntry listEntry = new ListEntry(parent, getText(feature), null);
 					List<BaseEntry> elementList = listEntry.getElementList();
 					if (leftMatch != null) {
 						elementList.add(createMatchEntry(listEntry, getText(feature) + " : ", leftMatch,
@@ -704,15 +693,8 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 	 * @return true if the collection contains only {@link SelectionEntry}s,
 	 *         false otherwise
 	 */
-	private boolean containsOnlySelectionEntries(Collection<?> collection) {
-
-		for (Object element : collection) {
-			if (!(element instanceof SelectionEntry)) {
-				return false;
-			}
-		}
-
-		return true;
+	private boolean containsOnlyBaseEntries(Collection<?> collection) {
+		return Iterables.all(collection, Predicates.instanceOf(BaseEntry.class));
 	}
 
 	/**
@@ -926,7 +908,18 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 	private String getEntryText(BaseEntry entry, TreeDiffSide side) {
 
 		String text = entry.getLabelTextPrefix();
-		if (entry instanceof SelectionEntry) {
+		if (entry instanceof ContainerEntry) {
+
+			switch (side) {
+			case LEFT:
+				text += ((ContainerEntry) entry).getLeftLabel();
+				break;
+			case RIGHT:
+				text += ((ContainerEntry) entry).getRightLabel();
+				break;
+			}
+
+		} else if (entry instanceof SelectionEntry) {
 
 			text += "Selection";
 
@@ -998,7 +991,11 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 	 */
 	private TreeDiffType getEntryDiffType(BaseEntry entry) {
 
-		if (entry instanceof MovedMatchEntry) {
+		if (entry instanceof ContainerEntry) {
+
+			return TreeDiffType.EQUAL;
+
+		} else if (entry instanceof MovedMatchEntry) {
 
 			if (((MovedMatchEntry) entry).getSide() == TreeDiffSide.LEFT) {
 				return TreeDiffType.ADD;
@@ -1103,20 +1100,17 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 	protected static class BaseEntry {
 
 		private String labelTextPrefix;
-		private Comparison comparison;
 		private BaseEntry parent;
 
 		/**
+		 * @param parent
 		 * @param labelTextPrefix
 		 *            the prefix for the label of this entry.
-		 * @param comparison
-		 *            the comparison used to create this entry.
 		 */
-		public BaseEntry(BaseEntry parent, String labelTextPrefix, Comparison comparison) {
+		public BaseEntry(BaseEntry parent, String labelTextPrefix) {
 			super();
 			this.parent = parent;
 			this.labelTextPrefix = labelTextPrefix;
-			this.comparison = comparison;
 		}
 
 		/**
@@ -1124,13 +1118,6 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 		 */
 		public String getLabelTextPrefix() {
 			return labelTextPrefix;
-		}
-
-		/**
-		 * @return the comparison used to create this entry.
-		 */
-		public Comparison getComparison() {
-			return comparison;
 		}
 
 		/**
@@ -1146,6 +1133,99 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 		 */
 		public void setParent(BaseEntry parent) {
 			this.parent = parent;
+		}
+
+	}
+
+	/**
+	 * Base class for all entries that are related to a Comparison.
+	 * 
+	 * @author Florian Zoubek
+	 *
+	 */
+	protected static class EntryWithComparison extends BaseEntry {
+
+		private Comparison comparison;
+
+		/**
+		 * 
+		 * @param parent
+		 *            the parent entry or null if no parent exists.
+		 * @param labelTextPrefix
+		 *            the prefix for the label of this entry.
+		 * @param comparison
+		 *            the comparison used to create this entry.
+		 */
+		public EntryWithComparison(BaseEntry parent, String labelTextPrefix, Comparison comparison) {
+			super(parent, labelTextPrefix);
+			this.comparison = comparison;
+		}
+
+		/**
+		 * @return the comparison used to create this entry.
+		 */
+		public Comparison getComparison() {
+			return comparison;
+		}
+	}
+
+	/**
+	 * An {@link BaseEntry} that holds a number of child {@link BaseEntry}s.
+	 * 
+	 * @author Florian Zoubek
+	 *
+	 */
+	protected static class ContainerEntry extends BaseEntry {
+
+		private List<BaseEntry> childEntries;
+		private String leftLabel;
+		private String rightLabel;
+
+		/**
+		 * 
+		 * @param parent
+		 *            the parent entry or null if no parent exists.
+		 * @param leftLabel
+		 *            the label shown on the left side.
+		 * @param rightLabel
+		 *            the label shown on the right side.
+		 * @param childEntries
+		 *            the list of all child entries. Parent references of the
+		 *            given entries will be updated to reference the new
+		 *            container entry.
+		 */
+		public ContainerEntry(BaseEntry parent, String leftLabel, String rightLabel, List<BaseEntry> childEntries) {
+			super(parent, "");
+			this.childEntries = childEntries;
+			this.leftLabel = leftLabel;
+			this.rightLabel = rightLabel;
+			for (BaseEntry entry : childEntries) {
+				entry.setParent(this);
+			}
+
+		}
+
+		/**
+		 * @return the label of the left side.
+		 */
+		public String getLeftLabel() {
+			return leftLabel;
+		}
+
+		/**
+		 * @return the label of the right side.
+		 */
+		public String getRightLabel() {
+			return rightLabel;
+		}
+
+		/**
+		 * @return the list of all child entries. The caller is responsible for
+		 *         maintaining the parent references if the returned list is
+		 *         changed.
+		 */
+		public List<BaseEntry> getChildEntries() {
+			return childEntries;
 		}
 
 	}
@@ -1168,8 +1248,7 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 
 		public SelectionEntry(BaseEntry parent, String labelTextPrefix, Match modelElementMatch,
 				Match notationElementMatch) {
-			super(parent, labelTextPrefix, modelElementMatch != null ? modelElementMatch.getComparison()
-					: notationElementMatch.getComparison());
+			super(parent, labelTextPrefix);
 			this.modelElementMatch = modelElementMatch;
 			this.notationElementMatch = notationElementMatch;
 		}
@@ -1197,13 +1276,13 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 	}
 
 	/**
-	 * A {@link BaseEntry} that represents a matched EObject that was discovered
-	 * through a referencing {@link EStructuralFeature}.
+	 * An {@link EntryWithComparison} that represents a matched EObject that was
+	 * discovered through a referencing {@link EStructuralFeature}.
 	 * 
 	 * @author Florian Zoubek
 	 *
 	 */
-	protected static class MatchEntry extends BaseEntry {
+	protected static class MatchEntry extends EntryWithComparison {
 
 		private EStructuralFeature referencingFeature;
 
@@ -1267,13 +1346,13 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 	}
 
 	/**
-	 * A {@link BaseEntry} that represents java objects on the left and right
-	 * side that are related.
+	 * An {@link EntryWithComparison} that represents java objects on the left
+	 * and right side that are related.
 	 * 
 	 * @author Florian Zoubek
 	 *
 	 */
-	protected static class ObjectEntry extends BaseEntry {
+	protected static class ObjectEntry extends EntryWithComparison {
 
 		private Object left;
 		private Object right;
@@ -1311,8 +1390,8 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 		private Image image;
 		private List<BaseEntry> elementList = new ArrayList<>();
 
-		public ListEntry(BaseEntry parent, String labelTextPrefix, Comparison comparison, Image image) {
-			super(parent, labelTextPrefix, comparison);
+		public ListEntry(BaseEntry parent, String labelTextPrefix, Image image) {
+			super(parent, labelTextPrefix);
 			this.image = image;
 		}
 
