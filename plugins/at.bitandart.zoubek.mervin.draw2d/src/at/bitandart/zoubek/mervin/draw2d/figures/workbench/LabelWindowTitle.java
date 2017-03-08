@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Florian Zoubek.
+ * Copyright (c) 2015, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -62,7 +62,8 @@ public class LabelWindowTitle extends ComposedClickable implements IDiffWorkbenc
 		constrainedToolbarLayout.setSpacing(horizontalSpacing);
 		setLayoutManager(constrainedToolbarLayout);
 		setOpaque(true);
-		setBackgroundColor(ColorConstants.lightGray);
+		setBackgroundColor(ColorConstants.menuBackground);
+		setForegroundColor(ColorConstants.menuForeground);
 	}
 
 	/*
