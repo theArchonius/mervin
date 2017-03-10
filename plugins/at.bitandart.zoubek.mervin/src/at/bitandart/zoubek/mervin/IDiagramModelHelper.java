@@ -17,7 +17,7 @@ import org.eclipse.gmf.runtime.notation.View;
 
 /**
  * Base interface for helper classes providing shared operations for GMF
- * Diagrams using a specifc strategy.
+ * Diagrams using a specific strategy.
  * 
  * @author Florian Zoubek
  *

@@ -17,22 +17,10 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.workbench.UIEvents;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.compare.Diff;
-import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.diagram.internal.extensions.DiagramDiff;
-import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 
-import at.bitandart.zoubek.mervin.IDiagramModelHelper;
-import at.bitandart.zoubek.mervin.IModelReviewHelper;
-import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
-import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
-import at.bitandart.zoubek.mervin.patchset.history.IPatchSetHistoryEntry;
-import at.bitandart.zoubek.mervin.patchset.history.ISimilarityHistoryService.DiffWithSimilarity;
-import at.bitandart.zoubek.mervin.patchset.history.NamedHistoryEntryContainer;
 import at.bitandart.zoubek.mervin.review.explorer.content.IReviewExplorerContentProvider;
 import at.bitandart.zoubek.mervin.swt.ProgressPanel;
 import at.bitandart.zoubek.mervin.swt.ProgressPanelOperationThread;
@@ -48,11 +36,8 @@ public class ReviewExplorerHighlightUpdater extends ProgressPanelOperationThread
 
 	private List<Object> baseElements;
 	private Set<Object> objectsToHighlight;
-	private ModelReview modelReview;
 	private TreeViewer treeViewer;
 	private IReviewExplorerContentProvider contentProvider;
-	private IDiagramModelHelper diagramModelHelper;
-	private IModelReviewHelper modelReviewHelper;
 	private IEventBroker eventBroker;
 
 	/**
@@ -66,37 +51,25 @@ public class ReviewExplorerHighlightUpdater extends ProgressPanelOperationThread
 	 *            the list of elements to derive the highlighted objects from
 	 * @param objectsToHighlight
 	 *            the set of objects to store the highlighted object into.
-	 * @param modelReview
-	 *            the context {@link ModelReview} used to derive objects.
 	 * @param treeViewer
 	 *            the {@link TreeViewer} that must be refreshed after the
 	 *            highlighted elements have been computed.
 	 * @param contentProvider
 	 *            the {@link IReviewExplorerContentProvider} used to derive
 	 *            objects.
-	 * @param diagramModelHelper
-	 *            the {@link IDiagramModelHelper} used to derive objects related
-	 *            to the diagram model.
-	 * @param modelReviewHelper
-	 *            the {@link IModelReviewHelper} used to derive objects related
-	 *            to the given {@link ModelReview}.
 	 * @param eventBroker
 	 *            the {@link IEventBroker} to use for UI update requests
 	 */
 	public ReviewExplorerHighlightUpdater(ProgressPanel progressPanel, Composite mainPanel, List<Object> baseElements,
-			Set<Object> objectsToHighlight, ModelReview modelReview, TreeViewer treeViewer,
-			IReviewExplorerContentProvider contentProvider, IDiagramModelHelper diagramModelHelper,
-			IModelReviewHelper modelReviewHelper, IEventBroker eventBroker) {
+			Set<Object> objectsToHighlight, TreeViewer treeViewer, IReviewExplorerContentProvider contentProvider,
+			IEventBroker eventBroker) {
 
 		super(progressPanel, mainPanel);
 
 		this.baseElements = baseElements;
 		this.objectsToHighlight = objectsToHighlight;
-		this.modelReview = modelReview;
 		this.treeViewer = treeViewer;
 		this.contentProvider = contentProvider;
-		this.diagramModelHelper = diagramModelHelper;
-		this.modelReviewHelper = modelReviewHelper;
 		this.eventBroker = eventBroker;
 	}
 
@@ -107,10 +80,6 @@ public class ReviewExplorerHighlightUpdater extends ProgressPanelOperationThread
 		progressMonitor.beginTask("Recalculating highlights...", IProgressMonitor.UNKNOWN);
 		// TODO apply filter
 		objectsToHighlight.addAll(baseElements);
-
-		addDerivedElementsToHighlight(modelReview, baseElements, objectsToHighlight, progressMonitor);
-
-		addReferencingDiffs(modelReview, new HashSet<>(objectsToHighlight), objectsToHighlight, progressMonitor);
 
 		addContainers(new HashSet<>(objectsToHighlight), objectsToHighlight, progressMonitor);
 
@@ -125,196 +94,6 @@ public class ReviewExplorerHighlightUpdater extends ProgressPanelOperationThread
 				eventBroker.send(UIEvents.REQUEST_ENABLEMENT_UPDATE_TOPIC, UIEvents.ALL_ELEMENT_ID);
 			}
 		});
-	}
-
-	/**
-	 * adds the derived objects to highlight for the given {@link ModelReview}
-	 * {@link Diff} to the given list of highlighted objects.
-	 * 
-	 * @param modelReview
-	 *            the model review to highlight elements for.
-	 * @param highlightedElements
-	 *            the highlighted elements as reported by the highlight service.
-	 * @param objectsToHighlight
-	 *            the set of elements to add the derived highlighted elements
-	 *            to.
-	 * @param progressMonitor
-	 *            the {@link IProgressMonitor} to check the cancellation state.
-	 */
-	protected void addDerivedElementsToHighlight(ModelReview modelReview, List<Object> highlightedElements,
-			Set<Object> objectsToHighlight, IProgressMonitor progressMonitor) {
-
-		for (Object highlightedElement : highlightedElements) {
-
-			if (progressMonitor.isCanceled()) {
-				return;
-			}
-
-			if (highlightedElement instanceof NamedHistoryEntryContainer) {
-
-				// TODO move in own method
-
-				for (IPatchSetHistoryEntry<?, ?> subEntry : ((NamedHistoryEntryContainer) highlightedElement)
-						.getSubEntries()) {
-					Object entryObject = subEntry.getEntryObject();
-					if (entryObject instanceof Diff) {
-						Match match = ((Diff) entryObject).getMatch();
-						EObject left = match.getLeft();
-						EObject right = match.getRight();
-						if (left != null) {
-							objectsToHighlight.add(left);
-						}
-						if (right != null) {
-							objectsToHighlight.add(right);
-						}
-					}
-
-					for (PatchSet patchSet : modelReview.getPatchSets()) {
-						Object value = subEntry.getValue(patchSet);
-						if (value instanceof DiffWithSimilarity) {
-							Match match = ((DiffWithSimilarity) value).getDiff().getMatch();
-							EObject left = match.getLeft();
-							EObject right = match.getRight();
-							if (left != null) {
-								objectsToHighlight.add(left);
-							}
-							if (right != null) {
-								objectsToHighlight.add(right);
-							}
-						}
-					}
-				}
-
-			} else if (highlightedElement instanceof IPatchSetHistoryEntry<?, ?>) {
-				addDerivedElementsToHighlight((IPatchSetHistoryEntry<?, ?>) highlightedElement, objectsToHighlight,
-						modelReview, progressMonitor);
-			}
-
-			if (highlightedElement instanceof EObject) {
-				objectsToHighlight.addAll(diagramModelHelper.getReferencingViews((EObject) highlightedElement));
-			}
-		}
-	}
-
-	/**
-	 * adds the derived objects to highlight for the given
-	 * {@link IPatchSetHistoryEntry} to the given list of highlighted objects.
-	 * 
-	 * @param historyEntry
-	 *            the entry to derive the objects from.
-	 * @param objectsToHighlight
-	 *            the set of objects to store the highlighted objects into
-	 * @param modelReview
-	 *            the corresponding {@link ModelReview}
-	 * @param progressMonitor
-	 *            the {@link IProgressMonitor} to check the cancellation state.
-	 */
-	private void addDerivedElementsToHighlight(IPatchSetHistoryEntry<?, ?> historyEntry, Set<Object> objectsToHighlight,
-			ModelReview modelReview, IProgressMonitor progressMonitor) {
-		Object entryObject = historyEntry.getEntryObject();
-
-		if (entryObject != null) {
-			Diff diff = null;
-
-			if (entryObject instanceof Diff) {
-				diff = (Diff) entryObject;
-			} else if (entryObject instanceof DiffWithSimilarity) {
-				diff = ((DiffWithSimilarity) entryObject).getDiff();
-			}
-
-			/* check the entry object first */
-			if (diff != null) {
-
-				addDerivedElementsToHighlight(diff, objectsToHighlight, progressMonitor);
-
-				if (progressMonitor.isCanceled()) {
-					return;
-				}
-			}
-		}
-
-		EList<PatchSet> patchSets = modelReview.getPatchSets();
-		for (PatchSet patchSet : patchSets) {
-
-			if (progressMonitor.isCanceled()) {
-				return;
-			}
-
-			Object value = historyEntry.getValue(patchSet);
-			if (value instanceof DiffWithSimilarity) {
-
-				// TODO apply filter
-				Diff diff = ((DiffWithSimilarity) value).getDiff();
-				// TODO apply filter
-				addDerivedElementsToHighlight(diff, objectsToHighlight, progressMonitor);
-
-				if (progressMonitor.isCanceled()) {
-					return;
-				}
-			}
-		}
-	}
-
-	/**
-	 * adds the derived objects to highlight for the given highlighted
-	 * {@link Diff} to the given list of highlighted objects.
-	 * 
-	 * @param diff
-	 *            the highlighted diff to add derived highlighted objects to the
-	 *            given list of highlighted objects
-	 * @param objectsToHighlight
-	 *            the set of objects to store the derived elements into.
-	 * @param progressMonitor
-	 *            the {@link IProgressMonitor} to check the cancellation state.
-	 */
-	protected void addDerivedElementsToHighlight(Diff diff, Set<Object> objectsToHighlight,
-			IProgressMonitor progressMonitor) {
-
-		if (progressMonitor.isCanceled()) {
-			return;
-		}
-
-		if (diff instanceof DiagramDiff) {
-			EObject view = ((DiagramDiff) diff).getView();
-			if (view != null) {
-				objectsToHighlight.add(view);
-			}
-		} else {
-			Object value = MatchUtil.getValue(diff);
-			// TODO apply filter
-			if (value != null) {
-				objectsToHighlight.add(value);
-			}
-		}
-	}
-
-	/**
-	 * adds all {@link Diff}s that references the given candidates in the given
-	 * {@link ModelReview}.
-	 * 
-	 * @param modelReview
-	 *            the {@link ModelReview} to obtain the {@link Diff}s from.
-	 * @param candidates
-	 *            the candidates to search for {@link Diff}s.
-	 * @param objectsToHighlight
-	 *            the set of objects to store the {@link Diff}s into.
-	 * @param progressMonitor
-	 *            the {@link IProgressMonitor} to check the cancellation state.
-	 */
-	protected void addReferencingDiffs(ModelReview modelReview, Set<Object> candidates, Set<Object> objectsToHighlight,
-			IProgressMonitor progressMonitor) {
-
-		for (Object candidate : candidates) {
-
-			if (progressMonitor.isCanceled()) {
-				return;
-			}
-
-			if (candidate instanceof EObject) {
-				objectsToHighlight.addAll(modelReviewHelper.getDifferences((EObject) candidate, modelReview));
-			}
-		}
-
 	}
 
 	/**

@@ -25,6 +25,9 @@
     <elements xsi:type="commands:Command" xmi:id="_Vi6tID0BEeaYz6GEb20auA" elementId="at.bitandart.zoubek.mervin.command.highlights.clear" commandName="Clear Highlights"/>
     <elements xsi:type="commands:Command" xmi:id="_-z19cAMfEeejMcCxMoDObw" elementId="at.bitandart.zoubek.mervin.command.highlights.reveal.next" commandName="Reveal Next Highlight"/>
     <elements xsi:type="commands:Command" xmi:id="_Njk7wAM1EeejMcCxMoDObw" elementId="at.bitandart.zoubek.mervin.command.highlights.reveal.previous" commandName="Reveal Previous Highlight"/>
+    <elements xsi:type="commands:Command" xmi:id="_KOO8QAQUEeeuH7qhLh3Ubw" elementId="at.bitandart.zoubek.mervin.command.highlight.views" commandName="Highlight Referencing Views"/>
+    <elements xsi:type="commands:Command" xmi:id="_xU4AkAQUEeeuH7qhLh3Ubw" elementId="at.bitandart.zoubek.mervin.command.highlight.diffs" commandName="Highlight Referencing Differences"/>
+    <elements xsi:type="commands:Command" xmi:id="_7Nd1UAQfEeeuH7qhLh3Ubw" elementId="at.bitandart.zoubek.mervin.command.highlight.semantic.model" commandName="Highlight Semantic Model"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_rV6KoPsFEeS2q_4qNTgMUQ" featurename="handlers" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="commands:Handler" xmi:id="_ZCDZQAX8EeWDm7E-HymwAA" elementId="at.bitandart.zoubek.mervin.handler.review.load" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.LoadReviewHandler" command="_UTSkEAX8EeWDm7E-HymwAA"/>
@@ -37,6 +40,9 @@
     <elements xsi:type="commands:Handler" xmi:id="_hj2IYD0BEeaYz6GEb20auA" elementId="at.bitandart.zoubek.mervin.handler.highlights.clear" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.ClearHighlights" command="_Vi6tID0BEeaYz6GEb20auA"/>
     <elements xsi:type="commands:Handler" xmi:id="_6UUeIAMfEeejMcCxMoDObw" elementId="at.bitandart.zoubek.mervin.handler.highlights.reveal.next" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.RevealNextHighlightedElement" command="_-z19cAMfEeejMcCxMoDObw"/>
     <elements xsi:type="commands:Handler" xmi:id="_IfcTgAM1EeejMcCxMoDObw" elementId="at.bitandart.zoubek.mervin.handler.highlights.reveal.previous" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.RevealPreviousHighlightedElement" command="_Njk7wAM1EeejMcCxMoDObw"/>
+    <elements xsi:type="commands:Handler" xmi:id="_JBYjEAQeEeeuH7qhLh3Ubw" elementId="at.bitandart.zoubek.mervin.handler.highlight.views" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.HighlightReferencingViews" command="_KOO8QAQUEeeuH7qhLh3Ubw"/>
+    <elements xsi:type="commands:Handler" xmi:id="_0StpsAQfEeeuH7qhLh3Ubw" elementId="at.bitandart.zoubek.mervin.handler.highlight.diffs" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.HighlightReferencingDiffs" command="_xU4AkAQUEeeuH7qhLh3Ubw"/>
+    <elements xsi:type="commands:Handler" xmi:id="_gT0K8AQiEeeuH7qhLh3Ubw" elementId="at.bitandart.zoubek.mervin.handler.highlight.semantic.model" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.HighlightSemanticModel" command="_7Nd1UAQfEeeuH7qhLh3Ubw"/>
   </fragments>
   <fragments xsi:type="fragment:StringModelFragment" xmi:id="_OapfwPsGEeS2q_4qNTgMUQ" featurename="descriptors" parentElementId="org.eclipse.e4.legacy.ide.application">
     <elements xsi:type="basic:PartDescriptor" xmi:id="_b4kdcPsGEeS2q_4qNTgMUQ" elementId="at.bitandart.zoubek.mervin.partdescriptor.diagram.diffviewer" label="Diagram Diff Viewer" allowMultiple="true" category="Mervin" closeable="true" dirtyable="true" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.diagram.diff.DiagramDiffView">
@@ -47,6 +53,14 @@
       <handlers xmi:id="_SSUGMNrkEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.handler.toggle.deletions" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.ToggleDeletionOverlays" command="_cg4BYNrjEeW5avyAcffSfQ"/>
       <handlers xmi:id="_Fahe8NrlEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.handler.toggle.layout.changes" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.ToggleLayoutChangeOverlays" command="_A3198NrlEeW5avyAcffSfQ"/>
       <handlers xmi:id="_SL660OlVEeaJTucP7fzELA" elementId="at.bitandart.zoubek.mervin.handler.toggle.comments" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.handlers.ToggleCommentOverlays" command="_AI2W8OlVEeaJTucP7fzELA"/>
+      <menus xsi:type="menu:PopupMenu" xmi:id="_kyZSQAQmEeeuH7qhLh3Ubw" elementId="at.bitandart.zoubek.mervin.contextmenu.view.diagram.diff">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_q_KWgAQmEeeuH7qhLh3Ubw" elementId="at.bitandart.zoubek.mervin.contextmenu.view.diagram.diff.highlights.clear" label="Clear Highlights" command="_Vi6tID0BEeaYz6GEb20auA"/>
+        <children xsi:type="menu:Menu" xmi:id="_scpBIAQmEeeuH7qhLh3Ubw" elementId="at.bitandart.zoubek.mervin.contextmenu.view.diagram.diff.highlight" label="Highlight">
+          <children xsi:type="menu:HandledMenuItem" xmi:id="_scpBIQQmEeeuH7qhLh3Ubw" elementId="at.bitandart.zoubek.mervin.contextmenu.view.diagram.diff.highlight.views" label="Referencing Views" command="_KOO8QAQUEeeuH7qhLh3Ubw"/>
+          <children xsi:type="menu:HandledMenuItem" xmi:id="_scpBIgQmEeeuH7qhLh3Ubw" elementId="at.bitandart.zoubek.mervin.contextmenu.view.diagram.diff.highlight.diffs" label="Referencing Differences" command="_xU4AkAQUEeeuH7qhLh3Ubw"/>
+          <children xsi:type="menu:HandledMenuItem" xmi:id="_scpBIwQmEeeuH7qhLh3Ubw" elementId="at.bitandart.zoubek.mervin.contextmenu.view.diagram.diff.highlight.semantic.model" label="Semantic Model" command="_7Nd1UAQfEeeuH7qhLh3Ubw"/>
+        </children>
+      </menus>
       <toolbar xmi:id="_R80pQNriEeW5avyAcffSfQ" elementId="at.bitandart.zoubek.mervin.toolbar.diffviewer">
         <children xsi:type="menu:ToolControl" xmi:id="_fPYuMISZEeadQ7Sb89he3A" elementId="at.bitandart.zoubek.mervin.toolbar.diffviewer.compare.old" accessibilityPhrase="Old Version" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.diagram.diff.toolcontrols.OldVersionSelector"/>
         <children xsi:type="menu:ToolControl" xmi:id="_aZtNIISjEeadQ7Sb89he3A" elementId="at.bitandart.zoubek.mervin.toolbar.diffviewer.compare.new" accessibilityPhrase="New Version" contributionURI="bundleclass://at.bitandart.zoubek.mervin/at.bitandart.zoubek.mervin.diagram.diff.toolcontrols.NewVersionSelector"/>
@@ -64,6 +78,14 @@
       <menus xmi:id="_nRSKsDh_EeaJkOmvJc6KWA" elementId="at.bitandart.zoubek.mervin.menu.view.review.explorer">
         <tags>ViewMenu</tags>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_y4mMEDh_EeaJkOmvJc6KWA" elementId="at.bitandart.zoubek.mervin.menu.view.review.explorer.highlight.switchmode" label="Quick Highlight" type="Check" command="_S-b8kDh_EeaJkOmvJc6KWA"/>
+      </menus>
+      <menus xsi:type="menu:PopupMenu" xmi:id="_KPVk8AQTEeeuH7qhLh3Ubw" elementId="at.bitandart.zoubek.mervin.contextmenu.view.review.explorer">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_NuDukAQTEeeuH7qhLh3Ubw" elementId="at.bitandart.zoubek.mervin.contextmenu.view.review.explorer.highlights.clear" label="Clear Highlights" command="_Vi6tID0BEeaYz6GEb20auA"/>
+        <children xsi:type="menu:Menu" xmi:id="_FkCeAAQUEeeuH7qhLh3Ubw" elementId="at.bitandart.zoubek.mervin.contextmenu.view.review.explorer.highlight" label="Highlight">
+          <children xsi:type="menu:HandledMenuItem" xmi:id="_GbuT8AQUEeeuH7qhLh3Ubw" elementId="at.bitandart.zoubek.mervin.contextmenu.view.review.explorer.highlight.views" label="Referencing Views" command="_KOO8QAQUEeeuH7qhLh3Ubw"/>
+          <children xsi:type="menu:HandledMenuItem" xmi:id="_uf1GEAQUEeeuH7qhLh3Ubw" elementId="at.bitandart.zoubek.mervin.contextmenu.view.review.explorer.highlight.diffs" label="Referencing Differences" command="_xU4AkAQUEeeuH7qhLh3Ubw"/>
+          <children xsi:type="menu:HandledMenuItem" xmi:id="_Bd0ZEAQgEeeuH7qhLh3Ubw" elementId="at.bitandart.zoubek.mervin.contextmenu.view.review.explorer.highlight.semantic.model" label="Semantic Model" command="_7Nd1UAQfEeeuH7qhLh3Ubw"/>
+        </children>
       </menus>
       <toolbar xmi:id="_f9fuMISVEeadQ7Sb89he3A" elementId="at.bitandart.zoubek.mervin.toolbar.review">
         <children xsi:type="menu:HandledToolItem" xmi:id="_58FXIISVEeadQ7Sb89he3A" elementId="at.bitandart.zoubek.mervin.toolbar.review.highlights.clear" label="Clear Highlights" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/etool/clearHighlights_16.png" tooltip="Clear Highlights" command="_Vi6tID0BEeaYz6GEb20auA"/>
