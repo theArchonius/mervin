@@ -13,11 +13,14 @@ package at.bitandart.zoubek.mervin.handlers;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.ecore.EObject;
@@ -44,7 +47,11 @@ import at.bitandart.zoubek.mervin.patchset.history.ObjectHistoryEntryContainer;
  * @author Florian Zoubek
  *
  */
+@SuppressWarnings("restriction")
 public class HighlightReferencingDiffs {
+
+	@Inject
+	private Logger logger;
 
 	private final static Predicate<Object> VALID_SELECTION_PREDICATE = new Predicate<Object>() {
 
@@ -79,6 +86,8 @@ public class HighlightReferencingDiffs {
 
 			} catch (InvocationTargetException e) {
 			} catch (InterruptedException e) {
+			} catch (OperationCanceledException e) {
+				logger.warn(e, "Highlighting of referencing diffs has been cancelled");
 			}
 
 		}

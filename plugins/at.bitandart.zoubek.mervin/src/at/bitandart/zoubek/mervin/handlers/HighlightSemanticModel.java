@@ -14,13 +14,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.annotations.Optional;
+import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.services.IServiceConstants;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
@@ -45,7 +48,11 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
  * @author Florian Zoubek
  *
  */
+@SuppressWarnings("restriction")
 public class HighlightSemanticModel {
+
+	@Inject
+	private Logger logger;
 
 	private final static Predicate<Object> VALID_SELECTION_PREDICATE = new Predicate<Object>() {
 
@@ -97,6 +104,8 @@ public class HighlightSemanticModel {
 						});
 			} catch (InvocationTargetException e) {
 			} catch (InterruptedException e) {
+			} catch (OperationCanceledException e) {
+				logger.warn(e, "Highlighting of referencing diffs has been cancelled");
 			}
 
 		}
