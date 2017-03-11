@@ -17,6 +17,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -26,21 +28,23 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
+import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
+import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.e4.ui.workbench.modeling.ElementMatcher;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
-import org.eclipse.emf.compare.utils.MatchUtil;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
-import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.util.Policy;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
@@ -63,6 +67,7 @@ import org.eclipse.swt.widgets.Tree;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
+import at.bitandart.zoubek.mervin.IMatchHelper;
 import at.bitandart.zoubek.mervin.IOverlayTypeHelper;
 import at.bitandart.zoubek.mervin.IReviewHighlightService;
 import at.bitandart.zoubek.mervin.IReviewHighlightServiceListener;
@@ -72,6 +77,7 @@ import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayType;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
+import at.bitandart.zoubek.mervin.patchset.history.ISimilarityHistoryService.DiffWithSimilarity;
 import at.bitandart.zoubek.mervin.patchset.history.organizers.IPatchSetHistoryEntryOrganizer;
 import at.bitandart.zoubek.mervin.review.HighlightHoveredTreeItemMouseTracker;
 import at.bitandart.zoubek.mervin.review.HighlightMode;
@@ -116,6 +122,11 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 
 	public static final String VIEW_MENU_ITEM_RADIO_VISIBLE_DIFFS_OLD_PATCHSET = "at.bitandart.zoubek.mervin.menu.view.patchset.history.visiblediffs.oldpatchset";
 
+	/**
+	 * the menu id of the context menu for this view
+	 */
+	public static final String VIEW_CONTEXTMENU_ID = "at.bitandart.zoubek.mervin.contextmenu.view.patchset.history";
+
 	public enum VisibleDiffMode {
 		ALL_DIFFS, NEW_PATCHSET_DIFFS, OLD_PATCHSET_DIFFS
 	}
@@ -141,7 +152,16 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 	private IOverlayTypeHelper overlayTypeHelper;
 
 	@Inject
+	private IMatchHelper matchHelper;
+
+	@Inject
 	private IEventBroker eventBroker;
+
+	@Inject
+	private EMenuService menuService;
+
+	@Inject
+	private ESelectionService selectionService;
 
 	private IPatchSetHistoryEntryOrganizer entryOrganizer;
 
@@ -179,7 +199,7 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 
 	private DiffNameColumnLabelProvider labelColumnLabelProvider;
 
-	private boolean ignoreSelection = false;
+	private boolean ignoreSelectionHighlight = false;
 
 	private HighlightRevealer highlightRevealer;
 
@@ -221,14 +241,135 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 		historyTreeViewer = new TreeViewer(mainPanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
 		historyTreeViewer.setContentProvider(patchSetHistoryContentProvider);
 		historyTreeViewer.addSelectionChangedListener(new HighlightSelectionListener(this) {
+
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
-				if (!ignoreSelection) {
+				if (!ignoreSelectionHighlight) {
 					super.selectionChanged(event);
 				}
+				ISelection selection = event.getSelection();
+				selectionService.setSelection(selection);
 				eventBroker.send(UIEvents.REQUEST_ENABLEMENT_UPDATE_TOPIC, UIEvents.ALL_ELEMENT_ID);
 			}
+
+			@Override
+			protected void addElementsToHighlight(Object object, Set<Object> elements) {
+
+				if (object instanceof Match) {
+					addElementsToHighlight((Match) object, elements);
+
+				} else if (object instanceof DiffWithSimilarity) {
+					addElementsToHighlight((DiffWithSimilarity) object, elements);
+
+				} else if (object instanceof IPatchSetHistoryEntry<?, ?>) {
+					addElementsToHighlight((IPatchSetHistoryEntry<?, ?>) object, elements);
+
+				} else {
+					super.addElementsToHighlight(object, elements);
+				}
+			}
+
+			/**
+			 * adds the elements to highlight for the given
+			 * {@link ObjectHistoryEntryContainer}.
+			 * 
+			 * @param entry
+			 *            the {@link ObjectHistoryEntryContainer} to obtain the
+			 *            elements to highlight from.
+			 * @param elements
+			 *            the set of elements to highlight.
+			 */
+			protected void addElementsToHighlight(ObjectHistoryEntryContainer entry, Set<Object> elements) {
+
+				ModelReview modelReview = getCurrentModelReview();
+
+				Map<PatchSet, Match> matches = entry.getMatches(modelReview.getPatchSets());
+
+				for (Match match : matches.values()) {
+					addElementsToHighlight(match, elements);
+				}
+			}
+
+			/**
+			 * adds the elements to highlight for the given {@link Match}.
+			 * 
+			 * @param entry
+			 *            the match to obtain the elements to highlight from.
+			 * @param elements
+			 *            the set of elements to highlight.
+			 */
+			protected void addElementsToHighlight(Match match, Set<Object> elements) {
+
+				EObject newValue = matchHelper.getNewValue(match);
+				if (newValue != null) {
+					elements.add(newValue);
+				}
+				EObject oldValue = matchHelper.getOldValue(match);
+				if (oldValue != null) {
+					elements.add(oldValue);
+				}
+			}
+
+			/**
+			 * adds the elements to highlight for the given
+			 * {@link NamedHistoryEntryContainer}.
+			 * 
+			 * @param entry
+			 *            the entry to obtain the elements to highlight from.
+			 * @param elements
+			 *            the set of elements to highlight.
+			 */
+			protected void addElementsToHighlight(NamedHistoryEntryContainer entry, Set<Object> elements) {
+
+				for (IPatchSetHistoryEntry<?, ?> subEntry : entry.getSubEntries()) {
+					addElementsToHighlight(subEntry, elements);
+				}
+			}
+
+			/**
+			 * adds the elements to highlight for the given
+			 * {@link IPatchSetHistoryEntry}.
+			 * 
+			 * @param entry
+			 *            the entry to obtain the elements to highlight from.
+			 * @param elements
+			 *            the set of elements to highlight.
+			 */
+			protected void addElementsToHighlight(IPatchSetHistoryEntry<?, ?> entry, Set<Object> elements) {
+
+				if (entry instanceof ObjectHistoryEntryContainer) {
+					addElementsToHighlight((ObjectHistoryEntryContainer) entry, elements);
+
+				} else if (entry instanceof NamedHistoryEntryContainer) {
+					addElementsToHighlight((NamedHistoryEntryContainer) entry, elements);
+
+				} else {
+					addElementsToHighlight(entry.getEntryObject(), elements);
+
+					EList<PatchSet> patchSets = getCurrentModelReview().getPatchSets();
+					for (PatchSet patchSet : patchSets) {
+						addElementsToHighlight(entry.getValue(patchSet), elements);
+					}
+				}
+			}
+
+			/**
+			 * 
+			 * adds the elements to highlight for the given
+			 * {@link DiffWithSimilarity}.
+			 * 
+			 * @param diffWithSimilarity
+			 *            the {@link DiffWithSimilarity} to obtain the elements
+			 *            to highlight from.
+			 * @param elements
+			 *            the set of elements to highlight.
+			 */
+			protected void addElementsToHighlight(DiffWithSimilarity diffWithSimilarity, Set<Object> elements) {
+				addElementsToHighlight(diffWithSimilarity.getDiff(), elements);
+			}
 		});
+
+		menuService.registerContextMenu(historyTreeViewer.getControl(), VIEW_CONTEXTMENU_ID);
 
 		Tree histroryTree = historyTreeViewer.getTree();
 		histroryTree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -279,14 +420,26 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 			@Override
 			public void elementRemoved(ModelReview review, Object element) {
 
-				historyTreeViewer.refresh();
+				historyTreeViewer.getControl().getDisplay().syncExec(new Runnable() {
+
+					@Override
+					public void run() {
+						historyTreeViewer.refresh();
+					}
+				});
 
 			}
 
 			@Override
 			public void elementAdded(ModelReview review, Object element) {
 
-				historyTreeViewer.refresh();
+				historyTreeViewer.getControl().getDisplay().syncExec(new Runnable() {
+
+					@Override
+					public void run() {
+						historyTreeViewer.refresh();
+					}
+				});
 
 			}
 		});
@@ -671,33 +824,51 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 				return true;
 			}
 
-			if (element instanceof View) {
-				if (isHighlighted(((View) element).getElement(), highlightedElements)) {
-					return true;
-				}
-			}
-
 			if (element instanceof IPatchSetHistoryEntry) {
 				if (isHighlighted(((IPatchSetHistoryEntry<?, ?>) element).getEntryObject(), highlightedElements)) {
 					return true;
 				}
-				// TODO include values
-			}
 
-			if (element instanceof Diff) {
-				Diff diff = (Diff) element;
-				Object value = MatchUtil.getValue(diff);
-				if (value != null && value instanceof EObject) {
-					Match match = diff.getMatch().getComparison().getMatch((EObject) value);
-					if (match != null && //
-							(isHighlighted(match.getLeft(), highlightedElements)
-									|| isHighlighted(match.getRight(), highlightedElements))) {
-						return true;
+				Map<PatchSet, ?> values = ((IPatchSetHistoryEntry<?, ?>) element)
+						.getValues(getCurrentModelReview().getPatchSets());
 
-					} else if (isHighlighted(value, highlightedElements)) {
+				for (Object value : values.values()) {
+					if (isHighlighted(value, highlightedElements)) {
 						return true;
 					}
 				}
+			}
+
+			if (element instanceof DiffWithSimilarity
+					&& isHighlighted(((DiffWithSimilarity) element).getDiff(), highlightedElements)) {
+				return true;
+			}
+
+			if (element instanceof Match) {
+				Match match = (Match) element;
+
+				EObject left = match.getLeft();
+				if (left != null && isHighlighted(left, highlightedElements)) {
+					return true;
+				}
+
+				EObject right = match.getRight();
+				if (right != null && isHighlighted(right, highlightedElements)) {
+					return true;
+				}
+			}
+
+			if (element instanceof ObjectHistoryEntryContainer) {
+
+				Map<PatchSet, Match> matches = ((ObjectHistoryEntryContainer) element)
+						.getMatches(getCurrentModelReview().getPatchSets());
+
+				for (Match match : matches.values()) {
+					if (isHighlighted(match, highlightedElements)) {
+						return true;
+					}
+				}
+
 			}
 
 			if (element instanceof NamedHistoryEntryContainer) {
@@ -779,16 +950,16 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 
 	@Override
 	public void revealNextHighlight() {
-		ignoreSelection = true;
+		ignoreSelectionHighlight = true;
 		highlightRevealer.revealNextHighlight();
-		ignoreSelection = false;
+		ignoreSelectionHighlight = false;
 	}
 
 	@Override
 	public void revealPreviousHighlight() {
-		ignoreSelection = true;
+		ignoreSelectionHighlight = true;
 		highlightRevealer.revealPreviousHighlight();
-		ignoreSelection = false;
+		ignoreSelectionHighlight = false;
 	}
 
 	@Override

@@ -33,6 +33,7 @@ import at.bitandart.zoubek.mervin.IMervinContextConstants;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.patchset.history.IPatchSetHistoryEntry;
 import at.bitandart.zoubek.mervin.patchset.history.NamedHistoryEntryContainer;
+import at.bitandart.zoubek.mervin.patchset.history.ObjectHistoryEntryContainer;
 
 /**
  * An {@link DiffCategoryOrganizer} that groups the entries by their common
@@ -93,7 +94,7 @@ public class MatchingObjectOrganizer extends DiffCategoryOrganizer {
 
 				if (parentEntry == null) {
 
-					parentEntry = new NamedHistoryEntryContainer(parent, adapterFactoryLabelProvider.getText(key),
+					parentEntry = new ObjectHistoryEntryContainer(parent, adapterFactoryLabelProvider.getText(key),
 							new LinkedList<IPatchSetHistoryEntry<?, ?>>());
 
 					if (key instanceof EObject) {

@@ -13,7 +13,6 @@ package at.bitandart.zoubek.mervin.diagram.diff;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -28,6 +27,7 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.ui.di.Focus;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
@@ -57,7 +57,6 @@ import org.eclipse.gmf.runtime.diagram.ui.services.editpart.EditPartService;
 import org.eclipse.gmf.runtime.emf.commands.core.command.EditingDomainUndoContext;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.papyrus.infra.elementtypesconfigurations.registries.ElementTypeSetConfigurationRegistry;
@@ -69,6 +68,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
+import at.bitandart.zoubek.mervin.IDiagramModelHelper;
 import at.bitandart.zoubek.mervin.IMervinContextConstants;
 import at.bitandart.zoubek.mervin.IReviewHighlightService;
 import at.bitandart.zoubek.mervin.IReviewHighlightServiceListener;
@@ -81,6 +81,9 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.patchset.history.IPatchSetHistoryEntry;
 import at.bitandart.zoubek.mervin.patchset.history.ISimilarityHistoryService.DiffWithSimilarity;
+import at.bitandart.zoubek.mervin.review.HighlightMode;
+import at.bitandart.zoubek.mervin.review.HighlightSelectionListener;
+import at.bitandart.zoubek.mervin.review.IReviewHighlightingPart;
 
 /**
  * <p>
@@ -107,7 +110,7 @@ import at.bitandart.zoubek.mervin.patchset.history.ISimilarityHistoryService.Dif
  * @author Florian Zoubek
  *
  */
-public class DiagramDiffView implements IAdaptable {
+public class DiagramDiffView implements IAdaptable, IReviewHighlightingPart {
 
 	private Composite mainPanel;
 
@@ -123,6 +126,10 @@ public class DiagramDiffView implements IAdaptable {
 	private MPart part;
 	@Inject
 	private IEclipseContext context;
+	@Inject
+	private EMenuService menuService;
+	@Inject
+	private IDiagramModelHelper diagramModelHelper;
 
 	private GMFDiagramDiffViewService diagramDiffViewService;
 
@@ -146,6 +153,11 @@ public class DiagramDiffView implements IAdaptable {
 	 * the corresponding {@link MPart}.
 	 */
 	public static final String DATA_TRANSIENT_DIAGRAM_VIEWER = "transient-diagram-viewer";
+
+	/**
+	 * the menu id of the context menu for this view
+	 */
+	public static final String VIEW_CONTEXTMENU_ID = "at.bitandart.zoubek.mervin.contextmenu.view.diagram.diff";
 
 	private TransactionalEditingDomain editingDomain;
 
@@ -237,64 +249,43 @@ public class DiagramDiffView implements IAdaptable {
 			viewer.setRootEditPart(EditPartService.getInstance().createRootEditPart(diagram));
 			viewer.setContents(diagram);
 
-			viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			menuService.registerContextMenu(viewer.getControl(), VIEW_CONTEXTMENU_ID);
+
+			viewer.addSelectionChangedListener(new HighlightSelectionListener(this) {
 
 				@Override
 				public void selectionChanged(SelectionChangedEvent event) {
 
+					ignoreHighlights = true;
+					super.selectionChanged(event);
 					IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 					selectionService.setSelection(selection);
-					highlightSelectionInOtherViews(selection);
+					ignoreHighlights = false;
+
 				}
 
-				/**
-				 * highlights the given selection using the current highlight
-				 * service. Currently, only the element of views contained in
-				 * selected edit parts are passed to the service. Highlighting
-				 * in this view is disabled while the highlight service is
-				 * called.
-				 * 
-				 * @param selection
-				 *            the selection containing the elements to
-				 *            highlight.
-				 */
-				private void highlightSelectionInOtherViews(IStructuredSelection selection) {
+				@Override
+				protected void addElementsToHighlight(Object object, Set<Object> elements) {
 
-					if (!selection.isEmpty()) {
-						Iterator<?> iterator = selection.iterator();
-						boolean highlightsCleared = false;
-						ModelReview modelReview = getModelReview();
+					EObject semanticModel = diagramModelHelper.getSemanticModel(object);
+					if (semanticModel != null) {
+						elements.add(semanticModel);
+					}
 
-						ignoreHighlights = true;
+					EObject notationModel = diagramModelHelper.getNotationModel(object);
+					if (notationModel != null) {
 
-						while (iterator.hasNext()) {
+						EObject originalNotationModel = getModelReview().getUnifiedModelMap()
+								.getOriginal(notationModel);
 
-							Object object = iterator.next();
+						if (originalNotationModel != null) {
+							elements.add(originalNotationModel);
 
-							if (object instanceof EditPart) {
-
-								Object model = ((EditPart) object).getModel();
-
-								if (model instanceof View) {
-
-									EObject element = ((View) model).getElement();
-
-									if (element != null) {
-
-										if (!highlightsCleared) {
-											highlightService.clearHighlights(modelReview);
-											highlightsCleared = true;
-										}
-										highlightService.addHighlightFor(modelReview, element);
-									}
-								}
-							}
+						} else {
+							elements.add(notationModel);
 						}
-
-						ignoreHighlights = false;
 					}
 				}
-
 			});
 			part.getTransientData().put(DATA_TRANSIENT_DIAGRAM_VIEWER, viewer);
 			highlightService.addHighlightServiceListener(highlightListener);
@@ -945,6 +936,46 @@ public class DiagramDiffView implements IAdaptable {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void setHighlightMode(HighlightMode highlightMode) throws UnsupportedOperationException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public HighlightMode getHighlightMode() {
+		return HighlightMode.SELECTION;
+	}
+
+	@Override
+	public ModelReview getHighlightedModelReview() {
+		return getModelReview();
+	}
+
+	@Override
+	public IReviewHighlightService getReviewHighlightService() {
+		return highlightService;
+	}
+
+	@Override
+	public void revealNextHighlight() {
+		// Not (yet) supported in this view
+	}
+
+	@Override
+	public void revealPreviousHighlight() {
+		// Not (yet) supported in this view
+	}
+
+	@Override
+	public boolean hasNextHighlight() {
+		return false;
+	}
+
+	@Override
+	public boolean hasPreviousHighlight() {
+		return false;
 	}
 
 }

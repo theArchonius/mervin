@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
+import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
@@ -124,6 +125,8 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 
 	public static final String VIEW_MENU_ID = "at.bitandart.zoubek.mervin.menu.view.review.explorer";
 
+	public static final String VIEW_CONTEXTMENU_ID = "at.bitandart.zoubek.mervin.contextmenu.view.review.explorer";
+
 	public static final String VIEW_MENU_ITEM_HIGHLIGHT_SWITCH_MODE = "at.bitandart.zoubek.mervin.menu.view.review.explorer.highlight.switchmode";
 
 	@Inject
@@ -149,6 +152,9 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 
 	@Inject
 	private IEventBroker eventBroker;
+
+	@Inject
+	private EMenuService menuService;
 
 	// text styles
 	private HighlightStyler highlightStyler;
@@ -199,7 +205,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 
 	private HighlightRevealer highlightRevealer;
 
-	private boolean ignoreSelection = false;
+	private boolean ignoreSelectionHighlight = false;
 
 	@PostConstruct
 	public void postConstruct(Composite parent, EModelService modelService, MPart part) {
@@ -228,14 +234,15 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 
-				if (!ignoreSelection) {
+				if (!ignoreSelectionHighlight) {
 					super.selectionChanged(event);
-					ISelection selection = event.getSelection();
-					selectionService.setSelection(selection);
 
 				}
+				ISelection selection = event.getSelection();
+				selectionService.setSelection(selection);
 				eventBroker.send(UIEvents.REQUEST_ENABLEMENT_UPDATE_TOPIC, UIEvents.ALL_ELEMENT_ID);
 			}
+
 		});
 		ColumnViewerToolTipSupport.enableFor(reviewTreeViewer);
 
@@ -261,6 +268,8 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 				return isHighlighted(element, objectsToHighlight);
 			}
 		});
+
+		menuService.registerContextMenu(reviewTreeViewer.getControl(), VIEW_CONTEXTMENU_ID);
 
 		Tree reviewTree = reviewTreeViewer.getTree();
 		reviewTree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -364,7 +373,13 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 			public void elementRemoved(ModelReview review, Object element) {
 
 				updateObjectsToHighlight();
-				reviewTreeViewer.refresh();
+				reviewTreeViewer.getControl().getDisplay().syncExec(new Runnable() {
+
+					@Override
+					public void run() {
+						reviewTreeViewer.refresh();
+					}
+				});
 
 			}
 
@@ -372,7 +387,13 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 			public void elementAdded(ModelReview review, Object element) {
 
 				updateObjectsToHighlight();
-				reviewTreeViewer.refresh();
+				reviewTreeViewer.getControl().getDisplay().syncExec(new Runnable() {
+
+					@Override
+					public void run() {
+						reviewTreeViewer.refresh();
+					}
+				});
 
 			}
 		});
@@ -412,8 +433,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 			List<Object> highlightedElements = highlightService.getHighlightedElements(getCurrentModelReview());
 
 			reviewHighlightUpdater = new ReviewExplorerHighlightUpdater(progressPanel, mainPanel, highlightedElements,
-					objectsToHighlight, currentModelReview, reviewTreeViewer, reviewExplorerContentProvider,
-					diagramModelHelper, modelReviewHelper, eventBroker);
+					objectsToHighlight, reviewTreeViewer, reviewExplorerContentProvider, eventBroker);
 
 			reviewHighlightUpdater.start();
 
@@ -899,16 +919,16 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 
 	@Override
 	public void revealNextHighlight() {
-		ignoreSelection = true;
+		ignoreSelectionHighlight = true;
 		highlightRevealer.revealNextHighlight();
-		ignoreSelection = false;
+		ignoreSelectionHighlight = false;
 	}
 
 	@Override
 	public void revealPreviousHighlight() {
-		ignoreSelection = true;
+		ignoreSelectionHighlight = true;
 		highlightRevealer.revealPreviousHighlight();
-		ignoreSelection = false;
+		ignoreSelectionHighlight = false;
 	}
 
 	@Override

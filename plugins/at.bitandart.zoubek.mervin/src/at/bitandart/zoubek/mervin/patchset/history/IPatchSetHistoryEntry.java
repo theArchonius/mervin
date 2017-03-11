@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2016 Florian Zoubek.
+ * Copyright (c) 2015, 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,9 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.patchset.history;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 
@@ -43,6 +45,15 @@ public interface IPatchSetHistoryEntry<O, V> {
 	 *            the associated value to the given {@link PatchSet}
 	 */
 	void setValue(PatchSet patchSet, V value);
+
+	/**
+	 * @param patchSets
+	 *            the patch sets to retrieve the values for.
+	 * @return a map containing the values for the given patch sets. The map
+	 *         does not contain values for {@link PatchSet}s that have no value
+	 *         assigned.
+	 */
+	Map<PatchSet, V> getValues(Collection<PatchSet> patchSets);
 
 	/**
 	 * 

@@ -10,7 +10,12 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.patchset.history;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 
 /**
  * Abstract base class for {@link IPatchSetHistoryEntry}s that provides the
@@ -52,6 +57,23 @@ public abstract class AbstractHistoryEntry<O, V> implements IPatchSetHistoryEntr
 				siblings.add(this);
 			}
 		}
+	}
+
+	@Override
+	public Map<PatchSet, V> getValues(Collection<PatchSet> patchSets) {
+
+		Map<PatchSet, V> valueMap = new HashMap<PatchSet, V>();
+
+		for (PatchSet patchSet : patchSets) {
+
+			V value = getValue(patchSet);
+
+			if (value != null) {
+				valueMap.put(patchSet, value);
+			}
+		}
+
+		return valueMap;
 	}
 
 	@Override
