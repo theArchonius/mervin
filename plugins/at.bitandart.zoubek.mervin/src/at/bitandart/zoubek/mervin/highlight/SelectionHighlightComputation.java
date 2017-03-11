@@ -8,7 +8,7 @@
  * Contributors:
  *    Florian Zoubek - initial API and implementation
  *******************************************************************************/
-package at.bitandart.zoubek.mervin.handlers;
+package at.bitandart.zoubek.mervin.highlight;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
@@ -30,7 +30,8 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
  * Base class for long running computations of highlight requests. It reads the
  * set of candidates to highlight form the given selection, collects the
  * highlighted elements, passes them to the given highlight service. Subclasses
- * must override {@link #collectHighlightedElements(Set, IProgressMonitor)} to
+ * must override
+ * {@link #collectHighlightedElements(Object, Set, IProgressMonitor)} to
  * determine the highlighted elements that will be passed to the highlight
  * service.
  * 
@@ -72,11 +73,11 @@ public abstract class SelectionHighlightComputation implements IRunnableWithProg
 
 		Set<Object> highlightedElements = collectHighlightedElements(candidates, subMonitor.newChild(100));
 
-		if (monitor.isCanceled()) {
+		if (subMonitor.isCanceled()) {
 			throw new OperationCanceledException();
 		}
 
-		applyHighlightedViews(highlightedElements, highlightService, review, subMonitor.newChild(100));
+		applyHighlightedElements(highlightedElements, highlightService, review, subMonitor.newChild(100));
 	}
 
 	/**
@@ -92,7 +93,46 @@ public abstract class SelectionHighlightComputation implements IRunnableWithProg
 	 *            should be reported and that the operation cannot be cancelled.
 	 * @return the set of collected elements to highlight.
 	 */
-	protected abstract Set<Object> collectHighlightedElements(Set<Object> candidates, IProgressMonitor monitor);
+	protected Set<Object> collectHighlightedElements(Set<Object> candidates, IProgressMonitor monitor) {
+
+		SubMonitor subMonitor = SubMonitor.convert(monitor, getCollectTaskLabel(), candidates.size() * 100);
+
+		Set<Object> highlightedElements = new HashSet<>();
+
+		for (Object candidate : candidates) {
+
+			if (subMonitor.isCanceled()) {
+				throw new OperationCanceledException();
+			}
+			collectHighlightedElements(candidate, highlightedElements, subMonitor.newChild(100));
+		}
+
+		return highlightedElements;
+	}
+
+	/**
+	 * collects the elements to highlight for the given candidate and stores it
+	 * in the given set.
+	 * 
+	 * @param candidate
+	 *            the candidate to collect the highlighted elements for.
+	 * @param highlightedElements
+	 *            the set of elements to highlight.
+	 * @param monitor
+	 *            the progress monitor to use for reporting progress to the
+	 *            user. It is the caller's responsibility to call done() on the
+	 *            given monitor. Accepts null, indicating that no progress
+	 *            should be reported and that the operation cannot be cancelled.
+	 * @return the set of collected elements to highlight.
+	 */
+	protected abstract void collectHighlightedElements(Object candidate, Set<Object> highlightedElements,
+			IProgressMonitor monitor);
+
+	/**
+	 * @return the label that is passed to the progress monitor while collecting
+	 *         the highlighted elements.
+	 */
+	protected abstract String getCollectTaskLabel();
 
 	/**
 	 * passes the given highlighted elements to the given
@@ -110,10 +150,10 @@ public abstract class SelectionHighlightComputation implements IRunnableWithProg
 	 *            given monitor. Accepts null, indicating that no progress
 	 *            should be reported and that the operation cannot be cancelled.
 	 */
-	protected void applyHighlightedViews(Set<Object> highlightedElements, IReviewHighlightService highlightService,
+	protected void applyHighlightedElements(Set<Object> highlightedElements, IReviewHighlightService highlightService,
 			ModelReview review, IProgressMonitor monitor) {
 
-		SubMonitor subMonitor = SubMonitor.convert(monitor, "Adding highlighted views...",
+		SubMonitor subMonitor = SubMonitor.convert(monitor, "Adding highlighted elements...",
 				highlightedElements.size() * 100 + 20);
 
 		highlightService.clearHighlights(review);
@@ -123,6 +163,13 @@ public abstract class SelectionHighlightComputation implements IRunnableWithProg
 			highlightService.addHighlightFor(review, object);
 			subMonitor.worked(100);
 		}
+	}
+
+	/**
+	 * @return the review to highlight.
+	 */
+	public ModelReview getHighlightedReview() {
+		return review;
 	}
 
 }

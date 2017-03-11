@@ -110,6 +110,14 @@
         <children xsi:type="menu:HandledMenuItem" xmi:id="_LSMQcDb8EeaRo_cgSmIxdQ" elementId="at.bitandart.zoubek.mervin.menu.view.patchset.history.mergeequaldiffs" label="Merge Equal DIffs" selected="true" type="Check" command="_Z4Qh8Db8EeaRo_cgSmIxdQ"/>
         <children xsi:type="menu:HandledMenuItem" xmi:id="_nGt9gDxxEeaGXtmajgSMmg" elementId="at.bitandart.zoubek.mervin.menu.view.patchset.history.highlight.switchmode" label="Quick Highlight" type="Check" command="_S-b8kDh_EeaJkOmvJc6KWA"/>
       </menus>
+      <menus xsi:type="menu:PopupMenu" xmi:id="_9IinQAZWEeeJ4azHgl9N5g" elementId="at.bitandart.zoubek.mervin.contextmenu.view.patchset.history">
+        <children xsi:type="menu:HandledMenuItem" xmi:id="_9IinQQZWEeeJ4azHgl9N5g" elementId="at.bitandart.zoubek.mervin.contextmenu.view.patchset.history.highlights.clear" label="Clear Highlights" command="_Vi6tID0BEeaYz6GEb20auA"/>
+        <children xsi:type="menu:Menu" xmi:id="_9IinQgZWEeeJ4azHgl9N5g" elementId="at.bitandart.zoubek.mervin.contextmenu.view.patchset.historyhighlight" label="Highlight">
+          <children xsi:type="menu:HandledMenuItem" xmi:id="_9IinQwZWEeeJ4azHgl9N5g" elementId="at.bitandart.zoubek.mervin.contextmenu.view.patchset.history.highlight.views" label="Referencing Views" command="_KOO8QAQUEeeuH7qhLh3Ubw"/>
+          <children xsi:type="menu:HandledMenuItem" xmi:id="_9IinRAZWEeeJ4azHgl9N5g" elementId="at.bitandart.zoubek.mervin.contextmenu.view.patchset.history.highlight.diffs" label="Referencing Differences" command="_xU4AkAQUEeeuH7qhLh3Ubw"/>
+          <children xsi:type="menu:HandledMenuItem" xmi:id="_9IinRQZWEeeJ4azHgl9N5g" elementId="at.bitandart.zoubek.mervin.contextmenu.view.patchset.history.highlight.semantic.model" label="Semantic Model" command="_7Nd1UAQfEeeuH7qhLh3Ubw"/>
+        </children>
+      </menus>
       <toolbar xmi:id="_IhtjwISWEeadQ7Sb89he3A" elementId="at.bitandart.zoubek.mervin.toolbar.patchset.history">
         <children xsi:type="menu:HandledToolItem" xmi:id="_OBaGoISWEeadQ7Sb89he3A" elementId="at.bitandart.zoubek.mervin.toolbar.patchset.history.highlights.clear" label="Clear Highlights" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/etool/clearHighlights_16.png" tooltip="Clear Highlights" command="_Vi6tID0BEeaYz6GEb20auA"/>
         <children xsi:type="menu:HandledToolItem" xmi:id="_ZFR40AM_EeejMcCxMoDObw" elementId="at.bitandart.zoubek.mervin.toolbar.patchset.history.highlights.next" label="Next Highlight" iconURI="platform:/plugin/at.bitandart.zoubek.mervin/icons/etool/nextHighlight_16.png" tooltip="Reveal Next Highlight" command="_-z19cAMfEeejMcCxMoDObw"/>

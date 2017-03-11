@@ -28,8 +28,10 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
+import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
+import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.e4.ui.workbench.modeling.ElementMatcher;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
@@ -42,6 +44,7 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.util.Policy;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
@@ -119,6 +122,11 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 
 	public static final String VIEW_MENU_ITEM_RADIO_VISIBLE_DIFFS_OLD_PATCHSET = "at.bitandart.zoubek.mervin.menu.view.patchset.history.visiblediffs.oldpatchset";
 
+	/**
+	 * the menu id of the context menu for this view
+	 */
+	public static final String VIEW_CONTEXTMENU_ID = "at.bitandart.zoubek.mervin.contextmenu.view.patchset.history";
+
 	public enum VisibleDiffMode {
 		ALL_DIFFS, NEW_PATCHSET_DIFFS, OLD_PATCHSET_DIFFS
 	}
@@ -148,6 +156,12 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 
 	@Inject
 	private IEventBroker eventBroker;
+
+	@Inject
+	private EMenuService menuService;
+
+	@Inject
+	private ESelectionService selectionService;
 
 	private IPatchSetHistoryEntryOrganizer entryOrganizer;
 
@@ -227,11 +241,14 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 		historyTreeViewer = new TreeViewer(mainPanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
 		historyTreeViewer.setContentProvider(patchSetHistoryContentProvider);
 		historyTreeViewer.addSelectionChangedListener(new HighlightSelectionListener(this) {
+
 			@Override
 			public void selectionChanged(SelectionChangedEvent event) {
 				if (!ignoreSelectionHighlight) {
 					super.selectionChanged(event);
 				}
+				ISelection selection = event.getSelection();
+				selectionService.setSelection(selection);
 				eventBroker.send(UIEvents.REQUEST_ENABLEMENT_UPDATE_TOPIC, UIEvents.ALL_ELEMENT_ID);
 			}
 
@@ -351,6 +368,8 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 				addElementsToHighlight(diffWithSimilarity.getDiff(), elements);
 			}
 		});
+
+		menuService.registerContextMenu(historyTreeViewer.getControl(), VIEW_CONTEXTMENU_ID);
 
 		Tree histroryTree = historyTreeViewer.getTree();
 		histroryTree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));

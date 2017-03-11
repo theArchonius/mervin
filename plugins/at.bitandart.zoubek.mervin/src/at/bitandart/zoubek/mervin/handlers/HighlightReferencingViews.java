@@ -11,14 +11,12 @@
 package at.bitandart.zoubek.mervin.handlers;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
 import javax.inject.Named;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
@@ -38,6 +36,7 @@ import com.google.common.collect.Iterators;
 import at.bitandart.zoubek.mervin.IDiagramModelHelper;
 import at.bitandart.zoubek.mervin.IMervinContextConstants;
 import at.bitandart.zoubek.mervin.IReviewHighlightService;
+import at.bitandart.zoubek.mervin.highlight.SelectionHighlightComputation;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 
 /**
@@ -81,44 +80,36 @@ public class HighlightReferencingViews {
 						new SelectionHighlightComputation(selection, highlightService, review) {
 
 							@Override
-							protected Set<Object> collectHighlightedElements(Set<Object> candidates,
+							protected void collectHighlightedElements(Object candidate, Set<Object> highlightedElements,
 									IProgressMonitor monitor) {
-								SubMonitor subMonitor = SubMonitor.convert(monitor, "Searching for view references...",
-										candidates.size() * 100);
 
-								Set<Object> referencingViews = new HashSet<>();
+								SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
 
-								for (Object candidate : candidates) {
+								if (candidate instanceof EditPart) {
 
-									if (monitor.isCanceled()) {
-										throw new OperationCanceledException();
+									/*
+									 * use the semantic model to retrieve the
+									 * referencing views for selected edit parts
+									 */
+
+									EObject semanticModel = diagramModelHelper.getSemanticModel(candidate);
+
+									if (semanticModel != null) {
+										highlightedElements
+												.addAll(diagramModelHelper.getReferencingViews(semanticModel));
 									}
 
-									if (candidate instanceof EditPart) {
-
-										/*
-										 * use the semantic model to retrieve
-										 * the referencing views for selected
-										 * edit parts
-										 */
-
-										EObject semanticModel = diagramModelHelper.getSemanticModel(candidate);
-
-										if (semanticModel != null) {
-											referencingViews
-													.addAll(diagramModelHelper.getReferencingViews(semanticModel));
-										}
-
-									}
-
-									if (candidate instanceof EObject) {
-										referencingViews
-												.addAll(diagramModelHelper.getReferencingViews((EObject) candidate));
-									}
-									subMonitor.worked(100);
 								}
 
-								return referencingViews;
+								if (candidate instanceof EObject) {
+									highlightedElements
+											.addAll(diagramModelHelper.getReferencingViews((EObject) candidate));
+								}
+							}
+
+							@Override
+							protected String getCollectTaskLabel() {
+								return "Searching for view references...";
 							}
 						});
 			} catch (InvocationTargetException e) {

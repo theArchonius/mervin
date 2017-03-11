@@ -11,14 +11,12 @@
 package at.bitandart.zoubek.mervin.handlers;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
 import javax.inject.Named;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
@@ -37,6 +35,7 @@ import com.google.common.collect.Iterators;
 import at.bitandart.zoubek.mervin.IDiagramModelHelper;
 import at.bitandart.zoubek.mervin.IMervinContextConstants;
 import at.bitandart.zoubek.mervin.IReviewHighlightService;
+import at.bitandart.zoubek.mervin.highlight.SelectionHighlightComputation;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 
 /**
@@ -79,29 +78,20 @@ public class HighlightSemanticModel {
 						new SelectionHighlightComputation(selection, highlightService, review) {
 
 							@Override
-							protected Set<Object> collectHighlightedElements(Set<Object> candidates,
+							protected void collectHighlightedElements(Object candidate, Set<Object> highlightedElements,
 									IProgressMonitor monitor) {
 
-								SubMonitor subMonitor = SubMonitor.convert(monitor,
-										"Searching for semantic model elements...", candidates.size() * 100);
+								SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
 
-								Set<Object> semanticModelElements = new HashSet<>();
-
-								for (Object candidate : candidates) {
-
-									if (monitor.isCanceled()) {
-										throw new OperationCanceledException();
-									}
-
-									EObject semanticModel = diagramModelHelper.getSemanticModel(candidate);
-									if (semanticModel != null) {
-										semanticModelElements.add(semanticModel);
-									}
-
-									subMonitor.worked(100);
+								EObject semanticModel = diagramModelHelper.getSemanticModel(candidate);
+								if (semanticModel != null) {
+									highlightedElements.add(semanticModel);
 								}
+							}
 
-								return semanticModelElements;
+							@Override
+							protected String getCollectTaskLabel() {
+								return "Searching for semantic model elements...";
 							}
 
 						});

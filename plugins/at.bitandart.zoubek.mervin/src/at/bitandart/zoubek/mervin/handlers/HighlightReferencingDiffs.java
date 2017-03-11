@@ -11,15 +11,10 @@
 package at.bitandart.zoubek.mervin.handlers;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 import javax.inject.Named;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.e4.core.di.annotations.CanExecute;
 import org.eclipse.e4.core.di.annotations.Execute;
 import org.eclipse.e4.core.di.annotations.Optional;
@@ -38,7 +33,9 @@ import at.bitandart.zoubek.mervin.IDiagramModelHelper;
 import at.bitandart.zoubek.mervin.IMervinContextConstants;
 import at.bitandart.zoubek.mervin.IModelReviewHelper;
 import at.bitandart.zoubek.mervin.IReviewHighlightService;
+import at.bitandart.zoubek.mervin.highlight.ReferencingDiffHighlightComputation;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
+import at.bitandart.zoubek.mervin.patchset.history.ObjectHistoryEntryContainer;
 
 /**
  * A command handler that performs a highlight request for the referencing
@@ -53,7 +50,8 @@ public class HighlightReferencingDiffs {
 
 		@Override
 		public boolean apply(Object element) {
-			return !(element instanceof Diff) && (element instanceof EObject || element instanceof EditPart);
+			return !(element instanceof Diff) && (element instanceof EObject || element instanceof EditPart
+					|| element instanceof ObjectHistoryEntryContainer);
 		}
 	};
 
@@ -69,72 +67,16 @@ public class HighlightReferencingDiffs {
 
 	@Execute
 	public void execute(Shell shell, final IReviewHighlightService highlightService,
-			final IModelReviewHelper modelReviewHelper, final IDiagramModelHelper diagramModelHelper,
-			final @Named(IServiceConstants.ACTIVE_SELECTION) @Optional IStructuredSelection selection,
-			final @Named(IMervinContextConstants.ACTIVE_MODEL_REVIEW) @Optional ModelReview review) {
+			IModelReviewHelper modelReviewHelper, IDiagramModelHelper diagramModelHelper,
+			@Named(IServiceConstants.ACTIVE_SELECTION) @Optional IStructuredSelection selection,
+			@Named(IMervinContextConstants.ACTIVE_MODEL_REVIEW) @Optional ModelReview review) {
 
 		if (review != null && selection != null) {
 			ProgressMonitorDialog progressMonitorDialog = new ProgressMonitorDialog(shell);
 			try {
-				progressMonitorDialog.run(true, true,
-						new SelectionHighlightComputation(selection, highlightService, review) {
+				progressMonitorDialog.run(true, true, new ReferencingDiffHighlightComputation(selection,
+						highlightService, review, diagramModelHelper, modelReviewHelper));
 
-							@Override
-							protected Set<Object> collectHighlightedElements(Set<Object> candidates,
-									IProgressMonitor monitor) {
-
-								SubMonitor subMonitor = SubMonitor.convert(monitor, "Searching for differences...",
-										candidates.size() * 100);
-
-								Set<Object> referencingDiffs = new HashSet<>();
-
-								for (Object candidate : candidates) {
-
-									if (monitor.isCanceled()) {
-										throw new OperationCanceledException();
-									}
-
-									if (candidate instanceof EditPart) {
-
-										/*
-										 * use the semantic and the notation
-										 * model to retrieve the diffs for
-										 * selected edit parts
-										 */
-
-										EObject semanticModel = diagramModelHelper.getSemanticModel(candidate);
-
-										if (semanticModel != null) {
-											referencingDiffs
-													.addAll(modelReviewHelper.getDifferences(semanticModel, review));
-										}
-
-										EObject notationModel = diagramModelHelper.getNotationModel(candidate);
-
-										if (notationModel != null) {
-
-											EObject originalNotationModel = review.getUnifiedModelMap()
-													.getOriginal(notationModel);
-											if (originalNotationModel != null) {
-												notationModel = originalNotationModel;
-											}
-
-											referencingDiffs
-													.addAll(modelReviewHelper.getDifferences(notationModel, review));
-										}
-									}
-
-									if (candidate instanceof EObject) {
-										referencingDiffs
-												.addAll(modelReviewHelper.getDifferences((EObject) candidate, review));
-									}
-									subMonitor.worked(100);
-								}
-
-								return referencingDiffs;
-							}
-
-						});
 			} catch (InvocationTargetException e) {
 			} catch (InterruptedException e) {
 			}
