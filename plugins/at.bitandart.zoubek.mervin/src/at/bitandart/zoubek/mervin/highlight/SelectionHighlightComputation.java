@@ -101,9 +101,7 @@ public abstract class SelectionHighlightComputation implements IRunnableWithProg
 
 		for (Object candidate : candidates) {
 
-			if (subMonitor.isCanceled()) {
-				throw new OperationCanceledException();
-			}
+			checkCancellation(subMonitor);
 			collectHighlightedElements(candidate, highlightedElements, subMonitor.newChild(100));
 		}
 
@@ -162,6 +160,21 @@ public abstract class SelectionHighlightComputation implements IRunnableWithProg
 		for (Object object : highlightedElements) {
 			highlightService.addHighlightFor(review, object);
 			subMonitor.worked(100);
+		}
+	}
+
+	/**
+	 * checks the given monitor for cancellation and throws an
+	 * {@link OperationCanceledException} if the monitor request a cancellation.
+	 * 
+	 * @param monitor
+	 *            the monitor to to check, accepts null.
+	 * @throws OperationCanceledException
+	 *             if the monitor has been cancelled.
+	 */
+	protected void checkCancellation(IProgressMonitor monitor) throws OperationCanceledException {
+		if (monitor != null && monitor.isCanceled()) {
+			throw new OperationCanceledException();
 		}
 	}
 

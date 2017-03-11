@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
@@ -88,8 +87,7 @@ public class ReferencingDiffHighlightComputation extends SelectionHighlightCompu
 	 *            should be reported and that the operation cannot be cancelled.
 	 * 
 	 */
-	protected void collectReferencingDiffs(EditPart editPart, Set<Object> referencingDiffs,
-			IProgressMonitor monitor) {
+	protected void collectReferencingDiffs(EditPart editPart, Set<Object> referencingDiffs, IProgressMonitor monitor) {
 
 		/*
 		 * use the semantic and the notation model to retrieve the diffs for
@@ -97,9 +95,7 @@ public class ReferencingDiffHighlightComputation extends SelectionHighlightCompu
 		 */
 
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 200);
-		if (subMonitor.isCanceled()) {
-			throw new OperationCanceledException();
-		}
+		checkCancellation(subMonitor);
 
 		ModelReview review = getHighlightedReview();
 
@@ -145,9 +141,7 @@ public class ReferencingDiffHighlightComputation extends SelectionHighlightCompu
 			IProgressMonitor monitor) {
 
 		SubMonitor subMonitor = SubMonitor.convert(monitor);
-		if (subMonitor.isCanceled()) {
-			throw new OperationCanceledException();
-		}
+		checkCancellation(subMonitor);
 
 		ModelReview review = getHighlightedReview();
 
@@ -176,9 +170,7 @@ public class ReferencingDiffHighlightComputation extends SelectionHighlightCompu
 	protected void collectReferencingDiffs(Match match, Set<Object> referencingDiffs, IProgressMonitor monitor) {
 
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 200);
-		if (subMonitor.isCanceled()) {
-			throw new OperationCanceledException();
-		}
+		checkCancellation(subMonitor);
 
 		EObject left = match.getLeft();
 		if (left != null) {
@@ -210,9 +202,8 @@ public class ReferencingDiffHighlightComputation extends SelectionHighlightCompu
 	protected void collectReferencingDiffs(EObject eObject, Set<Object> referencingDiffs, IProgressMonitor monitor) {
 
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
-		if (subMonitor.isCanceled()) {
-			throw new OperationCanceledException();
-		}
+		checkCancellation(subMonitor);
+
 		referencingDiffs.addAll(modelReviewHelper.getDifferences(eObject, getHighlightedReview()));
 	}
 
