@@ -106,7 +106,7 @@ public class HighlightReferencingViews {
 			} catch (InvocationTargetException e) {
 			} catch (InterruptedException e) {
 			} catch (OperationCanceledException e) {
-				logger.warn(e, "Highlighting of referencing diffs has been cancelled");
+				logger.warn(e, "Highlighting of referencing views has been cancelled");
 			}
 
 		}

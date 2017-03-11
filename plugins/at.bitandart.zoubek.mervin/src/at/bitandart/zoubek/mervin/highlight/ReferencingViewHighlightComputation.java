@@ -146,7 +146,7 @@ public class ReferencingViewHighlightComputation extends SelectionHighlightCompu
 	/**
 	 * collects the referencing views for the given {@link Match}.
 	 * 
-	 * @param container
+	 * @param match
 	 *            the {@link Match} to collect the referencing views for.
 	 * @param referencingViews
 	 *            the set of views to add the referencing views to.
