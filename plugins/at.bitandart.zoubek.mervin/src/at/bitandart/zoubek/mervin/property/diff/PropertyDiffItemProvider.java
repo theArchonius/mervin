@@ -873,14 +873,16 @@ public class PropertyDiffItemProvider implements ITreeDiffItemProvider {
 			if (nextElement instanceof EObject) {
 
 				Match match = comparison.getMatch((EObject) nextElement);
-				MatchEntry matchEntry = createMatchEntry(listEntry, "", match, side, feature, featureDiffs);
-				elementList.add(matchEntry);
+				if (match != null) {
+					MatchEntry matchEntry = createMatchEntry(listEntry, "", match, side, feature, featureDiffs);
+					elementList.add(matchEntry);
+				} else {
+					elementList.add(new ObjectEntry(listEntry, "", comparison, nextElement, null));
+				}
 
 			} else {
 
-				if (side == TreeDiffSide.LEFT) {
-					elementList.add(new ObjectEntry(listEntry, "", comparison, nextElement, null));
-				}
+				elementList.add(new ObjectEntry(listEntry, "", comparison, nextElement, null));
 			}
 		}
 
