@@ -66,10 +66,6 @@ public class MervinServicesAddon {
 				context);
 		context.set(IReviewCompareService.class, compareService);
 
-		// add diff service based on EMF Compare
-		IDiffService diffService = ContextInjectionFactory.make(EMFCompareDiffService.class, context);
-		context.set(IDiffService.class, diffService);
-
 		/* add the default mervin model review helper */
 		IModelReviewHelper modelReviewHelper = ContextInjectionFactory.make(MervinModelReviewHelper.class, context);
 		context.set(IModelReviewHelper.class, modelReviewHelper);

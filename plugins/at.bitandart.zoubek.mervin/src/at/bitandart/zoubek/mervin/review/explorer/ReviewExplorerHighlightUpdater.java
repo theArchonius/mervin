@@ -16,6 +16,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -62,9 +63,9 @@ public class ReviewExplorerHighlightUpdater extends ProgressPanelOperationThread
 	 */
 	public ReviewExplorerHighlightUpdater(ProgressPanel progressPanel, Composite mainPanel, List<Object> baseElements,
 			Set<Object> objectsToHighlight, TreeViewer treeViewer, IReviewExplorerContentProvider contentProvider,
-			IEventBroker eventBroker) {
+			IEventBroker eventBroker, Logger logger) {
 
-		super(progressPanel, mainPanel);
+		super(progressPanel, mainPanel, logger);
 
 		this.baseElements = baseElements;
 		this.objectsToHighlight = objectsToHighlight;

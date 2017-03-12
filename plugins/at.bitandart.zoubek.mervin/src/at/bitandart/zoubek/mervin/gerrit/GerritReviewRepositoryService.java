@@ -38,9 +38,6 @@ import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
-import org.eclipse.emf.compare.EMFCompare;
-import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
-import org.eclipse.emf.compare.scope.DefaultComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -88,8 +85,7 @@ import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.treewalk.TreeWalk;
 
-import com.google.common.base.Predicate;
-
+import at.bitandart.zoubek.mervin.IReviewCompareService;
 import at.bitandart.zoubek.mervin.IReviewDescriptor;
 import at.bitandart.zoubek.mervin.IReviewRepositoryService;
 import at.bitandart.zoubek.mervin.exceptions.InvalidReviewException;
@@ -153,6 +149,9 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 	@SuppressWarnings("restriction")
 	@Inject
 	private org.eclipse.e4.core.services.log.Logger logger;
+
+	@Inject
+	private IReviewCompareService compareService;
 
 	@Inject
 	private IEclipseContext eclipseContext;
@@ -367,37 +366,7 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 	 * @return
 	 */
 	public Comparison compareModels(PatchSet patchSet) {
-
-		EList<ModelResource> oldInvolvedModels = patchSet.getOldInvolvedModels();
-		EList<ModelResource> newInvolvedModels = patchSet.getNewInvolvedModels();
-		ResourceSet oldResourceSet = new ResourceSetImpl();
-		ResourceSet newResourceSet = new ResourceSetImpl();
-
-		if (!oldInvolvedModels.isEmpty()) {
-			oldResourceSet = oldInvolvedModels.get(0).getObjects().get(0).eResource().getResourceSet();
-		}
-
-		if (!newInvolvedModels.isEmpty()) {
-			newResourceSet = newInvolvedModels.get(0).getObjects().get(0).eResource().getResourceSet();
-		}
-
-		EcoreUtil.resolveAll(oldResourceSet);
-		EcoreUtil.resolveAll(newResourceSet);
-
-		EMFCompare comparator = EMFCompare.builder()
-				.setPostProcessorRegistry(EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry()).build();
-
-		DefaultComparisonScope scope = new DefaultComparisonScope(newResourceSet, oldResourceSet, null);
-		scope.setResourceSetContentFilter(new Predicate<Resource>() {
-
-			@Override
-			public boolean apply(Resource resource) {
-				org.eclipse.emf.common.util.URI uri = resource.getURI();
-				return !uri.fileExtension().equals("notation") && uri.scheme().equals(GitURIParser.GIT_COMMIT_SCHEME);
-			}
-		});
-		Comparison comparison = comparator.compare(scope);
-		return comparison;
+		return compareService.comparePatchSetModelVersions(patchSet, null);
 	}
 
 	/**
@@ -408,37 +377,7 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 	 * @return
 	 */
 	public Comparison compareDiagrams(PatchSet patchSet) {
-
-		EList<DiagramResource> oldInvolvedDiagrams = patchSet.getOldInvolvedDiagrams();
-		EList<DiagramResource> newInvolvedDiagrams = patchSet.getNewInvolvedDiagrams();
-		ResourceSet oldResourceSet = new ResourceSetImpl();
-		ResourceSet newResourceSet = new ResourceSetImpl();
-
-		if (!oldInvolvedDiagrams.isEmpty()) {
-			oldResourceSet = oldInvolvedDiagrams.get(0).getObjects().get(0).eResource().getResourceSet();
-		}
-
-		if (!newInvolvedDiagrams.isEmpty()) {
-			newResourceSet = newInvolvedDiagrams.get(0).getObjects().get(0).eResource().getResourceSet();
-		}
-
-		EcoreUtil.resolveAll(oldResourceSet);
-		EcoreUtil.resolveAll(newResourceSet);
-
-		EMFCompare comparator = EMFCompare.builder()
-				.setPostProcessorRegistry(EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry()).build();
-
-		DefaultComparisonScope scope = new DefaultComparisonScope(newResourceSet, oldResourceSet, null);
-		scope.setResourceSetContentFilter(new Predicate<Resource>() {
-
-			@Override
-			public boolean apply(Resource resource) {
-				org.eclipse.emf.common.util.URI uri = resource.getURI();
-				return uri.fileExtension().equals("notation") && uri.scheme().equals(GitURIParser.GIT_COMMIT_SCHEME);
-			}
-		});
-		Comparison comparison = comparator.compare(scope);
-		return comparison;
+		return compareService.comparePatchSetDiagramVersions(patchSet, null);
 	}
 
 	/**

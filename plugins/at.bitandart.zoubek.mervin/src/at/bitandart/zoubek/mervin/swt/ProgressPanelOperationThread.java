@@ -11,6 +11,8 @@
 package at.bitandart.zoubek.mervin.swt;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -21,12 +23,14 @@ import org.eclipse.swt.widgets.Display;
  * @author Florian Zoubek
  *
  */
+@SuppressWarnings("restriction")
 public abstract class ProgressPanelOperationThread extends Thread {
 
 	private ProgressPanel progressPanel;
 	private Composite mainPanel;
 	private boolean updateProgressPanel;
 	private IProgressMonitor progressMonitor;
+	private Logger logger;
 
 	/**
 	 * @param progressPanel
@@ -35,11 +39,12 @@ public abstract class ProgressPanelOperationThread extends Thread {
 	 *            the main panel that needs to be layouted when the progress
 	 *            panel is shown or hidden.
 	 */
-	public ProgressPanelOperationThread(ProgressPanel progressPanel, Composite mainPanel) {
+	public ProgressPanelOperationThread(ProgressPanel progressPanel, Composite mainPanel, Logger logger) {
 		this.progressPanel = progressPanel;
 		this.mainPanel = mainPanel;
 		this.updateProgressPanel = true;
 		this.progressMonitor = progressPanel.getProgressMonitor();
+		this.logger = logger;
 	}
 
 	/**
@@ -53,7 +58,11 @@ public abstract class ProgressPanelOperationThread extends Thread {
 	public void run() {
 
 		showProgressPanel();
-		runOperation();
+		try {
+			runOperation();
+		} catch (OperationCanceledException e) {
+			logger.warn(e, "Operation has been cancelled.");
+		}
 		done(progressMonitor);
 
 		hideProgressPanel();

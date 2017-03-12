@@ -26,6 +26,7 @@ import javax.inject.Inject;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
 import org.eclipse.e4.ui.services.EMenuService;
@@ -162,6 +163,9 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 
 	@Inject
 	private ESelectionService selectionService;
+
+	@Inject
+	private Logger logger;
 
 	private IPatchSetHistoryEntryOrganizer entryOrganizer;
 
@@ -537,7 +541,7 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 
 				currentUpdateThread = new PatchSetHistoryTreeUpdater(currentModelReview, activePatchSet,
 						mergeEqualDiffs, similarityHistoryService, entryOrganizer, historyTreeViewer, labelColumn,
-						progressPanel, mainPanel);
+						progressPanel, mainPanel, logger);
 
 				currentUpdateThread.start();
 

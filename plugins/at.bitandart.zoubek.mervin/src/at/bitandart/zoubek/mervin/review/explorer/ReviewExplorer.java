@@ -25,6 +25,7 @@ import javax.inject.Inject;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.model.application.ui.menu.MHandledMenuItem;
 import org.eclipse.e4.ui.services.EMenuService;
@@ -67,9 +68,7 @@ import org.eclipse.swt.widgets.TreeColumn;
 
 import com.google.common.base.Predicate;
 
-import at.bitandart.zoubek.mervin.IDiagramModelHelper;
 import at.bitandart.zoubek.mervin.IMatchHelper;
-import at.bitandart.zoubek.mervin.IModelReviewHelper;
 import at.bitandart.zoubek.mervin.IOverlayTypeHelper;
 import at.bitandart.zoubek.mervin.IReviewHighlightService;
 import at.bitandart.zoubek.mervin.IReviewHighlightServiceListener;
@@ -145,10 +144,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 	private IOverlayTypeHelper overlayTypeHelper;
 
 	@Inject
-	private IDiagramModelHelper diagramModelHelper;
-
-	@Inject
-	private IModelReviewHelper modelReviewHelper;
+	private Logger logger;
 
 	@Inject
 	private IEventBroker eventBroker;
@@ -433,7 +429,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 			List<Object> highlightedElements = highlightService.getHighlightedElements(getCurrentModelReview());
 
 			reviewHighlightUpdater = new ReviewExplorerHighlightUpdater(progressPanel, mainPanel, highlightedElements,
-					objectsToHighlight, reviewTreeViewer, reviewExplorerContentProvider, eventBroker);
+					objectsToHighlight, reviewTreeViewer, reviewExplorerContentProvider, eventBroker, logger);
 
 			reviewHighlightUpdater.start();
 

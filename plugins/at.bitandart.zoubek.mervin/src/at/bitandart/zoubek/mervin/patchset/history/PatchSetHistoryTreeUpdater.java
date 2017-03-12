@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -79,8 +80,8 @@ public class PatchSetHistoryTreeUpdater extends ProgressPanelOperationThread {
 	public PatchSetHistoryTreeUpdater(ModelReview currentModelReview, PatchSet activePatchSet, boolean mergeEqualDiffs,
 			ISimilarityHistoryService similarityHistoryService, IPatchSetHistoryEntryOrganizer organizer,
 			TreeViewer historyTreeViewer, TreeViewerColumn labelColumn, ProgressPanel progressPanel,
-			Composite mainPanel) {
-		super(progressPanel, mainPanel);
+			Composite mainPanel, Logger logger) {
+		super(progressPanel, mainPanel, logger);
 		this.currentModelReview = currentModelReview;
 		this.activePatchSet = activePatchSet;
 		this.mergeEqualDiffs = mergeEqualDiffs;

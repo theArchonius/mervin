@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -37,8 +38,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-import at.bitandart.zoubek.mervin.IDiffService;
 import at.bitandart.zoubek.mervin.IMervinContextConstants;
+import at.bitandart.zoubek.mervin.IReviewCompareService;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 
 /**
@@ -52,7 +53,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 public abstract class VersionSelector {
 
 	@Inject
-	private IDiffService diffService;
+	private IReviewCompareService compareService;
 
 	@Inject
 	private Shell shell;
@@ -198,11 +199,11 @@ public abstract class VersionSelector {
 				@Override
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					ModelReview modelReview = getActiveReview();
-					diffService.updateSelectedComparison(modelReview, monitor);
+					compareService.updateSelectedComparison(modelReview, monitor);
 					monitor.done();
 				}
 			});
-		} catch (InvocationTargetException | InterruptedException e) {
+		} catch (InvocationTargetException | InterruptedException | OperationCanceledException e) {
 			logger.error(e, "Could not update the selected comparison");
 		}
 

@@ -11,9 +11,11 @@
 package at.bitandart.zoubek.mervin.predicates;
 
 import org.eclipse.emf.compare.Match;
+import org.eclipse.emf.ecore.resource.Resource;
 
 import com.google.common.base.Predicate;
 
+import at.bitandart.zoubek.mervin.gerrit.GitURIParser;
 import at.bitandart.zoubek.mervin.predicates.MatchValuesPredicate.Operation;
 
 /**
@@ -58,4 +60,67 @@ public class MervinPredicates {
 			Operation operation) {
 		return new MatchValuesPredicate(leftPredicate, rightPredicate, operation);
 	}
+
+	/**
+	 * @return a {@link Resource} predicate that returns true if the resource is
+	 *         a mervin git resource.
+	 */
+	public static Predicate<Resource> mervinGitResource() {
+		return PREDICATE_GIT_RESOURCE;
+	}
+
+	/**
+	 * @return a {@link Resource} predicate that returns true if the resource is
+	 *         a diagram resource.
+	 */
+	public static Predicate<Resource> diagramResource() {
+		return PREDICATE_DIAGRAM_RESOURCE;
+	}
+
+	/**
+	 * @return a {@link Resource} predicate that returns true if the resource is
+	 *         a model resource (excluding diagram resources).
+	 */
+	public static Predicate<Resource> modelResource() {
+		return PREDICATE_MODEL_RESOURCE;
+	}
+
+	/**
+	 * A {@link Resource} predicate that returns true if the resource is a
+	 * mervin git resource.
+	 */
+	private static final Predicate<Resource> PREDICATE_GIT_RESOURCE = new Predicate<Resource>() {
+
+		@Override
+		public boolean apply(Resource resource) {
+			org.eclipse.emf.common.util.URI uri = resource.getURI();
+			return uri.scheme().equals(GitURIParser.GIT_COMMIT_SCHEME);
+		}
+	};
+
+	/**
+	 * A {@link Resource} predicate that returns true if the resource is a
+	 * diagram resource.
+	 */
+	private static final Predicate<Resource> PREDICATE_DIAGRAM_RESOURCE = new Predicate<Resource>() {
+
+		@Override
+		public boolean apply(Resource resource) {
+			org.eclipse.emf.common.util.URI uri = resource.getURI();
+			return uri.fileExtension().equals("notation");
+		}
+	};
+
+	/**
+	 * A {@link Resource} predicate that returns true if the resource is a model
+	 * resource(excluding diagram resources).
+	 */
+	private static final Predicate<Resource> PREDICATE_MODEL_RESOURCE = new Predicate<Resource>() {
+
+		@Override
+		public boolean apply(Resource resource) {
+			org.eclipse.emf.common.util.URI uri = resource.getURI();
+			return !uri.fileExtension().equals("notation");
+		}
+	};
 }
