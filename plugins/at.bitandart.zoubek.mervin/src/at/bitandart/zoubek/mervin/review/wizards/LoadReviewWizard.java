@@ -18,13 +18,14 @@ import java.text.MessageFormat;
 import javax.inject.Inject;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.e4.core.di.annotations.Creatable;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 
-import at.bitandart.zoubek.mervin.IDiffService;
+import at.bitandart.zoubek.mervin.IReviewCompareService;
 import at.bitandart.zoubek.mervin.IReviewRepositoryService;
 import at.bitandart.zoubek.mervin.exceptions.InvalidReviewException;
 import at.bitandart.zoubek.mervin.exceptions.InvalidReviewRepositoryException;
@@ -55,7 +56,7 @@ public class LoadReviewWizard extends Wizard {
 	private IReviewRepositoryService repoService;
 
 	@Inject
-	private IDiffService diffService;
+	private IReviewCompareService compareService;
 
 	/**
 	 * the model review factory used by this wizard to create all model elements
@@ -109,8 +110,9 @@ public class LoadReviewWizard extends Wizard {
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
 						modelReview = repoService.loadReview(uri, id, reviewer, monitor);
-						diffService.updateSelectedComparison(modelReview, monitor);
-					} catch (RepositoryIOException | InvalidReviewRepositoryException | InvalidReviewException e) {
+						compareService.updateSelectedComparison(modelReview, monitor);
+					} catch (RepositoryIOException | InvalidReviewRepositoryException | InvalidReviewException
+							| OperationCanceledException e) {
 						new InvocationTargetException(e);
 					}
 

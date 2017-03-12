@@ -13,12 +13,17 @@ package at.bitandart.zoubek.mervin;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.BasicMonitor;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.EMFCompare;
 import org.eclipse.emf.compare.match.impl.MatchEngineFactoryRegistryImpl;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.compare.scope.DefaultComparisonScope;
+import org.eclipse.emf.compare.scope.IComparisonScope;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -26,11 +31,13 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 
-import at.bitandart.zoubek.mervin.gerrit.GitURIParser;
 import at.bitandart.zoubek.mervin.model.modelreview.DiagramResource;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelResource;
+import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
+import at.bitandart.zoubek.mervin.predicates.MervinPredicates;
 
 /**
  * Default EMF Compare based {@link IReviewCompareService} that operates only on
@@ -41,73 +48,114 @@ import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
  */
 public class EMFCompareReviewCompareService implements IReviewCompareService {
 
-	/**
-	 * A {@link Resource} predicate that returns true if the resource is a
-	 * mervin git resource.
-	 */
-	private static final Predicate<Resource> PREDICATE_GIT_RESOURCE = new Predicate<Resource>() {
+	@Override
+	public Comparison comparePatchSetModelVersions(PatchSet patchSet, IProgressMonitor monitor)
+			throws OperationCanceledException {
 
-		@Override
-		public boolean apply(Resource resource) {
-			org.eclipse.emf.common.util.URI uri = resource.getURI();
-			return uri.scheme().equals(GitURIParser.GIT_COMMIT_SCHEME);
-		}
-	};
+		return comparePatchSetVersions(patchSet, Version.NEW, patchSet, Version.OLD, MervinPredicates.modelResource(),
+				monitor);
+	}
 
 	@Override
-	public Comparison compareWithPatchSetVersion(EObject eObject, PatchSet patchSet, Version version) {
+	public Comparison comparePatchSetDiagramVersions(PatchSet patchSet, IProgressMonitor monitor)
+			throws OperationCanceledException {
+
+		return comparePatchSetVersions(patchSet, Version.NEW, patchSet, Version.OLD, MervinPredicates.diagramResource(),
+				monitor);
+	}
+
+	@Override
+	public Comparison compareWithPatchSetVersion(EObject eObject, PatchSet patchSet, Version version,
+			IProgressMonitor monitor) {
+
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
+		checkCancellation(subMonitor);
 
 		ResourceSet resourceSet = getResourceSet(patchSet, version);
 
 		EcoreUtil.resolveAll(resourceSet);
 
-		EMFCompare comparator = EMFCompare.builder()
-				.setPostProcessorRegistry(EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry()).build();
+		EMFCompare comparator = createEMFCompare();
 
-		DefaultComparisonScope scope = new DefaultComparisonScope(eObject.eResource().getResourceSet(), resourceSet,
-				null);
-		scope.setResourceSetContentFilter(PREDICATE_GIT_RESOURCE);
-		Comparison comparison = comparator.compare(scope);
+		IComparisonScope scope = createComparisonScope(eObject.eResource().getResourceSet(), resourceSet);
+		Comparison comparison = comparator.compare(scope, BasicMonitor.toMonitor(subMonitor.newChild(100)));
 		return comparison;
 	}
 
 	@Override
 	public Comparison comparePatchSetVersions(PatchSet leftPatchSet, Version leftVersion, PatchSet rightPatchSet,
-			Version rightVersion) {
+			Version rightVersion, IProgressMonitor monitor) {
 
-		ResourceSet leftResourceSet = getResourceSet(leftPatchSet, leftVersion);
-		ResourceSet rightResourceSet = getResourceSet(rightPatchSet, rightVersion);
+		return comparePatchSetVersions(leftPatchSet, leftVersion, rightPatchSet, rightVersion,
+				Predicates.<Resource> alwaysTrue(), monitor);
+	}
 
-		EcoreUtil.resolveAll(leftResourceSet);
-		EcoreUtil.resolveAll(rightResourceSet);
+	/**
+	 * compares all diagrams and models of the given left patch set and version
+	 * with all diagrams and models of the given right patch set and version.
+	 * 
+	 * @param newPatchSet
+	 *            the new (left) patch containing the models/diagrams to
+	 *            compare.
+	 * @param newVersion
+	 *            the new (left) version of the models/diagrams to compare with.
+	 * @param oldPatchSet
+	 *            the old (right) patch containing the models/diagrams to
+	 *            compare.
+	 * @param oldVersion
+	 *            the old (right) version of the models/diagrams to compare
+	 *            with.
+	 * @param monitor
+	 *            the progress monitor to use for reporting progress to the
+	 *            user. It is the caller's responsibility to call done() on the
+	 *            given monitor. Accepts null, indicating that no progress
+	 *            should be reported and that the operation cannot be cancelled.
+	 * @return the resulting comparison.
+	 * @throws OperationCanceledException
+	 *             if the operations has been cancelled by the given monitor.
+	 */
+	private Comparison comparePatchSetVersions(PatchSet newPatchSet, Version newVersion, PatchSet oldPatchSet,
+			Version oldVersion, Predicate<Resource> resourceFilter, IProgressMonitor monitor) {
 
-		EMFCompare comparator = EMFCompare.builder()
-				.setPostProcessorRegistry(EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry()).build();
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
+		checkCancellation(subMonitor);
 
-		DefaultComparisonScope scope = new DefaultComparisonScope(leftResourceSet, rightResourceSet, null);
-		scope.setResourceSetContentFilter(PREDICATE_GIT_RESOURCE);
-		Comparison comparison = comparator.compare(scope);
+		ResourceSet newResourceSet = getResourceSet(newPatchSet, newVersion);
+		ResourceSet oldResourceSet = getResourceSet(oldPatchSet, oldVersion);
+
+		EcoreUtil.resolveAll(newResourceSet);
+		EcoreUtil.resolveAll(oldResourceSet);
+
+		EMFCompare comparator = createEMFCompare();
+
+		IComparisonScope scope = createComparisonScope(newResourceSet, oldResourceSet, resourceFilter);
+		Comparison comparison = comparator.compare(scope, BasicMonitor.toMonitor(subMonitor.newChild(100)));
 		return comparison;
 	}
 
 	@Override
-	public Comparison matchWithPatchSetVersion(EObject eObject, PatchSet patchSet, Version version) {
+	public Comparison matchWithPatchSetVersion(EObject eObject, PatchSet patchSet, Version version,
+			IProgressMonitor monitor) {
+
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
+		checkCancellation(subMonitor);
 
 		ResourceSet oldResourceSet = getResourceSet(patchSet, version);
 
 		EcoreUtil.resolveAll(oldResourceSet);
 
-		DefaultComparisonScope scope = new DefaultComparisonScope(eObject.eResource().getResourceSet(), oldResourceSet,
-				null);
-		scope.setResourceSetContentFilter(PREDICATE_GIT_RESOURCE);
+		IComparisonScope scope = createComparisonScope(eObject.eResource().getResourceSet(), oldResourceSet);
 
 		return MatchEngineFactoryRegistryImpl.createStandaloneInstance().getHighestRankingMatchEngineFactory(scope)
-				.getMatchEngine().match(scope, new BasicMonitor());
+				.getMatchEngine().match(scope, BasicMonitor.toMonitor(subMonitor.newChild(100)));
 	}
 
 	@Override
 	public Comparison matchPatchSetVersions(PatchSet patchSet, Version version, PatchSet otherPatchSet,
-			Version otherVersion) {
+			Version otherVersion, IProgressMonitor monitor) {
+
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
+		checkCancellation(subMonitor);
 
 		ResourceSet leftResourceSet = getResourceSet(patchSet, version);
 		ResourceSet rightResourceSet = getResourceSet(otherPatchSet, otherVersion);
@@ -115,11 +163,121 @@ public class EMFCompareReviewCompareService implements IReviewCompareService {
 		EcoreUtil.resolveAll(leftResourceSet);
 		EcoreUtil.resolveAll(rightResourceSet);
 
-		DefaultComparisonScope scope = new DefaultComparisonScope(leftResourceSet, rightResourceSet, null);
-		scope.setResourceSetContentFilter(PREDICATE_GIT_RESOURCE);
+		IComparisonScope scope = createComparisonScope(leftResourceSet, rightResourceSet);
 
 		return MatchEngineFactoryRegistryImpl.createStandaloneInstance().getHighestRankingMatchEngineFactory(scope)
-				.getMatchEngine().match(scope, new BasicMonitor());
+				.getMatchEngine().match(scope, BasicMonitor.toMonitor(subMonitor.newChild(100)));
+	}
+
+	@Override
+	public void updateSelectedComparison(ModelReview review, IProgressMonitor monitor) {
+
+		SubMonitor subMonitor = SubMonitor.convert(monitor, "Updating comparison...", 220);
+		checkCancellation(subMonitor);
+
+		PatchSet oldPatchSet = review.getLeftPatchSet();
+		PatchSet newPatchSet = review.getRightPatchSet();
+		PatchSet fallbackPatchSet = null;
+
+		EList<PatchSet> patchSets = review.getPatchSets();
+		if (!patchSets.isEmpty()) {
+			fallbackPatchSet = patchSets.get(0);
+		}
+
+		ResourceSet oldResourceSet = null;
+		ResourceSet newResourceSet = null;
+
+		if (oldPatchSet != null) {
+			oldResourceSet = getResourceSet(oldPatchSet, Version.NEW);
+
+		} else if (oldPatchSet == null && fallbackPatchSet != null) {
+			oldResourceSet = getResourceSet(fallbackPatchSet, Version.OLD);
+		}
+
+		if (newPatchSet != null) {
+			newResourceSet = getResourceSet(newPatchSet, Version.NEW);
+
+		} else if (oldPatchSet == null && fallbackPatchSet != null) {
+			newResourceSet = getResourceSet(fallbackPatchSet, Version.OLD);
+		}
+
+		if (newResourceSet == null || oldResourceSet == null) {
+			return;
+		}
+
+		EMFCompare emfCompare = createEMFCompare();
+
+		subMonitor.worked(10);
+		checkCancellation(subMonitor);
+
+		IComparisonScope modelScope = createComparisonScope(newResourceSet, oldResourceSet,
+				MervinPredicates.modelResource());
+		Comparison modelComparison = emfCompare.compare(modelScope, BasicMonitor.toMonitor(subMonitor.newChild(100)));
+
+		checkCancellation(subMonitor);
+
+		IComparisonScope diagramScope = createComparisonScope(newResourceSet, oldResourceSet,
+				MervinPredicates.diagramResource());
+		Comparison diagramComparison = emfCompare.compare(diagramScope,
+				BasicMonitor.toMonitor(subMonitor.newChild(100)));
+
+		review.setSelectedModelComparison(modelComparison);
+		review.setSelectedDiagramComparison(diagramComparison);
+	}
+
+	/**
+	 * @return the default {@link EMFCompare} instance to use for comparison.
+	 */
+	private EMFCompare createEMFCompare() {
+		return EMFCompare.builder()
+				.setPostProcessorRegistry(EMFCompareRCPPlugin.getDefault().getPostProcessorRegistry()).build();
+	}
+
+	/**
+	 * creates the comparison scope for the given resource sets.
+	 * 
+	 * @param newResourceSet
+	 *            the new resource set.
+	 * @param oldResourceSet
+	 *            the old resource set.
+	 * @return the {@link IComparisonScope} for the given resource sets.
+	 */
+	private IComparisonScope createComparisonScope(ResourceSet newResourceSet, ResourceSet oldResourceSet) {
+		return createComparisonScope(newResourceSet, oldResourceSet, Predicates.<Resource> alwaysTrue());
+	}
+
+	/**
+	 * creates the comparison scope for the given resource sets.
+	 * 
+	 * @param newResourceSet
+	 *            the new (left) resource set.
+	 * @param oldResourceSet
+	 *            the old (right) resource set.
+	 * @param resourceFilter
+	 *            the resource filter to apply.
+	 * @return the {@link IComparisonScope} for the given resource sets.
+	 */
+	private IComparisonScope createComparisonScope(ResourceSet newResourceSet, ResourceSet oldResourceSet,
+			Predicate<Resource> resourceFilter) {
+
+		DefaultComparisonScope scope = new DefaultComparisonScope(newResourceSet, oldResourceSet, null);
+		scope.setResourceSetContentFilter(Predicates.and(MervinPredicates.mervinGitResource(), resourceFilter));
+		return scope;
+	}
+
+	/**
+	 * checks the monitor for cancellation an trows an
+	 * {@link OperationCanceledException} if the monitor has been cancelled.
+	 * 
+	 * @param monitor
+	 *            them monitor to check or null.
+	 * @throws OperationCanceledException
+	 *             if the monitor has been cancelled.
+	 */
+	private void checkCancellation(IProgressMonitor monitor) throws OperationCanceledException {
+		if (monitor != null && monitor.isCanceled()) {
+			throw new OperationCanceledException();
+		}
 	}
 
 	/**

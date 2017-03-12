@@ -191,7 +191,8 @@ public class DiffSimilarityHistoryService implements ISimilarityHistoryService {
 			 * the old versions of the object
 			 */
 			if (oldComparison == null) {
-				oldComparison = compareService.matchWithPatchSetVersion(oldValue, patchSet, Version.OLD);
+				oldComparison = compareService.matchWithPatchSetVersion(oldValue, patchSet, Version.OLD,
+						subMonitor.newChild(50));
 			}
 			Match valueMatch = oldComparison.getMatch(oldValue);
 			matchingPatchSetValue = matchHelper.getOpposite(oldValue, valueMatch);
@@ -203,14 +204,14 @@ public class DiffSimilarityHistoryService implements ISimilarityHistoryService {
 			 * the new versions of the object
 			 */
 			if (newComparison == null) {
-				newComparison = compareService.matchWithPatchSetVersion(newValue, patchSet, Version.NEW);
+				newComparison = compareService.matchWithPatchSetVersion(newValue, patchSet, Version.NEW,
+						subMonitor.newChild(50));
 			}
 			Match valueMatch = newComparison.getMatch(newValue);
 			matchingPatchSetValue = matchHelper.getOpposite(newValue, valueMatch);
 		}
 
-		subMonitor.worked(50);
-		subMonitor.setWorkRemaining(uncategorizedDiffs.size());
+		subMonitor.setWorkRemaining(uncategorizedDiffs.size() * 100);
 
 		/*
 		 * filter the whole set of diffs which:
@@ -231,7 +232,7 @@ public class DiffSimilarityHistoryService implements ISimilarityHistoryService {
 					candidates.add(diffCandidate);
 				}
 			}
-			subMonitor.worked(1);
+			subMonitor.worked(100);
 		}
 
 		return candidates;
@@ -532,9 +533,9 @@ public class DiffSimilarityHistoryService implements ISimilarityHistoryService {
 
 				if (!cache.containsValues(patchSet, otherPatchSet)) {
 					Comparison oldComparison = compareService.matchPatchSetVersions(patchSet, Version.OLD,
-							otherPatchSet, Version.OLD);
+							otherPatchSet, Version.OLD, null);
 					Comparison newComparison = compareService.matchPatchSetVersions(patchSet, Version.NEW,
-							otherPatchSet, Version.NEW);
+							otherPatchSet, Version.NEW, null);
 					cache.add(patchSet, otherPatchSet, oldComparison, newComparison);
 				}
 			}
