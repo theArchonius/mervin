@@ -10,6 +10,7 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.diagram.diff;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,7 +25,10 @@ import javax.inject.Inject;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.e4.core.di.annotations.Creatable;
+import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
@@ -60,6 +64,9 @@ import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.swt.widgets.Shell;
 
 import at.bitandart.zoubek.mervin.IMatchHelper;
 import at.bitandart.zoubek.mervin.diagram.diff.gmf.ModelReviewElementTypes;
@@ -83,6 +90,12 @@ public class GMFDiagramDiffViewService {
 
 	@Inject
 	private IMatchHelper matchHelper;
+
+	@Inject
+	private Shell shell;
+
+	@Inject
+	private Logger logger;
 
 	/**
 	 * the currently registered {@link DiagramDiffServiceListener}s for this
@@ -114,7 +127,27 @@ public class GMFDiagramDiffViewService {
 		final Diagram diagram = createDiagram(modelReview, editDomain, transactionalEditingDomain, preferencesHint);
 
 		if (diagram != null) {
-			updateDiagramNodes(diagram, modelReview, editDomain, transactionalEditingDomain, preferencesHint);
+			shell.getDisplay().asyncExec(new Runnable() {
+
+				@Override
+				public void run() {
+					ProgressMonitorDialog progressMonitorDialog = new ProgressMonitorDialog(shell);
+					try {
+						progressMonitorDialog.run(true, true, new IRunnableWithProgress() {
+
+							@Override
+							public void run(IProgressMonitor monitor)
+									throws InvocationTargetException, InterruptedException {
+								updateDiagramNodes(diagram, modelReview, editDomain, transactionalEditingDomain,
+										preferencesHint, monitor);
+							}
+						});
+					} catch (InvocationTargetException | InterruptedException | OperationCanceledException e) {
+						logger.warn(e);
+					}
+				}
+			});
+
 		}
 
 		modelReview.eAdapters().add(new ModelReviewChangeAdapter(editDomain, preferencesHint, diagram, modelReview,
@@ -213,9 +246,20 @@ public class GMFDiagramDiffViewService {
 	 *            the {@link TransactionalEditingDomain} used by commands to
 	 *            update the model
 	 * @param preferencesHint
+	 * @param monitor
+	 *            the progress monitor to use for reporting progress to the
+	 *            user. It is the caller's responsibility to call done() on the
+	 *            given monitor. Accepts null, indicating that no progress
+	 *            should be reported and that the operation cannot be cancelled.
 	 */
 	private void updateDiagramNodes(Diagram workspaceDiagram, ModelReview modelReview, EditDomain editDomain,
-			TransactionalEditingDomain transactionalEditingDomain, PreferencesHint preferencesHint) {
+			TransactionalEditingDomain transactionalEditingDomain, PreferencesHint preferencesHint,
+			IProgressMonitor monitor) {
+
+		SubMonitor subMonitor = SubMonitor.convert(monitor, "Updating unified diagram...", 500);
+		checkCancellation(subMonitor);
+
+		subMonitor.newChild(100);
 
 		// create/clear old unified model map
 		UnifiedModelMap unifiedModelMap = modelReview.getUnifiedModelMap();
@@ -230,6 +274,9 @@ public class GMFDiagramDiffViewService {
 			unifiedModelMap.clear();
 		}
 
+		checkCancellation(subMonitor);
+		subMonitor.newChild(100);
+
 		// remove old diagram nodes
 		EList<?> children = workspaceDiagram.getChildren();
 		if (!children.isEmpty()) {
@@ -241,6 +288,9 @@ public class GMFDiagramDiffViewService {
 			}
 			executeCommand(compositeCommand, editDomain);
 		}
+
+		checkCancellation(subMonitor);
+		subMonitor.newChild(100);
 
 		// add new diagram nodes
 		PatchSet oldPatchSet = modelReview.getLeftPatchSet();
@@ -275,11 +325,19 @@ public class GMFDiagramDiffViewService {
 			}
 		}
 
+		checkCancellation(subMonitor);
+		SubMonitor childMonitor = subMonitor.newChild(100);
+
 		// add children for each diagram
 		Comparison diagramComparison = modelReview.getSelectedDiagramComparison();
 
 		children = workspaceDiagram.getChildren();
+
+		childMonitor.setWorkRemaining(100 * children.size());
 		for (Object workspaceChild : children) {
+
+			checkCancellation(subMonitor);
+			childMonitor.newChild(100);
 
 			if (workspaceChild instanceof View && ((View) workspaceChild).getElement() instanceof Diagram) {
 				final View childView = (View) workspaceChild;
@@ -335,6 +393,9 @@ public class GMFDiagramDiffViewService {
 			}
 		}
 
+		checkCancellation(subMonitor);
+		subMonitor.newChild(100);
+
 		CompositeCommand compositeCommand = new CompositeCommand("Restore overlay type visibility");
 		compositeCommand.add(new ApplyOverlayVisibilityStateCommand(transactionalEditingDomain, workspaceDiagram,
 				new ModelReviewVisibilityState(modelReview, true)));
@@ -342,6 +403,21 @@ public class GMFDiagramDiffViewService {
 		executeCommand(compositeCommand, editDomain);
 
 		notifyNodesUpdated(workspaceDiagram, modelReview);
+	}
+
+	/**
+	 * checks the monitor for cancellation an throws an
+	 * {@link OperationCanceledException} if the monitor has been cancelled.
+	 * 
+	 * @param monitor
+	 *            them monitor to check or null.
+	 * @throws OperationCanceledException
+	 *             if the monitor has been cancelled.
+	 */
+	private void checkCancellation(IProgressMonitor monitor) throws OperationCanceledException {
+		if (monitor != null && monitor.isCanceled()) {
+			throw new OperationCanceledException();
+		}
 	}
 
 	/**
@@ -1012,7 +1088,27 @@ public class GMFDiagramDiffViewService {
 			if (featureID == ModelReviewPackage.MODEL_REVIEW__SELECTED_DIAGRAM_COMPARISON
 					|| featureID == ModelReviewPackage.MODEL_REVIEW__COMMENTS) {
 
-				updateDiagramNodes(diagram, modelReview, editDomain, transactionalEditingDomain, preferencesHint);
+				shell.getDisplay().asyncExec(new Runnable() {
+
+					@Override
+					public void run() {
+
+						ProgressMonitorDialog progressMonitorDialog = new ProgressMonitorDialog(shell);
+						try {
+							progressMonitorDialog.run(false, true, new IRunnableWithProgress() {
+
+								@Override
+								public void run(IProgressMonitor monitor)
+										throws InvocationTargetException, InterruptedException {
+									updateDiagramNodes(diagram, modelReview, editDomain, transactionalEditingDomain,
+											preferencesHint, monitor);
+								}
+							});
+						} catch (InvocationTargetException | InterruptedException | OperationCanceledException e) {
+							logger.warn(e);
+						}
+					}
+				});
 
 			}
 

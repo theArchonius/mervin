@@ -266,7 +266,7 @@ public class EMFCompareReviewCompareService implements IReviewCompareService {
 	}
 
 	/**
-	 * checks the monitor for cancellation an trows an
+	 * checks the monitor for cancellation an throws an
 	 * {@link OperationCanceledException} if the monitor has been cancelled.
 	 * 
 	 * @param monitor
