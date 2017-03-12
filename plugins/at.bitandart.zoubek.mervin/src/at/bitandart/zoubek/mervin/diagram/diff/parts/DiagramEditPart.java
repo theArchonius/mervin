@@ -145,6 +145,21 @@ public class DiagramEditPart extends LinkLFShapeCompartmentEditPart {
 
 	@Override
 	public void deactivate() {
+
+		if (workbenchListener != null) {
+
+			EditPart parentEditPart = getParent();
+			IFigure parentFigure = null;
+			if (parentEditPart instanceof GraphicalEditPart) {
+				parentFigure = ((GraphicalEditPart) parentEditPart).getFigure();
+			}
+
+			if (parentFigure instanceof IDiffWorkbench) {
+
+				IDiffWorkbench workbench = ((IDiffWorkbench) parentFigure);
+				workbench.removeWorkbenchListener(workbenchListener);
+			}
+		}
 		super.deactivate();
 		styleAdvisor.dispose();
 	}
