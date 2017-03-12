@@ -191,6 +191,9 @@ public class FocusFreeformViewport extends FreeformViewport {
 		IFigure child = figure;
 		Rectangle visibleBounds = child.getBounds().getCopy();
 		visibleBounds.expand(10, 10);
+		if (!child.isVisible()) {
+			visibleBounds.setBounds(0, 0, 0, 0);
+		}
 		IFigure parent = figure.getParent();
 		while (!visibleBounds.isEmpty() && parent != null) {
 

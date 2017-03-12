@@ -148,20 +148,32 @@ public class DiagramEditPart extends LinkLFShapeCompartmentEditPart {
 
 		if (workbenchListener != null) {
 
-			EditPart parentEditPart = getParent();
-			IFigure parentFigure = null;
-			if (parentEditPart instanceof GraphicalEditPart) {
-				parentFigure = ((GraphicalEditPart) parentEditPart).getFigure();
-			}
-
-			if (parentFigure instanceof IDiffWorkbench) {
-
-				IDiffWorkbench workbench = ((IDiffWorkbench) parentFigure);
+			IDiffWorkbench workbench = getContainingWorkbench();
+			if (workbench != null) {
 				workbench.removeWorkbenchListener(workbenchListener);
 			}
+
 		}
 		super.deactivate();
 		styleAdvisor.dispose();
+	}
+
+	/**
+	 * @return the containing workbench figure or null if no workbench figure
+	 *         could be found.
+	 */
+	private IDiffWorkbench getContainingWorkbench() {
+
+		EditPart parentEditPart = getParent();
+		IFigure parentFigure = null;
+		if (parentEditPart instanceof GraphicalEditPart) {
+			parentFigure = ((GraphicalEditPart) parentEditPart).getFigure();
+		}
+
+		if (parentFigure instanceof IDiffWorkbench) {
+			return (IDiffWorkbench) parentFigure;
+		}
+		return null;
 	}
 
 	@Override
@@ -267,6 +279,12 @@ public class DiagramEditPart extends LinkLFShapeCompartmentEditPart {
 	@Override
 	protected void createDefaultEditPolicies() {
 		super.createDefaultEditPolicies();
+		IDiffWorkbench workbench = getContainingWorkbench();
+		if (workbench != null) {
+			if (workbench.getDisplayMode() == DisplayMode.WINDOW) {
+				installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, new ResizableEditPolicyEx());
+			}
+		}
 	}
 
 	@Override

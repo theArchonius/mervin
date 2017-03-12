@@ -342,18 +342,21 @@ public class DiagramContainerFigure extends LinkLFShapeCompartmentEditPart.Shape
 
 		if (workbench != this.workbench) {
 
-			if (this.workbench != null && this.workbench.containsContainer(this)) {
-				this.workbench.removeContainer(this);
-				this.workbench.removeWorkbenchListener(workbenchListener);
-			}
-
+			IDiffWorkbench oldWorkbench = this.workbench;
 			this.workbench = workbench;
 
-			if (!workbench.containsContainer(this)) {
-				workbench.addContainer(this, null);
+			if (oldWorkbench != null && oldWorkbench.containsContainer(this)) {
+				oldWorkbench.removeContainer(this);
+				oldWorkbench.removeWorkbenchListener(workbenchListener);
 			}
 
-			workbench.addWorkbenchListener(workbenchListener);
+			if (this.workbench != null) {
+				if (!this.workbench.containsContainer(this)) {
+					workbench.addContainer(this, null);
+				}
+				workbench.addWorkbenchListener(workbenchListener);
+			}
+
 		}
 	}
 

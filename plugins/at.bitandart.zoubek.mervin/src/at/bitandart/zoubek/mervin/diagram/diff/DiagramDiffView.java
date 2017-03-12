@@ -77,6 +77,7 @@ import at.bitandart.zoubek.mervin.diagram.diff.parts.DiagramEditPart;
 import at.bitandart.zoubek.mervin.diagram.diff.parts.IFocusHighlightEditPart;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.DiagramContainerFigure;
 import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbenchTrayFigure;
+import at.bitandart.zoubek.mervin.draw2d.figures.workbench.IDiffWorkbenchWindowTitleFigure;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.patchset.history.IPatchSetHistoryEntry;
@@ -722,6 +723,10 @@ public class DiagramDiffView implements IAdaptable, IReviewHighlightingPart {
 					IDiffWorkbenchTrayFigure trayFigure = diagramContainerFigure.getTrayFigure();
 					if (trayFigure != null) {
 						figureSet.add(trayFigure);
+					}
+					IDiffWorkbenchWindowTitleFigure windowTitleFigure = diagramContainerFigure.getWindowTitleFigure();
+					if (windowTitleFigure != null) {
+						figureSet.add(windowTitleFigure);
 					}
 				}
 

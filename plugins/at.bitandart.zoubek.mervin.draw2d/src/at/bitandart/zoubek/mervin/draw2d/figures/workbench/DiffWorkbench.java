@@ -279,6 +279,7 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 							clearTrayContentPane(trayFigure);
 							addButtons(trayFigure, newMode);
 						}
+						trayFigure.setVisible(true);
 					}
 				}
 			}
@@ -289,6 +290,7 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 			for (Object child : childrenToRemove) {
 				if (child instanceof IFigure) {
 					IFigure childFigure = (IFigure) child;
+					childFigure.setVisible(false);
 					trayArea.remove(childFigure);
 					if (childFigure instanceof IDiffWorkbenchTrayFigure) {
 						unregisterListeners((IDiffWorkbenchTrayFigure) childFigure);
@@ -338,6 +340,7 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 				clearFigure(titleFigure.getContentPane());
 				contentArea.add(titleFigure);
 				addButtons(titleFigure);
+				titleFigure.setVisible(true);
 			}
 
 			// update constraints for window title figures in the content area
@@ -472,7 +475,7 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 				contentArea.remove(titleFigure);
 				clearWindowTitleContentPane(titleFigure);
 				titleFigure.getContainer().setVisible(true);
-				titleFigure.setVisible(true);
+				titleFigure.setVisible(false);
 			}
 		}
 
@@ -510,6 +513,7 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 		List<?> childrenCpy = new ArrayList<>((List<?>) figure.getChildren());
 		for (Object child : childrenCpy) {
 			if (child instanceof IFigure) {
+				((IFigure) child).setVisible(false);
 				figure.remove((IFigure) child);
 			}
 		}
@@ -721,7 +725,7 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 	}
 
 	@Override
-	public void registerContainer(IDiffWorkbenchContainer container) {
+	public void registerContainer(final IDiffWorkbenchContainer container) {
 		container.setWorkbench(this);
 	}
 
@@ -736,13 +740,47 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 
 	@Override
 	public void removeContainer(IDiffWorkbenchContainer container) {
-		getContentArea().remove(container);
+		removeTrayFigure(container);
+		safeFigureRemove(getContentArea(), container);
 		unregisterContainer(container);
+	}
+
+	/**
+	 * removes the tray figure of the given container from the tray area if it
+	 * is a child of the tray area. Does nothing if the tray figure is not a
+	 * child of the tray area.
+	 * 
+	 * @param container
+	 *            the container to obtain the tray figure from.
+	 */
+	private void removeTrayFigure(IDiffWorkbenchContainer container) {
+		IDiffWorkbenchTrayFigure trayFigure = container.getTrayFigure();
+		if (trayFigure != null) {
+			safeFigureRemove(getTrayArea(), trayFigure);
+		}
+	}
+
+	/**
+	 * convenience method to remove an {@link IFigure} child from a parent
+	 * without throwing errors if the child does not exist in the parent. Does
+	 * nothing if the child is not a real child of the figure.
+	 * 
+	 * @param parent
+	 *            the parent figure.
+	 * @param child
+	 *            the figure to remove.
+	 */
+	private void safeFigureRemove(IFigure parent, IFigure child) {
+		if (child.getParent() == parent && parent.getChildren().contains(child)) {
+			parent.remove(child);
+		}
 	}
 
 	@Override
 	public void unregisterContainer(IDiffWorkbenchContainer container) {
-		container.setWorkbench(null);
+		if (container.getWorkbench() != null) {
+			container.setWorkbench(null);
+		}
 	}
 
 	@Override
@@ -762,6 +800,7 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 			IDiffWorkbenchTrayFigure trayFigure = container.getTrayFigure();
 			if (!trayArea.getChildren().contains(trayFigure)) {
 				clearTrayContentPane(trayFigure);
+				trayFigure.setVisible(true);
 				trayArea.add(trayFigure);
 				addButtons(trayFigure, getDisplayMode());
 			}
@@ -781,6 +820,7 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 
 			IDiffWorkbenchTrayFigure trayFigure = container.getTrayFigure();
 			if (trayArea.getChildren().contains(trayFigure)) {
+				trayFigure.setVisible(false);
 				trayArea.remove(trayFigure);
 			}
 			notifyPostSendToContentArea(this, container);
@@ -837,7 +877,7 @@ public class DiffWorkbench extends LinkLFShapeCompartmentEditPart.ShapeCompartme
 
 	@Override
 	public boolean containsContainer(IDiffWorkbenchContainer container) {
-		return getContentArea().getChildren().contains(container);
+		return getContentArea().getChildren().contains(container) && container.getParent() == getContentArea();
 	}
 
 	@Override
