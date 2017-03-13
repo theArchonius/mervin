@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -103,6 +104,10 @@ public class TreeDiffViewer extends Viewer {
 	public void refresh() {
 
 		if (treeDiffItemProvider != null) {
+
+			treeDiffControl.setRedraw(false);
+			treeDiffControl.setCursor(getTreeDiff().getDisplay().getSystemCursor(SWT.CURSOR_WAIT));
+
 			Object[] rootItemObjects = treeDiffItemProvider.getRootItems(input);
 			List<TreeDiffItem> rootItems = new ArrayList<>(rootItemObjects.length);
 			for (Object itemObj : rootItemObjects) {
@@ -112,6 +117,9 @@ public class TreeDiffViewer extends Viewer {
 				}
 			}
 			treeDiffControl.setItemData(rootItems);
+
+			treeDiffControl.setRedraw(true);
+			treeDiffControl.setCursor(null);
 		}
 
 	}

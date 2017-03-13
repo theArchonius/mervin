@@ -242,7 +242,8 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 		// initialize tree viewer
 
 		final PatchSetHistoryContentProvider patchSetHistoryContentProvider = new PatchSetHistoryContentProvider();
-		historyTreeViewer = new TreeViewer(mainPanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
+		historyTreeViewer = new TreeViewer(mainPanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.VIRTUAL);
+		historyTreeViewer.setUseHashlookup(true);
 		historyTreeViewer.setContentProvider(patchSetHistoryContentProvider);
 		historyTreeViewer.addSelectionChangedListener(new HighlightSelectionListener(this) {
 

@@ -62,6 +62,8 @@ public class CommentListViewer extends Viewer {
 
 		if (commentProvider != null) {
 
+			commentListControl.setRedraw(false);
+			commentListControl.setLayoutDeferred(true);
 			commentListControl.clearData();
 
 			List<ICommentColumn> allCommentColumns = commentProvider.getAllCommentColumns(input);
@@ -85,6 +87,8 @@ public class CommentListViewer extends Viewer {
 					}
 				}
 			}
+			commentListControl.setRedraw(true);
+			commentListControl.setLayoutDeferred(false);
 
 			commentListControl.layout(true, true);
 		}

@@ -222,7 +222,8 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 
 		// initialize tree viewer
 
-		reviewTreeViewer = new TreeViewer(mainPanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
+		reviewTreeViewer = new TreeViewer(mainPanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.VIRTUAL);
+		reviewTreeViewer.setUseHashlookup(true);
 		reviewExplorerContentProvider = new ModelReviewContentProvider(matchHelper);
 		reviewTreeViewer.setContentProvider(reviewExplorerContentProvider);
 		reviewTreeViewer.addSelectionChangedListener(new HighlightSelectionListener(this) {
