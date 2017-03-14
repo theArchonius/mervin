@@ -92,6 +92,7 @@ import at.bitandart.zoubek.mervin.review.explorer.content.IReviewExplorerContent
 import at.bitandart.zoubek.mervin.review.explorer.content.ITreeItemContainer;
 import at.bitandart.zoubek.mervin.review.explorer.content.ModelReviewContentProvider;
 import at.bitandart.zoubek.mervin.swt.ProgressPanel;
+import at.bitandart.zoubek.mervin.swt.ProgressPanelOperationThread;
 import at.bitandart.zoubek.mervin.swt.text.styles.ComposedStyler;
 import at.bitandart.zoubek.mervin.swt.text.styles.DiffStyler;
 import at.bitandart.zoubek.mervin.swt.text.styles.FontStyler;
@@ -195,7 +196,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 	 */
 	private boolean viewInitialized = false;
 
-	private ReviewExplorerHighlightUpdater reviewHighlightUpdater;
+	private ProgressPanelOperationThread reviewHighlightUpdater;
 
 	private ModelReviewContentProvider reviewExplorerContentProvider;
 
@@ -222,7 +223,8 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 
 		// initialize tree viewer
 
-		reviewTreeViewer = new TreeViewer(mainPanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
+		reviewTreeViewer = new TreeViewer(mainPanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.VIRTUAL);
+		reviewTreeViewer.setUseHashlookup(true);
 		reviewExplorerContentProvider = new ModelReviewContentProvider(matchHelper);
 		reviewTreeViewer.setContentProvider(reviewExplorerContentProvider);
 		reviewTreeViewer.addSelectionChangedListener(new HighlightSelectionListener(this) {
@@ -366,7 +368,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		highlightService.addHighlightServiceListener(new IReviewHighlightServiceListener() {
 
 			@Override
-			public void elementRemoved(ModelReview review, Object element) {
+			public void elementsRemoved(ModelReview review, Set<Object> elements) {
 
 				updateObjectsToHighlight();
 				reviewTreeViewer.getControl().getDisplay().syncExec(new Runnable() {
@@ -376,11 +378,10 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 						reviewTreeViewer.refresh();
 					}
 				});
-
 			}
 
 			@Override
-			public void elementAdded(ModelReview review, Object element) {
+			public void elementsAdded(ModelReview review, Set<Object> elements) {
 
 				updateObjectsToHighlight();
 				reviewTreeViewer.getControl().getDisplay().syncExec(new Runnable() {
@@ -390,7 +391,6 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 						reviewTreeViewer.refresh();
 					}
 				});
-
 			}
 		});
 
@@ -426,10 +426,12 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 
 		if (currentModelReview != null) {
 
-			List<Object> highlightedElements = highlightService.getHighlightedElements(getCurrentModelReview());
+			Set<Object> highlightedElements = highlightService.getHighlightedElements(getCurrentModelReview());
 
-			reviewHighlightUpdater = new ReviewExplorerHighlightUpdater(progressPanel, mainPanel, highlightedElements,
-					objectsToHighlight, reviewTreeViewer, reviewExplorerContentProvider, eventBroker, logger);
+			reviewHighlightUpdater = new ProgressPanelOperationThread(
+					new ReviewExplorerHighlightUpdater(highlightedElements, objectsToHighlight, reviewTreeViewer,
+							reviewExplorerContentProvider, eventBroker),
+					progressPanel, mainPanel, logger);
 
 			reviewHighlightUpdater.start();
 
@@ -731,6 +733,14 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 	 * @return true if the given element should be highlighted, false otherwise.
 	 */
 	private boolean isHighlighted(Object element, Set<Object> highlightedElements) {
+
+		if (element instanceof ModelReview) {
+			/*
+			 * do not highlight model reviews, even if it is part of the
+			 * highlighted elements
+			 */
+			return false;
+		}
 
 		if (highlightedElements.contains(element)) {
 			return true;

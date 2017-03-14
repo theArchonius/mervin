@@ -59,10 +59,7 @@ public class HighlightSelectionListener implements ISelectionChangedListener {
 			if (selection instanceof IStructuredSelection) {
 
 				Set<Object> elements = getHighlightedElementsFor((IStructuredSelection) selection);
-
-				for (Object element : elements) {
-					highlightService.addHighlightFor(review, element);
-				}
+				highlightService.addHighlightFor(review, elements);
 			}
 		}
 	}

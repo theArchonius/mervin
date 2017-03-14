@@ -163,7 +163,8 @@ public class TreeDiff extends Composite {
 		TreeViewerRedrawer treeViewerRedrawer = new TreeViewerRedrawer();
 
 		/* create the left tree viewer */
-		leftTreeViewer = new TreeViewer(this);
+		leftTreeViewer = new TreeViewer(this, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.VIRTUAL);
+		leftTreeViewer.setUseHashlookup(true);
 		leftTreeViewer.setContentProvider(leftTreeDiffContentProvider);
 		leftTreeViewer.setLabelProvider(new TreeDiffItemSideLabelProvider(TreeDiffSide.LEFT));
 		leftTreeViewer.setInput(rootDiffItems);
@@ -190,7 +191,8 @@ public class TreeDiff extends Composite {
 		});
 
 		/* create the right tree viewer */
-		rightTreeViewer = new TreeViewer(this);
+		rightTreeViewer = new TreeViewer(this, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.VIRTUAL);
+		rightTreeViewer.setUseHashlookup(true);
 		rightTreeViewer.setContentProvider(rightTreeDiffContentProvider);
 		rightTreeViewer.setLabelProvider(new TreeDiffItemSideLabelProvider(TreeDiffSide.RIGHT));
 		rightTreeViewer.setInput(rootDiffItems);

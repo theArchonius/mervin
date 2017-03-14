@@ -10,18 +10,18 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.patchset.history;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Diff;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TreeColumn;
 
@@ -29,7 +29,6 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.patchset.history.ISimilarityHistoryService.DiffWithSimilarity;
 import at.bitandart.zoubek.mervin.patchset.history.organizers.IPatchSetHistoryEntryOrganizer;
-import at.bitandart.zoubek.mervin.swt.ProgressPanel;
 import at.bitandart.zoubek.mervin.swt.ProgressPanelOperationThread;
 import at.bitandart.zoubek.mervin.util.vis.HSB;
 import at.bitandart.zoubek.mervin.util.vis.ThreeWayLabelTreeViewerComparator;
@@ -41,7 +40,7 @@ import at.bitandart.zoubek.mervin.util.vis.ThreeWayLabelTreeViewerComparator;
  * @author Florian Zoubek
  *
  */
-public class PatchSetHistoryTreeUpdater extends ProgressPanelOperationThread {
+public class PatchSetHistoryTreeUpdater implements IRunnableWithProgress {
 
 	private ModelReview currentModelReview;
 	private PatchSet activePatchSet;
@@ -50,6 +49,7 @@ public class PatchSetHistoryTreeUpdater extends ProgressPanelOperationThread {
 	private IPatchSetHistoryEntryOrganizer organizer;
 	private TreeViewer historyTreeViewer;
 	private TreeViewerColumn labelColumn;
+	private PatchSetHistoryHighlightUpdater highlightUpdater;
 
 	/**
 	 * 
@@ -71,6 +71,7 @@ public class PatchSetHistoryTreeUpdater extends ProgressPanelOperationThread {
 	 * @param labelColumn
 	 *            the label column that will not be deleted during the update of
 	 *            the treeviewer.
+	 * @param highlightUpdater
 	 * @param progressPanel
 	 *            the progress panel to show while the update is in progress.
 	 * @param mainPanel
@@ -79,9 +80,8 @@ public class PatchSetHistoryTreeUpdater extends ProgressPanelOperationThread {
 	 */
 	public PatchSetHistoryTreeUpdater(ModelReview currentModelReview, PatchSet activePatchSet, boolean mergeEqualDiffs,
 			ISimilarityHistoryService similarityHistoryService, IPatchSetHistoryEntryOrganizer organizer,
-			TreeViewer historyTreeViewer, TreeViewerColumn labelColumn, ProgressPanel progressPanel,
-			Composite mainPanel, Logger logger) {
-		super(progressPanel, mainPanel, logger);
+			TreeViewer historyTreeViewer, TreeViewerColumn labelColumn,
+			PatchSetHistoryHighlightUpdater highlightUpdater) {
 		this.currentModelReview = currentModelReview;
 		this.activePatchSet = activePatchSet;
 		this.mergeEqualDiffs = mergeEqualDiffs;
@@ -89,11 +89,25 @@ public class PatchSetHistoryTreeUpdater extends ProgressPanelOperationThread {
 		this.organizer = organizer;
 		this.historyTreeViewer = historyTreeViewer;
 		this.labelColumn = labelColumn;
+		this.highlightUpdater = highlightUpdater;
 	}
 
 	@Override
-	protected void runOperation() {
-		updateHistoryTree(currentModelReview, getProgressMonitor(), getDisplay());
+	public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+
+		SubMonitor subMonitor = SubMonitor.convert(monitor, "Updating Patch Set History...", 1000);
+
+		if (monitor.isCanceled()) {
+			return;
+		}
+
+		updateHistoryTree(currentModelReview, subMonitor.newChild(900), historyTreeViewer.getControl().getDisplay());
+
+		if (monitor.isCanceled()) {
+			return;
+		}
+
+		highlightUpdater.run(subMonitor.newChild(100));
 	}
 
 	/**

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.handlers;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.inject.Named;
 
@@ -32,7 +32,7 @@ public class ClearHighlights {
 
 	@CanExecute
 	public boolean canExecute(
-			@Optional @Named(IMervinContextConstants.HIGHLIGHTED_ELEMENTS) List<Object> highlightedElements) {
+			@Optional @Named(IMervinContextConstants.HIGHLIGHTED_ELEMENTS) Set<Object> highlightedElements) {
 
 		if (highlightedElements != null) {
 			return !highlightedElements.isEmpty();

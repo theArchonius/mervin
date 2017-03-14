@@ -10,32 +10,29 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.review.explorer;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.e4.core.services.events.IEventBroker;
-import org.eclipse.e4.core.services.log.Logger;
 import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.swt.widgets.Composite;
 
 import at.bitandart.zoubek.mervin.review.explorer.content.IReviewExplorerContentProvider;
-import at.bitandart.zoubek.mervin.swt.ProgressPanel;
-import at.bitandart.zoubek.mervin.swt.ProgressPanelOperationThread;
 
 /**
- * A {@link ProgressPanelOperationThread} derives the set of objects to
- * highlight based on a list of element in the review explorer view.
+ * A {@link IRunnableWithProgress} that derives the set of objects to highlight
+ * based on a set of elements in the review explorer view.
  * 
  * @author Florian Zoubek
  *
  */
-public class ReviewExplorerHighlightUpdater extends ProgressPanelOperationThread {
+public class ReviewExplorerHighlightUpdater implements IRunnableWithProgress {
 
-	private List<Object> baseElements;
+	private Set<Object> baseElements;
 	private Set<Object> objectsToHighlight;
 	private TreeViewer treeViewer;
 	private IReviewExplorerContentProvider contentProvider;
@@ -43,13 +40,8 @@ public class ReviewExplorerHighlightUpdater extends ProgressPanelOperationThread
 
 	/**
 	 * 
-	 * @param progressPanel
-	 *            the progress panel to show while the update is in progress.
-	 * @param mainPanel
-	 *            the main panel that needs to be layouted when the progress
-	 *            panel is shown or hidden.
 	 * @param baseElements
-	 *            the list of elements to derive the highlighted objects from
+	 *            the set of elements to derive the highlighted objects from
 	 * @param objectsToHighlight
 	 *            the set of objects to store the highlighted object into.
 	 * @param treeViewer
@@ -61,11 +53,8 @@ public class ReviewExplorerHighlightUpdater extends ProgressPanelOperationThread
 	 * @param eventBroker
 	 *            the {@link IEventBroker} to use for UI update requests
 	 */
-	public ReviewExplorerHighlightUpdater(ProgressPanel progressPanel, Composite mainPanel, List<Object> baseElements,
-			Set<Object> objectsToHighlight, TreeViewer treeViewer, IReviewExplorerContentProvider contentProvider,
-			IEventBroker eventBroker, Logger logger) {
-
-		super(progressPanel, mainPanel, logger);
+	public ReviewExplorerHighlightUpdater(Set<Object> baseElements, Set<Object> objectsToHighlight,
+			TreeViewer treeViewer, IReviewExplorerContentProvider contentProvider, IEventBroker eventBroker) {
 
 		this.baseElements = baseElements;
 		this.objectsToHighlight = objectsToHighlight;
@@ -75,9 +64,7 @@ public class ReviewExplorerHighlightUpdater extends ProgressPanelOperationThread
 	}
 
 	@Override
-	protected void runOperation() {
-
-		IProgressMonitor progressMonitor = getProgressMonitor();
+	public void run(IProgressMonitor progressMonitor) throws InvocationTargetException, InterruptedException {
 		progressMonitor.beginTask("Recalculating highlights...", IProgressMonitor.UNKNOWN);
 		// TODO apply filter
 		objectsToHighlight.addAll(baseElements);
@@ -86,7 +73,7 @@ public class ReviewExplorerHighlightUpdater extends ProgressPanelOperationThread
 
 		addParentElements(new HashSet<>(objectsToHighlight), objectsToHighlight, progressMonitor);
 
-		getDisplay().syncExec(new Runnable() {
+		treeViewer.getControl().getDisplay().syncExec(new Runnable() {
 
 			@Override
 			public void run() {

@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -66,7 +67,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 
 import at.bitandart.zoubek.mervin.IMatchHelper;
 import at.bitandart.zoubek.mervin.IOverlayTypeHelper;
@@ -87,6 +87,7 @@ import at.bitandart.zoubek.mervin.review.HighlightSelectionListener;
 import at.bitandart.zoubek.mervin.review.IReviewHighlightingPart;
 import at.bitandart.zoubek.mervin.review.ModelReviewEditorTrackingView;
 import at.bitandart.zoubek.mervin.swt.ProgressPanel;
+import at.bitandart.zoubek.mervin.swt.ProgressPanelOperationThread;
 import at.bitandart.zoubek.mervin.swt.text.styles.ComposedStyler;
 import at.bitandart.zoubek.mervin.swt.text.styles.HighlightStyler;
 import at.bitandart.zoubek.mervin.swt.text.styles.OverlayTypeStyler;
@@ -173,6 +174,8 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 
 	private boolean mergeEqualDiffs = true;
 
+	private Set<Object> highlightedElements = new HashSet<>();
+
 	// JFace Viewers
 
 	/**
@@ -199,7 +202,7 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 
 	private ProgressPanel progressPanel;
 
-	private PatchSetHistoryTreeUpdater currentUpdateThread;
+	private ProgressPanelOperationThread currentProcessingThread;
 
 	private DiffNameColumnLabelProvider labelColumnLabelProvider;
 
@@ -242,7 +245,8 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 		// initialize tree viewer
 
 		final PatchSetHistoryContentProvider patchSetHistoryContentProvider = new PatchSetHistoryContentProvider();
-		historyTreeViewer = new TreeViewer(mainPanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
+		historyTreeViewer = new TreeViewer(mainPanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.VIRTUAL);
+		historyTreeViewer.setUseHashlookup(true);
 		historyTreeViewer.setContentProvider(patchSetHistoryContentProvider);
 		historyTreeViewer.addSelectionChangedListener(new HighlightSelectionListener(this) {
 
@@ -401,8 +405,6 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 			@Override
 			public boolean apply(Object element) {
 
-				List<Object> highlightedElements = highlightService.getHighlightedElements(getCurrentModelReview());
-
 				if (labelColumnLabelProvider.isHighlighted(element, highlightedElements)) {
 					Object[] children = patchSetHistoryContentProvider.getChildren(element);
 					for (Object child : children) {
@@ -414,7 +416,13 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 				}
 				return false;
 			}
-		}, Predicates.alwaysTrue());
+		}, new Predicate<Object>() {
+
+			@Override
+			public boolean apply(Object element) {
+				return labelColumnLabelProvider.isHighlighted(element, highlightedElements);
+			}
+		});
 
 		viewInitialized = true;
 
@@ -422,7 +430,29 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 		highlightService.addHighlightServiceListener(new IReviewHighlightServiceListener() {
 
 			@Override
-			public void elementRemoved(ModelReview review, Object element) {
+			public void elementsRemoved(ModelReview review, Set<Object> element) {
+
+				updateHighlightedElements();
+			}
+
+			/**
+			 * updates the highlighted elements cache.
+			 */
+			private void updateHighlightedElements() {
+				if (currentProcessingThread != null
+						&& currentProcessingThread.getRunnable() instanceof PatchSetHistoryHighlightUpdater
+						&& currentProcessingThread.isAlive()) {
+					currentProcessingThread.cancelOperation();
+					currentProcessingThread = null;
+				}
+
+				highlightedElements = new HashSet<>();
+
+				currentProcessingThread = new ProgressPanelOperationThread(
+						new PatchSetHistoryHighlightUpdater(highlightedElements, highlightService, historyTreeViewer,
+								getHighlightedModelReview(), eventBroker),
+						progressPanel, mainPanel, logger);
+				currentProcessingThread.start();
 
 				historyTreeViewer.getControl().getDisplay().syncExec(new Runnable() {
 
@@ -431,20 +461,12 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 						historyTreeViewer.refresh();
 					}
 				});
-
 			}
 
 			@Override
-			public void elementAdded(ModelReview review, Object element) {
+			public void elementsAdded(ModelReview review, Set<Object> element) {
 
-				historyTreeViewer.getControl().getDisplay().syncExec(new Runnable() {
-
-					@Override
-					public void run() {
-						historyTreeViewer.refresh();
-					}
-				});
-
+				updateHighlightedElements();
 			}
 		});
 	}
@@ -525,11 +547,11 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 					currentModelReview.eAdapters().add(patchSetHistoryViewUpdater);
 				}
 
-				if (currentUpdateThread != null && currentUpdateThread.isAlive()) {
+				if (currentProcessingThread != null && currentProcessingThread.isAlive()) {
 					/*
 					 * update thread is already running - cancel the operation
 					 */
-					currentUpdateThread.cancelOperation();
+					currentProcessingThread.cancelOperation();
 				}
 
 				PatchSet activePatchSet = null;
@@ -539,11 +561,16 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 					activePatchSet = currentModelReview.getLeftPatchSet();
 				}
 
-				currentUpdateThread = new PatchSetHistoryTreeUpdater(currentModelReview, activePatchSet,
-						mergeEqualDiffs, similarityHistoryService, entryOrganizer, historyTreeViewer, labelColumn,
+				highlightedElements = new HashSet<>();
+
+				currentProcessingThread = new ProgressPanelOperationThread(
+						new PatchSetHistoryTreeUpdater(currentModelReview, activePatchSet, mergeEqualDiffs,
+								similarityHistoryService, entryOrganizer, historyTreeViewer, labelColumn,
+								new PatchSetHistoryHighlightUpdater(highlightedElements, highlightService,
+										historyTreeViewer, getHighlightedModelReview(), eventBroker)),
 						progressPanel, mainPanel, logger);
 
-				currentUpdateThread.start();
+				currentProcessingThread.start();
 
 			} else {
 				// no current review, so reset the input of the history tree
@@ -727,7 +754,6 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 		public void update(ViewerCell cell) {
 
 			Object element = cell.getElement();
-			List<Object> highlightedElements = highlightService.getHighlightedElements(getCurrentModelReview());
 			StyledString text = new StyledString();
 
 			List<Styler> stylers = new ArrayList<Styler>();
@@ -818,7 +844,7 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 		 * @return true if the given element should be highlighted, false
 		 *         otherwise.
 		 */
-		public boolean isHighlighted(Object element, List<Object> highlightedElements) {
+		public boolean isHighlighted(Object element, Set<Object> highlightedElements) {
 
 			if (element == null) {
 				return false;
@@ -826,69 +852,6 @@ public class PatchSetHistoryView extends ModelReviewEditorTrackingView implement
 
 			if (highlightedElements.contains(element)) {
 				return true;
-			}
-
-			if (element instanceof IPatchSetHistoryEntry) {
-				if (isHighlighted(((IPatchSetHistoryEntry<?, ?>) element).getEntryObject(), highlightedElements)) {
-					return true;
-				}
-
-				Map<PatchSet, ?> values = ((IPatchSetHistoryEntry<?, ?>) element)
-						.getValues(getCurrentModelReview().getPatchSets());
-
-				for (Object value : values.values()) {
-					if (isHighlighted(value, highlightedElements)) {
-						return true;
-					}
-				}
-			}
-
-			if (element instanceof DiffWithSimilarity
-					&& isHighlighted(((DiffWithSimilarity) element).getDiff(), highlightedElements)) {
-				return true;
-			}
-
-			if (element instanceof Match) {
-				Match match = (Match) element;
-
-				EObject left = match.getLeft();
-				if (left != null && isHighlighted(left, highlightedElements)) {
-					return true;
-				}
-
-				EObject right = match.getRight();
-				if (right != null && isHighlighted(right, highlightedElements)) {
-					return true;
-				}
-			}
-
-			if (element instanceof ObjectHistoryEntryContainer) {
-
-				Map<PatchSet, Match> matches = ((ObjectHistoryEntryContainer) element)
-						.getMatches(getCurrentModelReview().getPatchSets());
-
-				for (Match match : matches.values()) {
-					if (isHighlighted(match, highlightedElements)) {
-						return true;
-					}
-				}
-
-			}
-
-			if (element instanceof NamedHistoryEntryContainer) {
-				for (Object entry : ((NamedHistoryEntryContainer) element).getSubEntries()) {
-					if (isHighlighted(entry, highlightedElements)) {
-						return true;
-					}
-				}
-			}
-
-			Object[] children = contentProvider.getChildren(element);
-
-			for (Object child : children) {
-				if (isHighlighted(child, highlightedElements)) {
-					return true;
-				}
 			}
 
 			return false;
