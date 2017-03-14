@@ -10,6 +10,8 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin;
 
+import java.util.Set;
+
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 
 /**
@@ -22,20 +24,21 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 public interface IReviewHighlightServiceListener {
 
 	/**
-	 * called when an element has been added to the set of highlighted elements.
-	 * 
-	 * @param review
-	 * @param element
-	 */
-	public void elementAdded(ModelReview review, Object element);
-
-	/**
-	 * called when an element has been removed from the set of highlighted
+	 * called when an elements have been added to the set of highlighted
 	 * elements.
 	 * 
 	 * @param review
-	 * @param element
+	 * @param elements
 	 */
-	public void elementRemoved(ModelReview review, Object element);
+	public void elementsAdded(ModelReview review, Set<Object> elements);
+
+	/**
+	 * called when an elements have been removed from the set of highlighted
+	 * elements.
+	 * 
+	 * @param review
+	 * @param elements
+	 */
+	public void elementsRemoved(ModelReview review, Set<Object> elements);
 
 }

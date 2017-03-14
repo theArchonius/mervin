@@ -31,8 +31,10 @@ public class RevealPreviousHighlightedElement {
 	public boolean canExecute(@Optional MPart part) {
 
 		if (part != null) {
+
 			Object object = part.getObject();
 			if (object instanceof IReviewHighlightingPart) {
+
 				return ((IReviewHighlightingPart) object).hasPreviousHighlight();
 			}
 		}
@@ -43,6 +45,7 @@ public class RevealPreviousHighlightedElement {
 	public void execute(@Optional MPart part, IEventBroker eventBroker) {
 
 		if (part != null) {
+
 			Object object = part.getObject();
 			if (object instanceof IReviewHighlightingPart) {
 				((IReviewHighlightingPart) object).revealPreviousHighlight();

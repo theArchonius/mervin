@@ -151,16 +151,12 @@ public abstract class SelectionHighlightComputation implements IRunnableWithProg
 	protected void applyHighlightedElements(Set<Object> highlightedElements, IReviewHighlightService highlightService,
 			ModelReview review, IProgressMonitor monitor) {
 
-		SubMonitor subMonitor = SubMonitor.convert(monitor, "Adding highlighted elements...",
-				highlightedElements.size() * 100 + 20);
+		SubMonitor subMonitor = SubMonitor.convert(monitor, "Adding highlighted elements...", 100 + 20);
 
 		highlightService.clearHighlights(review);
 		subMonitor.worked(20);
 
-		for (Object object : highlightedElements) {
-			highlightService.addHighlightFor(review, object);
-			subMonitor.worked(100);
-		}
+		highlightService.addHighlightFor(review, highlightedElements);
 	}
 
 	/**

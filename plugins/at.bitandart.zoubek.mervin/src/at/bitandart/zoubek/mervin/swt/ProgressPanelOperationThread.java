@@ -10,9 +10,12 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.swt;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.e4.core.services.log.Logger;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -24,44 +27,45 @@ import org.eclipse.swt.widgets.Display;
  *
  */
 @SuppressWarnings("restriction")
-public abstract class ProgressPanelOperationThread extends Thread {
+public class ProgressPanelOperationThread extends Thread {
 
 	private ProgressPanel progressPanel;
 	private Composite mainPanel;
 	private boolean updateProgressPanel;
 	private IProgressMonitor progressMonitor;
 	private Logger logger;
+	private IRunnableWithProgress runnable;
 
 	/**
+	 * @param runnable
 	 * @param progressPanel
 	 *            the progress panel to show while the update is in progress.
 	 * @param mainPanel
 	 *            the main panel that needs to be layouted when the progress
 	 *            panel is shown or hidden.
 	 */
-	public ProgressPanelOperationThread(ProgressPanel progressPanel, Composite mainPanel, Logger logger) {
+	public ProgressPanelOperationThread(IRunnableWithProgress runnable, ProgressPanel progressPanel,
+			Composite mainPanel, Logger logger) {
 		this.progressPanel = progressPanel;
 		this.mainPanel = mainPanel;
 		this.updateProgressPanel = true;
 		this.progressMonitor = progressPanel.getProgressMonitor();
 		this.logger = logger;
+		this.runnable = runnable;
 	}
-
-	/**
-	 * the operation to run. Implementations should not call
-	 * {@link #done(IProgressMonitor)} or {@link IProgressMonitor#done()} as
-	 * this will be automatically after this method is called.
-	 */
-	protected abstract void runOperation();
 
 	@Override
 	public void run() {
 
 		showProgressPanel();
 		try {
-			runOperation();
+			runnable.run(getProgressMonitor());
 		} catch (OperationCanceledException e) {
 			logger.warn(e, "Operation has been cancelled.");
+		} catch (InvocationTargetException e) {
+			logger.error(e);
+		} catch (InterruptedException e) {
+			logger.error(e);
 		}
 		done(progressMonitor);
 
@@ -181,5 +185,9 @@ public abstract class ProgressPanelOperationThread extends Thread {
 	public void disconnectFromProgressPanel() {
 		setUpdateProgressPanel(false);
 		progressPanel.createNewProgressMonitor();
+	}
+
+	public IRunnableWithProgress getRunnable() {
+		return runnable;
 	}
 }

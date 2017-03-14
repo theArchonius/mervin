@@ -446,7 +446,7 @@ public class DiagramDiffView implements IAdaptable, IReviewHighlightingPart {
 	private class DiffHighlightListener implements IReviewHighlightServiceListener, DiagramDiffServiceListener {
 
 		@Override
-		public void elementAdded(ModelReview review, Object element) {
+		public void elementsAdded(ModelReview review, Set<Object> elements) {
 
 			if (!ignoreHighlights) {
 				IFocusHighlightEditPart focusableEditPart = getFocusHighlightEditPart();
@@ -454,30 +454,33 @@ public class DiagramDiffView implements IAdaptable, IReviewHighlightingPart {
 
 					Set<IFigure> figures = new HashSet<>();
 
-					collectFiguresFor(review, element, focusableEditPart, figures);
+					for (Object element : elements) {
+						collectFiguresFor(review, element, focusableEditPart, figures);
+					}
 
 					for (IFigure figure : figures) {
 						focusableEditPart.addFocusHighlightFigure(figure);
 					}
 				}
 			}
-
 		}
 
 		@Override
-		public void elementRemoved(ModelReview review, Object element) {
+		public void elementsRemoved(ModelReview review, Set<Object> elements) {
 
 			IFocusHighlightEditPart focusableEditPart = getFocusHighlightEditPart();
 			if (focusableEditPart != null) {
 
 				Set<IFigure> figures = new HashSet<>();
-				collectFiguresFor(review, element, focusableEditPart, figures);
+
+				for (Object element : elements) {
+					collectFiguresFor(review, element, focusableEditPart, figures);
+				}
 
 				for (IFigure figure : figures) {
 					focusableEditPart.removeFocusHighlightFigure(figure);
 				}
 			}
-
 		}
 
 		/**
@@ -934,10 +937,8 @@ public class DiagramDiffView implements IAdaptable, IReviewHighlightingPart {
 					 */
 					focusHighlightEditPart.disableFocusHighlightMode();
 
-					List<Object> highlightedElements = highlightService.getHighlightedElements(review);
-					for (Object element : highlightedElements) {
-						elementAdded(review, element);
-					}
+					Set<Object> highlightedElements = highlightService.getHighlightedElements(review);
+					elementsAdded(review, highlightedElements);
 				}
 			}
 		}

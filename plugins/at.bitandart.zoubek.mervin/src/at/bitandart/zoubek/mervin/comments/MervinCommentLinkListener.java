@@ -20,6 +20,8 @@ import javax.inject.Named;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.emf.ecore.EObject;
 
+import com.google.common.collect.Sets;
+
 import at.bitandart.zoubek.mervin.IMervinContextConstants;
 import at.bitandart.zoubek.mervin.IReviewHighlightService;
 import at.bitandart.zoubek.mervin.IReviewHighlightServiceListener;
@@ -56,17 +58,17 @@ public class MervinCommentLinkListener implements CommentLinkListener {
 	private IReviewHighlightServiceListener highlightListener = new IReviewHighlightServiceListener() {
 
 		@Override
-		public void elementRemoved(ModelReview review, Object element) {
+		public void elementsRemoved(ModelReview review, Set<Object> elements) {
 			/*
 			 * listen to highlight removal requests - if a permanent highlight
 			 * has been deleted also delete it from the set of permanent
 			 * highlighted link targets
 			 */
-			permanentLinkTargets.remove(element);
+			permanentLinkTargets.removeAll(elements);
 		}
 
 		@Override
-		public void elementAdded(ModelReview review, Object element) {
+		public void elementsAdded(ModelReview review, Set<Object> elements) {
 			// Intentionally left empty
 		}
 	};
@@ -80,12 +82,8 @@ public class MervinCommentLinkListener implements CommentLinkListener {
 
 			List<EObject> targets = ((MervinCommentLinkTarget) commentLinkTarget).getTargets();
 			reviewHighlightService.clearHighlights(activeModelReview);
-
-			for (EObject target : targets) {
-
-				permanentLinkTargets.add(target);
-				reviewHighlightService.addHighlightFor(activeModelReview, target);
-			}
+			permanentLinkTargets.addAll(targets);
+			reviewHighlightService.addHighlightFor(activeModelReview, Sets.<Object> newHashSet(targets));
 		}
 	}
 
@@ -95,11 +93,9 @@ public class MervinCommentLinkListener implements CommentLinkListener {
 		ICommentLinkTarget commentLinkTarget = commentLink.getCommentLinkTarget();
 
 		if (activeModelReview != null && commentLinkTarget instanceof MervinCommentLinkTarget) {
-			List<EObject> targets = ((MervinCommentLinkTarget) commentLinkTarget).getTargets();
 
-			for (EObject target : targets) {
-				reviewHighlightService.addHighlightFor(activeModelReview, target);
-			}
+			List<EObject> targets = ((MervinCommentLinkTarget) commentLinkTarget).getTargets();
+			reviewHighlightService.addHighlightFor(activeModelReview, Sets.<Object> newHashSet(targets));
 		}
 
 	}
@@ -110,18 +106,15 @@ public class MervinCommentLinkListener implements CommentLinkListener {
 		ICommentLinkTarget commentLinkTarget = commentLink.getCommentLinkTarget();
 
 		if (activeModelReview != null && commentLinkTarget instanceof MervinCommentLinkTarget) {
-			List<EObject> targets = ((MervinCommentLinkTarget) commentLinkTarget).getTargets();
-
-			for (EObject target : targets) {
-				/*
-				 * Hovering is also needed for clicking on a comment link - so
-				 * do not remove highlighted link targets that should be
-				 * permanent
-				 */
-				if (!permanentLinkTargets.contains(target)) {
-					reviewHighlightService.removeHighlightFor(activeModelReview, target);
-				}
-			}
+			Set<Object> targets = Sets.<Object> newHashSet(((MervinCommentLinkTarget) commentLinkTarget).getTargets());
+			
+			/*
+			 * Hovering is also needed for clicking on a comment link - so
+			 * do not remove highlighted link targets that should be
+			 * permanent
+			 */
+			targets.removeAll(permanentLinkTargets);
+			reviewHighlightService.removeHighlightFor(activeModelReview, targets);
 		}
 
 	}

@@ -135,9 +135,7 @@ public class PropertyDiffView extends ModelReviewEditorTrackingView {
 				diffViewer.refresh();
 
 			}
-
 		}
-
 	}
 
 	/**

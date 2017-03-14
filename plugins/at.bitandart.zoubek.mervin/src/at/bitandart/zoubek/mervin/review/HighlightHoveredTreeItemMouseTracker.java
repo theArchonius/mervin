@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Florian Zoubek.
+ * Copyright (c) 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,16 +16,17 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
+import com.google.common.collect.Sets;
+
 import at.bitandart.zoubek.mervin.IReviewHighlightService;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 
 /**
  * A {@link MouseTrackListener} that highlights the data element of a tree item
  * using the highlight service and the model review of the
- * {@link IReviewHighlightingPart} when the mouse hovers over a
- * {@link TreeItem}. This tracker does nothing if the the highlight mode of the
- * associated {@link IReviewHighlightingPart} is not set to
- * {@link HighlightMode#HOVER}.
+ * {@link IReviewHighlightingPart} when the mouse hovers over a {@link TreeItem}
+ * . This tracker does nothing if the the highlight mode of the associated
+ * {@link IReviewHighlightingPart} is not set to {@link HighlightMode#HOVER}.
  * 
  * @author Florian Zoubek
  *
@@ -68,7 +69,7 @@ public class HighlightHoveredTreeItemMouseTracker implements MouseTrackListener 
 						 */
 						highlightService.clearHighlights(modelReview);
 						/* add new highlighted element */
-						highlightService.addHighlightFor(modelReview, data);
+						highlightService.addHighlightFor(modelReview, Sets.newHashSet(data));
 					}
 				}
 			}

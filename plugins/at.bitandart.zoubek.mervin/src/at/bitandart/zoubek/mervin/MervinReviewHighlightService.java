@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Florian Zoubek.
+ * Copyright (c) 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,9 +12,11 @@ package at.bitandart.zoubek.mervin;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -23,6 +25,8 @@ import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.workbench.UIEvents;
+
+import com.google.common.collect.Sets;
 
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 
@@ -35,7 +39,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
  */
 public class MervinReviewHighlightService implements IReviewHighlightService {
 
-	private Map<ModelReview, List<Object>> highlightedElements = new HashMap<>();
+	private Map<ModelReview, Set<Object>> highlightedElements = new HashMap<>();
 
 	private List<IReviewHighlightServiceListener> listeners = new LinkedList<>();
 
@@ -47,16 +51,18 @@ public class MervinReviewHighlightService implements IReviewHighlightService {
 	private IEventBroker eventBroker;
 
 	@Override
-	public void addHighlightFor(ModelReview review, Object object) {
+	public void addHighlightFor(ModelReview review, Set<Object> objects) {
 
-		List<Object> elements = highlightedElements.get(review);
+		Set<Object> elements = highlightedElements.get(review);
 		if (elements == null) {
-			elements = new LinkedList<Object>();
+			elements = new HashSet<Object>();
 			highlightedElements.put(review, elements);
 		}
-		if (!elements.contains(object)) {
-			elements.add(object);
-			notifyElementAdded(review, object);
+		Set<Object> difference = Sets.newHashSet(objects);
+		difference.removeAll(elements);
+		if (!difference.isEmpty()) {
+			elements.addAll(difference);
+			notifyElementsAdded(review, difference);
 		}
 
 		if (review == activeModelReview) {
@@ -64,21 +70,25 @@ public class MervinReviewHighlightService implements IReviewHighlightService {
 		}
 	}
 
-	private void notifyElementAdded(ModelReview review, Object object) {
+	private void notifyElementsAdded(ModelReview review, Set<Object> objects) {
 
 		for (IReviewHighlightServiceListener listener : listeners) {
-			listener.elementAdded(review, object);
+			listener.elementsAdded(review, objects);
 		}
 
 	}
 
 	@Override
-	public void removeHighlightFor(ModelReview review, Object object) {
+	public void removeHighlightFor(ModelReview review, Set<Object> objects) {
 
-		List<Object> elements = highlightedElements.get(review);
-		if (elements != null && elements.contains(object)) {
-			elements.remove(object);
-			notifyElementRemoved(review, object);
+		Set<Object> elements = highlightedElements.get(review);
+		if (elements != null) {
+
+			Set<Object> intersection = Sets.<Object> intersection(elements, objects).immutableCopy();
+			if (!intersection.isEmpty()) {
+				elements.removeAll(intersection);
+				notifyElementsRemoved(review, intersection);
+			}
 		}
 
 		if (review == activeModelReview) {
@@ -86,10 +96,10 @@ public class MervinReviewHighlightService implements IReviewHighlightService {
 		}
 	}
 
-	private void notifyElementRemoved(ModelReview review, Object object) {
+	private void notifyElementsRemoved(ModelReview review, Set<Object> objects) {
 
 		for (IReviewHighlightServiceListener listener : listeners) {
-			listener.elementRemoved(review, object);
+			listener.elementsRemoved(review, objects);
 		}
 
 	}
@@ -97,12 +107,10 @@ public class MervinReviewHighlightService implements IReviewHighlightService {
 	@Override
 	public void clearHighlights(ModelReview review) {
 
-		List<Object> elements = highlightedElements.remove(review);
+		Set<Object> elements = highlightedElements.remove(review);
 
 		if (elements != null) {
-			for (Object object : elements) {
-				notifyElementRemoved(review, object);
-			}
+			notifyElementsRemoved(review, elements);
 		}
 
 		if (review == activeModelReview) {
@@ -112,13 +120,13 @@ public class MervinReviewHighlightService implements IReviewHighlightService {
 	}
 
 	@Override
-	public List<Object> getHighlightedElements(ModelReview review) {
+	public Set<Object> getHighlightedElements(ModelReview review) {
 
-		List<Object> elements = highlightedElements.get(review);
+		Set<Object> elements = highlightedElements.get(review);
 		if (elements == null) {
-			return Collections.emptyList();
+			return Collections.emptySet();
 		}
-		return Collections.unmodifiableList(elements);
+		return Collections.unmodifiableSet(elements);
 
 	}
 

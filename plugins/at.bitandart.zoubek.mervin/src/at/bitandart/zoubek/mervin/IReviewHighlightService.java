@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Florian Zoubek.
+ * Copyright (c) 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,7 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin;
 
-import java.util.List;
+import java.util.Set;
 
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 
@@ -24,24 +24,24 @@ import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 public interface IReviewHighlightService {
 
 	/**
-	 * adds a highlight for the given object associated with the given review.
-	 * Does nothing if the object has already been highlight with the given
+	 * adds a highlight for the given objects associated with the given review.
+	 * Does nothing if the objects have already been highlighted in the given
 	 * review.
 	 * 
 	 * @param review
-	 * @param object
+	 * @param objects
 	 */
-	public void addHighlightFor(ModelReview review, Object object);
+	public void addHighlightFor(ModelReview review, Set<Object> objects);
 
 	/**
-	 * removes a highlight for the given object associated with the given
-	 * review. Does nothing if the object has already been highlight with the
+	 * removes a highlight for the given objects associated with the given
+	 * review. Does nothing if the objects have already been highlighted in the
 	 * given review.
 	 * 
 	 * @param review
-	 * @param object
+	 * @param objects
 	 */
-	public void removeHighlightFor(ModelReview review, Object object);
+	public void removeHighlightFor(ModelReview review, Set<Object> objects);
 
 	/**
 	 * clears all highlights for the given review.
@@ -53,9 +53,9 @@ public interface IReviewHighlightService {
 	/**
 	 * 
 	 * @param review
-	 * @return an unmodifiable list of the highlighted elements of the review.
+	 * @return an unmodifiable set of the highlighted elements of the review.
 	 */
-	public List<Object> getHighlightedElements(ModelReview review);
+	public Set<Object> getHighlightedElements(ModelReview review);
 
 	/**
 	 * registers a new highlight listener, does nothing if it has already been
