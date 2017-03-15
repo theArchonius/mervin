@@ -10,88 +10,74 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.review.explorer.content;
 
+import java.text.MessageFormat;
+
 import org.eclipse.emf.compare.Comparison;
 
+import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 
 /**
- * An {@link ITreeItem} that represents a {@link PatchSet}.
+ * An {@link ITreeItem} that represents the selected comparisons of a
+ * {@link ModelReview}.
  * 
  * @author Florian Zoubek
  *
  */
-public class PatchSetTreeItem implements ITreeItem {
+public class SelectedComparisonTreeItem implements ITreeItem {
 
-	private PatchSet patchSet;
-	private Object parent;
+	private ModelReview modelReview;
 	private ComparisonTreeItem modelComparisonTreeItem;
 	private ComparisonTreeItem diagramComparisonTreeItem;
-	private PatchesTreeItem patchesTreeItem;
 
-	public PatchSetTreeItem(PatchSet patchSet, Object parent) {
-		this.patchSet = patchSet;
-		this.parent = parent;
+	public SelectedComparisonTreeItem(ModelReview modelReview) {
+		this.modelReview = modelReview;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * at.bitandart.zoubek.mervin.review.explorer.content.ITreeItem#hasChildren(
-	 * )
-	 */
 	@Override
 	public boolean hasChildren() {
-		return true;
+		return modelReview != null && modelReview.getSelectedDiagramComparison() != null
+				&& modelReview.getSelectedModelComparison() != null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * at.bitandart.zoubek.mervin.review.explorer.content.ITreeItem#getChildren(
-	 * )
-	 */
 	@Override
 	public Object[] getChildren() {
 
-		Comparison modelComparison = patchSet.getModelComparison();
+		Comparison modelComparison = modelReview.getSelectedModelComparison();
 		if (modelComparisonTreeItem == null || modelComparisonTreeItem.getComparison() != modelComparison) {
 			modelComparisonTreeItem = new ComparisonTreeItem(modelComparison, "Involved Models", this);
 		}
 
-		Comparison diagramComparison = patchSet.getDiagramComparison();
+		Comparison diagramComparison = modelReview.getSelectedDiagramComparison();
 		if (diagramComparisonTreeItem == null || diagramComparisonTreeItem.getComparison() != diagramComparison) {
 			diagramComparisonTreeItem = new ComparisonTreeItem(diagramComparison, "Involved Diagrams", this);
 		}
 
-		if (patchesTreeItem == null) {
-			patchesTreeItem = new PatchesTreeItem(patchSet, this);
-		}
-
-		return new Object[] { modelComparisonTreeItem, diagramComparisonTreeItem, patchesTreeItem };
+		return new Object[] { modelComparisonTreeItem, diagramComparisonTreeItem };
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * at.bitandart.zoubek.mervin.review.explorer.content.ITreeItem#getParent()
-	 */
 	@Override
 	public Object getParent() {
-		return parent;
+		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * at.bitandart.zoubek.mervin.review.explorer.content.ITreeItem#getElement()
-	 */
 	@Override
 	public Object getElement() {
-		return patchSet;
+
+		String oldVersion = "Base Version";
+		String newVersion = "Base Version";
+
+		PatchSet newPatchSet = modelReview.getRightPatchSet();
+		if (newPatchSet != null) {
+			newVersion = "PatchSet #" + newPatchSet.getId();
+		}
+
+		PatchSet oldPatchSet = modelReview.getLeftPatchSet();
+		if (oldPatchSet != null) {
+			oldVersion = "PatchSet #" + oldPatchSet.getId();
+		}
+
+		return MessageFormat.format("[Selected] {0} <> {1}", oldVersion, newVersion);
 	}
 
 }

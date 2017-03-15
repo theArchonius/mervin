@@ -110,7 +110,11 @@ public class ReferencingViewHighlightComputation extends SelectionHighlightCompu
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 100);
 		checkCancellation(subMonitor);
 
-		referencingViews.addAll(diagramModelHelper.getReferencingViews(eObject));
+		if (eObject instanceof Match) {
+			collectReferencingViews((Match) eObject, referencingViews, subMonitor.newChild(100));
+		} else {
+			referencingViews.addAll(diagramModelHelper.getReferencingViews(eObject));
+		}
 	}
 
 	/**

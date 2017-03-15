@@ -10,27 +10,35 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.review.explorer.content;
 
-import org.eclipse.emf.compare.Comparison;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.Match;
 
 /**
- * An {@link ITreeItem} that represents a {@link PatchSet}.
+ * An {@link ITreeItem} representing the differences of a {@link Match}.
  * 
  * @author Florian Zoubek
  *
  */
-public class PatchSetTreeItem implements ITreeItem {
+public class MatchDifferencesTreeItem implements ITreeItem {
 
-	private PatchSet patchSet;
+	private Match match;
 	private Object parent;
-	private ComparisonTreeItem modelComparisonTreeItem;
-	private ComparisonTreeItem diagramComparisonTreeItem;
-	private PatchesTreeItem patchesTreeItem;
+	private Map<Diff, ITreeItem> itemCache;
+	private List<ITreeItem> children;
 
-	public PatchSetTreeItem(PatchSet patchSet, Object parent) {
-		this.patchSet = patchSet;
+	public MatchDifferencesTreeItem(Match match, Object parent) {
+		this.match = match;
 		this.parent = parent;
+		itemCache = new HashMap<>();
+		children = new LinkedList<ITreeItem>();
 	}
 
 	/*
@@ -42,7 +50,7 @@ public class PatchSetTreeItem implements ITreeItem {
 	 */
 	@Override
 	public boolean hasChildren() {
-		return true;
+		return !match.getDifferences().isEmpty();
 	}
 
 	/*
@@ -55,21 +63,27 @@ public class PatchSetTreeItem implements ITreeItem {
 	@Override
 	public Object[] getChildren() {
 
-		Comparison modelComparison = patchSet.getModelComparison();
-		if (modelComparisonTreeItem == null || modelComparisonTreeItem.getComparison() != modelComparison) {
-			modelComparisonTreeItem = new ComparisonTreeItem(modelComparison, "Involved Models", this);
+		children.clear();
+		EList<Diff> differences = match.getDifferences();
+
+		Set<Diff> cachedDiffs = itemCache.keySet();
+		Set<Diff> diffsToRemove = new HashSet<>(cachedDiffs);
+		diffsToRemove.removeAll(differences);
+
+		if (!diffsToRemove.isEmpty()) {
+			cachedDiffs.removeAll(diffsToRemove);
 		}
 
-		Comparison diagramComparison = patchSet.getDiagramComparison();
-		if (diagramComparisonTreeItem == null || diagramComparisonTreeItem.getComparison() != diagramComparison) {
-			diagramComparisonTreeItem = new ComparisonTreeItem(diagramComparison, "Involved Diagrams", this);
+		for (Diff diff : differences) {
+			ITreeItem treeItem = itemCache.get(diff);
+			if (treeItem == null) {
+				treeItem = new LeafTreeItem(diff, this);
+				itemCache.put(diff, treeItem);
+			}
+			children.add(treeItem);
 		}
 
-		if (patchesTreeItem == null) {
-			patchesTreeItem = new PatchesTreeItem(patchSet, this);
-		}
-
-		return new Object[] { modelComparisonTreeItem, diagramComparisonTreeItem, patchesTreeItem };
+		return children.toArray();
 	}
 
 	/*
@@ -91,7 +105,7 @@ public class PatchSetTreeItem implements ITreeItem {
 	 */
 	@Override
 	public Object getElement() {
-		return patchSet;
+		return "[Differences]";
 	}
 
 }

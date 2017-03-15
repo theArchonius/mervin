@@ -70,12 +70,15 @@ public class HighlightSemanticModel {
 			if (element instanceof ObjectHistoryEntryContainer && review != null) {
 				Map<PatchSet, Match> matches = ((ObjectHistoryEntryContainer) element)
 						.getMatches(review.getPatchSets());
-				return Iterables.any(matches.values(),
-						MervinPredicates.matchValues(validSelectionPredicate, Operation.OR));
+				return Iterables.any(matches.values(), validMatchPredicate);
 			}
-			return element != null && (element instanceof View || element instanceof EditPart);
+			return element != null && (element instanceof View || element instanceof EditPart
+					|| ((element instanceof Match && validMatchPredicate.apply((Match) element))));
 		}
 	};
+
+	private final Predicate<Match> validMatchPredicate = MervinPredicates.matchValues(validSelectionPredicate,
+			Operation.OR);
 
 	@CanExecute
 	public boolean canExecute(@Named(IServiceConstants.ACTIVE_SELECTION) @Optional IStructuredSelection selection) {
@@ -96,8 +99,8 @@ public class HighlightSemanticModel {
 		if (review != null && selection != null) {
 			ProgressMonitorDialog progressMonitorDialog = new ProgressMonitorDialog(shell);
 			try {
-				progressMonitorDialog.run(true, true,
-						new SemanticModelElementsHighlightComputation(selection, highlightService, review, diagramModelHelper));
+				progressMonitorDialog.run(true, true, new SemanticModelElementsHighlightComputation(selection,
+						highlightService, review, diagramModelHelper));
 
 			} catch (InvocationTargetException e) {
 			} catch (InterruptedException e) {

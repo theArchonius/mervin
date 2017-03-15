@@ -11,6 +11,7 @@
 package at.bitandart.zoubek.mervin.review.explorer.content;
 
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.ecore.EObject;
@@ -49,5 +50,16 @@ public interface IReviewExplorerContentProvider extends ITreeContentProvider {
 	 * @return the differences that reference to given EObject.
 	 */
 	public List<Diff> getDiffsFor(EObject eObject);
+
+	/**
+	 * collects all {@link ITreeItem}s that are associated with the given
+	 * element and returns them.
+	 * 
+	 * @param element
+	 *            the element to search {@link ITreeItem} for.
+	 * @return the set of {@link ITreeItem}s that are associated with the given
+	 *         element.
+	 */
+	public Set<ITreeItem> getTreeItemsFor(Object element);
 
 }

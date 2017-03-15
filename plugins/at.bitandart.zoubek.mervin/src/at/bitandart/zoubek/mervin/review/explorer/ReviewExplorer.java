@@ -33,12 +33,15 @@ import org.eclipse.e4.ui.workbench.UIEvents;
 import org.eclipse.e4.ui.workbench.modeling.EModelService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.e4.ui.workbench.modeling.ElementMatcher;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
+import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.ReferenceChange;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -48,8 +51,10 @@ import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.StyledString.Styler;
@@ -62,6 +67,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
@@ -79,6 +85,7 @@ import at.bitandart.zoubek.mervin.model.modelreview.DiagramPatch;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelPatch;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelResource;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
+import at.bitandart.zoubek.mervin.model.modelreview.ModelReviewPackage;
 import at.bitandart.zoubek.mervin.model.modelreview.Patch;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 import at.bitandart.zoubek.mervin.review.HighlightHoveredTreeItemMouseTracker;
@@ -87,9 +94,10 @@ import at.bitandart.zoubek.mervin.review.HighlightRevealer;
 import at.bitandart.zoubek.mervin.review.HighlightSelectionListener;
 import at.bitandart.zoubek.mervin.review.IReviewHighlightingPart;
 import at.bitandart.zoubek.mervin.review.ModelReviewEditorTrackingView;
-import at.bitandart.zoubek.mervin.review.explorer.content.DifferencesTreeItem;
+import at.bitandart.zoubek.mervin.review.explorer.content.ComparisonWithTitle;
 import at.bitandart.zoubek.mervin.review.explorer.content.IReviewExplorerContentProvider;
-import at.bitandart.zoubek.mervin.review.explorer.content.ITreeItemContainer;
+import at.bitandart.zoubek.mervin.review.explorer.content.ITreeItem;
+import at.bitandart.zoubek.mervin.review.explorer.content.MatchDifferencesTreeItem;
 import at.bitandart.zoubek.mervin.review.explorer.content.ModelReviewContentProvider;
 import at.bitandart.zoubek.mervin.swt.ProgressPanel;
 import at.bitandart.zoubek.mervin.swt.ProgressPanelOperationThread;
@@ -202,6 +210,8 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 
 	private HighlightRevealer highlightRevealer;
 
+	private ModelReviewChangeAdapter modelReviewChangeAdapter = new ModelReviewChangeAdapter();
+
 	private boolean ignoreSelectionHighlight = false;
 
 	@PostConstruct
@@ -236,9 +246,50 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 					super.selectionChanged(event);
 
 				}
+
 				ISelection selection = event.getSelection();
+				/*
+				 * do not propagate internal ITreeItems outside of this view, so
+				 * replace them with their elements
+				 */
+				if (selection instanceof IStructuredSelection) {
+					Object[] objects = ((IStructuredSelection) selection).toArray();
+
+					for (int i = 0; i < objects.length; i++) {
+						if (objects[i] instanceof ITreeItem) {
+							objects[i] = ((ITreeItem) objects[i]).getElement();
+						}
+					}
+
+					selection = new StructuredSelection(objects);
+				}
+
 				selectionService.setSelection(selection);
 				eventBroker.send(UIEvents.REQUEST_ENABLEMENT_UPDATE_TOPIC, UIEvents.ALL_ELEMENT_ID);
+			}
+
+			@Override
+			protected void addElementsToHighlight(Object object, Set<Object> elements) {
+
+				if (object instanceof ITreeItem) {
+					addElementsToHighlight(((ITreeItem) object).getElement(), elements);
+
+				} else if (object instanceof Match) {
+
+					Match match = (Match) object;
+					EObject left = match.getLeft();
+					if (left != null) {
+						addElementsToHighlight(left, elements);
+					}
+
+					EObject right = match.getRight();
+					if (right != null) {
+						addElementsToHighlight(right, elements);
+					}
+
+				} else {
+					super.addElementsToHighlight(object, elements);
+				}
 			}
 
 		});
@@ -371,30 +422,31 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 			public void elementsRemoved(ModelReview review, Set<Object> elements) {
 
 				updateObjectsToHighlight();
-				reviewTreeViewer.getControl().getDisplay().syncExec(new Runnable() {
-
-					@Override
-					public void run() {
-						reviewTreeViewer.refresh();
-					}
-				});
+				refreshTree();
 			}
 
 			@Override
 			public void elementsAdded(ModelReview review, Set<Object> elements) {
 
 				updateObjectsToHighlight();
-				reviewTreeViewer.getControl().getDisplay().syncExec(new Runnable() {
-
-					@Override
-					public void run() {
-						reviewTreeViewer.refresh();
-					}
-				});
+				refreshTree();
 			}
 		});
 
 		updateValues();
+	}
+
+	private void refreshTree() {
+		reviewTreeViewer.getControl().getDisplay().syncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				Control control = reviewTreeViewer.getControl();
+				control.setRedraw(false);
+				reviewTreeViewer.refresh();
+				control.setRedraw(true);
+			}
+		});
 	}
 
 	@PreDestroy
@@ -473,9 +525,18 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 			updateObjectsToHighlight();
 			ModelReview currentModelReview = getCurrentModelReview();
 
+			Object input = reviewTreeViewer.getInput();
+			if (input instanceof ModelReview) {
+				ModelReview oldReview = ((ModelReview) input);
+				oldReview.eAdapters().remove(modelReviewChangeAdapter);
+			}
+
 			// update the tree viewer
 			reviewTreeViewer.setInput(currentModelReview);
 			reviewTreeViewer.refresh();
+			if (currentModelReview != null) {
+				currentModelReview.eAdapters().add(modelReviewChangeAdapter);
+			}
 
 			for (TreeColumn treeColumn : reviewTreeViewer.getTree().getColumns()) {
 				treeColumn.pack();
@@ -563,31 +624,48 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 
 			Object element = cell.getElement();
 			StyledString text = new StyledString();
+			Object treeItemElement = null;
+			if (element instanceof ITreeItem) {
+				treeItemElement = ((ITreeItem) element).getElement();
+			}
 
 			List<Styler> stylers = new ArrayList<Styler>();
 
 			/* collect the stylers that should be applied to the label */
-			if (element instanceof Diff) {
+			if (element instanceof Diff || treeItemElement instanceof Diff) {
 
+				Diff diff = null;
+				if (treeItemElement instanceof Diff) {
+					diff = (Diff) treeItemElement;
+				} else {
+					diff = (Diff) element;
+				}
 				stylers.add(diffStyler);
 				OverlayTypeStyler typeStyler = overlayTypeStylers
-						.get(overlayTypeHelper.toOverlayType(((Diff) element).getKind()));
+						.get(overlayTypeHelper.toOverlayType((diff).getKind()));
 
 				if (typeStyler != null) {
 					stylers.add(typeStyler);
 				}
 
-			} else if (element instanceof DifferencesTreeItem) {
+			} else if (element instanceof MatchDifferencesTreeItem) {
 				stylers.add(diffStyler);
 
-			} else if (element instanceof EObject) {
+			} else if (element instanceof EObject || treeItemElement instanceof EObject) {
+
+				EObject eObject = null;
+				if (treeItemElement instanceof EObject) {
+					eObject = (EObject) treeItemElement;
+				} else {
+					eObject = (EObject) element;
+				}
 
 				/*
 				 * color EObjects based on their referencing containment
 				 * difference
 				 */
 
-				List<Diff> diffs = contentProvider.getDiffsFor((EObject) element);
+				List<Diff> diffs = contentProvider.getDiffsFor(eObject);
 				for (Diff diff : diffs) {
 
 					if (diff instanceof ReferenceChange && ((ReferenceChange) diff).getReference().isContainment()) {
@@ -647,11 +725,15 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		public String getText(Object element) {
 
 			if (element instanceof PatchSet) {
-				return MessageFormat.format("PatchSet #{0}", ((PatchSet) element).getId());
+				return MessageFormat.format("Base <> PatchSet #{0}", ((PatchSet) element).getId());
 			}
 
-			if (element instanceof ITreeItemContainer) {
-				return ((ITreeItemContainer) element).getText();
+			if (element instanceof ComparisonWithTitle) {
+				return ((ComparisonWithTitle) element).getTitle();
+			}
+
+			if (element instanceof ITreeItem) {
+				return getText(((ITreeItem) element).getElement());
 			}
 
 			if (element instanceof Patch) {
@@ -675,6 +757,10 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		 * @return the label icon for the given element
 		 */
 		public Image getImage(Object element) {
+
+			if (element instanceof ITreeItem) {
+				return getImage(((ITreeItem) element).getElement());
+			}
 
 			if (element instanceof EObject) {
 				try {
@@ -771,6 +857,10 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		@Override
 		public String getText(Object element) {
 
+			if (element instanceof ITreeItem) {
+				return getText(((ITreeItem) element).getElement());
+			}
+
 			if (element instanceof EObject) {
 
 				Resource resource = ((EObject) element).eResource();
@@ -778,6 +868,18 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 					return resource.getURI().toString();
 				}
 
+			}
+			if (element instanceof Match) {
+				Match match = (Match) element;
+				String oldResourceText = getText(matchHelper.getOldValue(match));
+				if (oldResourceText == null) {
+					oldResourceText = "<none>";
+				}
+				String newResourceText = getText(matchHelper.getNewValue(match));
+				if (newResourceText == null) {
+					newResourceText = "<none>";
+				}
+				return oldResourceText + " | " + newResourceText;
 			}
 			return null;
 		}
@@ -809,18 +911,29 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		 */
 		protected PatchSet findPatchSet(Object element) {
 
+			Object actualElement = getActualElement(element);
+
 			ITreeContentProvider contentProvider = (ITreeContentProvider) viewer.getContentProvider();
 			Object currentElement = element;
 
-			while (currentElement != null && !(currentElement instanceof PatchSet)) {
+			while (currentElement != null && !(actualElement instanceof PatchSet)) {
 				currentElement = contentProvider.getParent(currentElement);
+				actualElement = getActualElement(currentElement);
 			}
 
-			if (currentElement instanceof PatchSet) {
-				return (PatchSet) currentElement;
+			if (actualElement instanceof PatchSet) {
+				return (PatchSet) actualElement;
 			}
 
 			return null;
+		}
+
+		protected Object getActualElement(Object element) {
+
+			if (element instanceof ITreeItem) {
+				return ((ITreeItem) element).getElement();
+			}
+			return element;
 		}
 	}
 
@@ -898,9 +1011,17 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 			PatchSet patchSet = findPatchSet(element);
 			if (patchSet != null) {
 
+				Object actualElement = getActualElement(element);
+				if (actualElement instanceof Match) {
+					Match match = (Match) actualElement;
+					actualElement = matchHelper.getNewValue(match);
+					if (actualElement == null) {
+						actualElement = matchHelper.getOldValue(match);
+					}
+				}
 				Map<EObject, Integer> objectChangeRefCount = patchSet.getObjectChangeRefCount();
-				if (objectChangeRefCount.containsKey(element)) {
-					return objectChangeRefCount.get(element);
+				if (objectChangeRefCount.containsKey(actualElement)) {
+					return objectChangeRefCount.get(actualElement);
 				}
 
 			}
@@ -914,8 +1035,16 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 			PatchSet patchSet = findPatchSet(element);
 			if (patchSet != null) {
 
+				Object actualElement = getActualElement(element);
+				if (actualElement instanceof Match) {
+					Match match = (Match) actualElement;
+					actualElement = matchHelper.getNewValue(match);
+					if (actualElement == null) {
+						actualElement = matchHelper.getOldValue(match);
+					}
+				}
 				Map<EObject, Integer> objectChangeRefCount = patchSet.getObjectChangeRefCount();
-				return objectChangeRefCount.containsKey(element);
+				return objectChangeRefCount.containsKey(actualElement);
 			}
 
 			return false;
@@ -945,6 +1074,38 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 	@Override
 	public boolean hasPreviousHighlight() {
 		return highlightRevealer.hasPreviousHighlight();
+	}
+
+	/**
+	 * A {@link EContentAdapter} that listens for changes of the selected
+	 * comparisons of a {@link ModelReview}.
+	 * 
+	 * @author Florian Zoubek
+	 *
+	 */
+	private final class ModelReviewChangeAdapter extends EContentAdapter {
+
+		@Override
+		public void notifyChanged(Notification notification) {
+
+			// needed to adapt also containment references
+			super.notifyChanged(notification);
+
+			int featureID = notification.getFeatureID(PatchSet.class);
+			if (featureID == ModelReviewPackage.MODEL_REVIEW__SELECTED_DIAGRAM_COMPARISON
+					|| featureID == ModelReviewPackage.MODEL_REVIEW__SELECTED_MODEL_COMPARISON) {
+
+				reviewTreeViewer.getControl().getDisplay().syncExec(new Runnable() {
+
+					@Override
+					public void run() {
+						reviewTreeViewer.refresh();
+					}
+				});
+
+			}
+
+		}
 	}
 
 }
