@@ -30,14 +30,13 @@ import org.eclipse.emf.compare.Match;
  */
 public class ComparisonTreeItem implements ITreeItem {
 
-	private SelectedComparisonTreeItem selectedComparisonTreeItem;
 	private ComparisonWithTitle titledComparison;
 	private Map<Match, MatchTreeItem> itemCache;
 	private List<ITreeItem> children;
+	private Object parent;
 
-	public ComparisonTreeItem(SelectedComparisonTreeItem selectedComparisonTreeItem, Comparison comparison,
-			String title) {
-		this.selectedComparisonTreeItem = selectedComparisonTreeItem;
+	public ComparisonTreeItem(Comparison comparison, String title, Object parent) {
+		this.parent = parent;
 		this.titledComparison = new ComparisonWithTitle(comparison, title);
 		itemCache = new HashMap<>();
 		children = new LinkedList<>();
@@ -76,7 +75,7 @@ public class ComparisonTreeItem implements ITreeItem {
 
 	@Override
 	public Object getParent() {
-		return selectedComparisonTreeItem;
+		return parent;
 	}
 
 	public Comparison getComparison() {

@@ -11,32 +11,22 @@
 package at.bitandart.zoubek.mervin.review.explorer.content;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
-import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
-import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 import at.bitandart.zoubek.mervin.IMatchHelper;
-import at.bitandart.zoubek.mervin.model.modelreview.DiagramResource;
-import at.bitandart.zoubek.mervin.model.modelreview.ModelResource;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
-import at.bitandart.zoubek.mervin.model.modelreview.Patch;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
+import at.bitandart.zoubek.mervin.review.explorer.content.TreeItemCache.ITreeItemFactory;
 
 /**
  * An {@link IReviewExplorerContentProvider} for the model review tree. Shows
@@ -48,56 +38,44 @@ import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
  */
 public class ModelReviewContentProvider implements IReviewExplorerContentProvider {
 
-	private AdapterFactoryContentProvider adapterFactoryContentProvider;
-
 	private ModelReview modelReview;
-	private Map<PatchSet, Collection<Object>> cachedPatchSetChildren = new HashMap<>();
-	private Map<EObject, DifferenceListTreeItem> cachedDifferenceTreeItems = new HashMap<>();
 	private IMatchHelper matchHelper;
 	private SelectedComparisonTreeItem selectedComparisonTreeItem;
 	private Object input;
+	private TreeItemCache<PatchSet> patchSetItemCache;
+	private ITreeItemFactory<PatchSet> patchSetTreeItemFactory = new ITreeItemFactory<PatchSet>() {
+
+		@Override
+		public ITreeItem createTreeItem(PatchSet patchSet, Object parent) {
+			return new PatchSetTreeItem(patchSet, parent);
+		}
+	};
 
 	public ModelReviewContentProvider(IMatchHelper matchHelper) {
-		adapterFactoryContentProvider = new AdapterFactoryContentProvider(
-				new ComposedAdapterFactory(EMFCompareRCPPlugin.getDefault().createFilteredAdapterFactoryRegistry()));
 		this.matchHelper = matchHelper;
+		patchSetItemCache = new TreeItemCache<>(patchSetTreeItemFactory);
 	}
 
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 		input = newInput;
-		adapterFactoryContentProvider.inputChanged(viewer, oldInput, newInput);
 		// we need the root model review to find the parent of some children
 		if (newInput instanceof ModelReview) {
 			modelReview = (ModelReview) newInput;
 		}
 		// clear the cache
-		cachedPatchSetChildren.clear();
-		cachedDifferenceTreeItems.clear();
 		selectedComparisonTreeItem = null;
+		patchSetItemCache.clear();
 	}
 
 	@Override
 	public void dispose() {
-		adapterFactoryContentProvider.dispose();
 	}
 
 	@Override
 	public boolean hasChildren(Object element) {
-		if (element instanceof ModelReview) {
-			return true;
-		}
-		if (element instanceof PatchSet) {
-			return true;
-		}
 		if (element instanceof ITreeItem) {
 			return ((ITreeItem) element).hasChildren();
-		}
-		if (element instanceof ModelResource) {
-			return !((ModelResource) element).getObjects().isEmpty();
-		}
-		if (element instanceof EObject) {
-			return adapterFactoryContentProvider.hasChildren(element) || !getMatchDiffsFor((EObject) element).isEmpty();
 		}
 		return false;
 	}
@@ -107,145 +85,6 @@ public class ModelReviewContentProvider implements IReviewExplorerContentProvide
 
 		if (element instanceof ITreeItem) {
 			return ((ITreeItem) element).getParent();
-		}
-		if (element instanceof ModelReview) {
-			return null;
-		}
-		if (element instanceof PatchSet) {
-			return null;
-		}
-		if (element instanceof DiagramResource || element instanceof ModelResource || element instanceof Patch) {
-			return getPatchSetChildContainer(element);
-		}
-		if (element instanceof Diff) {
-			return getDifferenceContainer((Diff) element);
-		}
-		if (element instanceof EObject) {
-			EObject eObject = (EObject) element;
-			Object parent = adapterFactoryContentProvider.getParent(element);
-
-			/*
-			 * FIXME It might be better to use an own implementation of
-			 * EcoreUtil.UsageCrossReferencer to detect references to the model
-			 * resource
-			 */
-			if (parent == null || parent instanceof Resource) {
-				// search for an containing model or diagram resource
-				for (PatchSet patchSet : modelReview.getPatchSets()) {
-					ModelResource modelResource = findContainingModelResource(patchSet.getNewInvolvedDiagrams(),
-							eObject);
-					if (modelResource != null)
-						return modelResource;
-					modelResource = findContainingModelResource(patchSet.getOldInvolvedDiagrams(), eObject);
-					if (modelResource != null)
-						return modelResource;
-					modelResource = findContainingModelResource(patchSet.getNewInvolvedModels(), eObject);
-					if (modelResource != null)
-						return modelResource;
-					modelResource = findContainingModelResource(patchSet.getOldInvolvedModels(), eObject);
-					if (modelResource != null)
-						return modelResource;
-				}
-			}
-			return parent;
-		}
-		return null;
-	}
-
-	/**
-	 * @param object
-	 *            the object to get the container for.
-	 * @return the container containing the given object, or null if no
-	 *         container has been found.
-	 */
-	private Object getPatchSetChildContainer(Object object) {
-
-		PatchSet patchSet = null;
-		if (object instanceof EObject) {
-			EObject container = ((EObject) object).eContainer();
-			if (container instanceof PatchSet) {
-				patchSet = (PatchSet) container;
-			}
-		}
-
-		if (patchSet != null && !cachedPatchSetChildren.containsKey(patchSet)) {
-			rebuildPatchSetChildrenContainersFor(patchSet);
-		}
-
-		Collection<Collection<Object>> cachedPatchSetChildrenEntries = cachedPatchSetChildren.values();
-
-		for (Collection<Object> cachedChildren : cachedPatchSetChildrenEntries) {
-
-			if (cachedChildren != null) {
-
-				for (Object child : cachedChildren) {
-
-					if (child instanceof ITreeItem
-							&& Arrays.asList(((ITreeItem) child).getChildren()).contains(object)) {
-						return child;
-					}
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * rebuilds the cached containers for the given patch set
-	 * 
-	 * @param patchSet
-	 *            the patch set to rebuild the container cache for.
-	 */
-	private void rebuildPatchSetChildrenContainersFor(PatchSet patchSet) {
-		getChildren(patchSet);
-	}
-
-	/**
-	 * @param diff
-	 *            the {@link Diff} to find the {@link DifferenceListTreeItem}
-	 *            for.
-	 * @return the {@link DifferenceListTreeItem} containing the given diff or
-	 *         null if no {@link DifferenceListTreeItem} could be found.
-	 */
-	private DifferenceListTreeItem getDifferenceContainer(Diff diff) {
-
-		EObject newValue = matchHelper.getNewValue((diff).getMatch());
-
-		if (newValue != null) {
-
-			if (!cachedDifferenceTreeItems.containsKey(newValue)) {
-				rebuildCachedDifferenceContainerFor(newValue);
-			}
-			return cachedDifferenceTreeItems.get(newValue);
-		}
-		return null;
-	}
-
-	/**
-	 * rebuilds the cached containers for the given {@link EObject}
-	 * 
-	 * @param object
-	 *            the EObject to rebuild the container cache for.
-	 */
-	private void rebuildCachedDifferenceContainerFor(EObject object) {
-		getChildren(object);
-	}
-
-	/**
-	 * finds the {@link ModelResource} that contains the given object.
-	 * 
-	 * @param modelResources
-	 *            a {@link Collection} of {@link ModelResource}s to check
-	 * @param object
-	 * @return the {@link ModelResource} or null if no {@link ModelResource}
-	 *         contains the object
-	 */
-	private ModelResource findContainingModelResource(Collection<? extends ModelResource> modelResources,
-			EObject object) {
-		for (ModelResource modelResource : modelResources) {
-			if (modelResource.getObjects().contains(object)) {
-				return modelResource;
-			}
 		}
 		return null;
 	}
@@ -263,7 +102,9 @@ public class ModelReviewContentProvider implements IReviewExplorerContentProvide
 			}
 
 			children.add(selectedComparisonTreeItem);
-			children.addAll(patchSets);
+
+			patchSetItemCache.invalidateOldElements(patchSets);
+			patchSetItemCache.addTreeItems(patchSets, null, children);
 
 			return children.toArray();
 		}
@@ -272,52 +113,11 @@ public class ModelReviewContentProvider implements IReviewExplorerContentProvide
 
 	@Override
 	public Object[] getChildren(Object parentElement) {
-		if (parentElement instanceof PatchSet) {
 
-			PatchSet patchSet = (PatchSet) parentElement;
-			/*
-			 * These categories do not exist in the model, so we have to create
-			 * temporary containers. We cache them to make sure that these
-			 * categories stay the same even if the tree is refreshed.
-			 */
-			if (!cachedPatchSetChildren.containsKey(patchSet)) {
-				List<Object> children = new LinkedList<>();
-				children.add(new PatchSetInvolvedModelsTreeItem(patchSet));
-				children.add(new PatchSetInvolvedDiagramsTreeItem(patchSet));
-				children.add(new PatchSetTreeItem(patchSet));
-				cachedPatchSetChildren.put(patchSet, children);
-			}
-			return cachedPatchSetChildren.get(patchSet).toArray();
-		}
 		if (parentElement instanceof ITreeItem) {
 			return ((ITreeItem) parentElement).getChildren();
 		}
-		if (parentElement instanceof ModelResource) {
-			return ((ModelResource) parentElement).getObjects().toArray();
-		}
-		if (parentElement instanceof EObject) {
 
-			EObject parentEObject = (EObject) parentElement;
-
-			List<Object> children = new LinkedList<Object>();
-			children.addAll(Arrays.asList(adapterFactoryContentProvider.getChildren(parentElement)));
-
-			List<Diff> matchDiffs = getMatchDiffsFor(parentEObject);
-
-			if (!matchDiffs.isEmpty()) {
-				/*
-				 * This category does not exist in the model, so we have to
-				 * create a temporary container. We cache them to make sure that
-				 * the category stays the same even if the tree is refreshed.
-				 */
-				if (!cachedDifferenceTreeItems.containsKey(parentEObject)) {
-					cachedDifferenceTreeItems.put(parentEObject, new DifferenceListTreeItem(parentEObject, matchDiffs));
-				}
-				children.add(cachedDifferenceTreeItems.get(parentEObject));
-			}
-
-			return children.toArray();
-		}
 		return new Object[0];
 	}
 

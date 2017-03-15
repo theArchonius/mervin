@@ -67,6 +67,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
@@ -94,7 +95,6 @@ import at.bitandart.zoubek.mervin.review.HighlightSelectionListener;
 import at.bitandart.zoubek.mervin.review.IReviewHighlightingPart;
 import at.bitandart.zoubek.mervin.review.ModelReviewEditorTrackingView;
 import at.bitandart.zoubek.mervin.review.explorer.content.ComparisonWithTitle;
-import at.bitandart.zoubek.mervin.review.explorer.content.DifferenceListTreeItem;
 import at.bitandart.zoubek.mervin.review.explorer.content.IReviewExplorerContentProvider;
 import at.bitandart.zoubek.mervin.review.explorer.content.ITreeItem;
 import at.bitandart.zoubek.mervin.review.explorer.content.MatchDifferencesTreeItem;
@@ -422,30 +422,31 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 			public void elementsRemoved(ModelReview review, Set<Object> elements) {
 
 				updateObjectsToHighlight();
-				reviewTreeViewer.getControl().getDisplay().syncExec(new Runnable() {
-
-					@Override
-					public void run() {
-						reviewTreeViewer.refresh();
-					}
-				});
+				refreshTree();
 			}
 
 			@Override
 			public void elementsAdded(ModelReview review, Set<Object> elements) {
 
 				updateObjectsToHighlight();
-				reviewTreeViewer.getControl().getDisplay().syncExec(new Runnable() {
-
-					@Override
-					public void run() {
-						reviewTreeViewer.refresh();
-					}
-				});
+				refreshTree();
 			}
 		});
 
 		updateValues();
+	}
+
+	private void refreshTree() {
+		reviewTreeViewer.getControl().getDisplay().syncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				Control control = reviewTreeViewer.getControl();
+				control.setRedraw(false);
+				reviewTreeViewer.refresh();
+				control.setRedraw(true);
+			}
+		});
 	}
 
 	@PreDestroy
@@ -647,7 +648,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 					stylers.add(typeStyler);
 				}
 
-			} else if (element instanceof DifferenceListTreeItem || element instanceof MatchDifferencesTreeItem) {
+			} else if (element instanceof MatchDifferencesTreeItem) {
 				stylers.add(diffStyler);
 
 			} else if (element instanceof EObject || treeItemElement instanceof EObject) {
@@ -724,7 +725,7 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		public String getText(Object element) {
 
 			if (element instanceof PatchSet) {
-				return MessageFormat.format("PatchSet #{0}", ((PatchSet) element).getId());
+				return MessageFormat.format("Base <> PatchSet #{0}", ((PatchSet) element).getId());
 			}
 
 			if (element instanceof ComparisonWithTitle) {
@@ -856,6 +857,10 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		@Override
 		public String getText(Object element) {
 
+			if (element instanceof ITreeItem) {
+				return getText(((ITreeItem) element).getElement());
+			}
+
 			if (element instanceof EObject) {
 
 				Resource resource = ((EObject) element).eResource();
@@ -863,6 +868,18 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 					return resource.getURI().toString();
 				}
 
+			}
+			if (element instanceof Match) {
+				Match match = (Match) element;
+				String oldResourceText = getText(matchHelper.getOldValue(match));
+				if (oldResourceText == null) {
+					oldResourceText = "<none>";
+				}
+				String newResourceText = getText(matchHelper.getNewValue(match));
+				if (newResourceText == null) {
+					newResourceText = "<none>";
+				}
+				return oldResourceText + " | " + newResourceText;
 			}
 			return null;
 		}
@@ -894,18 +911,29 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 		 */
 		protected PatchSet findPatchSet(Object element) {
 
+			Object actualElement = getActualElement(element);
+
 			ITreeContentProvider contentProvider = (ITreeContentProvider) viewer.getContentProvider();
 			Object currentElement = element;
 
-			while (currentElement != null && !(currentElement instanceof PatchSet)) {
+			while (currentElement != null && !(actualElement instanceof PatchSet)) {
 				currentElement = contentProvider.getParent(currentElement);
+				actualElement = getActualElement(currentElement);
 			}
 
-			if (currentElement instanceof PatchSet) {
-				return (PatchSet) currentElement;
+			if (actualElement instanceof PatchSet) {
+				return (PatchSet) actualElement;
 			}
 
 			return null;
+		}
+
+		protected Object getActualElement(Object element) {
+
+			if (element instanceof ITreeItem) {
+				return ((ITreeItem) element).getElement();
+			}
+			return element;
 		}
 	}
 
@@ -983,9 +1011,17 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 			PatchSet patchSet = findPatchSet(element);
 			if (patchSet != null) {
 
+				Object actualElement = getActualElement(element);
+				if (actualElement instanceof Match) {
+					Match match = (Match) actualElement;
+					actualElement = matchHelper.getNewValue(match);
+					if (actualElement == null) {
+						actualElement = matchHelper.getOldValue(match);
+					}
+				}
 				Map<EObject, Integer> objectChangeRefCount = patchSet.getObjectChangeRefCount();
-				if (objectChangeRefCount.containsKey(element)) {
-					return objectChangeRefCount.get(element);
+				if (objectChangeRefCount.containsKey(actualElement)) {
+					return objectChangeRefCount.get(actualElement);
 				}
 
 			}
@@ -999,8 +1035,16 @@ public class ReviewExplorer extends ModelReviewEditorTrackingView implements IRe
 			PatchSet patchSet = findPatchSet(element);
 			if (patchSet != null) {
 
+				Object actualElement = getActualElement(element);
+				if (actualElement instanceof Match) {
+					Match match = (Match) actualElement;
+					actualElement = matchHelper.getNewValue(match);
+					if (actualElement == null) {
+						actualElement = matchHelper.getOldValue(match);
+					}
+				}
 				Map<EObject, Integer> objectChangeRefCount = patchSet.getObjectChangeRefCount();
-				return objectChangeRefCount.containsKey(element);
+				return objectChangeRefCount.containsKey(actualElement);
 			}
 
 			return false;

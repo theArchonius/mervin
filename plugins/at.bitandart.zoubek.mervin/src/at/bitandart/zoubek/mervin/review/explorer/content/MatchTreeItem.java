@@ -49,7 +49,7 @@ public class MatchTreeItem implements ITreeItem {
 	 */
 	@Override
 	public boolean hasChildren() {
-		return !match.getSubmatches().isEmpty();
+		return !match.getSubmatches().isEmpty() || !match.getDifferences().isEmpty();
 	}
 
 	/*

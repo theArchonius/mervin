@@ -198,7 +198,11 @@ public class ModelReviewContentViewerDiffCounter implements IDifferenceCounter {
 		}
 
 		if (object instanceof Diff) {
-			return 1;
+			if (((Diff) object).getKind() == kind) {
+				return 1;
+			} else {
+				return 0;
+			}
 		}
 
 		if (object instanceof ITreeItem) {

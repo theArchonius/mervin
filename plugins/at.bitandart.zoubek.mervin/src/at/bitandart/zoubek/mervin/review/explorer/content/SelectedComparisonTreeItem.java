@@ -10,9 +10,12 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.review.explorer.content;
 
+import java.text.MessageFormat;
+
 import org.eclipse.emf.compare.Comparison;
 
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
+import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 
 /**
  * An {@link ITreeItem} that represents the selected comparisons of a
@@ -42,12 +45,12 @@ public class SelectedComparisonTreeItem implements ITreeItem {
 
 		Comparison modelComparison = modelReview.getSelectedModelComparison();
 		if (modelComparisonTreeItem == null || modelComparisonTreeItem.getComparison() != modelComparison) {
-			modelComparisonTreeItem = new ComparisonTreeItem(this, modelComparison, "Involved Models");
+			modelComparisonTreeItem = new ComparisonTreeItem(modelComparison, "Involved Models", this);
 		}
 
 		Comparison diagramComparison = modelReview.getSelectedDiagramComparison();
 		if (diagramComparisonTreeItem == null || diagramComparisonTreeItem.getComparison() != diagramComparison) {
-			diagramComparisonTreeItem = new ComparisonTreeItem(this, diagramComparison, "Involved Diagrams");
+			diagramComparisonTreeItem = new ComparisonTreeItem(diagramComparison, "Involved Diagrams", this);
 		}
 
 		return new Object[] { modelComparisonTreeItem, diagramComparisonTreeItem };
@@ -60,7 +63,21 @@ public class SelectedComparisonTreeItem implements ITreeItem {
 
 	@Override
 	public Object getElement() {
-		return "Selected Comparison";
+
+		String oldVersion = "Base Version";
+		String newVersion = "Base Version";
+
+		PatchSet newPatchSet = modelReview.getRightPatchSet();
+		if (newPatchSet != null) {
+			newVersion = "PatchSet #" + newPatchSet.getId();
+		}
+
+		PatchSet oldPatchSet = modelReview.getLeftPatchSet();
+		if (oldPatchSet != null) {
+			oldVersion = "PatchSet #" + oldPatchSet.getId();
+		}
+
+		return MessageFormat.format("[Selected] {0} <> {1}", oldVersion, newVersion);
 	}
 
 }
