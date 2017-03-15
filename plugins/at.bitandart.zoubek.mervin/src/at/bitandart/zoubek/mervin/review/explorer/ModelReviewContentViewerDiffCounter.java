@@ -12,6 +12,7 @@ package at.bitandart.zoubek.mervin.review.explorer;
 
 import java.util.Map;
 
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
@@ -19,13 +20,15 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
 import at.bitandart.zoubek.mervin.model.modelreview.ModelResource;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
-import at.bitandart.zoubek.mervin.review.explorer.content.ITreeItemContainer;
+import at.bitandart.zoubek.mervin.predicates.MervinPredicates;
+import at.bitandart.zoubek.mervin.review.explorer.content.ComparisonTreeItem;
+import at.bitandart.zoubek.mervin.review.explorer.content.ComparisonWithTitle;
+import at.bitandart.zoubek.mervin.review.explorer.content.ITreeItem;
 
 /**
  * An {@link IDifferenceCounter} that provides difference counts for a model
@@ -45,35 +48,32 @@ public class ModelReviewContentViewerDiffCounter implements IDifferenceCounter {
 	@Override
 	public int getMaximumDiffCount(Object object) {
 
-		if (object instanceof ITreeItemContainer || object instanceof ModelResource || object instanceof PatchSet
-				|| object instanceof ModelReview) {
+		ITreeContentProvider contentProvider = getTreeContentProvider();
+
+		if (object instanceof PatchSet) {
+			return ((PatchSet) object).getMaxObjectChangeCount();
+		}
+		if (object instanceof ComparisonTreeItem) {
+			return ((ComparisonTreeItem) object).getComparison().getDifferences().size();
+		}
+		if (object == null) {
 			/*
-			 * a simple container, determine the count based on the children of
-			 * the parent returned by the content provider
+			 * the root element, so determine the count based on its children.
 			 */
-			ITreeContentProvider contentProvider = getTreeContentProvider();
-			Object parent = contentProvider.getParent(object);
-
-			if (parent == null) {
-				/*
-				 * assume that the object is the root object -> use the root as
-				 * parent
-				 */
-				parent = object;
-			}
-
-			Object[] children = getTreeContentProvider().getChildren(parent);
+			Object[] children = getTreeContentProvider().getElements(viewer.getInput());
 			if (children != null) {
 				return getMaximumDiffCountOf(children);
 			}
 		}
-		/*
-		 * Not a simple container, try to find the patchset and use its change
-		 * count
-		 */
-		PatchSet patchSet = findPatchSet(object);
-		if (patchSet != null) {
-			return patchSet.getMaxObjectChangeCount();
+
+		Object parent = contentProvider.getParent(object);
+
+		if (parent != null) {
+
+			int maximumDiffCount = getMaximumDiffCount(parent);
+			if (maximumDiffCount >= 0) {
+				return maximumDiffCount;
+			}
 		}
 		return -1;
 	}
@@ -95,24 +95,52 @@ public class ModelReviewContentViewerDiffCounter implements IDifferenceCounter {
 
 	@Override
 	public int getTotalDiffCount(Object object) {
-
-		Object input = viewer.getInput();
-		if (input != null) {
-			return getMaximumDiffCount(input);
-		}
-		return -1;
+		return getMaximumDiffCount(null);
 	}
 
 	@Override
 	public int getDiffCount(Object object) {
 
-		if (object instanceof ITreeItemContainer || object instanceof ModelResource || object instanceof PatchSet
-				|| object instanceof ModelReview) {
+		if (object instanceof Match) {
+			return Iterables.size(((Match) object).getAllDifferences());
+		}
+
+		if (object instanceof ComparisonWithTitle) {
+			return ((ComparisonWithTitle) object).getComparison().getDifferences().size();
+		}
+
+		if (object instanceof Comparison) {
+			return ((Comparison) object).getDifferences().size();
+		}
+
+		if (object instanceof Diff) {
+			return 1;
+		}
+
+		if (object instanceof ITreeItem) {
+			int diffCount = getDiffCount(((ITreeItem) object).getElement());
+			if (diffCount >= 0) {
+				return diffCount;
+			}
+		}
+
+		if (object instanceof ITreeItem || object instanceof ModelResource || object instanceof PatchSet) {
 			Object[] children = getTreeContentProvider().getChildren(object);
 			if (children != null) {
 				return getDiffCountOf(children);
 			}
 		}
+
+		if (object == null) {
+			/*
+			 * treat root as a container
+			 */
+			Object[] children = getTreeContentProvider().getElements(viewer.getInput());
+			if (children != null) {
+				return getDiffCountOf(children);
+			}
+		}
+
 		PatchSet patchSet = findPatchSet(object);
 		if (patchSet != null) {
 
@@ -154,13 +182,50 @@ public class ModelReviewContentViewerDiffCounter implements IDifferenceCounter {
 	@Override
 	public int getDiffCount(Object object, final DifferenceKind kind) {
 
-		if (object instanceof ITreeItemContainer || object instanceof ModelResource || object instanceof PatchSet
+		if (object instanceof Match) {
+			return Iterables
+					.size(Iterables.filter(((Match) object).getAllDifferences(), MervinPredicates.diffKind(kind)));
+		}
+
+		if (object instanceof ComparisonWithTitle) {
+			return Iterables.size(Iterables.filter(((ComparisonWithTitle) object).getComparison().getDifferences(),
+					MervinPredicates.diffKind(kind)));
+		}
+
+		if (object instanceof Comparison) {
+			return Iterables
+					.size(Iterables.filter(((Comparison) object).getDifferences(), MervinPredicates.diffKind(kind)));
+		}
+
+		if (object instanceof Diff) {
+			return 1;
+		}
+
+		if (object instanceof ITreeItem) {
+			int diffCount = getDiffCount(((ITreeItem) object).getElement(), kind);
+			if (diffCount >= 0) {
+				return diffCount;
+			}
+		}
+
+		if (object instanceof ITreeItem || object instanceof ModelResource || object instanceof PatchSet
 				|| object instanceof ModelReview) {
 			Object[] children = getTreeContentProvider().getChildren(object);
 			if (children != null) {
 				return getDiffCountOf(children, kind);
 			}
 		}
+
+		if (object == null) {
+			/*
+			 * treat root as a container
+			 */
+			Object[] children = getTreeContentProvider().getElements(viewer.getInput());
+			if (children != null) {
+				return getDiffCountOf(children, kind);
+			}
+		}
+
 		PatchSet patchSet = findPatchSet(object);
 		if (object instanceof EObject && patchSet != null) {
 			Match match = patchSet.getDiagramComparison().getMatch((EObject) object);
@@ -168,13 +233,7 @@ public class ModelReviewContentViewerDiffCounter implements IDifferenceCounter {
 				match = patchSet.getModelComparison().getMatch((EObject) object);
 			}
 			if (match != null) {
-				return Iterables.size(Iterables.filter(match.getAllDifferences(), new Predicate<Diff>() {
-
-					@Override
-					public boolean apply(Diff input) {
-						return input.getKind() == kind;
-					}
-				}));
+				return Iterables.size(Iterables.filter(match.getAllDifferences(), MervinPredicates.diffKind(kind)));
 			}
 
 		}

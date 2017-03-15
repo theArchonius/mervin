@@ -16,13 +16,13 @@ import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * An {@link ITreeItemContainer} that holds a list of {@link Diff}s for a given
+ * An {@link ITreeItem} that holds a list of {@link Diff}s for a given
  * {@link EObject}.
  * 
  * @author Florian Zoubek
  *
  */
-public class DifferencesTreeItem implements ITreeItemContainer {
+public class DifferenceListTreeItem implements ITreeItem {
 
 	private EObject parent;
 	private List<Diff> diffs;
@@ -33,7 +33,7 @@ public class DifferencesTreeItem implements ITreeItemContainer {
 	 * @param diffs
 	 *            the diffs of the given {@link EObject}.
 	 */
-	public DifferencesTreeItem(EObject parent, List<Diff> diffs) {
+	public DifferenceListTreeItem(EObject parent, List<Diff> diffs) {
 		this.parent = parent;
 		this.diffs = diffs;
 	}
@@ -67,18 +67,6 @@ public class DifferencesTreeItem implements ITreeItemContainer {
 	 * 
 	 * @see
 	 * at.bitandart.zoubek.mervin.review.explorer.content.ITreeItemContainer#
-	 * getText()
-	 */
-	@Override
-	public String getText() {
-		return "[Differences]";
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * at.bitandart.zoubek.mervin.review.explorer.content.ITreeItemContainer#
 	 * getParent()
 	 */
 	@Override
@@ -86,4 +74,8 @@ public class DifferencesTreeItem implements ITreeItemContainer {
 		return parent;
 	}
 
+	@Override
+	public Object getElement() {
+		return "[Differences]";
+	}
 }

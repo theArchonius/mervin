@@ -11,8 +11,11 @@
 package at.bitandart.zoubek.mervin.property.diff;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -32,6 +35,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 import at.bitandart.zoubek.mervin.IDiagramModelHelper;
+import at.bitandart.zoubek.mervin.IMatchHelper;
 import at.bitandart.zoubek.mervin.draw2d.figures.overlay.IOverlayTypeStyleAdvisor;
 import at.bitandart.zoubek.mervin.draw2d.figures.overlay.OverlayType;
 import at.bitandart.zoubek.mervin.model.modelreview.ModelReview;
@@ -65,6 +69,9 @@ public class PropertyDiffView extends ModelReviewEditorTrackingView {
 	 */
 	@Inject
 	private IDiagramModelHelper diagramModelHelper;
+
+	@Inject
+	private IMatchHelper matchHelper;
 
 	/**
 	 * the main panel of this view that contains all controls for this view.
@@ -156,8 +163,10 @@ public class PropertyDiffView extends ModelReviewEditorTrackingView {
 			Comparison modelComparison = getSelectedModelComparison();
 			Comparison diagramComparison = getSelectedDiagramComparison();
 
+			List<Object> selectedObjects = extractSelectedObjects(selection, currentModelReview);
+
 			if (modelComparison != null || diagramComparison != null) {
-				List<BaseEntry> selectionEntries = createSelectionEntries(selection, currentModelReview,
+				List<BaseEntry> selectionEntries = createSelectionEntries(selectedObjects, currentModelReview,
 						modelComparison, diagramComparison);
 				if (!selectionEntries.isEmpty()) {
 					modelEntries.add(new ContainerEntry(null, "Selected Comparison (new)", "Selected Comparison (old)",
@@ -167,7 +176,7 @@ public class PropertyDiffView extends ModelReviewEditorTrackingView {
 
 			EList<PatchSet> patchSets = currentModelReview.getPatchSets();
 			for (PatchSet patchSet : patchSets) {
-				List<BaseEntry> selectionEntries = createSelectionEntries(selection, currentModelReview,
+				List<BaseEntry> selectionEntries = createSelectionEntries(selectedObjects, currentModelReview,
 						patchSet.getModelComparison(), patchSet.getDiagramComparison());
 				if (!selectionEntries.isEmpty()) {
 					modelEntries.add(new ContainerEntry(null, "Patch Set " + patchSet.getId() + " (new)",
@@ -182,8 +191,8 @@ public class PropertyDiffView extends ModelReviewEditorTrackingView {
 	/**
 	 * creates {@link SelectionEntry}s for the given selection and comparisons.
 	 * 
-	 * @param selection
-	 *            the selection to obtain the elements to display from.
+	 * @param selectedObjects
+	 *            the selected objects to obtain the elements to display from.
 	 * @param currentModelReview
 	 *            the {@link ModelReview} instance used to obtain the views for
 	 *            the elements to display.
@@ -193,10 +202,11 @@ public class PropertyDiffView extends ModelReviewEditorTrackingView {
 	 *            the diagram {@link Comparison} to display the elements for.
 	 * @return a {@link List} of all created selection entries, never null.
 	 */
-	private List<BaseEntry> createSelectionEntries(IStructuredSelection selection, ModelReview currentModelReview,
+	private List<BaseEntry> createSelectionEntries(List<Object> selectedObjects, ModelReview currentModelReview,
 			Comparison modelComparison, Comparison diagramComparison) {
 		List<BaseEntry> modelEntries = new ArrayList<>();
-		Iterator<?> selectionIterator = selection.iterator();
+		Set<Match> matches = new HashSet<>();
+		Iterator<?> selectionIterator = selectedObjects.iterator();
 		int selectionIndex = 1;
 		while (selectionIterator.hasNext()) {
 
@@ -228,10 +238,20 @@ public class PropertyDiffView extends ModelReviewEditorTrackingView {
 			 * create an entry only if the selection contains a model element
 			 * contained in the comparison
 			 */
-			if (semanticModelMatch != null || notationModelMatch != null) {
+			if ((semanticModelMatch != null && !matches.contains(semanticModelMatch))
+					|| (notationModelMatch != null && !matches.contains(notationModelMatch))) {
+
 				SelectionEntry modelEntry = new SelectionEntry(null, selectionIndex + ". ", semanticModelMatch,
 						notationModelMatch);
 				modelEntries.add(modelEntry);
+
+				if (semanticModelMatch != null) {
+					matches.add(semanticModelMatch);
+				}
+
+				if (notationModelMatch != null) {
+					matches.add(notationModelMatch);
+				}
 
 				// TODO add other (referencing, context, etc...) notation
 				// models
@@ -241,6 +261,55 @@ public class PropertyDiffView extends ModelReviewEditorTrackingView {
 
 		}
 		return modelEntries;
+	}
+
+	/**
+	 * extracts the objects from that should be shown in the property diff if
+	 * possible.
+	 * 
+	 * @param selection
+	 *            the selection to extract the objects from.
+	 * @param modelReview
+	 *            the {@link ModelReview} containing the elements of the
+	 *            selection.
+	 * @return the list of elements to show in the property diff tree, never
+	 *         null.
+	 */
+	private List<Object> extractSelectedObjects(IStructuredSelection selection, ModelReview modelReview) {
+		List<Object> objects = new LinkedList<>();
+
+		Iterator<?> iterator = selection.iterator();
+
+		while (iterator.hasNext()) {
+			Object object = iterator.next();
+			if (object instanceof Match) {
+				Match match = (Match) object;
+				Comparison comparison = match.getComparison();
+				if (modelReview.getSelectedModelComparison() == comparison
+						|| modelReview.getSelectedDiagramComparison() == comparison) {
+
+					EObject left = match.getLeft();
+					if (left != null) {
+						objects.add(left);
+					}
+					EObject right = match.getRight();
+					if (right != null) {
+						objects.add(right);
+					}
+
+				} else {
+					object = matchHelper.getOldValue(match);
+					if (object == null) {
+						object = matchHelper.getNewValue(match);
+					}
+					objects.add(object);
+				}
+			} else {
+				objects.add(object);
+			}
+		}
+
+		return objects;
 	}
 
 	/**

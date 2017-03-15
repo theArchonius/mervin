@@ -10,6 +10,8 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.predicates;
 
+import org.eclipse.emf.compare.Diff;
+import org.eclipse.emf.compare.DifferenceKind;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.ecore.resource.Resource;
 
@@ -59,6 +61,17 @@ public class MervinPredicates {
 	public static Predicate<Match> matchValues(Predicate<Object> leftPredicate, Predicate<Object> rightPredicate,
 			Operation operation) {
 		return new MatchValuesPredicate(leftPredicate, rightPredicate, operation);
+	}
+
+	/**
+	 * @param kind
+	 * @return a predicate that evaluates to {@code true} if the given
+	 *         {@link Diff} has the given {@link DifferenceKind}. If the
+	 *         {@link Diff} being tested is {@code null} this predicate
+	 *         evaluates to {@code false}.
+	 */
+	public static Predicate<Diff> diffKind(DifferenceKind kind) {
+		return new DiffKindPredicate(kind);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Florian Zoubek.
+ * Copyright (c) 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,40 +10,41 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.review.explorer.content;
 
-import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
-
 /**
- * A temporary container for the involved models of an {@link PatchSet}.
+ * An {@link ITreeItem} with no children.
  * 
  * @author Florian Zoubek
  *
  */
-public class InvolvedModelsTreeItem implements ITreeItemContainer {
+public class LeafTreeItem implements ITreeItem {
 
-	private PatchSet patchSet;
+	private static final Object[] EMPTY = new Object[0];
 
-	public InvolvedModelsTreeItem(PatchSet patchSet) {
-		super();
-		this.patchSet = patchSet;
+	private Object element;
+	private Object parent;
+
+	public LeafTreeItem(Object element, Object parent) {
+		this.element = element;
+		this.parent = parent;
 	}
 
 	@Override
 	public boolean hasChildren() {
-		return !patchSet.getNewInvolvedModels().isEmpty();
+		return false;
 	}
 
 	@Override
 	public Object[] getChildren() {
-		return patchSet.getNewInvolvedModels().toArray();
-	}
-
-	@Override
-	public String getText() {
-		return "Involved models";
+		return EMPTY;
 	}
 
 	@Override
 	public Object getParent() {
-		return patchSet;
+		return parent;
+	}
+
+	@Override
+	public Object getElement() {
+		return element;
 	}
 }

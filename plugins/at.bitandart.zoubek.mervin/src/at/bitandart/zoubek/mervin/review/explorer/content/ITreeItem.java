@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Florian Zoubek.
+ * Copyright (c) 2016, 2017 Florian Zoubek.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,7 +19,7 @@ import org.eclipse.jface.viewers.TreeViewer;
  * @author Florian Zoubek
  *
  */
-public interface ITreeItemContainer {
+public interface ITreeItem {
 
 	/**
 	 * @return true if the container has children, false otherwise.
@@ -32,12 +32,12 @@ public interface ITreeItemContainer {
 	public Object[] getChildren();
 
 	/**
-	 * @return the label text for this container.
-	 */
-	public String getText();
-
-	/**
 	 * @return the parent of the container or null, if it has no parent.
 	 */
 	public Object getParent();
+
+	/**
+	 * @return the element represented by this {@link ITreeItem}.
+	 */
+	public Object getElement();
 }

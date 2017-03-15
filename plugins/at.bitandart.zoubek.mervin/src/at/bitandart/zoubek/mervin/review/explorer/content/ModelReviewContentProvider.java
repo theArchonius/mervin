@@ -10,13 +10,18 @@
  *******************************************************************************/
 package at.bitandart.zoubek.mervin.review.explorer.content;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.compare.Comparison;
 import org.eclipse.emf.compare.Diff;
 import org.eclipse.emf.compare.Match;
 import org.eclipse.emf.compare.rcp.EMFCompareRCPPlugin;
@@ -24,7 +29,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 import at.bitandart.zoubek.mervin.IMatchHelper;
@@ -35,9 +39,9 @@ import at.bitandart.zoubek.mervin.model.modelreview.Patch;
 import at.bitandart.zoubek.mervin.model.modelreview.PatchSet;
 
 /**
- * An {@link ITreeContentProvider} for the model review tree. Shows currently
- * the contents of all {@link PatchSet}s in a {@link ModelReview} as well as the
- * involved models and diagrams.
+ * An {@link IReviewExplorerContentProvider} for the model review tree. Shows
+ * currently the contents of all {@link PatchSet}s in a {@link ModelReview} as
+ * well as the involved models and diagrams.
  * 
  * @author Florian Zoubek
  *
@@ -48,8 +52,10 @@ public class ModelReviewContentProvider implements IReviewExplorerContentProvide
 
 	private ModelReview modelReview;
 	private Map<PatchSet, Collection<Object>> cachedPatchSetChildren = new HashMap<>();
-	private Map<EObject, DifferencesTreeItem> cachedDifferenceTreeItems = new HashMap<>();
+	private Map<EObject, DifferenceListTreeItem> cachedDifferenceTreeItems = new HashMap<>();
 	private IMatchHelper matchHelper;
+	private SelectedComparisonTreeItem selectedComparisonTreeItem;
+	private Object input;
 
 	public ModelReviewContentProvider(IMatchHelper matchHelper) {
 		adapterFactoryContentProvider = new AdapterFactoryContentProvider(
@@ -59,6 +65,7 @@ public class ModelReviewContentProvider implements IReviewExplorerContentProvide
 
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		input = newInput;
 		adapterFactoryContentProvider.inputChanged(viewer, oldInput, newInput);
 		// we need the root model review to find the parent of some children
 		if (newInput instanceof ModelReview) {
@@ -67,6 +74,7 @@ public class ModelReviewContentProvider implements IReviewExplorerContentProvide
 		// clear the cache
 		cachedPatchSetChildren.clear();
 		cachedDifferenceTreeItems.clear();
+		selectedComparisonTreeItem = null;
 	}
 
 	@Override
@@ -82,8 +90,8 @@ public class ModelReviewContentProvider implements IReviewExplorerContentProvide
 		if (element instanceof PatchSet) {
 			return true;
 		}
-		if (element instanceof ITreeItemContainer) {
-			return ((ITreeItemContainer) element).hasChildren();
+		if (element instanceof ITreeItem) {
+			return ((ITreeItem) element).hasChildren();
 		}
 		if (element instanceof ModelResource) {
 			return !((ModelResource) element).getObjects().isEmpty();
@@ -97,14 +105,14 @@ public class ModelReviewContentProvider implements IReviewExplorerContentProvide
 	@Override
 	public Object getParent(Object element) {
 
-		if (element instanceof ITreeItemContainer) {
-			return ((ITreeItemContainer) element).getParent();
+		if (element instanceof ITreeItem) {
+			return ((ITreeItem) element).getParent();
 		}
 		if (element instanceof ModelReview) {
 			return null;
 		}
 		if (element instanceof PatchSet) {
-			return ((PatchSet) element).getReview();
+			return null;
 		}
 		if (element instanceof DiagramResource || element instanceof ModelResource || element instanceof Patch) {
 			return getPatchSetChildContainer(element);
@@ -172,8 +180,8 @@ public class ModelReviewContentProvider implements IReviewExplorerContentProvide
 
 				for (Object child : cachedChildren) {
 
-					if (child instanceof ITreeItemContainer
-							&& Arrays.asList(((ITreeItemContainer) child).getChildren()).contains(object)) {
+					if (child instanceof ITreeItem
+							&& Arrays.asList(((ITreeItem) child).getChildren()).contains(object)) {
 						return child;
 					}
 				}
@@ -194,11 +202,12 @@ public class ModelReviewContentProvider implements IReviewExplorerContentProvide
 
 	/**
 	 * @param diff
-	 *            the {@link Diff} to find the {@link DifferencesTreeItem} for.
-	 * @return the {@link DifferencesTreeItem} containing the given diff or null
-	 *         if no {@link DifferencesTreeItem} could be found.
+	 *            the {@link Diff} to find the {@link DifferenceListTreeItem}
+	 *            for.
+	 * @return the {@link DifferenceListTreeItem} containing the given diff or
+	 *         null if no {@link DifferenceListTreeItem} could be found.
 	 */
-	private DifferencesTreeItem getDifferenceContainer(Diff diff) {
+	private DifferenceListTreeItem getDifferenceContainer(Diff diff) {
 
 		EObject newValue = matchHelper.getNewValue((diff).getMatch());
 
@@ -244,7 +253,19 @@ public class ModelReviewContentProvider implements IReviewExplorerContentProvide
 	@Override
 	public Object[] getElements(Object inputElement) {
 		if (inputElement instanceof ModelReview) {
-			return ((ModelReview) inputElement).getPatchSets().toArray();
+
+			ModelReview modelReview = ((ModelReview) inputElement);
+			EList<PatchSet> patchSets = modelReview.getPatchSets();
+			List<Object> children = new ArrayList<>(patchSets.size() + 1);
+
+			if (selectedComparisonTreeItem == null) {
+				selectedComparisonTreeItem = new SelectedComparisonTreeItem(modelReview);
+			}
+
+			children.add(selectedComparisonTreeItem);
+			children.addAll(patchSets);
+
+			return children.toArray();
 		}
 		return new Object[0];
 	}
@@ -261,15 +282,15 @@ public class ModelReviewContentProvider implements IReviewExplorerContentProvide
 			 */
 			if (!cachedPatchSetChildren.containsKey(patchSet)) {
 				List<Object> children = new LinkedList<>();
-				children.add(new InvolvedModelsTreeItem(patchSet));
-				children.add(new InvolvedDiagramsTreeItem(patchSet));
+				children.add(new PatchSetInvolvedModelsTreeItem(patchSet));
+				children.add(new PatchSetInvolvedDiagramsTreeItem(patchSet));
 				children.add(new PatchSetTreeItem(patchSet));
 				cachedPatchSetChildren.put(patchSet, children);
 			}
 			return cachedPatchSetChildren.get(patchSet).toArray();
 		}
-		if (parentElement instanceof ITreeItemContainer) {
-			return ((ITreeItemContainer) parentElement).getChildren();
+		if (parentElement instanceof ITreeItem) {
+			return ((ITreeItem) parentElement).getChildren();
 		}
 		if (parentElement instanceof ModelResource) {
 			return ((ModelResource) parentElement).getObjects().toArray();
@@ -290,7 +311,7 @@ public class ModelReviewContentProvider implements IReviewExplorerContentProvide
 				 * the category stays the same even if the tree is refreshed.
 				 */
 				if (!cachedDifferenceTreeItems.containsKey(parentEObject)) {
-					cachedDifferenceTreeItems.put(parentEObject, new DifferencesTreeItem(parentEObject, matchDiffs));
+					cachedDifferenceTreeItems.put(parentEObject, new DifferenceListTreeItem(parentEObject, matchDiffs));
 				}
 				children.add(cachedDifferenceTreeItems.get(parentEObject));
 			}
@@ -319,6 +340,10 @@ public class ModelReviewContentProvider implements IReviewExplorerContentProvide
 	public List<Diff> getMatchDiffsFor(EObject eObject) {
 
 		List<Diff> differences = new LinkedList<Diff>();
+		if (eObject instanceof Match) {
+			differences.addAll(((Match) eObject).getDifferences());
+			return differences;
+		}
 
 		PatchSet patchSet = getContainingPatchSet(eObject);
 		if (patchSet != null) {
@@ -340,6 +365,24 @@ public class ModelReviewContentProvider implements IReviewExplorerContentProvide
 	public List<Diff> getDiffsFor(EObject eObject) {
 
 		List<Diff> differences = new LinkedList<Diff>();
+		if (eObject instanceof Match) {
+			Match match = (Match) eObject;
+			EObject left = match.getLeft();
+			EObject right = match.getRight();
+			Comparison comparison = match.getComparison();
+
+			Set<Diff> diffSet = new HashSet<>();
+			if (left != null) {
+				diffSet.addAll(comparison.getDifferences(left));
+			}
+			if (right != null) {
+				diffSet.addAll(comparison.getDifferences(right));
+			}
+
+			differences.addAll(diffSet);
+
+			return differences;
+		}
 
 		PatchSet patchSet = getContainingPatchSet(eObject);
 		if (patchSet != null) {
@@ -348,5 +391,45 @@ public class ModelReviewContentProvider implements IReviewExplorerContentProvide
 			differences.addAll(patchSet.getDiagramComparison().getDifferences(eObject));
 		}
 		return differences;
+	}
+
+	@Override
+	public Set<ITreeItem> getTreeItemsFor(Object element) {
+		Set<ITreeItem> treeItems = new HashSet<>();
+		if (input != null) {
+			collectTreeItems(input, element, treeItems);
+		}
+		return treeItems;
+	}
+
+	/**
+	 * collects the {@link ITreeItem}s that are associated with the given
+	 * element.
+	 * 
+	 * @param root
+	 *            the root content tree element to start collecting.
+	 * @param element
+	 *            the element to search {@link ITreeItem}s for.
+	 * @param treeItems
+	 *            the set of {@link ITreeItem} to store the found
+	 *            {@link ITreeItem} into.
+	 */
+	private void collectTreeItems(Object root, Object element, Set<ITreeItem> treeItems) {
+
+		if (root instanceof ITreeItem && ((ITreeItem) root).getElement() == element) {
+			treeItems.add((ITreeItem) root);
+		}
+
+		Object[] children = null;
+		if (root == input) {
+			children = getElements(root);
+		} else {
+			children = getChildren(root);
+		}
+
+		for (Object child : children) {
+			collectTreeItems(child, element, treeItems);
+		}
+
 	}
 }
