@@ -75,6 +75,7 @@ import at.bitandart.zoubek.mervin.util.UnifiedModelMap;
 class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 
 	private Comparison diagramComparison;
+	private Comparison modelComparison;
 	private View container;
 	private UnifiedModelMap unifiedModelMap;
 	private PreferencesHint preferencesHint;
@@ -88,10 +89,12 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 	private BiMap<View, DifferenceOverlay> overlayIndex;
 
 	public AddOverlayNodesCommand(TransactionalEditingDomain domain, Comparison diagramComparison,
-			UnifiedModelMap unifiedModelMap, View container, Collection<Object> overlayedViews,
-			PreferencesHint preferencesHint, ModelReviewFactory reviewFactory, ModelReview modelReview) {
+			Comparison modelComparison, UnifiedModelMap unifiedModelMap, View container,
+			Collection<Object> overlayedViews, PreferencesHint preferencesHint, ModelReviewFactory reviewFactory,
+			ModelReview modelReview) {
 		super(domain, "", null);
 		this.diagramComparison = diagramComparison;
+		this.modelComparison = modelComparison;
 		this.container = container;
 		this.unifiedModelMap = unifiedModelMap;
 		this.preferencesHint = preferencesHint;
@@ -169,7 +172,7 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 		 * an overlay
 		 */
 		Match viewMatch = diagramComparison.getMatch(originalView);
-		Match elementMatch = diagramComparison.getMatch(view.getElement());
+		Match elementMatch = modelComparison.getMatch(view.getElement());
 		Match layoutConstraintMatch = null;
 		Match bendpointsMatch = null;
 
@@ -215,7 +218,7 @@ class AddOverlayNodesCommand extends AbstractTransactionalCommand {
 				 * improve the readability of the overlays, only report comments
 				 * if the parent overlay does not already show them.
 				 */
-				Match parentViewMatch = diagramComparison.getMatch(((View) parent).getElement());
+				Match parentViewMatch = modelComparison.getMatch(((View) parent).getElement());
 				hasComments = hasComments && parentViewMatch != elementMatch;
 			}
 		}

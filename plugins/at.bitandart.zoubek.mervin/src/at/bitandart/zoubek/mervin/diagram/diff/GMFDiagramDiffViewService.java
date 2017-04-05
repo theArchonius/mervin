@@ -385,8 +385,8 @@ public class GMFDiagramDiffViewService {
 						(View) childView, filterEdges(childrenCopy), filterNonEdges(childrenCopy), diagram.getType()));
 
 				compositeCommand.add(new AddOverlayNodesCommand(transactionalEditingDomain,
-						modelReview.getSelectedDiagramComparison(), unifiedModelMap, childView, childrenCopy,
-						preferencesHint, reviewFactory, modelReview));
+						modelReview.getSelectedDiagramComparison(), modelReview.getSelectedModelComparison(),
+						unifiedModelMap, childView, childrenCopy, preferencesHint, reviewFactory, modelReview));
 
 				executeCommand(compositeCommand.reduce(), editDomain);
 
