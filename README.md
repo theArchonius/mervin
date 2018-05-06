@@ -1,11 +1,14 @@
 # Mervin
 
-Mervin is a Graphical Model Review Visualization Prototype under active development for Eclipse Mars.
+Mervin is a Graphical Model Review Visualization Prototype for Eclipse Mars.
 
-## Eclipse Target platform
+## Evaluation resources
 
-Mervin is provided as eclipse plugins for the current Mars build of the ["Collaborative Modeling with Eclipse" ](https://sites.google.com/a/eclipsesource.com/collaborative-modeling/)-initiative.
-Although Mervin may also run on other builds, there is currently no guarantee for it.
+The resources of the evalution are provided in the directory 'evaluation-resources'. Please read the readme in that directory before loading the provided evaluation repositories.
+
+## Build instructions
+
+Run 'mvn install' in the 'at.bitandart.zoubek.mervin.parent' directory. If it fails due to dependency problems please contact the authors, which will try to resolve the issues if possible. However, there are also prebuild versions of the prototype available at https://github.com/theArchonius/mervin/releases .
 
 ## License
 
