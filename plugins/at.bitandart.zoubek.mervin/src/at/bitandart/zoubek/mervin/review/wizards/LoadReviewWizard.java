@@ -88,6 +88,7 @@ public class LoadReviewWizard extends Wizard {
 	public boolean performFinish() {
 
 		String repositoryPath = selectRepositoryPage.getSelectedRepositoryPath();
+		final boolean useOnlyLocalRef = selectRepositoryPage.shouldUseOnlyLocalRefs();
 		final URI uri;
 		final String id = gerritChangeSelectionPage.getReviewId();
 		final User reviewer = modelReviewFactory.createUser();
@@ -109,7 +110,7 @@ public class LoadReviewWizard extends Wizard {
 				@Override
 				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 					try {
-						modelReview = repoService.loadReview(uri, id, reviewer, monitor);
+						modelReview = repoService.loadReview(uri, id, reviewer, useOnlyLocalRef, monitor);
 						compareService.updateSelectedComparison(modelReview, monitor);
 					} catch (RepositoryIOException | InvalidReviewRepositoryException | InvalidReviewException
 							| OperationCanceledException e) {

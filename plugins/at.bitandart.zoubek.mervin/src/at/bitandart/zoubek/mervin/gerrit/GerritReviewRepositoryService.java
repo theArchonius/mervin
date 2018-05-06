@@ -54,7 +54,9 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
+import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import org.eclipse.jgit.dircache.DirCache;
@@ -158,7 +160,8 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 
 	@SuppressWarnings("restriction")
 	@Override
-	public List<IReviewDescriptor> getReviews(URI uri) throws InvalidReviewRepositoryException {
+	public List<IReviewDescriptor> getReviews(URI uri, boolean useOnlyLocalRefs)
+			throws InvalidReviewRepositoryException {
 
 		List<IReviewDescriptor> changeIds = new LinkedList<>();
 
@@ -167,9 +170,7 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 			Git git = Git.open(new File(uri));
 
 			try {
-				// Assume that origin refers to the remote gerrit repository
-				// list all remote refs from origin
-				Collection<Ref> remoteRefs = git.lsRemote().setTimeout(60).call();
+				Collection<Ref> remoteRefs = getRefs(git, useOnlyLocalRefs);
 
 				Pattern changeRefPattern = Pattern.compile(CHANGE_REF_PATTERN);
 
@@ -196,9 +197,14 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 							 * so we extract it from the commit message of the
 							 * current ref
 							 */
-							FetchResult fetchResult = git.fetch().setRefSpecs(new RefSpec(ref.getName())).call();
+							Ref localRef = null;
 
-							Ref localRef = fetchResult.getAdvertisedRef(ref.getName());
+							if (!useOnlyLocalRefs) {
+								FetchResult fetchResult = git.fetch().setRefSpecs(new RefSpec(ref.getName())).call();
+								localRef = fetchResult.getAdvertisedRef(ref.getName());
+							} else {
+								localRef = ref;
+							}
 							RevWalk revWalk = new RevWalk(git.getRepository());
 							RevCommit commit = revWalk.parseCommit(localRef.getObjectId());
 							String[] paragraphs = commit.getFullMessage().split("\n");
@@ -209,7 +215,6 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 							if (changeIdMatcher.matches()) {
 								changeId = changeIdMatcher.group(1);
 								reviewDescriptor.setChangeId(changeId);
-								;
 							} else {
 								logger.warn(MessageFormat.format(
 										"Could not find the change id for Gerrit change with primary key {0}",
@@ -230,8 +235,19 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 		return changeIds;
 	}
 
+	private Collection<Ref> getRefs(Git git, boolean useOnlyLocalRefs)
+			throws InvalidRemoteException, TransportException, GitAPIException {
+		if (useOnlyLocalRefs) {
+			return git.getRepository().getAllRefs().values();
+		}
+		// Assume that origin refers to the remote gerrit repository
+		// list all remote refs from origin
+		return git.lsRemote().setTimeout(60).call();
+	}
+
 	@Override
-	public ModelReview loadReview(URI uri, String id, User currentReviewer, IProgressMonitor monitor)
+	public ModelReview loadReview(URI uri, String id, User currentReviewer, boolean useOnlyLocalRef,
+			IProgressMonitor monitor)
 			throws InvalidReviewRepositoryException, InvalidReviewException, RepositoryIOException {
 		/*
 		 * Fetch all refs to the patch sets for the particular change and create
@@ -251,10 +267,12 @@ public class GerritReviewRepositoryService implements IReviewRepositoryService {
 			// +refs/changes/id%100/<cid>/<psId>:refs/changes/id%100/<cid>/<psId>
 
 			monitor.beginTask("Fetching change ref", IProgressMonitor.UNKNOWN);
-			git.fetch()
-					.setRefSpecs(new RefSpec(MessageFormat.format(
-							"+refs/changes/{0,number,00}/{1}/*:refs/changes/{0,number,00}/{1}/*", iId % 100, iId)))
-					.call();
+			if (!useOnlyLocalRef) {
+				git.fetch()
+						.setRefSpecs(new RefSpec(MessageFormat.format(
+								"+refs/changes/{0,number,00}/{1}/*:refs/changes/{0,number,00}/{1}/*", iId % 100, iId)))
+						.call();
+			}
 
 			// create model instance
 

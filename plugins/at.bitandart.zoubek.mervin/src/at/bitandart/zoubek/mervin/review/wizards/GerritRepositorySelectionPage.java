@@ -39,6 +39,7 @@ import org.eclipse.swt.widgets.Text;
 public class GerritRepositorySelectionPage extends WizardPage {
 
 	private Text repositoryPathControl;
+	private Button useOnlyLocalRefsControl;
 
 	public GerritRepositorySelectionPage() {
 		super("Select local copy of Gerrit Repository");
@@ -48,9 +49,8 @@ public class GerritRepositorySelectionPage extends WizardPage {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets
-	 * .Composite)
+	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
+	 * widgets .Composite)
 	 */
 	@Override
 	public void createControl(Composite parent) {
@@ -60,8 +60,7 @@ public class GerritRepositorySelectionPage extends WizardPage {
 
 		Label repositoryPathLabel = new Label(mainPanel, SWT.NONE);
 		repositoryPathLabel.setText("Repository Path:");
-		repositoryPathLabel.setLayoutData(new GridData(SWT.BEGINNING,
-				SWT.CENTER, false, false));
+		repositoryPathLabel.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
 
 		repositoryPathControl = new Text(mainPanel, SWT.BORDER);
 		repositoryPathControl.addModifyListener(new ModifyListener() {
@@ -84,20 +83,17 @@ public class GerritRepositorySelectionPage extends WizardPage {
 
 			}
 		});
-		repositoryPathControl.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
-				true, false));
+		repositoryPathControl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
 		Button selectButton = new Button(mainPanel, SWT.PUSH);
-		selectButton.setLayoutData(new GridData(SWT.BEGINNING, SWT.BEGINNING,
-				false, false));
+		selectButton.setLayoutData(new GridData(SWT.BEGINNING, SWT.BEGINNING, false, false));
 		selectButton.setText("Select directory...");
 
 		selectButton.addSelectionListener(new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				DirectoryDialog directoryDialog = new DirectoryDialog(
-						getShell());
+				DirectoryDialog directoryDialog = new DirectoryDialog(getShell());
 				String uri = directoryDialog.open();
 				if (uri != null) {
 					repositoryPathControl.setText("file://" + uri);
@@ -109,6 +105,11 @@ public class GerritRepositorySelectionPage extends WizardPage {
 				// intentionally empty
 			}
 		});
+
+		useOnlyLocalRefsControl = new Button(mainPanel, SWT.CHECK);
+		useOnlyLocalRefsControl.setLayoutData(new GridData(SWT.BEGINNING, SWT.BEGINNING, true, false, 3, 1));
+		useOnlyLocalRefsControl.setText("Use only local refs (Use this for local copies of gerrit repos)");
+
 		setControl(mainPanel);
 		setMessage("Select a local copy of the gerrit repository you want to review.");
 		setTitle("Select Repository");
@@ -134,5 +135,9 @@ public class GerritRepositorySelectionPage extends WizardPage {
 	 */
 	public String getSelectedRepositoryPath() {
 		return repositoryPathControl.getText();
+	}
+
+	public boolean shouldUseOnlyLocalRefs() {
+		return useOnlyLocalRefsControl.getSelection();
 	}
 }

@@ -63,19 +63,19 @@ public class ReviewSelectionPage extends WizardPage {
 	 */
 	private final class ReviewListUpdater implements IRunnableWithProgress {
 		private final String uri;
+		private final boolean useOnlyLocalRefs;
 
-		private ReviewListUpdater(String uri) {
+		private ReviewListUpdater(String uri, boolean useOnlyLocalRefs) {
 			this.uri = uri;
+			this.useOnlyLocalRefs = useOnlyLocalRefs;
 		}
 
 		@SuppressWarnings("restriction")
-		public void run(IProgressMonitor monitor)
-				throws InvocationTargetException, InterruptedException {
-			monitor.beginTask("Loading remote reviews...",
-					IProgressMonitor.UNKNOWN);
+		public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+			monitor.beginTask("Loading remote reviews...", IProgressMonitor.UNKNOWN);
 			try {
 				reviews.clear();
-				reviews.addAll(repoService.getReviews(new URI(uri)));
+				reviews.addAll(repoService.getReviews(new URI(uri), useOnlyLocalRefs));
 				uiSync.syncExec(new Runnable() {
 
 					@Override
@@ -83,8 +83,7 @@ public class ReviewSelectionPage extends WizardPage {
 						reviewListViewer.refresh();
 					}
 				});
-			} catch (URISyntaxException | RepositoryIOException
-					| InvalidReviewRepositoryException e) {
+			} catch (URISyntaxException | RepositoryIOException | InvalidReviewRepositoryException e) {
 				logger.error(e);
 				uiSync.syncExec(new Runnable() {
 
@@ -94,14 +93,11 @@ public class ReviewSelectionPage extends WizardPage {
 						 * FIXME add a more specific error message based on the
 						 * exception thrown by the repository service
 						 */
-						MessageDialog
-								.openError(
-										getShell(),
-										"Review list retrieval error",
-										"Could not load all reviews for this repository. "
-												+ "Make sure the git repository remote \"origin\" points at the correct "
-												+ "accessible remote gerrit repository. "
-												+ "See the error log for more details.");
+						MessageDialog.openError(getShell(), "Review list retrieval error",
+								"Could not load all reviews for this repository. "
+										+ "Make sure the git repository remote \"origin\" points at the correct "
+										+ "accessible remote gerrit repository. "
+										+ "See the error log for more details.");
 					}
 				});
 			}
@@ -129,9 +125,8 @@ public class ReviewSelectionPage extends WizardPage {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets
-	 * .Composite)
+	 * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.
+	 * widgets .Composite)
 	 */
 	@Override
 	public void createControl(Composite parent) {
@@ -150,20 +145,18 @@ public class ReviewSelectionPage extends WizardPage {
 		});
 		reviewListViewer.setContentProvider(ArrayContentProvider.getInstance());
 		reviewListViewer.setInput(reviews);
-		reviewListViewer.getList().setLayoutData(
-				new GridData(SWT.FILL, SWT.FILL, true, true));
-		reviewListViewer
-				.addSelectionChangedListener(new ISelectionChangedListener() {
+		reviewListViewer.getList().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		reviewListViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
-					@Override
-					public void selectionChanged(SelectionChangedEvent event) {
-						ISelection selection = event.getSelection();
-						if (selection != null) {
-							setPageComplete(!selection.isEmpty());
-						}
+			@Override
+			public void selectionChanged(SelectionChangedEvent event) {
+				ISelection selection = event.getSelection();
+				if (selection != null) {
+					setPageComplete(!selection.isEmpty());
+				}
 
-					}
-				});
+			}
+		});
 
 		setControl(mainPanel);
 		setMessage("Select a review to load.");
@@ -178,32 +171,28 @@ public class ReviewSelectionPage extends WizardPage {
 		if (visible) {
 			IWizardPage previousPage = getPreviousPage();
 			if (previousPage instanceof GerritRepositorySelectionPage) {
-				loadChanges(((GerritRepositorySelectionPage) previousPage)
-						.getSelectedRepositoryPath());
+				GerritRepositorySelectionPage page = ((GerritRepositorySelectionPage) previousPage);
+
+				loadChanges(page.getSelectedRepositoryPath(), page.shouldUseOnlyLocalRefs());
 			}
 		}
 	};
 
 	@SuppressWarnings("restriction")
-	private void loadChanges(final String uri) {
+	private void loadChanges(final String uri, final boolean useOnlyLocalRefs) {
 		try {
-			ProgressMonitorDialog progressMonitorDialog = new ProgressMonitorDialog(
-					getShell());
-			progressMonitorDialog.run(true, true, new ReviewListUpdater(uri));
+			ProgressMonitorDialog progressMonitorDialog = new ProgressMonitorDialog(getShell());
+			progressMonitorDialog.run(true, true, new ReviewListUpdater(uri, useOnlyLocalRefs));
 		} catch (InvocationTargetException | InterruptedException e) {
 			logger.error(e);
 			uiSync.syncExec(new Runnable() {
 
 				@Override
 				public void run() {
-					MessageDialog
-							.openError(
-									getShell(),
-									"Review list retrieval error",
-									"Could not load all review for this repository. "
-											+ "Make sure the repository remote \"origin\" points at the correct "
-											+ "accessible remote gerrit repository. "
-											+ "See the error log for more details.");
+					MessageDialog.openError(getShell(), "Review list retrieval error",
+							"Could not load all review for this repository. "
+									+ "Make sure the repository remote \"origin\" points at the correct "
+									+ "accessible remote gerrit repository. " + "See the error log for more details.");
 				}
 			});
 		}
@@ -215,8 +204,7 @@ public class ReviewSelectionPage extends WizardPage {
 	 * @return the selected review id or null if none is selected
 	 */
 	public String getReviewId() {
-		IStructuredSelection structuredSelection = reviewListViewer
-				.getStructuredSelection();
+		IStructuredSelection structuredSelection = reviewListViewer.getStructuredSelection();
 		if (structuredSelection != null && !structuredSelection.isEmpty()) {
 			Object firstElement = structuredSelection.getFirstElement();
 			if (firstElement instanceof IReviewDescriptor) {

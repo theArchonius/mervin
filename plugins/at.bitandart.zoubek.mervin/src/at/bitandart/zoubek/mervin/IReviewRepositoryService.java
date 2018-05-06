@@ -36,6 +36,9 @@ public interface IReviewRepositoryService {
 	 * 
 	 * @param uri
 	 *            the {@link URI} of the repository
+	 * @param useOnlyLocalRefs
+	 *            specifies if reviews should be loaded only from the local
+	 *            refs, ignoring any other remote refs
 	 * @return a list of review descriptors of all review in the given
 	 *         repository
 	 * @throws InvalidReviewRepositoryException
@@ -44,7 +47,8 @@ public interface IReviewRepositoryService {
 	 *             if an IO error occurs during reading the list of review
 	 *             identifiers.
 	 */
-	public List<IReviewDescriptor> getReviews(URI uri) throws InvalidReviewRepositoryException, RepositoryIOException;
+	public List<IReviewDescriptor> getReviews(URI uri, boolean useOnlyLocalRefs)
+			throws InvalidReviewRepositoryException, RepositoryIOException;
 
 	/**
 	 * loads the review with the given identifier from the repository at the
@@ -56,6 +60,9 @@ public interface IReviewRepositoryService {
 	 *            the identifier of the review to load.
 	 * @param currentReviewer
 	 *            the reviewer that requests to load the review.
+	 * @param useOnlyLocalRef
+	 *            specifies if the review should be loaded only from the local
+	 *            refs, ignoring any other remote refs
 	 * @param monitor
 	 *            the progress monitor to report to
 	 * @return the review instance
@@ -67,7 +74,8 @@ public interface IReviewRepositoryService {
 	 *             if an IO error occurs during reading the review from the
 	 *             repository
 	 */
-	public ModelReview loadReview(URI uri, String id, User currentReviewer, IProgressMonitor monitor)
+	public ModelReview loadReview(URI uri, String id, User currentReviewer, boolean useOnlyLocalRef,
+			IProgressMonitor monitor)
 			throws InvalidReviewRepositoryException, InvalidReviewException, RepositoryIOException;
 
 	/**
